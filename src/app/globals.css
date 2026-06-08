@@ -1,0 +1,459 @@
+/* 1. THE v4 ENGINE IMPORT */
+@import "tailwindcss";
+
+/* 2. CSS VARIABLES - COMPLETE DESIGN SYSTEM */
+:root {
+  /* ===== BRAND COLORS ===== */
+  --primary: #92b600;
+  /* MZ Logo Green */
+  --primary-hover: #7b9900;
+  --primary-light: #f4f8e5;
+  --primary-rgb: 146, 182, 0;
+
+  /* Secondary accent colors */
+  --accent-gold: #fccf00;
+  /* MZ Logo vibrant Yellow */
+  --accent-gold-light: #fff9e5;
+  --accent-cyan: #06b6d4;
+  --accent-emerald: #10b981;
+
+  /* ===== BACKGROUNDS ===== */
+  --background: #ffffff;
+  --surface: #f8fafc;
+  --surface-hover: #f1f5f9;
+  --surface-dark: #0f172a;
+  --dashboard-bg: #ffffff;
+  --dashboard-surface: #f8fafc;
+
+  /* ===== TYPOGRAPHY ===== */
+  --foreground: #0f172a;
+  --muted: #64748b;
+  --muted-foreground: #94a3b8;
+
+  /* ===== BORDERS ===== */
+  --border: #e2e8f0;
+  --border-hover: #cbd5e1;
+  --border-strong: #94a3b8;
+
+  /* ===== SHADOWS ===== */
+  --shadow-sm: 2px 2px 0px 0px rgba(0, 0, 0, 1);
+  --shadow-md: 4px 4px 0px 0px rgba(0, 0, 0, 1);
+  --shadow-lg: 8px 8px 0px 0px rgba(0, 0, 0, 1);
+  --shadow-xl: 12px 12px 0px 0px rgba(0, 0, 0, 1);
+  --shadow-2xl: 16px 16px 0px 0px rgba(0, 0, 0, 1);
+  --shadow-purple: 8px 8px 0px 0px var(--primary);
+  --shadow-purple-lg: 16px 16px 0px 0px var(--primary);
+
+  /* ===== OPACITY VALUES ===== */
+  --opacity-subtle: 0.03;
+  --opacity-light: 0.05;
+  --opacity-medium: 0.1;
+  --opacity-strong: 0.2;
+  --opacity-intense: 0.5;
+
+  /* ===== SPACING SYSTEM ===== */
+  --spacing-xs: 0.5rem;
+  --spacing-sm: 1rem;
+  --spacing-md: 1.5rem;
+  --spacing-lg: 2rem;
+  --spacing-xl: 3rem;
+  --spacing-2xl: 4rem;
+  --spacing-3xl: 6rem;
+
+  /* ===== BORDER RADIUS ===== */
+  --radius-sm: 0px;
+  --radius-md: 0px;
+  --radius-lg: 0px;
+  --radius-xl: 0px;
+  --radius-full: 9999px;
+
+  /* ===== TRANSITIONS ===== */
+  --transition-fast: 150ms;
+  --transition-base: 300ms;
+  --transition-slow: 500ms;
+  --transition-timing: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* ===== ANIMATION DURATIONS ===== */
+  --duration-spin: 1s;
+  --duration-pulse: 2s;
+  --duration-bounce: 1s;
+
+  /* ===== GRADIENTS ===== */
+  --gradient-primary: linear-gradient(to right, var(--primary), var(--accent-gold));
+  --gradient-radial-primary: radial-gradient(circle, rgba(var(--primary-rgb), 0.15) 0%, transparent 70%);
+  --gradient-vignette: radial-gradient(circle at center, transparent 0%, var(--background) 100%);
+  --gradient-glass: linear-gradient(to top right, rgb(255 255 255 / 0.1) 0%, transparent 50%);
+
+  /* ===== GRID PATTERNS ===== */
+  --grid-size: 40px;
+  --grid-color: #e2e8f0;
+  --grid-color-strong: #94a3b8;
+  --pattern-grid: linear-gradient(to right, var(--grid-color) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-color) 1px, transparent 1px);
+  --pattern-grid-strong: linear-gradient(to right, var(--grid-color-strong) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-color-strong) 1px, transparent 1px);
+  --pattern-dots: radial-gradient(var(--border) 1px, transparent 1px);
+
+  /* ===== NOISE TEXTURE ===== */
+  --noise-url: url('https://grainy-gradients.vercel.app/noise.svg');
+
+  /* ===== Z-INDEX SCALE ===== */
+  --z-background: 0;
+  --z-base: 10;
+  --z-overlay: 20;
+  --z-modal: 30;
+  --z-popover: 40;
+  --z-navbar: 50;
+
+  /* ===== FONT SIZES ===== */
+  --text-xs: 0.625rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem;
+  --text-4xl: 2.25rem;
+  --text-5xl: 3rem;
+  --text-6xl: 3.75rem;
+  --text-7xl: 4.5rem;
+  --text-8xl: 6rem;
+}
+
+/* 3. DARK MODE */
+.dark {
+  /* Backgrounds */
+  --background: #060d02;
+  /* Very dark green tint */
+  --surface: #0f1c07;
+  --surface-hover: #16260a;
+  --surface-dark: #000000;
+  --dashboard-bg: #050800;
+  --dashboard-surface: #080d00;
+
+  /* Typography */
+  --foreground: #f8fafc;
+  --muted: #94a3b8;
+  --muted-foreground: #64748b;
+
+  /* Borders */
+  --border: rgba(255, 255, 255, 0.1);
+  --border-hover: rgba(255, 255, 255, 0.2);
+  --border-strong: rgba(255, 255, 255, 0.3);
+
+  /* Shadows */
+  --shadow-sm: 2px 2px 0px 0px var(--primary);
+  --shadow-md: 4px 4px 0px 0px var(--primary);
+  --shadow-lg: 8px 8px 0px 0px var(--primary);
+  --shadow-xl: 12px 12px 0px 0px var(--primary);
+  --shadow-2xl: 16px 16px 0px 0px var(--primary);
+  --shadow-purple-lg: 16px 16px 0px 0px var(--primary);
+
+  /* Grid patterns for dark mode */
+  --grid-color: rgba(255, 255, 255, 0.05);
+  --grid-color-strong: rgba(255, 255, 255, 0.15);
+  --pattern-grid: linear-gradient(to right, var(--grid-color) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-color) 1px, transparent 1px);
+  --pattern-grid-strong: linear-gradient(to right, var(--grid-color-strong) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-color-strong) 1px, transparent 1px);
+
+  /* Gradients */
+  --gradient-vignette: radial-gradient(circle at center, transparent 0%, var(--background) 100%);
+  --gradient-radial-primary: radial-gradient(circle, rgba(var(--primary-rgb), 0.2) 0%, transparent 70%);
+}
+
+/* 4. BASE STYLES */
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* 5. GLOBAL TRANSITIONS */
+@layer base {
+  /* Removed global targeting of all layout blocks as it causes severe style recalculation and paint storms on scroll/hover */
+}
+
+/* 6. REUSABLE ANIMATIONS */
+@keyframes pulse-slow {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes ping {
+
+  75%,
+  100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-down {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes infinite-scroll {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-infinite-scroll {
+  animation: infinite-scroll 40s linear infinite;
+  will-change: transform;
+}
+
+/* 7. UTILITY CLASSES */
+.bg-grid {
+  background-image: var(--pattern-grid);
+  background-size: var(--grid-size) var(--grid-size);
+}
+
+.bg-grid-strong {
+  background-image: var(--pattern-grid-strong);
+  background-size: var(--grid-size) var(--grid-size);
+}
+
+.bg-dots {
+  background-image: var(--pattern-dots);
+  background-size: 20px 20px;
+}
+
+.bg-noise {
+  background-image: var(--noise-url);
+}
+
+.gradient-primary {
+  background-image: var(--gradient-primary);
+}
+
+.gradient-radial-primary {
+  background-image: var(--gradient-radial-primary);
+}
+
+.no-transition {
+  transition: none !important;
+}
+
+.text-gradient-primary {
+  background-image: var(--gradient-primary);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* 8. GLASS EFFECTS */
+.glass-light {
+  background-color: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.glass-dark {
+  background-color: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* 9. PERSPECTIVE UTILITIES */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.transform-style-3d {
+  transform-style: preserve-3d;
+}
+
+.translate-z-0 {
+  transform: translateZ(0);
+}
+
+.translate-z-40 {
+  transform: translateZ(40px);
+}
+
+.translate-z--40 {
+  transform: translateZ(-40px);
+}
+
+/* 10. SCROLL BEHAVIOR */
+html {
+  scroll-behavior: smooth;
+}
+
+/* 11. SELECTION */
+::selection {
+  background-color: var(--primary);
+  color: white;
+}
+
+/* 12. JUMBO BACKGROUND ANIMATION */
+@keyframes jumbo {
+  from {
+    background-position: 50% 50%, 50% 50%;
+  }
+
+  to {
+    background-position: 350% 50%, 350% 50%;
+  }
+}
+
+.jumbo {
+  --stripes: repeating-linear-gradient(100deg,
+      #fff 0%,
+      #fff 7%,
+      transparent 10%,
+      transparent 12%,
+      #fff 16%);
+  --stripesDark: repeating-linear-gradient(100deg,
+      #000 0%,
+      #000 7%,
+      transparent 10%,
+      transparent 12%,
+      #000 16%);
+  --rainbow: repeating-linear-gradient(100deg,
+      #60a5fa 10%,
+      #e879f9 15%,
+      #60a5fa 20%,
+      #5eead4 25%,
+      #60a5fa 30%);
+  background-image: var(--stripes), var(--rainbow);
+  background-size: 300%, 200%;
+  background-position: 50% 50%, 50% 50%;
+
+  filter: invert(100%);
+
+  mask-image: radial-gradient(ellipse at 100% 0%, black 40%, transparent 70%);
+
+  pointer-events: none;
+}
+
+.jumbo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: var(--stripes), var(--rainbow);
+  background-size: 200%, 100%;
+  animation: jumbo 60s linear infinite;
+  /* background-attachment: fixed; -> Removed because mixing fixed backgrounds with scroll causes severe paint lag */
+  mix-blend-mode: difference;
+  will-change: background-position;
+  transform: translateZ(0);
+  /* Force hardware acceleration */
+}
+
+.dark .jumbo {
+  background-image: var(--stripesDark), var(--rainbow);
+  filter: blur(10px) opacity(50%) saturate(200%);
+}
+
+.dark .jumbo::after {
+  background-image: var(--stripesDark), var(--rainbow);
+}
+
+/* 13. SPOTLIGHT TEXT EFFECT */
+/* 14. PREMIUM BORDER SPOTLIGHT (Final Tuned) */
+.spotlight-premium {
+  position: relative;
+  display: inline-block;
+  isolation: isolate;
+  z-index: 10;
+}
+
+/* The Beam (Triangle) */
+.spotlight-premium::before {
+  content: '';
+  position: absolute;
+  top: -350px;
+  /* Slightly lower for better connection */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-style: solid;
+  /* Elegant Geometry: Tall and narrower base */
+  border-width: 0 90px 400px 90px;
+
+  /* PREMIUM TUNING:
+     - Ghostly White Mist (10% Opacity)
+     - This creates the "Volumetric" feel without blocking text.
+  */
+  border-color: transparent transparent rgba(255, 255, 255, 0.1) transparent;
+
+  filter: blur(25px);
+  /* Heavy blur for atmosphere */
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* The Pool (Reflection) */
+.spotlight-premium::after {
+  content: '';
+  position: absolute;
+  bottom: -25px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 160%;
+  height: 50px;
+  /* Subtle glow at the base */
+  background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
+  border-radius: 50%;
+  filter: blur(15px);
+  pointer-events: none;
+  z-index: -1;
+}
