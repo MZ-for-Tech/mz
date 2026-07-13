@@ -177,7 +177,7 @@
 
 .heroBtnSecondary {
   background: transparent;
-  border: 1px solid rgba(245, 240, 232, 0.2);
+  border: 1px solid var(--color-border);
   color: var(--color-text);
   border-radius: 100px;
   padding: 16px 32px;
@@ -193,7 +193,7 @@
 }
 
 .heroBtnSecondary:hover {
-  border-color: rgba(245, 240, 232, 0.6);
+  border-color: var(--color-text);
   transform: translateY(-4px);
 }
 

@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { gsap } from 'gsap';
+import ThemeToggle from '../ThemeToggle/ThemeToggle';
 import './PillNav.css';
 
 export type PillNavItem = {
@@ -296,7 +297,11 @@ const PillNav: React.FC<PillNavProps> = ({
     <div className="pill-nav-container">
       {/* --- DESKTOP NAV --- */}
       <nav className={`pill-nav desktop-only ${className}`} aria-label="Primary Desktop" style={cssVars}>
-
+        {logo && (
+          <Link href="/" className="pill-logo" ref={logoRef} onMouseEnter={() => handleLogoEnter(false)}>
+            <Image src={logo} alt={logoAlt} width={100} height={20} ref={logoImgRef} />
+          </Link>
+        )}
 
         <div className="pill-nav-items" ref={navItemsRef} style={{ width: 0, overflow: 'hidden' }}>
           <ul className="pill-list" role="menubar">
@@ -354,13 +359,20 @@ const PillNav: React.FC<PillNavProps> = ({
         >
           {isDesktopMenuOpen ? 'CLOSE' : 'MENU'}
         </button>
+        <ThemeToggle />
       </nav>
 
       {/* --- MOBILE NAV (CardNav expanding pattern) --- */}
       <nav className={`mobile-pill-nav mobile-only ${isMobileMenuOpen ? 'open' : ''} ${className}`} ref={mobileNavRef} style={cssVars}>
         <div className="mobile-pill-nav-top">
+          {logo && (
+            <Link href="/" className="mobile-pill-logo" onMouseEnter={() => handleLogoEnter(true)}>
+              <Image src={logo} alt={logoAlt} width={80} height={16} ref={mobileLogoImgRef} />
+            </Link>
+          )}
           <div style={{ flex: 1 }}></div>
 
+          <ThemeToggle />
           <button
             className="mobile-menu-button"
             onClick={toggleMobileMenu}

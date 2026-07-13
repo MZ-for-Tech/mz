@@ -16,6 +16,7 @@ precision lowp float;
 uniform vec2 uResolution;
 uniform float uTime;
 uniform vec3 uPrimaryColor;
+uniform vec3 uBackgroundColor;
 uniform float uNoise;
 uniform float uScan;
 uniform float uScanFreq;
@@ -71,7 +72,7 @@ void main(){
     
     // Calculate luminance to map it to our primary color
     float luminance = dot(col.rgb, vec3(0.299, 0.587, 0.114));
-    col.rgb = mix(vec3(0.0), uPrimaryColor, luminance * 2.2);
+    col.rgb = mix(uBackgroundColor, uPrimaryColor, luminance * 2.2);
     
     float scanline_val=sin(gl_FragCoord.y*uScanFreq)*0.5+0.5;
     col.rgb*=1.-(scanline_val*scanline_val)*uScan;
@@ -82,6 +83,7 @@ void main(){
 
 type DarkVeilProps = {
   primaryColor?: string;
+  backgroundColor?: string;
   noiseIntensity?: number;
   scanlineIntensity?: number;
   speed?: number;
@@ -91,6 +93,7 @@ type DarkVeilProps = {
 
 export default function DarkVeil({
   primaryColor = "#afc020",
+  backgroundColor = "#000000",
   noiseIntensity = 0.08,
   scanlineIntensity = 0.05,
   scanlineFrequency = 0.01,
@@ -118,6 +121,7 @@ export default function DarkVeil({
         uResolution: { value: new Vec2() },
         uMouse: { value: new Vec2(window.innerWidth/2, window.innerHeight/2) },
         uPrimaryColor: { value: new Color(primaryColor) },
+        uBackgroundColor: { value: new Color(backgroundColor) },
         uNoise: { value: noiseIntensity },
         uScan: { value: scanlineIntensity },
         uScanFreq: { value: scanlineFrequency },
@@ -137,6 +141,25 @@ export default function DarkVeil({
 
     window.addEventListener('resize', resize);
     let initialResizeFrame = requestAnimationFrame(resize);
+
+    // Watch for theme changes
+    const updateThemeColor = () => {
+      const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+      program.uniforms.uBackgroundColor.value.set(isLight ? '#ffe78d' : '#000000');
+    };
+    
+    // Initial check
+    updateThemeColor();
+    
+    const themeObserver = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.attributeName === 'data-theme') {
+          updateThemeColor();
+        }
+      });
+    });
+    
+    themeObserver.observe(document.documentElement, { attributes: true });
 
     const mouse = new Vec2(window.innerWidth/2, window.innerHeight/2);
     const targetMouse = new Vec2(window.innerWidth/2, window.innerHeight/2);
@@ -171,12 +194,13 @@ export default function DarkVeil({
     observer.observe(parent);
 
     return () => {
+      themeObserver.disconnect();
       observer.disconnect();
       cancelAnimationFrame(frame);
       cancelAnimationFrame(initialResizeFrame);
       window.removeEventListener('resize', resize);
       window.removeEventListener('mousemove', onMouseMove);
     };
-  }, [primaryColor, noiseIntensity, scanlineIntensity, speed, scanlineFrequency, warpAmount]);
+  }, [primaryColor, backgroundColor, noiseIntensity, scanlineIntensity, speed, scanlineFrequency, warpAmount]);
   return <canvas ref={ref} className="darkveil-canvas" />;
 }

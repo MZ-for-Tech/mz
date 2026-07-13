@@ -152,10 +152,10 @@ export default function Home() {
             logo="/logo.png"
             logoAlt="MZ Logo"
             items={NAV_ITEMS}
-            baseColor="#0D0F08"
-            pillColor="#F5F0E8"
+            baseColor="var(--color-bg)"
+            pillColor="var(--color-text)"
             hoveredPillTextColor="var(--color-acid-green)"
-            pillTextColor="#0D0F08"
+            pillTextColor="var(--color-bg)"
           />
 
           {/* Sticky Hero Wrapper */}
@@ -258,7 +258,7 @@ export default function Home() {
                       <BorderGlow
                         edgeSensitivity={30}
                         glowColor="78 63 44"
-                        backgroundColor="#141508"
+                        backgroundColor="var(--color-bg-light)"
                         borderRadius={20}
                         glowRadius={40}
                         glowIntensity={1.0}

@@ -36,7 +36,7 @@ export default function PremiumShowcase() {
         height="35vh"
         strength={2}
         divCount={5}
-        curve="linear"
+        curve="bezier"
         exponential={true}
         animated="scroll"
         opacity={1}

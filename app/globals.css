@@ -16,8 +16,7 @@
   --color-tnh-text: #1A1208;
   --color-tnh-accent: #8B1A1A;
   --color-footer-bg: #ffe78d;
-
-  /* Typography */
+/* Typography */
   --font-base: var(--font-geist), system-ui, sans-serif;
   --font-code: var(--font-mono), monospace;
   --font-heading: var(--font-geist), system-ui, sans-serif;
@@ -30,6 +29,16 @@
   
   --spacing-container: 8vw;
 }
+
+:root[data-theme="light"] {
+  --color-bg: #ffe78d;
+  --color-bg-light: #f5d76e;
+  --color-border: rgba(13, 15, 8, 0.15);
+  --color-text: #0D0F08;
+  --color-text-muted: rgba(13, 15, 8, 0.6);
+  --color-acid-green: #afc020;
+}
+
 
 @media (max-width: 1024px) {
   :root {
