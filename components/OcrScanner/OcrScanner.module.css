@@ -1,0 +1,305 @@
+.scannerContainer {
+  position: relative;
+  width: 100%;
+  height: 560px;
+  background-color: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-code);
+  contain: layout style paint;
+  /* Removed transform to prevent overflow */
+}
+
+/* Subtle grid behind the animation */
+.scannerContainer::before {
+  content: "";
+  position: absolute;
+  inset: -100px;
+  background-image: 
+    linear-gradient(rgba(141, 184, 42, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(141, 184, 42, 0.05) 1px, transparent 1px);
+  background-size: 40px 40px;
+  background-position: center center;
+  mask-image: radial-gradient(circle at center, black 20%, transparent 60%);
+  -webkit-mask-image: radial-gradient(circle at center, black 20%, transparent 60%);
+  pointer-events: none;
+}
+
+.document {
+  position: absolute;
+  width: 320px;
+  height: 400px;
+  background: #111;
+  border: 1px solid #222;
+  border-radius: 6px;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  animation: docFade 8s infinite;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+  will-change: transform, opacity;
+}
+
+@keyframes docFade {
+  0%, 35% { opacity: 1; transform: scale(1); }
+  40%, 95% { opacity: 0; transform: scale(0.95); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+.scanLine {
+  position: absolute;
+  top: 0;
+  left: -10%;
+  width: 120%;
+  height: 4px;
+  background-color: var(--color-acid-green);
+  box-shadow: 0 0 20px var(--color-acid-green);
+  animation: scan 8s infinite;
+  z-index: 10;
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+@keyframes scan {
+  0%, 5% { top: -5%; opacity: 0; }
+  8% { opacity: 1; }
+  32% { top: 105%; opacity: 1; }
+  35%, 100% { top: 105%; opacity: 0; }
+}
+
+.block {
+  position: relative;
+  width: 100%;
+}
+
+.wireframeContent {
+  width: 100%;
+  background: #222;
+  border-radius: 4px;
+}
+
+.headerBlock .wireframeContent {
+  height: 40px;
+  width: 70%;
+}
+
+.textBlock .wireframeContent {
+  height: 80px;
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.line {
+  height: 12px;
+  background: #222;
+  border-radius: 4px;
+  width: 100%;
+}
+.line:last-child { width: 60%; }
+
+.tableBlock .wireframeContent {
+  height: 100px;
+  background: transparent;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 4px;
+  height: 100%;
+  border: 1px solid #222;
+  padding: 4px;
+}
+.grid > div {
+  background: #222;
+  border-radius: 2px;
+}
+
+.boundingBox {
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  right: -10px;
+  bottom: -10px;
+  border: 1px solid var(--color-acid-green);
+  background: rgba(141, 184, 42, 0.05);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.label {
+  position: absolute;
+  top: -24px;
+  right: -6px;
+  background: var(--color-acid-green);
+  color: #000;
+  font-size: 0.9rem;
+  padding: 4px 8px;
+  font-weight: bold;
+}
+
+/* Delay bounding box reveals based on scan line position */
+.headerBlock .boundingBox { animation: bboxRevealHeader 8s infinite; }
+.textBlock .boundingBox { animation: bboxRevealText 8s infinite; }
+.tableBlock .boundingBox { animation: bboxRevealTable 8s infinite; }
+
+@keyframes bboxRevealHeader {
+  0%, 12% { opacity: 0; }
+  14%, 35% { opacity: 1; }
+  40%, 100% { opacity: 0; }
+}
+
+@keyframes bboxRevealText {
+  0%, 20% { opacity: 0; }
+  22%, 35% { opacity: 1; }
+  40%, 100% { opacity: 0; }
+}
+
+@keyframes bboxRevealTable {
+  0%, 26% { opacity: 0; }
+  28%, 35% { opacity: 1; }
+  40%, 100% { opacity: 0; }
+}
+
+/* Output Code (Markdown) */
+.outputCode {
+  position: absolute;
+  width: 320px;
+  color: var(--color-text-muted);
+  font-size: 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  opacity: 0;
+  animation: codeFade 8s infinite;
+  background: #0a0a0a;
+  padding: 30px;
+  border-radius: 8px;
+  border: 1px solid #222;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+  will-change: transform, opacity;
+}
+
+.outputCode span:first-child {
+  color: var(--color-acid-green);
+  margin-bottom: 8px;
+}
+
+@keyframes codeFade {
+  0%, 35% { opacity: 0; transform: translateY(20px) scale(0.95); }
+  40%, 65% { opacity: 1; transform: translateY(0) scale(1); }
+  70%, 100% { opacity: 0; transform: translateY(-20px) scale(1.05); }
+}
+
+/* Output PDF */
+.outputPdf {
+  position: absolute;
+  width: 300px;
+  height: 400px;
+  background: #fff;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  padding: 30px;
+  opacity: 0;
+  animation: pdfFade 8s infinite;
+  box-shadow: 0 20px 60px rgba(141, 184, 42, 0.15);
+  will-change: transform, opacity;
+}
+
+.pdfHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 30px;
+  border-bottom: 2px solid #e0e0e0;
+  padding-bottom: 20px;
+}
+
+.pdfIcon {
+  background: #d32f2f;
+  color: white;
+  font-size: 0.9rem;
+  padding: 6px 10px;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+.pdfText {
+  color: #333;
+  font-size: 0.9rem;
+  font-weight: 800;
+  font-family: var(--font-sans);
+  letter-spacing: 0.05em;
+}
+
+.pdfLines {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.pdfLine {
+  height: 10px;
+  background: #e0e0e0;
+  width: 100%;
+  border-radius: 5px;
+}
+.pdfLine:nth-child(2) { width: 70%; }
+.pdfLine:nth-child(3) { width: 90%; margin-bottom: 20px; }
+
+.pdfTable {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 6px;
+  height: 100px;
+  border: 2px solid #e0e0e0;
+  padding: 6px;
+  border-radius: 6px;
+}
+.pdfTable > div {
+  background: #f5f5f5;
+  border-radius: 3px;
+}
+
+@keyframes pdfFade {
+  0%, 65% { opacity: 0; transform: scale(0.9); }
+  70%, 95% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1.05); }
+}
+
+@media (max-width: 768px) {
+  .scannerContainer {
+    height: 320px;
+  }
+  
+  /* Use transform for mobile since screen is small and overflow can be hidden */
+  .document, .outputCode, .outputPdf {
+    transform: scale(0.6);
+  }
+  
+  @keyframes docFade {
+    0%, 35% { opacity: 1; transform: scale(0.6); }
+    40%, 95% { opacity: 0; transform: scale(0.55); }
+    100% { opacity: 1; transform: scale(0.6); }
+  }
+
+  @keyframes codeFade {
+    0%, 35% { opacity: 0; transform: translateY(10px) scale(0.55); }
+    40%, 65% { opacity: 1; transform: translateY(0) scale(0.6); }
+    70%, 100% { opacity: 0; transform: translateY(-10px) scale(0.65); }
+  }
+
+  @keyframes pdfFade {
+    0%, 65% { opacity: 0; transform: scale(0.55); }
+    70%, 95% { opacity: 1; transform: scale(0.6); }
+    100% { opacity: 0; transform: scale(0.65); }
+  }
+}

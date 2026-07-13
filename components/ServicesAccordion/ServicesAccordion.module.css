@@ -1,0 +1,234 @@
+.section {
+  width: 100%;
+  padding: 120px 8vw;
+  color: var(--color-text, #F5F0E8);
+  position: relative;
+  z-index: 10;
+}
+
+.sectionHeader {
+  font-size: 2.5rem;
+  font-family: var(--font-heading);
+  font-weight: 500;
+  color: var(--color-text, #F5F0E8);
+  margin-bottom: 3rem;
+  letter-spacing: -0.02em;
+}
+
+.accordionContainer {
+  display: flex;
+  gap: 24px;
+  height: 500px;
+  width: 100%;
+  align-items: stretch;
+}
+
+.accordionItem {
+  flex-shrink: 0;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.03) 0%, rgba(0, 0, 0, 0.4) 100%);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  filter: drop-shadow(0 8px 32px rgba(0,0,0,0.4));
+  padding: 50px 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: background 0.4s ease, transform 0.4s ease, filter 0.4s ease;
+  overflow: hidden;
+  cursor: pointer;
+  position: relative;
+  will-change: width, filter, transform;
+}
+
+.accordionItem::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url('data:image/svg+xml,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)"/%3E%3C/svg%3E');
+  opacity: 0.025;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.accordionItem > * {
+  position: relative;
+  z-index: 1;
+}
+
+.shapeM {
+  clip-path: polygon(
+    0% 0%, 
+    140px 0%, 
+    50% 150px, 
+    calc(100% - 140px) 0%, 
+    100% 0%, 
+    100% 100%, 
+    0% 100%
+  );
+  border-bottom-left-radius: 24px;
+  border-bottom-right-radius: 24px;
+}
+
+.shapeZ {
+  clip-path: polygon(
+    0% 0%, 
+    100% 0%, 
+    100% 60px, 
+    calc(100% - 200px) calc(100% - 100px), 
+    100% calc(100% - 100px), 
+    100% 100%, 
+    0% 100%
+  );
+  border-bottom-left-radius: 24px;
+}
+
+/* Ensure text doesn't overflow into the Z slash */
+.shapeZ .itemContent, .shapeZ .itemHeader {
+  max-width: calc(100% - 220px);
+}
+
+.shapeDot {
+  /* Pristine block with a massive curve representing a period/dot */
+  border-top-right-radius: 120px;
+  border-bottom-left-radius: 24px;
+  border-bottom-right-radius: 24px;
+  border-top-left-radius: 24px;
+}
+
+.accordionItem:hover {
+  filter: drop-shadow(0 8px 30px rgba(141, 184, 42, 0.15));
+  background: linear-gradient(145deg, rgba(141, 184, 42, 0.06) 0%, rgba(0, 0, 0, 0.6) 100%);
+  transform: translateY(-4px);
+}
+
+.accordionItem.active {
+  background: linear-gradient(145deg, rgba(141, 184, 42, 0.12) 0%, rgba(0, 0, 0, 0.6) 100%);
+  filter: drop-shadow(0 10px 40px rgba(141, 184, 42, 0.25));
+}
+
+.itemHeader {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.itemNumber {
+  font-family: var(--font-code);
+  font-size: 1rem;
+  color: var(--color-acid-green);
+}
+
+.itemPillar {
+  font-size: 1rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(245, 240, 232, 0.5);
+  transition: color 0.3s ease;
+}
+
+.accordionItem.active .itemPillar {
+  color: var(--color-text, #F5F0E8);
+}
+
+.itemContent {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: auto; /* Push to bottom if needed, but let's just let it naturally sit */
+}
+
+.itemTitle {
+  font-size: clamp(1.5rem, 3vw, 2.5rem);
+  font-weight: 500;
+  margin: 0;
+  line-height: 1.1;
+  white-space: nowrap;
+}
+
+.itemTagline {
+  font-family: var(--font-code);
+  font-size: 0.9rem;
+  color: rgba(245, 240, 232, 0.5);
+  margin: 0;
+  white-space: nowrap;
+}
+
+.capabilitiesListWrapper {
+  /* Opacity and y are animated by GSAP */
+  will-change: opacity, transform;
+  margin-top: 24px;
+}
+
+/* No CSS active state needed — GSAP drives it */
+
+.capabilitiesList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.capabilityItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  font-size: clamp(1rem, 1.2vw, 1.1rem);
+  color: rgba(245, 240, 232, 0.8);
+  line-height: 1.4;
+  white-space: nowrap;
+  transition: color 0.2s ease;
+}
+
+.capabilityItem:hover {
+  color: var(--color-acid-green);
+}
+
+.bullet {
+  margin-top: 8px;
+  width: 6px;
+  height: 6px;
+  background-color: var(--color-acid-green);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* Mobile: Stacked Rows */
+@media (max-width: 1024px) {
+  .section {
+    padding: 80px 5vw;
+  }
+
+  .accordionContainer {
+    flex-direction: column;
+    height: auto;
+    gap: 16px;
+  }
+  
+  .accordionItem {
+    flex: none !important;
+    height: auto;
+    padding: 32px 24px;
+    border-radius: 16px;
+  }
+  
+  .accordionItem.active {
+    flex: none !important;
+  }
+  
+  /* On mobile, all items are permanently expanded */
+  .capabilitiesListWrapper,
+  .accordionItem.active .capabilitiesListWrapper {
+    opacity: 1;
+    transform: none;
+    max-height: none;
+    pointer-events: auto;
+    margin-top: 24px;
+  }
+  
+  .itemTitle, .itemTagline, .capabilityItem {
+    white-space: normal;
+  }
+}

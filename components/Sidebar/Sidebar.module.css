@@ -1,0 +1,82 @@
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 80px;
+  height: 100vh;
+  background-color: var(--color-bg, #0D0F08);
+  border-right: 1px solid rgba(245, 240, 232, 0.08);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 40px 0;
+  color: var(--color-text, #F5F0E8);
+}
+
+.logoWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 48px;
+  height: 48px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.logoImage {
+  object-fit: contain;
+  transition: all 0.3s ease;
+  filter: brightness(0) invert(1);
+}
+
+.logoWrapper:hover {
+  transform: translateY(-2px);
+  opacity: 0.8;
+}
+
+.middleSection {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 24px;
+}
+
+.verticalLine {
+  width: 1px;
+  height: 60px;
+  background-color: rgba(245, 240, 232, 0.15);
+}
+
+.verticalText {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  font-family: var(--font-mono), monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  color: rgba(245, 240, 232, 0.4);
+  text-transform: uppercase;
+}
+
+.bottomSection {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.bottomText {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.8rem;
+  color: rgba(245, 240, 232, 0.4);
+  letter-spacing: 0.1em;
+}
+
+/* Hide on mobile screens to preserve space */
+@media (max-width: 1024px) {
+  .sidebar {
+    display: none;
+  }
+}

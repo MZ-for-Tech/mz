@@ -1,0 +1,344 @@
+.container {
+  min-height: 100vh;
+  background-color: transparent;
+  color: var(--color-text, #F5F0E8);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 10;
+}
+
+.main {
+  flex: 1;
+  max-width: 1600px;
+  margin: 0 auto;
+  width: 100%;
+  padding: 160px 40px 140px;
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 80px;
+  align-items: flex-start;
+}
+
+/* Left Column (Sticky) */
+.leftCol {
+  position: sticky;
+  top: 160px;
+  display: flex;
+  flex-direction: column;
+}
+
+.title {
+  font-size: clamp(2.5rem, 4.5vw, 4.5rem);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin: 0 0 60px 0;
+}
+
+.contactDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.contactLabel {
+  color: rgba(245, 240, 232, 0.4);
+  font-size: 0.9rem;
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 0.1em;
+}
+
+.contactEmail {
+  font-size: clamp(1.2rem, 2vw, 1.8rem);
+  font-weight: 400;
+  color: var(--color-text, #F5F0E8);
+  text-decoration: none;
+  transition: color 0.3s ease;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.contactEmail:hover {
+  color: var(--color-accent, var(--color-acid-green));
+}
+
+.faqText {
+  margin-top: 24px;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: rgba(245, 240, 232, 0.5);
+}
+
+.faqLink {
+  color: var(--color-text, #F5F0E8);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(245, 240, 232, 0.3);
+  transition: all 0.3s ease;
+  padding-bottom: 2px;
+}
+
+.faqLink:hover {
+  color: var(--color-accent, var(--color-acid-green));
+  border-bottom-color: var(--color-accent, var(--color-acid-green));
+}
+
+/* Right Column (Form) */
+.rightCol {
+  display: flex;
+  flex-direction: column;
+  padding-top: 10px; /* Aligns with title */
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 80px;
+}
+
+.formSection {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.sectionTitle {
+  font-size: 1rem;
+  font-family: 'JetBrains Mono', monospace;
+  color: rgba(245, 240, 232, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid rgba(245, 240, 232, 0.1);
+  padding-bottom: 20px;
+  margin: 0;
+}
+
+/* Categories */
+.categoriesList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.categoryPill {
+  background: transparent;
+  border: 1px solid rgba(245, 240, 232, 0.2);
+  color: var(--color-text, #F5F0E8);
+  padding: 16px 32px;
+  border-radius: 100px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.categoryPill:hover {
+  border-color: rgba(245, 240, 232, 0.6);
+  transform: translateY(-2px);
+}
+
+.categoryPill.selected {
+  background: var(--color-text, #F5F0E8);
+  color: var(--color-bg, #0D0F08);
+  border-color: var(--color-text, #F5F0E8);
+}
+
+/* Inputs */
+.inputRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.label {
+  font-size: 1rem;
+  color: rgba(245, 240, 232, 0.7);
+  display: flex;
+  align-items: center;
+}
+
+.input, .textarea {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(245, 240, 232, 0.1);
+  border-radius: 12px;
+  color: var(--color-text, #F5F0E8);
+  font-size: 1.1rem;
+  padding: 16px 20px;
+  font-family: inherit;
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+.input::placeholder, .textarea::placeholder {
+  color: rgba(245, 240, 232, 0.2);
+}
+
+.input:focus, .textarea:focus {
+  outline: none;
+  border-color: var(--color-accent, var(--color-acid-green));
+  background: rgba(141, 184, 42, 0.05);
+}
+
+.textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+/* File Input */
+.fileInput {
+  display: none;
+}
+
+.fileLabel {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px dashed rgba(245, 240, 232, 0.3);
+  border-radius: 12px;
+  color: rgba(245, 240, 232, 0.6);
+  font-size: 1.1rem;
+  padding: 16px 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fileLabel:hover {
+  border-color: var(--color-accent, var(--color-acid-green));
+  color: var(--color-text, #F5F0E8);
+  background: rgba(141, 184, 42, 0.05);
+}
+
+/* Submit Section */
+.submitSection {
+  gap: 30px;
+  border-top: 1px solid rgba(245, 240, 232, 0.1);
+  padding-top: 40px;
+}
+
+.checkboxGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.checkboxLabel {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  font-size: 0.95rem;
+  color: rgba(245, 240, 232, 0.6);
+  cursor: pointer;
+  position: relative;
+  line-height: 1.5;
+}
+
+.checkbox {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.checkmark {
+  min-width: 20px;
+  height: 20px;
+  border: 1px solid rgba(245, 240, 232, 0.3);
+  border-radius: 4px; /* More modern than full circle */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  margin-top: 2px;
+}
+
+.checkboxLabel:hover .checkmark {
+  border-color: rgba(245, 240, 232, 0.8);
+}
+
+.checkbox:checked ~ .checkmark {
+  background-color: var(--color-text, #F5F0E8);
+  border-color: var(--color-text, #F5F0E8);
+}
+
+.checkbox:checked ~ .checkmark::after {
+  content: "";
+  width: 10px;
+  height: 10px;
+  background: var(--color-bg, #0D0F08);
+  border-radius: 2px;
+}
+
+.submitButton {
+  background: var(--color-accent, var(--color-acid-green));
+  color: var(--color-bg, #0D0F08);
+  border: none;
+  border-radius: 100px;
+  padding: 20px 48px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  align-self: flex-start;
+  margin-top: 10px;
+}
+
+.submitButton:hover {
+  background: var(--color-text, #F5F0E8);
+  transform: translateY(-4px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.submitIcon {
+  transition: transform 0.3s ease;
+}
+
+.submitButton:hover .submitIcon {
+  transform: translateX(6px) scale(1.1);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .main {
+    grid-template-columns: 1fr;
+    gap: 60px;
+  }
+  
+  .leftCol {
+    position: relative;
+    top: 0;
+  }
+  
+  .title {
+    margin-bottom: 30px;
+  }
+}
+
+@media (max-width: 768px) {
+  .main {
+    padding: 120px 20px 80px;
+  }
+
+  .inputRow {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  
+  .categoryPill {
+    padding: 12px 24px;
+    font-size: 1rem;
+  }
+  
+  .submitButton {
+    width: 100%;
+  }
+}

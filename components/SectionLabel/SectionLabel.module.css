@@ -1,0 +1,7 @@
+.sectionLabel {
+  font-family: var(--font-code);
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+}

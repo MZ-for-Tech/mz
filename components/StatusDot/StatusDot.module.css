@@ -1,0 +1,27 @@
+.statusDot {
+  font-family: var(--font-code);
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  letter-spacing: 0.05em;
+}
+
+.statusDot.active {
+  color: var(--color-acid-green);
+}
+
+.dot {
+  font-size: 0.6rem;
+}
+
+.statusDot.active .dot {
+  animation: pulse 2s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.2; }
+  100% { opacity: 1; }
+}
