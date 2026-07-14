@@ -1,5 +1,5 @@
-import React from 'react';
-import Image from 'next/image';
+
+import { MzLogo } from '@/components/Logo/MzLogo';
 import Link from 'next/link';
 import styles from './Sidebar.module.css';
 
@@ -8,9 +8,7 @@ export function Sidebar() {
     <aside className={styles.sidebar}>
       {/* Top: Logo */}
       <Link href="/" className={styles.logoWrapper}>
-        <Image 
-          src="/logo.png" 
-          alt="MZ Logo" 
+        <MzLogo 
           width={40} 
           height={40} 
           className={styles.logoImage} 

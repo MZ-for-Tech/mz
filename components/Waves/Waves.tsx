@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, CSSProperties } from 'react';
+import { useRef, useEffect, CSSProperties, FC } from 'react';
 import './Waves.css';
 
 class Grad {
@@ -58,7 +58,7 @@ class Noise {
     seed = Math.floor(seed);
     if (seed < 256) seed |= seed << 8;
     for (let i = 0; i < 256; i++) {
-      let v = i & 1 ? this.p[i] ^ (seed & 255) : this.p[i] ^ ((seed >> 8) & 255);
+      const v = i & 1 ? this.p[i] ^ (seed & 255) : this.p[i] ^ ((seed >> 8) & 255);
       this.perm[i] = this.perm[i + 256] = v;
       this.gradP[i] = this.gradP[i + 256] = this.grad3[v % 12];
     }
@@ -134,7 +134,7 @@ interface WavesProps {
   className?: string;
 }
 
-const Waves: React.FC<WavesProps> = ({
+const Waves: FC<WavesProps> = ({
   lineColor = 'black',
   backgroundColor = 'transparent',
   waveSpeedX = 0.0125,
@@ -163,6 +163,7 @@ const Waves: React.FC<WavesProps> = ({
     left: 0,
     top: 0
   });
+  // eslint-disable-next-line react-hooks/purity
   const noiseRef = useRef(new Noise(Math.random()));
   const linesRef = useRef<Point[][]>([]);
   const mouseRef = useRef<Mouse>({

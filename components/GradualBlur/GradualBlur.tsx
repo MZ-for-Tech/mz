@@ -1,4 +1,5 @@
-import React, { CSSProperties, useEffect, useRef, useState, useMemo, PropsWithChildren } from 'react';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { CSSProperties, useEffect, useRef, useState, useMemo, PropsWithChildren, FC, RefObject, ReactNode, memo } from 'react';
 
 import './GradualBlur.css';
 
@@ -144,7 +145,7 @@ const useResponsiveDimension = (
   return responsive ? val : (config as any)[key];
 };
 
-const useIntersectionObserver = (ref: React.RefObject<HTMLDivElement | null>, shouldObserve: boolean = false) => {
+const useIntersectionObserver = (ref: RefObject<HTMLDivElement | null>, shouldObserve: boolean = false) => {
   const [isVisible, setIsVisible] = useState(!shouldObserve);
 
   useEffect(() => {
@@ -159,7 +160,7 @@ const useIntersectionObserver = (ref: React.RefObject<HTMLDivElement | null>, sh
   return isVisible;
 };
 
-const GradualBlur: React.FC<PropsWithChildren<GradualBlurProps>> = props => {
+const GradualBlur: FC<PropsWithChildren<GradualBlurProps>> = props => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isHovered, setIsHovered] = useState(false);
 
@@ -174,7 +175,7 @@ const GradualBlur: React.FC<PropsWithChildren<GradualBlurProps>> = props => {
   const isVisible = useIntersectionObserver(containerRef, config.animated === 'scroll');
 
   const blurDivs = useMemo(() => {
-    const divs: React.ReactNode[] = [];
+    const divs: ReactNode[] = [];
     const increment = 100 / config.divCount;
     const currentStrength =
       isHovered && config.hoverIntensity ? config.strength * config.hoverIntensity : config.strength;
@@ -284,7 +285,7 @@ const GradualBlur: React.FC<PropsWithChildren<GradualBlurProps>> = props => {
   );
 };
 
-const GradualBlurMemo = React.memo(GradualBlur);
+const GradualBlurMemo = memo(GradualBlur);
 GradualBlurMemo.displayName = 'GradualBlur';
 (GradualBlurMemo as any).PRESETS = PRESETS;
 (GradualBlurMemo as any).CURVE_FUNCTIONS = CURVE_FUNCTIONS;

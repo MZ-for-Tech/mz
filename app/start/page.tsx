@@ -22,8 +22,6 @@ const CATEGORIES = [
   "AI & Machine Learning",
   "Data Analysis",
   "Workshops",
-  "Document Intelligence",
-  "Prompt Engineering",
   "Research Collaboration"
 ];
 
@@ -88,8 +86,6 @@ export default function StartProjectPage() {
         </div>
 
         <PillNav
-          logo="/logo.png"
-          logoAlt="MZ Logo"
           items={NAV_ITEMS}
           baseColor="#0D0F08"
           pillColor="#F5F0E8"

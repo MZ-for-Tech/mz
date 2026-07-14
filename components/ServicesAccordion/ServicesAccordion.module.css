@@ -1,7 +1,7 @@
 .section {
   width: 100%;
   padding: 120px 8vw;
-  color: var(--color-text, #F5F0E8);
+  color: var(--color-text, var(--color-text));
   position: relative;
   z-index: 10;
 }
@@ -10,22 +10,23 @@
   font-size: 2.5rem;
   font-family: var(--font-heading);
   font-weight: 500;
-  color: var(--color-text, #F5F0E8);
+  color: var(--color-text, var(--color-text));
   margin-bottom: 3rem;
   letter-spacing: -0.02em;
 }
 
-.accordionContainer {
+.cardSwapContainer {
   display: flex;
-  gap: 24px;
-  height: 500px;
+  justify-content: center;
+  align-items: center;
   width: 100%;
-  align-items: stretch;
+  margin-top: 2rem;
 }
 
 .accordionItem {
-  flex-shrink: 0;
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.03) 0%, rgba(0, 0, 0, 0.4) 100%);
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(145deg, rgba(var(--color-text-rgb), 0.03) 0%, rgba(0, 0, 0, 0.4) 100%);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   filter: drop-shadow(0 8px 32px rgba(0,0,0,0.4));
@@ -33,11 +34,11 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  transition: background 0.4s ease, transform 0.4s ease, filter 0.4s ease;
+  transition: background 0.4s ease, filter 0.4s ease;
   overflow: hidden;
   cursor: pointer;
   position: relative;
-  will-change: width, filter, transform;
+  will-change: filter, transform;
 }
 
 .accordionItem::before {
@@ -97,14 +98,25 @@
 }
 
 .accordionItem:hover {
-  filter: drop-shadow(0 8px 30px rgba(141, 184, 42, 0.15));
-  background: linear-gradient(145deg, rgba(141, 184, 42, 0.06) 0%, rgba(0, 0, 0, 0.6) 100%);
+  background: linear-gradient(145deg, rgba(141, 184, 42, 0.12) 0%, rgba(0, 0, 0, 0.6) 100%);
+  filter: drop-shadow(0 10px 40px rgba(141, 184, 42, 0.25));
   transform: translateY(-4px);
 }
 
-.accordionItem.active {
-  background: linear-gradient(145deg, rgba(141, 184, 42, 0.12) 0%, rgba(0, 0, 0, 0.6) 100%);
-  filter: drop-shadow(0 10px 40px rgba(141, 184, 42, 0.25));
+/* Light mode overrides for accordion cards */
+:global(:root[data-theme="light"]) .accordionItem {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.1) 100%);
+  filter: drop-shadow(0 8px 32px rgba(0, 0, 0, 0.05));
+}
+
+:global(:root[data-theme="light"]) .accordionItem::before {
+  opacity: 0.1;
+  mix-blend-mode: multiply;
+}
+
+:global(:root[data-theme="light"]) .accordionItem:hover {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.4) 100%);
+  filter: drop-shadow(0 10px 40px rgba(141, 184, 42, 0.3));
 }
 
 .itemHeader {
@@ -123,12 +135,7 @@
   font-size: 1rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: rgba(245, 240, 232, 0.5);
-  transition: color 0.3s ease;
-}
-
-.accordionItem.active .itemPillar {
-  color: var(--color-text, #F5F0E8);
+  color: var(--color-text, var(--color-text));
 }
 
 .itemContent {
@@ -149,18 +156,14 @@
 .itemTagline {
   font-family: var(--font-code);
   font-size: 0.9rem;
-  color: rgba(245, 240, 232, 0.5);
+  color: rgba(var(--color-text-rgb), 0.5);
   margin: 0;
   white-space: nowrap;
 }
 
 .capabilitiesListWrapper {
-  /* Opacity and y are animated by GSAP */
-  will-change: opacity, transform;
   margin-top: 24px;
 }
-
-/* No CSS active state needed — GSAP drives it */
 
 .capabilitiesList {
   list-style: none;
@@ -176,7 +179,7 @@
   align-items: flex-start;
   gap: 16px;
   font-size: clamp(1rem, 1.2vw, 1.1rem);
-  color: rgba(245, 240, 232, 0.8);
+  color: rgba(var(--color-text-rgb), 0.8);
   line-height: 1.4;
   white-space: nowrap;
   transition: color 0.2s ease;
@@ -201,31 +204,14 @@
     padding: 80px 5vw;
   }
 
-  .accordionContainer {
-    flex-direction: column;
-    height: auto;
-    gap: 16px;
-  }
-  
   .accordionItem {
-    flex: none !important;
-    height: auto;
     padding: 32px 24px;
     border-radius: 16px;
+    clip-path: none !important;
   }
   
-  .accordionItem.active {
-    flex: none !important;
-  }
-  
-  /* On mobile, all items are permanently expanded */
-  .capabilitiesListWrapper,
-  .accordionItem.active .capabilitiesListWrapper {
-    opacity: 1;
-    transform: none;
-    max-height: none;
-    pointer-events: auto;
-    margin-top: 24px;
+  .shapeZ .itemContent, .shapeZ .itemHeader {
+    max-width: 100%;
   }
   
   .itemTitle, .itemTagline, .capabilityItem {

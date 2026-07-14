@@ -1,0 +1,492 @@
+.container {
+  position: relative;
+  width: 100%;
+  height: 400px;
+  background-color: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-code);
+  contain: layout style paint;
+}
+
+.scaleWrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: scale(var(--scanner-scale, 1));
+}
+
+/* Base grid mask */
+.container::before {
+  content: "";
+  position: absolute;
+  inset: -50px;
+  background-image: 
+    linear-gradient(rgba(141, 184, 42, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(141, 184, 42, 0.05) 1px, transparent 1px);
+  background-size: 30px 30px;
+  background-position: center center;
+  mask-image: radial-gradient(circle at center, black 20%, transparent 60%);
+  -webkit-mask-image: radial-gradient(circle at center, black 20%, transparent 60%);
+  pointer-events: none;
+}
+
+/* ========================================= */
+/* ==== BUILD VISUAL (SOFTWARE NARRATIVE)==== */
+/* ========================================= */
+.buildContainer {
+  position: relative;
+  width: 320px;
+  height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* --- Stage 1: Terminal --- */
+.terminalWindow {
+  position: absolute;
+  width: 300px;
+  height: 200px;
+  background: #0a0a0a;
+  border: 1px solid #333;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+  animation: stage1Fade 8s infinite;
+  will-change: transform, opacity;
+}
+.windowHeader {
+  height: 24px;
+  background: #1a1a1a;
+  border-bottom: 1px solid #333;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  position: relative;
+}
+.dots { display: flex; gap: 6px; }
+.dots span { width: 8px; height: 8px; border-radius: 50%; background: #444; }
+.windowTitle {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #666;
+  font-size: 0.7rem;
+}
+.terminalBody { padding: 16px; display: flex; flex-direction: column; gap: 8px; }
+.cmd { color: #888; font-size: 0.9rem; opacity: 0; animation: cmdType 8s infinite; }
+.cmd:nth-child(1) { animation-delay: 0s; }
+.cmd:nth-child(2) { animation-delay: 0.5s; }
+.cmd:nth-child(3) { animation-delay: 1.0s; }
+.cmdSuccess { color: var(--color-acid-green); font-size: 0.9rem; opacity: 0; animation: cmdType 8s infinite; animation-delay: 1.5s; margin-top: 8px; }
+
+@keyframes cmdType {
+  0%, 5% { opacity: 0; transform: translateX(-10px); }
+  10%, 100% { opacity: 1; transform: translateX(0); }
+}
+
+/* --- Stage 2: Blueprint / Wireframe --- */
+.blueprintWindow {
+  position: absolute;
+  width: 320px;
+  height: 240px;
+  background: #111;
+  border: 1px solid var(--color-acid-green);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), 0 0 30px rgba(141, 184, 42, 0.1);
+  animation: stage2Fade 8s infinite;
+  will-change: transform, opacity;
+  opacity: 0;
+}
+.bpHeader { height: 30px; border-bottom: 1px solid rgba(141, 184, 42, 0.3); display: flex; align-items: center; padding: 0 16px; }
+.bpHeaderLine { width: 40px; height: 6px; background: rgba(141, 184, 42, 0.5); border-radius: 3px; }
+.bpBody { display: flex; flex: 1; }
+.bpSidebar { width: 60px; border-right: 1px solid rgba(141, 184, 42, 0.3); padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+.bpSidebarItem { width: 100%; height: 6px; background: rgba(141, 184, 42, 0.2); border-radius: 3px; }
+.bpContent { flex: 1; padding: 16px; display: flex; flex-direction: column; gap: 16px; }
+.bpChart { width: 100%; height: 80px; border: 1px dashed rgba(141, 184, 42, 0.5); border-radius: 4px; }
+.bpCards { display: flex; gap: 12px; }
+.bpCard { flex: 1; height: 60px; border: 1px dashed rgba(141, 184, 42, 0.5); border-radius: 4px; }
+.bpScanLine {
+  position: absolute; top: 0; left: 0; width: 100%; height: 2px;
+  background: var(--color-acid-green); box-shadow: 0 0 15px var(--color-acid-green);
+  animation: bpScan 8s infinite;
+}
+
+@keyframes bpScan {
+  0%, 30% { transform: translateY(-10px); opacity: 0; }
+  35% { opacity: 1; }
+  55% { transform: translateY(240px); opacity: 1; }
+  60%, 100% { transform: translateY(240px); opacity: 0; }
+}
+
+/* --- Stage 3: Polished Dashboard --- */
+.polishedWindow {
+  position: absolute;
+  width: 340px;
+  height: 260px;
+  background: #fff;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2), 0 0 40px rgba(141, 184, 42, 0.2);
+  animation: stage3Fade 8s infinite;
+  will-change: transform, opacity;
+  opacity: 0;
+}
+.polHeader { height: 36px; background: #f5f5f5; border-bottom: 1px solid #e0e0e0; display: flex; align-items: center; padding: 0 16px; gap: 12px; }
+.polLogo { width: 20px; height: 20px; background: #333; border-radius: 4px; }
+.polHeaderNav { width: 80px; height: 8px; background: #ddd; border-radius: 4px; }
+.polBody { display: flex; flex: 1; }
+.polSidebar { width: 70px; background: #fafafa; border-right: 1px solid #e0e0e0; padding: 16px; display: flex; flex-direction: column; gap: 16px; }
+.polSidebarItem { width: 100%; height: 10px; background: #ddd; border-radius: 5px; }
+.polSidebarItem.active { background: var(--color-acid-green); }
+.polContent { flex: 1; padding: 16px; display: flex; flex-direction: column; gap: 16px; background: #fff; }
+.polWidget { width: 100%; height: 90px; background: #f5f5f5; border-radius: 6px; padding: 12px; display: flex; flex-direction: column; gap: 8px; }
+.polWidgetTitle { width: 60px; height: 8px; background: #ccc; border-radius: 4px; }
+.polGraph { flex: 1; background: linear-gradient(180deg, rgba(141, 184, 42, 0.2) 0%, transparent 100%); border-top: 2px solid var(--color-acid-green); border-radius: 2px; }
+.polGrid { display: flex; gap: 12px; }
+.polCard { flex: 1; height: 70px; background: #f5f5f5; border-radius: 6px; padding: 10px; display: flex; flex-direction: column; gap: 6px; }
+.polCardData { width: 80%; height: 12px; background: #333; border-radius: 6px; }
+.polCardLabel { width: 50%; height: 6px; background: #ccc; border-radius: 3px; }
+
+
+/* ========================================= */
+/* ==== DEPLOY VISUAL (COMPRESSION NARRATIVE) ======= */
+/* ========================================= */
+.deployContainer {
+  position: relative;
+  width: 320px;
+  height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* --- Shared Grid --- */
+.bloatNet {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 6px;
+  width: 240px;
+  margin: 0 auto;
+}
+.weightDot {
+  width: 100%;
+  aspect-ratio: 1;
+  background: #333;
+  border-radius: 2px;
+}
+
+/* --- Stage 1: Bloated Generic Model --- */
+.stage1Model {
+  position: absolute;
+  width: 280px;
+  background: #111;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+  animation: stage1Fade 8s infinite;
+  opacity: 0;
+}
+.bloatHeader {
+  color: #888;
+  font-size: 0.9rem;
+  font-weight: bold;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid #222;
+  padding-bottom: 8px;
+  text-align: center;
+}
+.bloatStats {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+}
+.statRed { color: #ff4444; }
+.statGreen { color: var(--color-acid-green); }
+
+/* --- Stage 2: Active Pruning --- */
+.stage2Pruning {
+  position: absolute;
+  width: 280px;
+  background: #0a0a0a;
+  border: 1px solid #222;
+  border-radius: 8px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+  animation: stage2Fade 8s infinite;
+  opacity: 0;
+  overflow: hidden;
+}
+.pruneLaser {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--color-acid-green);
+  box-shadow: 0 0 15px var(--color-acid-green);
+  animation: scanLaser 8s infinite;
+  z-index: 10;
+}
+@keyframes scanLaser {
+  0%, 15% { top: -10px; opacity: 0; }
+  20% { opacity: 1; }
+  50% { top: 110%; opacity: 1; }
+  55%, 100% { top: 110%; opacity: 0; }
+}
+
+.nodePruned {
+  width: 100%;
+  aspect-ratio: 1;
+  background: #333;
+  border-radius: 2px;
+  animation: pruneNode 8s infinite;
+  will-change: transform, background-color, opacity;
+}
+@keyframes pruneNode {
+  0%, 15% { background: #333; box-shadow: none; transform: scale(1) translateY(0); opacity: 1; }
+  25%, 35% { background: #ff4444; box-shadow: 0 0 12px #ff4444; transform: scale(1.1); opacity: 1; }
+  45%, 100% { background: #ff4444; box-shadow: none; transform: scale(0) translateY(20px); opacity: 0; }
+}
+
+.nodeKept {
+  width: 100%;
+  aspect-ratio: 1;
+  background: #333;
+  border-radius: 2px;
+  animation: keepNode 8s infinite;
+  will-change: background-color, box-shadow;
+}
+@keyframes keepNode {
+  0%, 30% { background: #333; box-shadow: none; }
+  40%, 100% { background: var(--color-acid-green); box-shadow: 0 0 12px var(--color-acid-green); }
+}
+
+
+/* --- Stage 3: Specialized Model --- */
+.stage3Specialized {
+  position: absolute;
+  width: 260px;
+  background: #0a0a0a;
+  border: 1px solid var(--color-acid-green);
+  border-radius: 8px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(141, 184, 42, 0.15);
+  animation: stage3Fade 8s infinite;
+  opacity: 0;
+}
+.specHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #fff;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  font-size: 1rem;
+}
+.specIcon {
+  width: 16px;
+  height: 16px;
+  background: var(--color-acid-green);
+  border-radius: 50%;
+  box-shadow: 0 0 15px var(--color-acid-green);
+}
+.specStats {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: #111;
+  padding: 12px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  border: 1px solid #222;
+}
+.specCoreGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  width: 120px;
+}
+.nodeGreen {
+  width: 100%;
+  aspect-ratio: 1;
+  background: var(--color-acid-green);
+  border-radius: 2px;
+  box-shadow: 0 0 10px var(--color-acid-green);
+  animation: coreThrob 2s infinite alternate;
+}
+
+
+/* ========================================= */
+/* ==== TEACH VISUAL (KNOWLEDGE NARRATIVE) ==*/
+/* ========================================= */
+.teachContainer {
+  position: relative;
+  width: 320px;
+  height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* --- Stage 1: Isolated Chaos --- */
+.chaosNodes {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  animation: stage1Fade 8s infinite;
+  opacity: 0;
+}
+.cNode {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: #333;
+  border-radius: 50%;
+  animation: float 3s infinite alternate ease-in-out;
+}
+.cNode:nth-child(1) { top: 20%; left: 30%; animation-delay: 0s; }
+.cNode:nth-child(2) { top: 40%; left: 70%; animation-delay: 0.2s; }
+.cNode:nth-child(3) { top: 60%; left: 20%; animation-delay: 0.4s; }
+.cNode:nth-child(4) { top: 80%; left: 60%; animation-delay: 0.6s; }
+.cNode:nth-child(5) { top: 30%; left: 80%; animation-delay: 0.8s; }
+.cNode:nth-child(6) { top: 70%; left: 40%; animation-delay: 1.0s; }
+
+@keyframes float {
+  0% { transform: translate(0, 0); }
+  100% { transform: translate(10px, -15px); }
+}
+
+/* --- Stage 2: Connection / Synthesis --- */
+.synthesisProcess {
+  position: absolute;
+  width: 240px;
+  height: 240px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: stage2Fade 8s infinite;
+  opacity: 0;
+}
+.synCore {
+  width: 40px;
+  height: 40px;
+  background: var(--color-acid-green);
+  border-radius: 50%;
+  box-shadow: 0 0 30px var(--color-acid-green);
+  z-index: 10;
+}
+.synRing {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  border: 2px solid var(--color-acid-green);
+  border-radius: 50%;
+  animation: ripple 2s infinite;
+}
+@keyframes ripple {
+  0% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(4); opacity: 0; }
+}
+
+/* --- Stage 3: System Network --- */
+.systemNetwork {
+  position: absolute;
+  width: 260px;
+  height: 260px;
+  animation: stage3Fade 8s infinite;
+  opacity: 0;
+}
+.netSvg {
+  width: 100%;
+  height: 100%;
+  fill: none;
+  stroke: rgba(141, 184, 42, 0.4);
+  stroke-width: 2;
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  animation: drawNet 8s infinite;
+}
+.netNode {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  background: #0a0a0a;
+  border: 2px solid var(--color-acid-green);
+  border-radius: 50%;
+  box-shadow: 0 0 15px rgba(141, 184, 42, 0.4);
+}
+.n1 { top: 0; left: 50%; transform: translateX(-50%); }
+.n2 { top: 25%; right: 0; transform: translateY(-50%); }
+.n3 { bottom: 25%; right: 0; transform: translateY(50%); }
+.n4 { bottom: 0; left: 50%; transform: translateX(-50%); }
+.n5 { bottom: 25%; left: 0; transform: translateY(50%); }
+.n6 { top: 25%; left: 0; transform: translateY(-50%); }
+.nCenter { top: 50%; left: 50%; transform: translate(-50%, -50%); width: 24px; height: 24px; background: var(--color-acid-green); }
+
+@keyframes drawNet {
+  0%, 65% { stroke-dashoffset: 1000; }
+  75%, 100% { stroke-dashoffset: 0; }
+}
+
+
+/* ========================================= */
+/* ==== GLOBAL STAGE ANIMATION TIMINGS ==== */
+/* ========================================= */
+@keyframes stage1Fade {
+  0%, 25% { opacity: 1; transform: scale(1) translateY(0); }
+  30%, 95% { opacity: 0; transform: scale(0.95) translateY(-20px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes stage2Fade {
+  0%, 25% { opacity: 0; transform: scale(0.95) translateY(20px); }
+  30%, 60% { opacity: 1; transform: scale(1) translateY(0); }
+  65%, 100% { opacity: 0; transform: scale(1.05) translateY(-20px); }
+}
+
+@keyframes stage3Fade {
+  0%, 60% { opacity: 0; transform: scale(0.95) translateY(20px); }
+  65%, 95% { opacity: 1; transform: scale(1) translateY(0); }
+  100% { opacity: 0; transform: scale(1.05) translateY(-20px); }
+}
+
+@media (max-width: 768px) {
+  .container { height: 300px; }
+  .scaleWrapper { --scanner-scale: 0.65; }
+  .container::before { display: none; }
+}
+
+:global([data-theme="light"]) .terminalWindow,
+:global([data-theme="light"]) .blueprintWindow,
+:global([data-theme="light"]) .polishedWindow,
+:global([data-theme="light"]) .stage1Model,
+:global([data-theme="light"]) .stage2Pruning,
+:global([data-theme="light"]) .stage3Specialized {
+  box-shadow: 12px 12px 0px rgba(13, 15, 8, 0.15);
+}

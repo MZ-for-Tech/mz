@@ -6,15 +6,14 @@ import PillNav from "../components/PillNav/PillNav";
 import { Footer } from "../components/Footer/Footer";
 import { ScaleReveal } from "../components/ScaleReveal/ScaleReveal";
 import { StatusDot } from "@/components/StatusDot/StatusDot";
-import BorderGlow from "@/components/BorderGlow/BorderGlow";
 import DataStreamHero from "@/components/DataStreamHero/DataStreamHero";
 import Waves from "@/components/Waves/Waves";
 import { OcrScanner } from "@/components/OcrScanner/OcrScanner";
 import { MousePointerClick, Lock } from "lucide-react";
-import CardSwap, { Card } from "@/components/CardSwap/CardSwap";
 import LineSidebar from "@/components/LineSidebar/LineSidebar";
 import DarkVeil from "@/components/DarkVeil/DarkVeil";
 import { gsap } from "@/lib/gsap";
+import { MzLogo } from "@/components/Logo/MzLogo";
 import { useGSAP } from "@gsap/react";
 import ServicesAccordion from "@/components/ServicesAccordion/ServicesAccordion";
 import PremiumShowcase from "@/components/PremiumShowcase/PremiumShowcase";
@@ -149,8 +148,6 @@ export default function Home() {
       <div style={{ position: "relative", zIndex: 10 }}>
         <main ref={mainRef} className={styles.main}>
           <PillNav
-            logo="/logo.png"
-            logoAlt="MZ Logo"
             items={NAV_ITEMS}
             baseColor="var(--color-bg)"
             pillColor="var(--color-text)"
@@ -191,7 +188,7 @@ export default function Home() {
 
               <div className={`${styles.heroScrollWrapper} hero-scroll-wrapper`}>
                 <div className={styles.heroDescription}>
-                  We build proprietary systems and transfer knowledge — so you don't have to guess.
+                  We build proprietary systems and transfer knowledge — so you don&apos;t have to guess.
                 </div>
                 <div className={`${styles.scrollIndicator} scroll-indicator-line`}>
                   <div className={styles.scrollLine}></div>
@@ -202,16 +199,13 @@ export default function Home() {
                 <a href="/start" className={styles.heroBtnPrimary}>
                   Hire Us
                 </a>
-                <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className={styles.heroBtnSecondary}>
-                  Facebook Page
-                </a>
               </div>
             </section>
           </div>
 
-          <div style={{ 
-            backgroundColor: "var(--color-bg)", 
-            position: "relative", 
+          <div style={{
+            background: "var(--page-bg, var(--color-bg))",
+            position: "relative",
             zIndex: 2,
             borderTopLeftRadius: "40px",
             borderTopRightRadius: "40px",
@@ -234,7 +228,7 @@ export default function Home() {
                 />
               </div>
             </div>
-            
+
             <PremiumShowcase />
 
             {/* 03 — Services/Capabilities */}
@@ -244,58 +238,36 @@ export default function Home() {
             <section id="products" className={styles.products}>
               <div className={styles.sectionHeader}>Products</div>
 
-              <div className={styles.productCardWrapper} style={{ marginTop: '8rem' }}>
-                <CardSwap
-                  cardDistance={60}
-                  verticalDistance={70}
-                  delay={5000}
-                  pauseOnHover={true}
-                  width="100%"
-                  height="550px"
-                >
-                  {[1].map((num) => (
-                    <Card key={num} customClass={styles.customCardFull}>
-                      <BorderGlow
-                        edgeSensitivity={30}
-                        glowColor="78 63 44"
-                        backgroundColor="var(--color-bg-light)"
-                        borderRadius={20}
-                        glowRadius={40}
-                        glowIntensity={1.0}
-                        coneSpread={25}
-                        animated={true}
-                        colors={['var(--color-acid-green)', '#5A7A0A', '#D4A820']}
-                        className={styles.productCardWrapper}
-                      >
-                        <div className={styles.productCard}>
-                          <Image
-                            src="/logo-watermark.png"
-                            alt="MZ Watermark"
-                            width={400}
-                            height={400}
-                            className={styles.productWatermark}
-                          />
-                          <div className={styles.proprietaryStamp}>
-                            MZ.LTD © PROPRIETARY TECHNOLOGY
-                          </div>
+              <div className={styles.productScrollContainer}>
+                {[1].map((num) => (
+                  <div key={num} className={styles.productSnapItem}>
+                    <div className={styles.showcaseCard}>
+                      <MzLogo
+                        width={600}
+                        height={600}
+                        className={styles.productWatermark}
+                      />
+                      <div className={styles.proprietaryStamp}>
+                        MZ.LTD © PROPRIETARY TECHNOLOGY
+                      </div>
 
-                          <div className={styles.productContent}>
-                            <div className={styles.productNameWrapper} style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
-                              <div className={styles.productName}>Occhio</div>
-                              <div className={styles.pronunciation}>/ OK-yoo /</div>
-                            </div>
-                            <div className={styles.productTagline}>An OCR that reads Arabic the way Arabic should be read</div>
-                            <div className={styles.productDesc}>Most document processing tools were built for Latin scripts and extended to Arabic later. Occhio starts where the region starts. Arabic, French, and English as equal priorities, designed for the institutional documents governments, universities, and enterprises in MENA actually handle.</div>
-                            <StatusDot status="IN DEVELOPMENT" />
-                          </div>
-                          <div className={styles.productVisual}>
-                            <OcrScanner />
-                          </div>
+                      <div className={styles.productContent}>
+                        <div className={styles.productNameWrapper}>
+                          <div className={styles.productName}>Occhio</div>
+                          <div className={styles.pronunciation}>/ OK-yoo /</div>
                         </div>
-                      </BorderGlow>
-                    </Card>
-                  ))}
-                </CardSwap>
+                        <div className={styles.productTagline}>An OCR that reads Arabic the way Arabic should be read</div>
+                        <div className={styles.productDesc}>Most document processing tools were built for Latin scripts and extended to Arabic later. Occhio starts where the region starts. Arabic, French, and English as equal priorities, designed for the institutional documents governments, universities, and enterprises in MENA actually handle.</div>
+                        <div style={{ marginTop: '2rem' }}>
+                          <StatusDot status="IN DEVELOPMENT" />
+                        </div>
+                      </div>
+                      <div className={styles.productVisual}>
+                        <OcrScanner />
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
             </section>
 
@@ -310,8 +282,8 @@ export default function Home() {
                   <LineSidebar
                     items={WORK_PROJECTS.map(p => p.name)}
                     accentColor="var(--color-acid-green)"
-                    textColor="#F5F0E8"
-                    markerColor="#46493D"
+                    textColor="var(--color-text)"
+                    markerColor="var(--color-text-muted)"
                     showIndex
                     showMarker
                     proximityRadius={100}
@@ -443,7 +415,7 @@ export default function Home() {
 
               <div className={styles.ctaText}>
                 Tell us what you&apos;re building.<br />
-                We&apos;ll tell you if we can make it better.
+                We&apos;ll tell you what it&apos;s missing.
               </div>
 
               <a href="mailto:hello@mzltd.tech" className={styles.ctaEmail}>hello@mzltd.tech</a>

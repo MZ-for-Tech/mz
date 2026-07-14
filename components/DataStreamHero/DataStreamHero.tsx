@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useEffect } from 'react';
+import { useRef, useEffect } from 'react';
 
 class Particle {
     x: number;
@@ -79,8 +79,24 @@ export default function DataStreamHero({ className = "" }: { className?: string 
         let particles: Particle[] = [];
         let animationFrameId: number;
 
-        // TNH Portal has a light background, so we use a dark particle color with low opacity
-        const particleColor = 'rgba(26, 18, 8, 0.15)'; // matching --color-tnh-text
+        let particleColor = 'rgba(26, 18, 8, 0.15)'; // matching --color-tnh-text
+
+        const updateParticleColor = () => {
+            const rootStyles = getComputedStyle(document.documentElement);
+            const rgbStr = rootStyles.getPropertyValue('--color-tnh-text-rgb').trim() || '26, 18, 8';
+            particleColor = `rgba(${rgbStr}, 0.15)`;
+        };
+
+        updateParticleColor();
+
+        const themeObserver = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.attributeName === 'data-theme') {
+                    updateParticleColor();
+                }
+            });
+        });
+        themeObserver.observe(document.documentElement, { attributes: true });
 
         const mouse = {
             x: null as number | null,
@@ -176,6 +192,7 @@ export default function DataStreamHero({ className = "" }: { className?: string 
         canvas.addEventListener('mouseleave', handleMouseLeave);
 
         return () => {
+            themeObserver.disconnect();
             observer.disconnect();
             resizeObserver.disconnect();
             canvas.removeEventListener('mousemove', handleMouseMove);

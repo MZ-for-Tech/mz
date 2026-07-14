@@ -1,9 +1,13 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
+import { useRef } from "react";
 import { gsap } from "@/lib/gsap";
 import { useGSAP } from "@gsap/react";
-import styles from "./ServicesAccordion.module.css";
+import pageStyles from "@/app/page.module.css";
+import BorderGlow from "@/components/BorderGlow/BorderGlow";
+import Image from "next/image";
+import { BuildVisual, DeployVisual, TeachVisual } from "@/components/ServiceVisuals/ServiceVisuals";
+import { MzLogo } from "@/components/Logo/MzLogo";
 
 const SERVICES = [
   {
@@ -23,9 +27,9 @@ const SERVICES = [
     title: "Artificial Intelligence",
     tagline: "We give machines judgment.",
     capabilities: [
-      "Multilingual document intelligence",
-      "Prompt compression & efficiency systems",
-      "Interactive 3D commerce experiences",
+      "Custom specialized models",
+      "Model fine-tuning & pruning",
+      "Cost-optimized local inference",
     ]
   },
   {
@@ -41,15 +45,9 @@ const SERVICES = [
   }
 ];
 
-const ACTIVE_WIDTH = "50%";
-const INACTIVE_WIDTH = "25%";
 
 export default function ServicesAccordion() {
-  const [activeIndex, setActiveIndex] = useState(0);
   const sectionRef = useRef<HTMLElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const contentRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   // Section reveal on scroll
   useGSAP(() => {
@@ -69,78 +67,74 @@ export default function ServicesAccordion() {
     );
   }, { scope: sectionRef });
 
-  // GSAP width animation on activeIndex change
-  useEffect(() => {
-    itemRefs.current.forEach((el, i) => {
-      if (!el) return;
-      const isActive = i === activeIndex;
-
-      gsap.to(el, {
-        width: isActive ? ACTIVE_WIDTH : INACTIVE_WIDTH,
-        duration: 0.65,
-        ease: "power3.inOut",
-        overwrite: true,
-      });
-    });
-
-    // Fade in the capabilities list of the active card
-    contentRefs.current.forEach((el, i) => {
-      if (!el) return;
-      const isActive = i === activeIndex;
-      gsap.to(el, {
-        opacity: isActive ? 1 : 0,
-        y: isActive ? 0 : 8,
-        duration: isActive ? 0.4 : 0.2,
-        delay: isActive ? 0.3 : 0,
-        ease: "power2.out",
-        overwrite: true,
-      });
-    });
-  }, [activeIndex]);
-
   return (
-    <section ref={sectionRef} id="services" className={styles.section}>
-      <div className={styles.sectionHeader}>Services</div>
-      <div ref={containerRef} className={styles.accordionContainer}>
-        {SERVICES.map((service, index) => {
-          const isActive = activeIndex === index;
+    <section ref={sectionRef} id="services" style={{ padding: '120px 8vw', position: 'relative', zIndex: 10 }}>
+      <div className={pageStyles.sectionHeader}>Services</div>
+      
+      <div style={{ width: '100%', marginTop: '8rem', display: 'flex', flexDirection: 'column', gap: '30vh', paddingBottom: '20vh' }}>
+        {SERVICES.map((service, index) => (
+          <div 
+            key={service.id} 
+            className={pageStyles.customCardFull}
+            style={{
+              position: 'sticky',
+              top: `calc(25vh + ${index * 40}px)`,
+              zIndex: index,
+              height: 'min(700px, 70vh)',
+              width: '100%',
+              willChange: 'transform',
+              transform: 'perspective(1200px) skewY(6deg)',
+              transformStyle: 'preserve-3d'
+            }}
+          >
+              <BorderGlow
+                edgeSensitivity={30}
+                glowColor="78 63 44"
+                backgroundColor="var(--color-bg-light)"
+                borderRadius={20}
+                glowRadius={40}
+                glowIntensity={1.0}
+                coneSpread={25}
+                animated={true}
+                colors={['var(--color-acid-green)', '#5A7A0A', '#D4A820']}
+                className={pageStyles.productCardWrapper}
+              >
+                <div className={pageStyles.productCard}>
+                  <MzLogo
+                    width={400}
+                    height={400}
+                    className={pageStyles.productWatermark}
+                  />
+                  <div className={pageStyles.proprietaryStamp}>
+                    {service.id} {"//"} {service.pillar}
+                  </div>
 
-          return (
-            <div
-              key={service.id}
-              ref={(el) => { itemRefs.current[index] = el; }}
-              className={`${styles.accordionItem} ${isActive ? styles.active : ""} ${index === 0 ? styles.shapeM : index === 1 ? styles.shapeZ : styles.shapeDot}`}
-              style={{ width: index === 0 ? ACTIVE_WIDTH : INACTIVE_WIDTH }}
-              onMouseEnter={() => setActiveIndex(index)}
-              onClick={() => setActiveIndex(index)}
-            >
-              <div className={styles.itemHeader}>
-                <div className={styles.itemNumber}>{service.id}</div>
-                <div className={styles.itemPillar}>{service.pillar}</div>
-              </div>
-
-              <div className={styles.itemContent}>
-                <h3 className={styles.itemTitle}>{service.title}</h3>
-                <p className={styles.itemTagline}>{service.tagline}</p>
-
-                <div
-                  ref={(el) => { contentRefs.current[index] = el; }}
-                  className={styles.capabilitiesListWrapper}
-                  style={{ opacity: index === 0 ? 1 : 0, transform: "translateY(0)" }}
-                >
-                  <ul className={styles.capabilitiesList}>
-                    {service.capabilities.map((cap, i) => (
-                      <li key={i} className={styles.capabilityItem}>
-                        <span className={styles.bullet}></span>
-                        {cap}
-                      </li>
-                    ))}
-                  </ul>
+                  <div className={pageStyles.productContent}>
+                    <div className={pageStyles.productNameWrapper} style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+                      <div className={pageStyles.productName}>{service.title}</div>
+                      <div className={pageStyles.pronunciation}>/ {service.pillar.toLowerCase()} /</div>
+                    </div>
+                    <div className={pageStyles.productTagline}>{service.tagline}</div>
+                    <div className={pageStyles.productDesc} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                      <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                        {service.capabilities.map((cap, i) => (
+                          <li key={i} style={{ display: 'flex', alignItems: 'center', gap: '16px', fontSize: '1.25rem', color: 'rgba(var(--color-text-rgb), 0.8)' }}>
+                            <span style={{ width: '6px', height: '6px', backgroundColor: 'var(--color-acid-green)', borderRadius: '50%', flexShrink: 0 }}></span>
+                            {cap}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                  <div className={pageStyles.productVisual}>
+                    {service.pillar === "BUILD" && <BuildVisual />}
+                    {service.pillar === "DEPLOY" && <DeployVisual />}
+                    {service.pillar === "TEACH" && <TeachVisual />}
+                  </div>
                 </div>
-              </div>
-            </div>
-          );
-        })}
+              </BorderGlow>
+          </div>
+        ))}
       </div>
     </section>
   );

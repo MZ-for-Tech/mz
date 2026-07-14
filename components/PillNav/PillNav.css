@@ -37,27 +37,6 @@
   border-radius: 9999px;
 }
 
-.pill-logo {
-  width: 120px;
-  height: var(--nav-h);
-  border-radius: 9999px;
-  background: var(--base, #000);
-  padding: 0 16px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-}
-
-.pill-logo img {
-  object-fit: contain;
-  display: block;
-  filter: brightness(0) invert(1);
-}
-
-:root[data-theme="light"] .pill-logo img {
-  filter: brightness(0);
-}
 
 .pill-list {
   list-style: none;
@@ -187,22 +166,6 @@
   padding: 0 16px;
 }
 
-.mobile-pill-logo {
-  height: var(--nav-h);
-  display: inline-flex;
-  align-items: center;
-  justify-content: flex-start;
-}
-
-.mobile-pill-logo img {
-  object-fit: contain;
-  display: block;
-  filter: brightness(0) invert(1);
-}
-
-:root[data-theme="light"] .mobile-pill-logo img {
-  filter: brightness(0);
-}
 
 .mobile-menu-button {
   width: 40px;

@@ -26,7 +26,7 @@ export const metadata: Metadata = {
 };
 
 import Link from "next/link";
-import Image from "next/image";
+import { MzLogo } from "@/components/Logo/MzLogo";
 import FpsCounter from "@/components/FpsCounter";
 
 export default function RootLayout({
@@ -41,19 +41,16 @@ export default function RootLayout({
     >
       <body>
         <FpsCounter />
-        <Link href="/" style={{
+        <Link href="/" className="layout-logo-link" style={{
           position: 'fixed',
           top: '10px',
           left: '20px',
           zIndex: 9999,
-          mixBlendMode: 'difference'
         }}>
-          <Image
-            src="/logo.png"
-            alt="MZ Logo"
+          <MzLogo
             width={100}
             height={100}
-            style={{ filter: 'brightness(0) invert(1)' }}
+            className="layout-logo-img"
           />
         </Link>
         <SmoothScrolling>{children}</SmoothScrolling>

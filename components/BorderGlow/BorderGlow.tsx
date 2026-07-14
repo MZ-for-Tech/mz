@@ -167,11 +167,11 @@ const BorderGlow: React.FC<BorderGlowProps> = ({
       className={`border-glow-card ${className}`}
       style={{
         '--card-bg': backgroundColor,
-        '--edge-sensitivity': edgeSensitivity,
+        '--edge-sensitivity': `${edgeSensitivity}`,
         '--border-radius': `${borderRadius}px`,
         '--glow-padding': `${glowRadius}px`,
-        '--cone-spread': coneSpread,
-        '--fill-opacity': fillOpacity,
+        '--cone-spread': `${coneSpread}`,
+        '--fill-opacity': `${fillOpacity}`,
         ...glowVars,
         ...buildGradientVars(colors),
       } as React.CSSProperties}

@@ -1,8 +1,7 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, FC, CSSProperties } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { gsap } from 'gsap';
 import ThemeToggle from '../ThemeToggle/ThemeToggle';
 import './PillNav.css';
@@ -14,8 +13,7 @@ export type PillNavItem = {
 };
 
 export interface PillNavProps {
-  logo: string;
-  logoAlt?: string;
+
   items: PillNavItem[];
   activeHref?: string;
   className?: string;
@@ -38,9 +36,8 @@ const isExternalLink = (href: string) =>
 
 const isRouterLink = (href?: string) => href && !isExternalLink(href);
 
-const PillNav: React.FC<PillNavProps> = ({
-  logo,
-  logoAlt = 'Logo',
+const PillNav: FC<PillNavProps> = ({
+
   items,
   activeHref,
   className = '',
@@ -64,17 +61,14 @@ const PillNav: React.FC<PillNavProps> = ({
   const circleRefs = useRef<Array<HTMLSpanElement | null>>([]);
   const tlRefs = useRef<Array<gsap.core.Timeline | null>>([]);
   const activeTweenRefs = useRef<Array<gsap.core.Tween | null>>([]);
-  const logoImgRef = useRef<HTMLImageElement | null>(null);
-  const logoTweenRef = useRef<gsap.core.Tween | null>(null);
   const navItemsRef = useRef<HTMLDivElement | null>(null);
-  const logoRef = useRef<HTMLAnchorElement | HTMLElement | null>(null);
+
 
   // Mobile Refs
   const mobileNavRef = useRef<HTMLElement | null>(null);
   const mobileContentRef = useRef<HTMLDivElement | null>(null);
   const hamburgerRef = useRef<HTMLButtonElement | null>(null);
-  const mobileLogoImgRef = useRef<HTMLImageElement | null>(null);
-  const mobileLogoTweenRef = useRef<gsap.core.Tween | null>(null);
+
 
   useEffect(() => {
     // Desktop layout effect
@@ -127,8 +121,7 @@ const PillNav: React.FC<PillNavProps> = ({
       });
     };
 
-    let initialFrameRef: number;
-    initialFrameRef = requestAnimationFrame(() => {
+    const initialFrameRef = requestAnimationFrame(() => {
       layout();
     });
 
@@ -156,13 +149,7 @@ const PillNav: React.FC<PillNavProps> = ({
     }
 
     if (initialLoadAnimation) {
-      const logo = logoRef.current;
       const navItems = navItemsRef.current;
-
-      if (logo) {
-        gsap.set(logo, { scale: 0 });
-        gsap.to(logo, { scale: 1, duration: 0.6, ease });
-      }
 
       if (navItems) {
         gsap.set(navItems, { width: 0, overflow: 'hidden' });
@@ -212,20 +199,7 @@ const PillNav: React.FC<PillNavProps> = ({
     });
   };
 
-  const handleLogoEnter = (isMobile = false) => {
-    const img = isMobile ? mobileLogoImgRef.current : logoImgRef.current;
-    const tweenRef = isMobile ? mobileLogoTweenRef : logoTweenRef;
-    
-    if (!img) return;
-    tweenRef.current?.kill();
-    gsap.set(img, { rotate: 0 });
-    tweenRef.current = gsap.to(img, {
-      rotate: 360,
-      duration: 0.2,
-      ease,
-      overwrite: 'auto'
-    });
-  };
+
 
   const toggleMobileMenu = () => {
     const newState = !isMobileMenuOpen;
@@ -291,17 +265,13 @@ const PillNav: React.FC<PillNavProps> = ({
     ['--pill-bg']: pillColor,
     ['--hover-text']: hoveredPillTextColor,
     ['--pill-text']: resolvedPillTextColor
-  } as React.CSSProperties;
+  } as CSSProperties;
 
   return (
     <div className="pill-nav-container">
       {/* --- DESKTOP NAV --- */}
       <nav className={`pill-nav desktop-only ${className}`} aria-label="Primary Desktop" style={cssVars}>
-        {logo && (
-          <Link href="/" className="pill-logo" ref={logoRef} onMouseEnter={() => handleLogoEnter(false)}>
-            <Image src={logo} alt={logoAlt} width={100} height={20} ref={logoImgRef} />
-          </Link>
-        )}
+
 
         <div className="pill-nav-items" ref={navItemsRef} style={{ width: 0, overflow: 'hidden' }}>
           <ul className="pill-list" role="menubar">
@@ -365,11 +335,7 @@ const PillNav: React.FC<PillNavProps> = ({
       {/* --- MOBILE NAV (CardNav expanding pattern) --- */}
       <nav className={`mobile-pill-nav mobile-only ${isMobileMenuOpen ? 'open' : ''} ${className}`} ref={mobileNavRef} style={cssVars}>
         <div className="mobile-pill-nav-top">
-          {logo && (
-            <Link href="/" className="mobile-pill-logo" onMouseEnter={() => handleLogoEnter(true)}>
-              <Image src={logo} alt={logoAlt} width={80} height={16} ref={mobileLogoImgRef} />
-            </Link>
-          )}
+
           <div style={{ flex: 1 }}></div>
 
           <ThemeToggle />

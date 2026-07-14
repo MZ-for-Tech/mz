@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import styles from './ThemeToggle.module.css';
 import { Sun, Moon } from 'lucide-react';
 
@@ -11,6 +11,7 @@ export default function ThemeToggle() {
     // Check initial theme
     const savedTheme = localStorage.getItem('mz-theme');
     if (savedTheme === 'light') {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setIsLight(true);
       document.documentElement.setAttribute('data-theme', 'light');
     }

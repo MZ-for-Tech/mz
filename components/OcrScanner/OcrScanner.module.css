@@ -8,7 +8,16 @@
   justify-content: center;
   font-family: var(--font-code);
   contain: layout style paint;
-  /* Removed transform to prevent overflow */
+}
+
+.scannerScaleWrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: scale(var(--scanner-scale, 1));
 }
 
 /* Subtle grid behind the animation */
@@ -63,10 +72,10 @@
 }
 
 @keyframes scan {
-  0%, 5% { top: -5%; opacity: 0; }
+  0%, 5% { transform: translateY(-20px); opacity: 0; }
   8% { opacity: 1; }
-  32% { top: 105%; opacity: 1; }
-  35%, 100% { top: 105%; opacity: 0; }
+  32% { transform: translateY(420px); opacity: 1; }
+  35%, 100% { transform: translateY(420px); opacity: 0; }
 }
 
 .block {
@@ -277,29 +286,28 @@
 
 @media (max-width: 768px) {
   .scannerContainer {
-    height: 320px;
+    height: 300px; /* Reduced layout height for mobile so it fits in the card perfectly */
   }
   
-  /* Use transform for mobile since screen is small and overflow can be hidden */
+  .scannerScaleWrapper {
+    --scanner-scale: 0.55;
+  }
+
+  /* --- Mobile Performance Optimizations --- */
+  
+  /* 1. Disable the mask-image grid entirely on mobile. 
+     Masks inside 3D transform contexts (CardSwap) absolutely decimate mobile GPU fill-rates. */
+  .scannerContainer::before {
+    display: none;
+  }
+
+  /* 2. Strip down the massive drop shadows that have to be repainted during scale animations */
   .document, .outputCode, .outputPdf {
-    transform: scale(0.6);
-  }
-  
-  @keyframes docFade {
-    0%, 35% { opacity: 1; transform: scale(0.6); }
-    40%, 95% { opacity: 0; transform: scale(0.55); }
-    100% { opacity: 1; transform: scale(0.6); }
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.6);
   }
 
-  @keyframes codeFade {
-    0%, 35% { opacity: 0; transform: translateY(10px) scale(0.55); }
-    40%, 65% { opacity: 1; transform: translateY(0) scale(0.6); }
-    70%, 100% { opacity: 0; transform: translateY(-10px) scale(0.65); }
-  }
-
-  @keyframes pdfFade {
-    0%, 65% { opacity: 0; transform: scale(0.55); }
-    70%, 95% { opacity: 1; transform: scale(0.6); }
-    100% { opacity: 0; transform: scale(0.65); }
+  /* 3. Reduce the scan line glow radius */
+  .scanLine {
+    box-shadow: 0 0 10px var(--color-acid-green);
   }
 }

@@ -1,4 +1,4 @@
-import React, {
+import {
   Children,
   cloneElement,
   forwardRef,
@@ -8,7 +8,12 @@ import React, {
   RefObject,
   useEffect,
   useMemo,
-  useRef
+  useRef,
+  HTMLAttributes,
+  FC,
+  createRef,
+  MouseEvent,
+  RefAttributes
 } from 'react';
 import { gsap } from 'gsap';
 import './CardSwap.css';
@@ -26,7 +31,7 @@ export interface CardSwapProps {
   children: ReactNode;
 }
 
-export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface CardProps extends HTMLAttributes<HTMLDivElement> {
   customClass?: string;
 }
 
@@ -63,7 +68,7 @@ const placeNow = (el: HTMLElement, slot: Slot, skew: number) =>
     force3D: true
   });
 
-const CardSwap: React.FC<CardSwapProps> = ({
+const CardSwap: FC<CardSwapProps> = ({
   width = 500,
   height = 400,
   cardDistance = 60,
@@ -95,7 +100,7 @@ const CardSwap: React.FC<CardSwapProps> = ({
         };
 
   const childArr = useMemo(() => Children.toArray(children) as ReactElement<CardProps>[], [children]);
-  const refs = useMemo<CardRef[]>(() => childArr.map(() => React.createRef<HTMLDivElement>()), [childArr.length]);
+  const refs = useMemo<CardRef[]>(() => childArr.map(() => createRef<HTMLDivElement>()), [childArr]);
 
   const order = useRef<number[]>(Array.from({ length: childArr.length }, (_, i) => i));
 
@@ -104,6 +109,8 @@ const CardSwap: React.FC<CardSwapProps> = ({
   const container = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    if (childArr.length <= 1) return;
+
     const total = refs.length;
     refs.forEach((r, i) => placeNow(r.current!, makeSlot(i, cardDistance, verticalDistance, total), skewAmount));
 
@@ -225,19 +232,31 @@ const CardSwap: React.FC<CardSwapProps> = ({
       }
       stopInterval();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cardDistance, verticalDistance, delay, pauseOnHover, skewAmount, easing]);
+
+  const isSingle = childArr.length <= 1;
 
   const rendered = childArr.map((child, i) =>
     isValidElement<CardProps>(child)
       ? cloneElement(child, {
           key: i,
           ref: refs[i],
-          style: { width, height, ...(child.props.style ?? {}) },
+          style: { 
+            width, 
+            height,
+            ...(isSingle ? {
+              transform: `translate(-50%, -50%) skewY(${skewAmount}deg)`,
+              transformOrigin: 'center center',
+              zIndex: 1
+            } : {}),
+            ...(child.props.style ?? {}) 
+          },
           onClick: e => {
-            child.props.onClick?.(e as React.MouseEvent<HTMLDivElement>);
+            child.props.onClick?.(e as MouseEvent<HTMLDivElement>);
             onCardClick?.(i);
           }
-        } as CardProps & React.RefAttributes<HTMLDivElement>)
+        } as CardProps & RefAttributes<HTMLDivElement>)
       : child
   );
 

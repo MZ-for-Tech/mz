@@ -140,7 +140,7 @@ export default function DarkVeil({
     };
 
     window.addEventListener('resize', resize);
-    let initialResizeFrame = requestAnimationFrame(resize);
+    const initialResizeFrame = requestAnimationFrame(resize);
 
     // Watch for theme changes
     const updateThemeColor = () => {

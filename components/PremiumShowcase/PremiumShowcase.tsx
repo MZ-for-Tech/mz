@@ -1,4 +1,4 @@
-import React from 'react';
+
 import Image from 'next/image';
 import styles from './PremiumShowcase.module.css';
 import GradualBlur from '../GradualBlur/GradualBlur';
@@ -10,7 +10,7 @@ export default function PremiumShowcase() {
       <div className={styles.wrapper}>
         <div className={styles.leftCopy}>
           <p>We are a research-driven technology company.</p>
-          <p>We build proprietary software, deploy AI products, and transfer knowledge — in institutions that can't afford to guess.</p>
+          <p>We build proprietary software, deploy AI products, and transfer knowledge — in institutions that can&apos;t afford to guess.</p>
         </div>
 
         <div className={styles.container}>
@@ -40,6 +40,7 @@ export default function PremiumShowcase() {
         exponential={true}
         animated="scroll"
         opacity={1}
+        className={styles.desktopBlur}
         style={{
           position: 'sticky',
           bottom: 0,
