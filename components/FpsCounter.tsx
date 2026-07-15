@@ -36,7 +36,7 @@ export default function FpsCounter() {
         color: fps >= 55 ? "#8DB82A" : fps >= 30 ? "orange" : "red",
         padding: "4px 8px",
         borderRadius: "4px",
-        fontFamily: "monospace",
+        fontFamily: "var(--font-base)",
         fontSize: "14px",
         zIndex: 99999,
         pointerEvents: "none",

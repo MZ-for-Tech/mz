@@ -54,7 +54,7 @@
 .verticalText {
   writing-mode: vertical-rl;
   transform: rotate(180deg);
-  font-family: var(--font-mono), monospace;
+  font-family: var(--font-base);
   font-size: 0.75rem;
   letter-spacing: 0.2em;
   color: rgba(var(--color-text-rgb), 0.4);
@@ -68,7 +68,7 @@
 }
 
 .bottomText {
-  font-family: var(--font-mono), monospace;
+  font-family: var(--font-base);
   font-size: 0.8rem;
   color: rgba(var(--color-text-rgb), 0.4);
   letter-spacing: 0.1em;

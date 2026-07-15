@@ -7,6 +7,7 @@ import pageStyles from "@/app/page.module.css";
 import BorderGlow from "@/components/BorderGlow/BorderGlow";
 import { BuildVisual, DeployVisual, TeachVisual } from "@/components/ServiceVisuals/ServiceVisuals";
 import { MzLogo } from "@/components/Logo/MzLogo";
+import MobileServiceCard from "@/components/MobileServiceCard/MobileServiceCard";
 
 const SERVICES = [
   {
@@ -70,7 +71,7 @@ export default function ServicesAccordion() {
     <section ref={sectionRef} id="services" style={{ padding: '120px 8vw', position: 'relative', zIndex: 10 }}>
       <div className={pageStyles.sectionHeader}>Services</div>
 
-      <div style={{ width: '100%', marginTop: '8rem', display: 'flex', flexDirection: 'column', gap: '30vh', paddingBottom: '20vh' }}>
+      <div className={pageStyles.desktopOnly} style={{ width: '100%', marginTop: '8rem', display: 'flex', flexDirection: 'column', gap: '30vh', paddingBottom: '20vh' }}>
         {SERVICES.map((service, index) => (
           <div
             key={service.id}
@@ -131,6 +132,32 @@ export default function ServicesAccordion() {
                 </div>
               </div>
             </BorderGlow>
+          </div>
+        ))}
+      </div>
+
+      <div className={`${pageStyles.mobileOnly} ${pageStyles.mobileServicesWrapper}`}>
+        {SERVICES.map((service, index) => (
+          <div 
+            key={service.id} 
+            style={{ 
+              position: 'sticky', 
+              top: `calc(12vh + ${index * 1.5}rem)`, 
+              width: '100%', 
+              display: 'flex', 
+              justifyContent: 'center' 
+            }}
+          >
+            <MobileServiceCard
+              title={service.title}
+              tagline={service.tagline}
+              capabilities={service.capabilities}
+              visual={
+                service.pillar === "BUILD" ? <BuildVisual /> :
+                service.pillar === "DEPLOY" ? <DeployVisual /> :
+                service.pillar === "TEACH" ? <TeachVisual /> : undefined
+              }
+            />
           </div>
         ))}
       </div>

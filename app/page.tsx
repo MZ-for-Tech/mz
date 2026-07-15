@@ -18,6 +18,7 @@ import { useGSAP } from "@gsap/react";
 import ServicesAccordion from "@/components/ServicesAccordion/ServicesAccordion";
 import PremiumShowcase from "@/components/PremiumShowcase/PremiumShowcase";
 import BackToTop from "@/components/BackToTop/BackToTop";
+import ObfuscatedEmail from "@/components/ObfuscatedEmail/ObfuscatedEmail";
 
 
 const WORK_PROJECTS = [
@@ -359,15 +360,13 @@ export default function Home() {
                               </div>
                             )}
 
-                            {isActive && (
-                              <iframe
-                                src={project.link}
-                                title={project.name}
-                                className={styles.workIframe}
-                                loading="lazy"
-                                style={{ pointerEvents: (isInteractive && isActive) ? 'auto' : 'none' }}
-                              />
-                            )}
+                            <iframe
+                              src={project.link}
+                              title={project.name}
+                              className={styles.workIframe}
+                              loading="lazy"
+                              style={{ pointerEvents: (isInteractive && isActive) ? 'auto' : 'none' }}
+                            />
                           </>
                         )}
                       </div>
@@ -418,7 +417,7 @@ export default function Home() {
                 We&apos;ll tell you what it&apos;s missing.
               </div>
 
-              <a href="mailto:hello@mzltd.tech" className={styles.ctaEmail}>hello@mzltd.tech</a>
+              <ObfuscatedEmail user="hello" domain="mzltd.tech" className={styles.ctaEmail} />
 
               <div className={styles.ctaActionWrapper}>
                 <a href="/start" className={styles.submitBtn}>

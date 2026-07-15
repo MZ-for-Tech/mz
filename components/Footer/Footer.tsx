@@ -1,5 +1,6 @@
 import styles from "./Footer.module.css";
 import { useRef, useEffect, useState } from "react";
+import ObfuscatedEmail from "../ObfuscatedEmail/ObfuscatedEmail";
 
 export function Footer() {
   const footerRef = useRef<HTMLDivElement>(null);
@@ -10,7 +11,7 @@ export function Footer() {
     const observer = new IntersectionObserver(([entry]) => {
       setIsVisible(entry.isIntersecting);
     }, { threshold: 0 });
-    
+
     observer.observe(footerRef.current);
     return () => observer.disconnect();
   }, []);
@@ -26,21 +27,16 @@ export function Footer() {
               CAIRO, EG
             </p>
           </div>
-          
+
           <div className={styles.infoBlock}>
             <p className={styles.label}>Contact</p>
-            <a href="mailto:hello@mzltd.tech" className={styles.value}>
-              HELLO@MZLTD.TECH
-            </a>
+            <ObfuscatedEmail user="hello" domain="mzltd.tech" className={styles.value} />
           </div>
-          
+
           <div className={styles.infoBlock}>
             <p className={styles.label}>Socials</p>
             <a href="https://www.facebook.com/mzfortech/" target="_blank" rel="noopener noreferrer" className={styles.value}>
               FACEBOOK
-            </a>
-            <a href="https://nullhypothesis.dev" target="_blank" rel="noopener noreferrer" className={styles.value}>
-              THE NULL HYPOTHESIS
             </a>
           </div>
         </div>
@@ -50,7 +46,7 @@ export function Footer() {
           <div className={styles.copyright}>
             <span>&copy; {new Date().getFullYear()} MZ Ltd.</span>
             <span className={styles.marquee}>
-              <div 
+              <div
                 className={styles.marqueeInner}
                 style={{ animationPlayState: isVisible ? 'running' : 'paused' }}
               >
@@ -60,7 +56,7 @@ export function Footer() {
                 <span>RESEARCH — SOFTWARE — KNOWLEDGE</span>
               </div>
             </span>
-            <span>All rights reserved.</span>
+            <span>All rights reserved. <a href="/privacy" style={{ textDecoration: 'underline', marginLeft: '1rem' }}>Privacy Policy</a></span>
           </div>
         </div>
       </footer>

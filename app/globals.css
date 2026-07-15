@@ -159,5 +159,5 @@ button {
 
 /* Link Typography */
 a {
-  font-family: var(--font-code);
+  font-family: var(--font-base);
 }

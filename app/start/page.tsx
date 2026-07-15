@@ -6,6 +6,7 @@ import PillNav from "@/components/PillNav/PillNav";
 import { Footer } from "@/components/Footer/Footer";
 import { ArrowRight, Paperclip } from "lucide-react";
 import DarkVeil from "@/components/DarkVeil/DarkVeil";
+import ObfuscatedEmail from "@/components/ObfuscatedEmail/ObfuscatedEmail";
 
 const NAV_ITEMS = [
   { label: 'Work', href: '/#work' },
@@ -102,7 +103,7 @@ export default function StartProjectPage() {
                 What do you wanna talk about?              </h1>
               <div className={styles.contactDetails}>
                 <div className={styles.contactLabel}>GENERAL INQUIRIES</div>
-                <a href="mailto:hello@mzltd.tech" className={styles.contactEmail}>hello@mzltd.tech</a>
+                <ObfuscatedEmail user="hello" domain="mzltd.tech" className={styles.contactEmail} />
 
                 <div className={styles.faqText}>
                   Want to learn about our process?<br />

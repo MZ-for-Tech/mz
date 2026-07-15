@@ -45,7 +45,7 @@
 .contactLabel {
   color: rgba(var(--color-text-rgb), 0.4);
   font-size: 0.9rem;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-base);
   letter-spacing: 0.1em;
 }
 
@@ -55,7 +55,7 @@
   color: var(--color-text, var(--color-text));
   text-decoration: none;
   transition: color 0.3s ease;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-base);
 }
 
 .contactEmail:hover {
@@ -103,7 +103,7 @@
 
 .sectionTitle {
   font-size: 1rem;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-base);
   color: rgba(var(--color-text-rgb), 0.5);
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -175,8 +175,8 @@
 
 :global([data-theme="light"]) .input,
 :global([data-theme="light"]) .textarea {
-  background: #ffffff;
-  border: 1px solid var(--color-border);
+  background: rgba(255, 255, 255, 0.25);
+  border: 1px solid rgba(var(--color-text-rgb), 0.15);
 }
 
 .input::placeholder, .textarea::placeholder {
@@ -214,8 +214,8 @@
 }
 
 :global([data-theme="light"]) .fileLabel {
-  background: #ffffff;
-  border: 1px dashed var(--color-border);
+  background: rgba(255, 255, 255, 0.25);
+  border: 1px dashed rgba(var(--color-text-rgb), 0.25);
 }
 
 .fileLabel:hover {
