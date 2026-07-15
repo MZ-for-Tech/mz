@@ -21,6 +21,7 @@ export default function PremiumShowcase() {
             src="/green_glass.jpg"
             alt="Abstract Green Glass 3D Shape"
             fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             priority
             loading="eager"
             className={styles.demoImage}

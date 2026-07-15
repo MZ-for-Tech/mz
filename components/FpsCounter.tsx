@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 
 export default function FpsCounter() {
+  if (process.env.NODE_ENV === "production") return null;
+
   const [fps, setFps] = useState(0);
 
   useEffect(() => {

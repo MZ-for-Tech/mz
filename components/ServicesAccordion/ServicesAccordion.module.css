@@ -26,19 +26,20 @@
 .accordionItem {
   width: 100%;
   height: 100%;
-  background: linear-gradient(145deg, rgba(var(--color-text-rgb), 0.03) 0%, rgba(0, 0, 0, 0.4) 100%);
+  background: linear-gradient(145deg, rgba(var(--color-text-rgb), 0.03) 0%, rgba(var(--color-text-rgb), 0.01) 100%);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  filter: drop-shadow(0 8px 32px rgba(0,0,0,0.4));
+  border: 1px solid rgba(var(--color-text-rgb), 0.1);
+  box-shadow: inset 0 1px 0 rgba(var(--color-text-rgb), 0.05), inset 0 0 20px rgba(var(--color-text-rgb), 0.02);
   padding: 50px 40px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  transition: background 0.4s ease, filter 0.4s ease;
+  transition: background 0.4s ease, border-color 0.4s ease, transform 0.4s ease, box-shadow 0.4s ease;
   overflow: hidden;
   cursor: pointer;
   position: relative;
-  will-change: filter, transform;
+  will-change: transform;
 }
 
 .accordionItem::before {
@@ -98,15 +99,17 @@
 }
 
 .accordionItem:hover {
-  background: linear-gradient(145deg, rgba(141, 184, 42, 0.12) 0%, rgba(0, 0, 0, 0.6) 100%);
-  filter: drop-shadow(0 10px 40px rgba(141, 184, 42, 0.25));
+  background: linear-gradient(145deg, rgba(141, 184, 42, 0.08) 0%, rgba(141, 184, 42, 0.02) 100%);
+  border-color: rgba(141, 184, 42, 0.3);
+  box-shadow: inset 0 1px 0 rgba(141, 184, 42, 0.2), inset 0 0 30px rgba(141, 184, 42, 0.05);
   transform: translateY(-4px);
 }
 
 /* Light mode overrides for accordion cards */
 :global(:root[data-theme="light"]) .accordionItem {
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.1) 100%);
-  filter: drop-shadow(0 8px 32px rgba(0, 0, 0, 0.05));
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.4) 100%);
+  border-color: rgba(0, 0, 0, 0.05);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 1), inset 0 0 20px rgba(0, 0, 0, 0.02);
 }
 
 :global(:root[data-theme="light"]) .accordionItem::before {
@@ -115,8 +118,9 @@
 }
 
 :global(:root[data-theme="light"]) .accordionItem:hover {
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.4) 100%);
-  filter: drop-shadow(0 10px 40px rgba(141, 184, 42, 0.3));
+  background: linear-gradient(145deg, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.6) 100%);
+  border-color: rgba(141, 184, 42, 0.4);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 1), inset 0 0 30px rgba(141, 184, 42, 0.1);
 }
 
 .itemHeader {

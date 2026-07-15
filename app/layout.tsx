@@ -28,6 +28,8 @@ export const metadata: Metadata = {
 import Link from "next/link";
 import { MzLogo } from "@/components/Logo/MzLogo";
 import FpsCounter from "@/components/FpsCounter";
+import { CustomCursor } from "@/components/CustomCursor/CustomCursor";
+
 
 export default function RootLayout({
   children,
@@ -40,6 +42,7 @@ export default function RootLayout({
       className={`${geistSans.variable} ${jetbrainsMono.variable} ${cormorant.variable}`}
     >
       <body>
+        <CustomCursor />
         <FpsCounter />
         <Link href="/" className="layout-logo-link" style={{
           position: 'fixed',

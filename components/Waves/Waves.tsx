@@ -121,7 +121,7 @@ const Waves: FC<WavesProps> = ({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const ctxRef = useRef<CanvasRenderingContext2D | null>(null);
   const boundingRef = useRef({ width: 0, height: 0, left: 0, top: 0 });
-  const noiseRef = useRef(new Noise(Math.random()));
+  const noiseRef = useRef<Noise | null>(null);
   const mouseRef = useRef<Mouse>({
     x: -10, y: 0, lx: 0, ly: 0, sx: 0, sy: 0, v: 0, vs: 0, a: 0, set: false
   });
@@ -139,6 +139,10 @@ const Waves: FC<WavesProps> = ({
     const container = containerRef.current;
     if (!canvas || !container) return;
     ctxRef.current = canvas.getContext('2d');
+    
+    if (!noiseRef.current) {
+      noiseRef.current = new Noise(Math.random());
+    }
 
     // TypedArray States
     let totalLines = 0;
@@ -202,7 +206,7 @@ const Waves: FC<WavesProps> = ({
 
     function movePoints(time: number) {
       const mouse = mouseRef.current;
-      const noise = noiseRef.current;
+      const noise = noiseRef.current!;
       const { waveSpeedX, waveSpeedY, waveAmpX, waveAmpY, friction, tension, maxCursorMove } = configRef.current;
       
       const count = (totalLines + 1) * (totalPoints + 1);

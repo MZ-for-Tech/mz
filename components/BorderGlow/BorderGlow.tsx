@@ -60,7 +60,9 @@ interface AnimateOpts {
 function animateValue({ start = 0, end = 100, duration = 1000, delay = 0, ease = easeOutCubic, onUpdate, onEnd, signal }: AnimateOpts) {
   const t0 = performance.now() + delay;
   let frameId: number;
-  let timerId: ReturnType<typeof setTimeout> | number;
+  const timerId = setTimeout(() => {
+    if (!signal?.aborted) frameId = requestAnimationFrame(tick);
+  }, delay);
 
   function tick() {
     if (signal?.aborted) return;
@@ -76,10 +78,10 @@ function animateValue({ start = 0, end = 100, duration = 1000, delay = 0, ease =
     else if (onEnd) onEnd();
   }
 
-  if (signal?.aborted) return;
-  timerId = setTimeout(() => {
-    if (!signal?.aborted) frameId = requestAnimationFrame(tick);
-  }, delay);
+  if (signal?.aborted) {
+    clearTimeout(timerId);
+    return;
+  }
 
   signal?.addEventListener('abort', () => {
     clearTimeout(timerId);

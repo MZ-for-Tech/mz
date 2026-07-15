@@ -17,6 +17,7 @@ import { MzLogo } from "@/components/Logo/MzLogo";
 import { useGSAP } from "@gsap/react";
 import ServicesAccordion from "@/components/ServicesAccordion/ServicesAccordion";
 import PremiumShowcase from "@/components/PremiumShowcase/PremiumShowcase";
+import Manifesto from "@/components/Manifesto/Manifesto";
 import BackToTop from "@/components/BackToTop/BackToTop";
 import ObfuscatedEmail from "@/components/ObfuscatedEmail/ObfuscatedEmail";
 
@@ -65,37 +66,45 @@ export default function Home() {
     }
 
     // Hero Entry Animation
-    const tl = gsap.timeline({ delay: 0.2 });
+    const playHeroAnimation = () => {
+      const tl = gsap.timeline();
 
-    tl.fromTo(".hero-word-inner", {
-      y: "110%",
-      rotationZ: 4,
-      transformOrigin: "left top"
-    }, {
-      y: "0%",
-      rotationZ: 0,
-      duration: 1.4,
-      stagger: 0.15,
-      ease: "power4.out"
-    });
+      tl.fromTo(".hero-word-inner", {
+        y: "110%",
+        rotationZ: 4,
+        transformOrigin: "left top"
+      }, {
+        y: "0%",
+        rotationZ: 0,
+        duration: 1.4,
+        stagger: 0.15,
+        ease: "power4.out"
+      });
 
-    tl.fromTo(".hero-subtext", {
-      opacity: 0,
-      y: 20
-    }, {
-      opacity: 1,
-      y: 0,
-      duration: 1,
-      ease: "power2.out"
-    }, "-=0.8");
+      tl.fromTo(".hero-subtext", {
+        opacity: 0,
+        y: 20
+      }, {
+        opacity: 1,
+        y: 0,
+        duration: 1,
+        ease: "power2.out"
+      }, "-=0.8");
 
-    tl.fromTo(".hero-scroll-wrapper, .hero-action-wrapper", {
-      opacity: 0,
-    }, {
-      opacity: 1,
-      duration: 1,
-      ease: "power2.out"
-    }, "-=0.5");
+      tl.fromTo(".hero-scroll-wrapper, .hero-action-wrapper", {
+        opacity: 0,
+      }, {
+        opacity: 1,
+        duration: 1,
+        ease: "power2.out"
+      }, "-=0.5");
+    };
+
+    // Set initial states to hide elements before animation
+    gsap.set(".hero-word-inner", { y: "110%", rotationZ: 4, transformOrigin: "left top" });
+    gsap.set(".hero-subtext, .hero-scroll-wrapper, .hero-action-wrapper", { opacity: 0 });
+
+    gsap.delayedCall(0.2, playHeroAnimation);
 
     // Hero Parallax on Scroll
     gsap.to(".hero-word", {
@@ -189,7 +198,7 @@ export default function Home() {
 
               <div className={`${styles.heroScrollWrapper} hero-scroll-wrapper`}>
                 <div className={styles.heroDescription}>
-                  We build proprietary systems and transfer knowledge — so you don&apos;t have to guess.
+                  Engineered in Cairo. Owned by you. We build proprietary systems and transfer the exact knowledge you need to run them.
                 </div>
                 <div className={`${styles.scrollIndicator} scroll-indicator-line`}>
                   <div className={styles.scrollLine}></div>
@@ -231,6 +240,7 @@ export default function Home() {
             </div>
 
             <PremiumShowcase />
+            <Manifesto />
 
             {/* 03 — Services/Capabilities */}
             <ServicesAccordion />

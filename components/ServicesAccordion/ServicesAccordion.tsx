@@ -106,7 +106,7 @@ export default function ServicesAccordion() {
                   className={pageStyles.productWatermark}
                 />
                 <div className={pageStyles.proprietaryStamp}>
-                  {service.id} {"//"} {service.pillar}
+                  {service.pillar}
                 </div>
 
                 <div className={pageStyles.productContent}>
@@ -138,14 +138,14 @@ export default function ServicesAccordion() {
 
       <div className={`${pageStyles.mobileOnly} ${pageStyles.mobileServicesWrapper}`}>
         {SERVICES.map((service, index) => (
-          <div 
-            key={service.id} 
-            style={{ 
-              position: 'sticky', 
-              top: `calc(12vh + ${index * 1.5}rem)`, 
-              width: '100%', 
-              display: 'flex', 
-              justifyContent: 'center' 
+          <div
+            key={service.id}
+            style={{
+              position: 'sticky',
+              top: `calc(12vh + ${index * 1.5}rem)`,
+              width: '100%',
+              display: 'flex',
+              justifyContent: 'center'
             }}
           >
             <MobileServiceCard
@@ -154,8 +154,8 @@ export default function ServicesAccordion() {
               capabilities={service.capabilities}
               visual={
                 service.pillar === "BUILD" ? <BuildVisual /> :
-                service.pillar === "DEPLOY" ? <DeployVisual /> :
-                service.pillar === "TEACH" ? <TeachVisual /> : undefined
+                  service.pillar === "DEPLOY" ? <DeployVisual /> :
+                    service.pillar === "TEACH" ? <TeachVisual /> : undefined
               }
             />
           </div>

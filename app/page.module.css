@@ -346,6 +346,11 @@
   border-radius: 20px;
 }
 
+:global([data-theme="light"]) .productCard {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0.2) 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 1), inset 0 0 30px rgba(0, 0, 0, 0.03);
+}
+
 .showcaseCard {
   padding: 5rem 6rem;
   display: flex;
@@ -358,12 +363,15 @@
   border-radius: 24px;
   background: radial-gradient(circle at top right, rgba(var(--color-acid-green-rgb), 0.05), transparent 50%),
               radial-gradient(circle at bottom left, rgba(255, 255, 255, 0.02), transparent 40%);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  box-shadow: 
-    0 4px 6px rgba(0, 0, 0, 0.05),
-    0 10px 15px rgba(0, 0, 0, 0.1),
-    0 25px 40px rgba(0, 0, 0, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(var(--color-text-rgb), 0.1);
+  box-shadow: inset 0 1px 0 rgba(var(--color-text-rgb), 0.05), inset 0 0 20px rgba(var(--color-text-rgb), 0.02);
+}
+
+:global([data-theme="light"]) .showcaseCard {
+  background: radial-gradient(circle at top right, rgba(var(--color-acid-green-rgb), 0.05), transparent 50%),
+              linear-gradient(145deg, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.4) 100%);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 1), inset 0 0 20px rgba(0, 0, 0, 0.02);
 }
 
 .showcaseCard::after {
@@ -377,6 +385,12 @@
   opacity: 0.3;
   z-index: 0;
   pointer-events: none;
+}
+
+:global([data-theme="light"]) .showcaseCard::after {
+  background-image: 
+    linear-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
 }
 
 .productCard::before {
@@ -479,6 +493,10 @@
   max-width: 600px;
   margin-top: -0.5rem;
   margin-bottom: 0.5rem;
+}
+
+:global([data-theme="light"]) .productTagline {
+  color: var(--color-olive);
 }
 
 .productDesc {

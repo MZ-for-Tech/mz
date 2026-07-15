@@ -1,0 +1,51 @@
+.manifestoSection {
+  width: 100%;
+  padding: 30vh 8vw;
+  background-color: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 10;
+}
+
+.container {
+  max-width: 1400px;
+  width: 100%;
+}
+
+.textWrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5vw 2vw;
+  font-family: var(--font-heading), sans-serif;
+  font-size: clamp(3rem, 7vw, 9rem);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.04em;
+  color: var(--color-text);
+}
+
+.word {
+  display: inline-block;
+  will-change: opacity, transform;
+}
+
+.word:last-child {
+  color: var(--color-acid-green);
+}
+
+/* Ensure contrast in light mode */
+:global([data-theme="light"]) .word:last-child {
+  color: var(--color-olive);
+}
+
+@media (max-width: 768px) {
+  .manifestoSection {
+    padding: 20vh 5vw;
+  }
+
+  .textWrapper {
+    gap: 2vw 3vw;
+  }
+}
