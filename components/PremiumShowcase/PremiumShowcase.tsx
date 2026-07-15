@@ -21,6 +21,8 @@ export default function PremiumShowcase() {
             src="/green_glass.jpg"
             alt="Abstract Green Glass 3D Shape"
             fill
+            priority
+            loading="eager"
             className={styles.demoImage}
           />
         </div>

@@ -1188,10 +1188,18 @@
     --glow-padding: 16px !important; /* Push the glowing border closer to the physical edge */
   }
   
-  .productCardWrapper > div,
-  .customCardFull {
+  .productCardWrapper > div {
     height: auto !important;
     min-height: 800px;
+  }
+  
+  .customCardFull {
+    height: var(--card-height, auto) !important;
+    min-height: 500px; /* Reduced from 800px so visuals can fit on screen */
+    transform: none !important;
+    --card-top-offset: 12vh;
+    --card-stack-offset: 20px;
+    --card-height: auto;
   }
 
   .productsSlider > div {

@@ -338,7 +338,6 @@ const PillNav: FC<PillNavProps> = ({
 
           <div style={{ flex: 1 }}></div>
 
-          <ThemeToggle />
           <button
             className="mobile-menu-button"
             onClick={toggleMobileMenu}
@@ -373,6 +372,9 @@ const PillNav: FC<PillNavProps> = ({
                 )}
               </li>
             ))}
+            <li className="mobile-theme-toggle-container">
+              <ThemeToggle />
+            </li>
           </ul>
         </div>
       </nav>

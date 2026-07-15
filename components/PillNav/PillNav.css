@@ -13,6 +13,7 @@
     top: 1rem;
     transform: none;
     padding: 0 1rem;
+    pointer-events: none;
   }
 }
 
@@ -35,6 +36,7 @@
   height: var(--nav-h);
   background: var(--base, #000);
   border-radius: 9999px;
+  pointer-events: auto;
 }
 
 
@@ -142,20 +144,14 @@
   --nav-h: 60px;
   width: 100%;
   height: var(--nav-h);
-  background: var(--base, #000);
-  border-radius: 30px; /* Fully rounded when closed */
+  background: transparent;
   display: none;
   flex-direction: column;
   overflow: hidden;
   box-sizing: border-box;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
-  will-change: height, border-radius;
-  transition: border-radius 0.3s ease;
+  will-change: height;
 }
 
-.mobile-pill-nav.open {
-  border-radius: 24px; /* Slightly less rounded when expanded, like CardNav */
-}
 
 .mobile-pill-nav-top {
   display: flex;
@@ -164,6 +160,7 @@
   height: var(--nav-h);
   min-height: var(--nav-h);
   padding: 0 16px;
+  pointer-events: auto;
 }
 
 
@@ -243,8 +240,15 @@
   cursor: pointer;
   transition: opacity 0.3s ease;
   white-space: nowrap;
+  pointer-events: auto;
 }
 
 .pill-menu-toggle:hover {
   opacity: 0.8;
+}
+
+.mobile-theme-toggle-container {
+  display: flex;
+  justify-content: flex-end;
+  padding: 8px 0;
 }

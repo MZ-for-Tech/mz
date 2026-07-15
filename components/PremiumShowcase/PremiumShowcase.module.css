@@ -1,5 +1,6 @@
 .sectionContainer {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   width: 100%;
 }
 
@@ -15,11 +16,12 @@
   width: 100%;
   max-width: 1600px;
   margin: 0 auto;
+  box-sizing: border-box;
 }
 
 .container {
   position: relative;
-  width: 100vw;
+  width: 100%;
   max-width: 680px; /* Optimized to share space with side text */
   height: 85vh;
   border-radius: 40px;
@@ -125,12 +127,14 @@
     gap: 3rem;
   }
   
+
+
   .leftCopy {
     font-size: 1.15rem;
   }
   
   .rightCopy p {
-    font-size: 1.6rem;
+    font-size: 1.4rem;
   }
   
   .container {
