@@ -2,70 +2,7 @@
 
 import { useRef, useEffect } from 'react';
 
-class Particle {
-    x: number;
-    y: number;
-    vx: number;
-    vy: number;
-    baseX: number;
-    baseY: number;
-    size: number;
-    density: number;
-    color: string;
-
-    value: string; // The mathematical symbol
-
-    constructor(x: number, y: number, color: string) {
-        this.x = x;
-        this.y = y;
-        this.baseX = x;
-        this.baseY = y;
-        this.vx = (Math.random() - 0.5);
-        this.vy = (Math.random() - 0.5);
-        this.size = Math.floor(Math.random() * 12 + 10); // Font size (rounded for grouping)
-        this.density = (Math.random() * 30) + 1;
-        this.color = color;
-        // Mathematical symbols instead of binary
-        const symbols = ['∫', '∑', '∂', '∇', 'α', 'β', 'μ', 'σ', 'φ', 'θ', 'λ', 'π', '∞', '≈', '≠', '≤', '≥'];
-        this.value = symbols[Math.floor(Math.random() * symbols.length)];
-    }
-
-    draw(ctx: CanvasRenderingContext2D) {
-        ctx.fillText(this.value, this.x, this.y);
-    }
-
-    update(mouse: { x: number | null, y: number | null, radius: number }) {
-        if (mouse.x != null && mouse.y != null) {
-            const dx = mouse.x - this.x;
-            const dy = mouse.y - this.y;
-            const distance = Math.sqrt(dx * dx + dy * dy);
-            const forceDirectionX = dx / distance;
-            const forceDirectionY = dy / distance;
-            const maxDistance = mouse.radius;
-            const force = (maxDistance - distance) / maxDistance;
-            const directionX = forceDirectionX * force * this.density;
-            const directionY = forceDirectionY * force * this.density;
-
-            if (distance < mouse.radius) {
-                this.x -= directionX;
-                this.y -= directionY;
-            } else {
-                if (this.x !== this.baseX) {
-                    const dx = this.x - this.baseX;
-                    this.x -= dx / 10;
-                }
-                if (this.y !== this.baseY) {
-                    const dy = this.y - this.baseY;
-                    this.y -= dy / 10;
-                }
-            }
-        } else {
-            // Return to base if no mouse
-            if (this.x !== this.baseX) { this.x -= (this.x - this.baseX) / 20; }
-            if (this.y !== this.baseY) { this.y -= (this.y - this.baseY) / 20; }
-        }
-    }
-}
+const SYMBOLS = ['∫', '∑', '∂', '∇', 'α', 'β', 'μ', 'σ', 'φ', 'θ', 'λ', 'π', '∞', '≈', '≠', '≤', '≥'];
 
 export default function DataStreamHero({ className = "" }: { className?: string }) {
     const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -76,10 +13,8 @@ export default function DataStreamHero({ className = "" }: { className?: string 
         const ctx = canvas.getContext('2d');
         if (!ctx) return;
 
-        let particles: Particle[] = [];
         let animationFrameId: number;
-
-        let particleColor = 'rgba(26, 18, 8, 0.15)'; // matching --color-tnh-text
+        let particleColor = 'rgba(26, 18, 8, 0.15)'; 
 
         const updateParticleColor = () => {
             const rootStyles = getComputedStyle(document.documentElement);
@@ -104,21 +39,82 @@ export default function DataStreamHero({ className = "" }: { className?: string 
             radius: 150
         };
 
-        const init = () => {
-            particles = [];
-            if (canvas.width === 0 || canvas.height === 0) return;
+        // TypedArrays for data-oriented particles
+        let numParticles = 0;
+        let pX: Float32Array;
+        let pY: Float32Array;
+        let pBaseX: Float32Array;
+        let pBaseY: Float32Array;
+        let pSize: Float32Array;
+        let pDensity: Float32Array;
+        let pSymbolIndex: Uint8Array;
 
-            const gap = 40; // OPTIMIZED
+        const init = () => {
+            if (canvas.width === 0 || canvas.height === 0) return;
+            
+            // Dynamic gap based on resolution to strictly cap particles (preventing 4K runaway)
+            const TARGET_PARTICLES = 1500;
+            const area = canvas.width * canvas.height;
+            // Expected particles ≈ (area / gap^2) * 0.9 (because of 90% chance below)
+            let gap = Math.sqrt((area * 0.9) / TARGET_PARTICLES);
+            gap = Math.max(30, gap); // ensure it doesn't get too overwhelmingly dense on tiny screens
+
+            const cols = Math.ceil(canvas.width / gap);
+            const rows = Math.ceil(canvas.height / gap);
+            const maxP = cols * rows;
+
+            pX = new Float32Array(maxP);
+            pY = new Float32Array(maxP);
+            pBaseX = new Float32Array(maxP);
+            pBaseY = new Float32Array(maxP);
+            pSize = new Float32Array(maxP);
+            pDensity = new Float32Array(maxP);
+            pSymbolIndex = new Uint8Array(maxP);
+
+            numParticles = 0;
+
             for (let y = 0; y < canvas.height; y += gap) {
                 for (let x = 0; x < canvas.width; x += gap) {
                     if (Math.random() > 0.1) {
-                        particles.push(new Particle(x, y, particleColor));
+                        pX[numParticles] = x;
+                        pY[numParticles] = y;
+                        pBaseX[numParticles] = x;
+                        pBaseY[numParticles] = y;
+                        pSize[numParticles] = Math.floor(Math.random() * 12 + 10);
+                        pDensity[numParticles] = (Math.random() * 30) + 1;
+                        pSymbolIndex[numParticles] = Math.floor(Math.random() * SYMBOLS.length);
+                        numParticles++;
                     }
                 }
             }
             
-            // Sort by size so we can batch ctx.font changes in the render loop
-            particles.sort((a, b) => a.size - b.size);
+            // Sort arrays by pSize for heavily batched ctx.font rendering
+            const indices = new Int32Array(numParticles);
+            for (let i = 0; i < numParticles; i++) indices[i] = i;
+            indices.sort((a, b) => pSize[a] - pSize[b]);
+
+            // Copy to sorted buffers
+            const sX = new Float32Array(numParticles);
+            const sY = new Float32Array(numParticles);
+            const sBaseX = new Float32Array(numParticles);
+            const sBaseY = new Float32Array(numParticles);
+            const sSize = new Float32Array(numParticles);
+            const sDensity = new Float32Array(numParticles);
+            const sSymbolIndex = new Uint8Array(numParticles);
+
+            for (let i = 0; i < numParticles; i++) {
+                const idx = indices[i];
+                sX[i] = pX[idx];
+                sY[i] = pY[idx];
+                sBaseX[i] = pBaseX[idx];
+                sBaseY[i] = pBaseY[idx];
+                sSize[i] = pSize[idx];
+                sDensity[i] = pDensity[idx];
+                sSymbolIndex[i] = pSymbolIndex[idx];
+            }
+
+            pX = sX; pY = sY; pBaseX = sBaseX; pBaseY = sBaseY;
+            pSize = sSize; pDensity = sDensity; pSymbolIndex = sSymbolIndex;
         };
 
         const resizeObserver = new ResizeObserver((entries) => {
@@ -158,15 +154,45 @@ export default function DataStreamHero({ className = "" }: { className?: string 
             ctx.fillStyle = particleColor;
             
             let currentSize = 0;
+            const mx = mouse.x;
+            const my = mouse.y;
+            const mRadius = mouse.radius;
             
-            for (let i = 0; i < particles.length; i++) {
-                const p = particles[i];
-                if (p.size !== currentSize) {
-                    currentSize = p.size;
+            for (let i = 0; i < numParticles; i++) {
+                let px = pX[i];
+                let py = pY[i];
+                const bx = pBaseX[i];
+                const by = pBaseY[i];
+                
+                if (mx != null && my != null) {
+                    const dx = mx - px;
+                    const dy = my - py;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    if (distance < mRadius) {
+                        const forceDirectionX = dx / distance;
+                        const forceDirectionY = dy / distance;
+                        const force = (mRadius - distance) / mRadius;
+                        const density = pDensity[i];
+                        px -= forceDirectionX * force * density;
+                        py -= forceDirectionY * force * density;
+                    } else {
+                        if (px !== bx) px -= (px - bx) / 10;
+                        if (py !== by) py -= (py - by) / 10;
+                    }
+                } else {
+                    if (px !== bx) px -= (px - bx) / 20;
+                    if (py !== by) py -= (py - by) / 20;
+                }
+                
+                pX[i] = px;
+                pY[i] = py;
+
+                const size = pSize[i];
+                if (size !== currentSize) {
+                    currentSize = size;
                     ctx.font = `${currentSize}px "Cormorant Garamond", serif`;
                 }
-                p.draw(ctx);
-                p.update(mouse);
+                ctx.fillText(SYMBOLS[pSymbolIndex[i]], px, py);
             }
             
             animationFrameId = requestAnimationFrame(animate);
@@ -204,15 +230,7 @@ export default function DataStreamHero({ className = "" }: { className?: string 
     return (
         <div 
           className={className} 
-          style={{ 
-            position: 'absolute', 
-            top: 0, 
-            left: 0, 
-            right: 0, 
-            bottom: 0, 
-            overflow: 'hidden', 
-            zIndex: 0 
-          }}
+          style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, overflow: 'hidden', zIndex: 0 }}
         >
             <canvas ref={canvasRef} style={{ display: 'block', width: '100%', height: '100%' }} />
         </div>

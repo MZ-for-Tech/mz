@@ -54,18 +54,37 @@ function easeInCubic(x: number) { return x * x * x; }
 interface AnimateOpts {
   start?: number; end?: number; duration?: number; delay?: number;
   ease?: (t: number) => number; onUpdate: (v: number) => void; onEnd?: () => void;
+  signal?: AbortSignal;
 }
 
-function animateValue({ start = 0, end = 100, duration = 1000, delay = 0, ease = easeOutCubic, onUpdate, onEnd }: AnimateOpts) {
+function animateValue({ start = 0, end = 100, duration = 1000, delay = 0, ease = easeOutCubic, onUpdate, onEnd, signal }: AnimateOpts) {
   const t0 = performance.now() + delay;
+  let frameId: number;
+  let timerId: ReturnType<typeof setTimeout> | number;
+
   function tick() {
+    if (signal?.aborted) return;
     const elapsed = performance.now() - t0;
-    const t = Math.min(elapsed / duration, 1);
-    onUpdate(start + (end - start) * ease(t));
-    if (t < 1) requestAnimationFrame(tick);
+    const t = Math.min(Math.max(elapsed / duration, 0), 1);
+    
+    // Only update if delay has passed
+    if (elapsed >= 0) {
+       onUpdate(start + (end - start) * ease(t));
+    }
+    
+    if (t < 1) frameId = requestAnimationFrame(tick);
     else if (onEnd) onEnd();
   }
-  setTimeout(() => requestAnimationFrame(tick), delay);
+
+  if (signal?.aborted) return;
+  timerId = setTimeout(() => {
+    if (!signal?.aborted) frameId = requestAnimationFrame(tick);
+  }, delay);
+
+  signal?.addEventListener('abort', () => {
+    clearTimeout(timerId);
+    cancelAnimationFrame(frameId);
+  }, { once: true });
 }
 
 const BorderGlow: React.FC<BorderGlowProps> = ({
@@ -132,6 +151,8 @@ const BorderGlow: React.FC<BorderGlowProps> = ({
     const angleStart = 110;
     const angleEnd = 465;
 
+    const abortController = new AbortController();
+    const { signal } = abortController;
     let hasRun = false;
     const observer = new IntersectionObserver(([entry]) => {
       if (entry.isIntersecting && !hasRun) {
@@ -139,14 +160,14 @@ const BorderGlow: React.FC<BorderGlowProps> = ({
         card.classList.add('sweep-active');
         card.style.setProperty('--cursor-angle', `${angleStart}deg`);
 
-        animateValue({ duration: 500, onUpdate: v => card.style.setProperty('--edge-proximity', `${v}`) });
-        animateValue({ ease: easeInCubic, duration: 1500, end: 50, onUpdate: v => {
+        animateValue({ signal, duration: 500, onUpdate: v => card.style.setProperty('--edge-proximity', `${v}`) });
+        animateValue({ signal, ease: easeInCubic, duration: 1500, end: 50, onUpdate: v => {
           card.style.setProperty('--cursor-angle', `${(angleEnd - angleStart) * (v / 100) + angleStart}deg`);
         }});
-        animateValue({ ease: easeOutCubic, delay: 1500, duration: 2250, start: 50, end: 100, onUpdate: v => {
+        animateValue({ signal, ease: easeOutCubic, delay: 1500, duration: 2250, start: 50, end: 100, onUpdate: v => {
           card.style.setProperty('--cursor-angle', `${(angleEnd - angleStart) * (v / 100) + angleStart}deg`);
         }});
-        animateValue({ ease: easeInCubic, delay: 2500, duration: 1500, start: 100, end: 0,
+        animateValue({ signal, ease: easeInCubic, delay: 2500, duration: 1500, start: 100, end: 0,
           onUpdate: v => card.style.setProperty('--edge-proximity', `${v}`),
           onEnd: () => card.classList.remove('sweep-active'),
         });
@@ -155,7 +176,10 @@ const BorderGlow: React.FC<BorderGlowProps> = ({
     }, { threshold: 0.1 });
 
     observer.observe(card);
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      abortController.abort();
+    };
   }, [animated]);
 
   const glowVars = buildGlowVars(glowColor, glowIntensity);

@@ -200,6 +200,10 @@ export default function DarkVeil({
       cancelAnimationFrame(initialResizeFrame);
       window.removeEventListener('resize', resize);
       window.removeEventListener('mousemove', onMouseMove);
+
+      geometry.remove();
+      program.remove();
+      renderer.gl.getExtension('WEBGL_lose_context')?.loseContext();
     };
   }, [primaryColor, backgroundColor, noiseIntensity, scanlineIntensity, speed, scanlineFrequency, warpAmount]);
   return <canvas ref={ref} className="darkveil-canvas" />;
