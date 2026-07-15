@@ -46,7 +46,7 @@ export default function Manifesto() {
             radius={150}
             falloff="gaussian"
             fromFontVariationSettings="'wght' 400"
-            toFontVariationSettings="'wght' 900"
+            toFontVariationSettings="'wght' 400"
             wordClassName={styles.word}
           />
         </div>

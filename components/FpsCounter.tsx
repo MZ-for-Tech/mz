@@ -3,11 +3,10 @@
 import { useEffect, useState } from "react";
 
 export default function FpsCounter() {
-  if (process.env.NODE_ENV === "production") return null;
-
   const [fps, setFps] = useState(0);
 
   useEffect(() => {
+    if (process.env.NODE_ENV === "production") return;
     let frameCount = 0;
     let lastTime = performance.now();
     let animationFrameId: number;
@@ -27,6 +26,8 @@ export default function FpsCounter() {
 
     return () => cancelAnimationFrame(animationFrameId);
   }, []);
+
+  if (process.env.NODE_ENV === "production") return null;
 
   return (
     <div

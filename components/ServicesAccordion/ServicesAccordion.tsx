@@ -1,12 +1,11 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import { gsap } from "@/lib/gsap";
 import { useGSAP } from "@gsap/react";
 import pageStyles from "@/app/page.module.css";
-import BorderGlow from "@/components/BorderGlow/BorderGlow";
+import DesktopServiceCard from "@/components/DesktopServiceCard/DesktopServiceCard";
 import { BuildVisual, DeployVisual, TeachVisual } from "@/components/ServiceVisuals/ServiceVisuals";
-import { MzLogo } from "@/components/Logo/MzLogo";
 import MobileServiceCard from "@/components/MobileServiceCard/MobileServiceCard";
 
 const SERVICES = [
@@ -48,6 +47,20 @@ const SERVICES = [
 
 export default function ServicesAccordion() {
   const sectionRef = useRef<HTMLElement>(null);
+  const [isMounted, setIsMounted] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const mql = window.matchMedia('(max-width: 768px)');
+    setTimeout(() => {
+      setIsMounted(true);
+      setIsMobile(mql.matches);
+    }, 0);
+    
+    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    mql.addEventListener('change', handler);
+    return () => mql.removeEventListener('change', handler);
+  }, []);
 
   // Section reveal on scroll
   useGSAP(() => {
@@ -72,7 +85,7 @@ export default function ServicesAccordion() {
       <div className={pageStyles.sectionHeader}>Services</div>
 
       <div className={pageStyles.desktopOnly} style={{ width: '100%', marginTop: '8rem', display: 'flex', flexDirection: 'column', gap: '30vh', paddingBottom: '20vh' }}>
-        {SERVICES.map((service, index) => (
+        {(!isMounted || !isMobile) && SERVICES.map((service, index) => (
           <div
             key={service.id}
             className={pageStyles.customCardFull}
@@ -87,57 +100,23 @@ export default function ServicesAccordion() {
               transformStyle: 'preserve-3d'
             }}
           >
-            <BorderGlow
-              edgeSensitivity={30}
-              glowColor="78 63 44"
-              backgroundColor="var(--color-bg-light)"
-              borderRadius={20}
-              glowRadius={40}
-              glowIntensity={1.0}
-              coneSpread={25}
-              animated={true}
-              colors={['var(--color-acid-green)', '#5A7A0A', '#D4A820']}
-              className={pageStyles.productCardWrapper}
-            >
-              <div className={pageStyles.productCard}>
-                <MzLogo
-                  width={400}
-                  height={400}
-                  className={pageStyles.productWatermark}
-                />
-                <div className={pageStyles.proprietaryStamp}>
-                  {service.pillar}
-                </div>
-
-                <div className={pageStyles.productContent}>
-                  <div className={pageStyles.productNameWrapper} style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
-                    <div className={pageStyles.productName}>{service.title}</div>
-                  </div>
-                  <div className={pageStyles.productTagline}>{service.tagline}</div>
-                  <div className={pageStyles.productDesc} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                    <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                      {service.capabilities.map((cap, i) => (
-                        <li key={i} style={{ display: 'flex', alignItems: 'center', gap: '16px', fontSize: '1.25rem', color: 'rgba(var(--color-text-rgb), 0.8)' }}>
-                          <span style={{ width: '6px', height: '6px', backgroundColor: 'var(--color-acid-green)', borderRadius: '50%', flexShrink: 0 }}></span>
-                          {cap}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-                <div className={pageStyles.productVisual}>
-                  {service.pillar === "BUILD" && <BuildVisual />}
-                  {service.pillar === "DEPLOY" && <DeployVisual />}
-                  {service.pillar === "TEACH" && <TeachVisual />}
-                </div>
-              </div>
-            </BorderGlow>
+            <DesktopServiceCard
+              pillar={service.pillar}
+              title={service.title}
+              tagline={service.tagline}
+              capabilities={service.capabilities}
+              visual={
+                service.pillar === "BUILD" ? <BuildVisual /> :
+                  service.pillar === "DEPLOY" ? <DeployVisual /> :
+                    service.pillar === "TEACH" ? <TeachVisual /> : undefined
+              }
+            />
           </div>
         ))}
       </div>
 
       <div className={`${pageStyles.mobileOnly} ${pageStyles.mobileServicesWrapper}`}>
-        {SERVICES.map((service, index) => (
+        {(!isMounted || isMobile) && SERVICES.map((service, index) => (
           <div
             key={service.id}
             style={{

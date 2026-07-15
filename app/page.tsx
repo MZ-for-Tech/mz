@@ -41,6 +41,18 @@ export default function Home() {
   const [activeProjectIndex, setActiveProjectIndex] = useState<number>(0);
   const [hoveredProjectIndex, setHoveredProjectIndex] = useState<number | null>(null);
   const [isInteractive, setIsInteractive] = useState(false);
+  const [loadedProjects, setLoadedProjects] = useState<Set<string>>(new Set([WORK_PROJECTS[0].id]));
+
+  useEffect(() => {
+    const displayIndex = hoveredProjectIndex !== null ? hoveredProjectIndex : activeProjectIndex;
+    const currentId = WORK_PROJECTS[displayIndex].id;
+    setLoadedProjects(prev => {
+      if (prev.has(currentId)) return prev;
+      const next = new Set(prev);
+      next.add(currentId);
+      return next;
+    });
+  }, [hoveredProjectIndex, activeProjectIndex]);
 
   // Exit iframe interactive mode on Escape key
   useEffect(() => {
@@ -364,19 +376,16 @@ export default function Home() {
                                 </div>
                               </div>
                             )}
-                            {isInteractive && isActive && (
-                              <div className={styles.workExitHint}>
-                                ESC or move mouse out to exit
-                              </div>
-                            )}
 
-                            <iframe
-                              src={project.link}
-                              title={project.name}
-                              className={styles.workIframe}
-                              loading="lazy"
-                              style={{ pointerEvents: (isInteractive && isActive) ? 'auto' : 'none' }}
-                            />
+                            {(isActive || loadedProjects.has(project.id)) && (
+                              <iframe
+                                src={project.link}
+                                title={project.name}
+                                className={styles.workIframe}
+                                loading="lazy"
+                                style={{ pointerEvents: isInteractive && isActive ? 'auto' : 'none' }}
+                              />
+                            )}
                           </>
                         )}
                       </div>

@@ -19,7 +19,7 @@ function useAnimationFrame(callback: Callback) {
 }
 
 function useMousePositionRef(containerRef: RefObject<HTMLElement | null>) {
-  const positionRef = useRef({ x: 0, y: 0 });
+  const positionRef = useRef({ x: -9999, y: -9999 });
 
   useEffect(() => {
     const updatePosition = (x: number, y: number) => {
@@ -32,18 +32,10 @@ function useMousePositionRef(containerRef: RefObject<HTMLElement | null>) {
     };
 
     const handleMouseMove = (ev: MouseEvent) => updatePosition(ev.clientX, ev.clientY);
-    const handleTouchMove = (ev: TouchEvent) => {
-      if (ev.touches.length > 0) {
-        const touch = ev.touches[0];
-        updatePosition(touch.clientX, touch.clientY);
-      }
-    };
 
     window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('touchmove', handleTouchMove);
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('touchmove', handleTouchMove);
     };
   }, [containerRef]);
 
@@ -137,12 +129,16 @@ const VariableProximity = forwardRef<HTMLSpanElement, VariableProximityProps>((p
       const letterCenterX = rect.left + rect.width / 2 - containerRect.left;
       const letterCenterY = rect.top + rect.height / 2 - containerRect.top;
 
-      const distance = calculateDistance(
+      let distance = calculateDistance(
         mousePositionRef.current.x,
         mousePositionRef.current.y,
         letterCenterX,
         letterCenterY
       );
+
+      if (typeof window !== 'undefined' && window.matchMedia('(max-width: 768px)').matches) {
+        distance = Infinity;
+      }
 
       if (distance >= radius) {
         letterRef.style.fontVariationSettings = fromFontVariationSettings;
