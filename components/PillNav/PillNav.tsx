@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState, FC, CSSProperties } from 'react';
 import { TransitionLink as Link } from '@/components/TransitionLink/TransitionLink';
 import { gsap } from 'gsap';
-import ThemeToggle from '../ThemeToggle/ThemeToggle';
 import './PillNav.css';
 
 export type PillNavItem = {
@@ -329,7 +328,6 @@ const PillNav: FC<PillNavProps> = ({
         >
           {isDesktopMenuOpen ? 'CLOSE' : 'MENU'}
         </button>
-        <ThemeToggle />
       </nav>
 
       {/* --- MOBILE NAV (CardNav expanding pattern) --- */}
@@ -372,9 +370,6 @@ const PillNav: FC<PillNavProps> = ({
                 )}
               </li>
             ))}
-            <li className="mobile-theme-toggle-container">
-              <ThemeToggle />
-            </li>
           </ul>
         </div>
       </nav>

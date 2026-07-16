@@ -39,6 +39,7 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${geistSans.variable} ${jetbrainsMono.variable} ${cormorant.variable}`}
+      data-theme="dark"
     >
       <body>
         <CustomCursor />
