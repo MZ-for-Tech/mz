@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, FC, CSSProperties } from 'react';
-import Link from 'next/link';
+import { TransitionLink as Link } from '@/components/TransitionLink/TransitionLink';
 import { gsap } from 'gsap';
 import ThemeToggle from '../ThemeToggle/ThemeToggle';
 import './PillNav.css';

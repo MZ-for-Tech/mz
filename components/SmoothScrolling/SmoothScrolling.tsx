@@ -12,22 +12,28 @@ function ScrollToTopOnRouteChange() {
   useEffect(() => {
     if (!lenis) return;
 
+    // Prevent browser from restoring scroll position natively (fixes back button lock)
+    if (typeof window !== "undefined" && "scrollRestoration" in window.history) {
+      window.history.scrollRestoration = "manual";
+    }
+
     // Stop Lenis immediately so it doesn't fight with the reset
     lenis.stop();
 
     // Scroll to top via native API to clear any stuck positions
     window.scrollTo(0, 0);
+    lenis.scrollTo(0, { immediate: true, force: true });
 
-    // Give Lenis one frame to register the position reset before re-enabling
-    const raf = requestAnimationFrame(() => {
-      lenis.scrollTo(0, { immediate: true });
+    // Give layout time to settle (e.g. isMounted states, framer-motion)
+    const timeoutId = setTimeout(() => {
       lenis.start();
-
-      // Refresh ScrollTrigger after Lenis is running again
+      lenis.scrollTo(0, { immediate: true, force: true });
+      window.scrollTo(0, 0);
+      lenis.resize();
       ScrollTrigger.refresh();
-    });
+    }, 150); // 150ms covers most React mounting lifecycle shifts
 
-    return () => cancelAnimationFrame(raf);
+    return () => clearTimeout(timeoutId);
   }, [pathname, lenis]);
 
   return null;

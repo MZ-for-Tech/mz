@@ -20,6 +20,7 @@ import PremiumShowcase from "@/components/PremiumShowcase/PremiumShowcase";
 import Manifesto from "@/components/Manifesto/Manifesto";
 import BackToTop from "@/components/BackToTop/BackToTop";
 import ObfuscatedEmail from "@/components/ObfuscatedEmail/ObfuscatedEmail";
+import { TransitionLink } from "@/components/TransitionLink/TransitionLink";
 
 
 const WORK_PROJECTS = [
@@ -43,16 +44,14 @@ export default function Home() {
   const [isInteractive, setIsInteractive] = useState(false);
   const [loadedProjects, setLoadedProjects] = useState<Set<string>>(new Set([WORK_PROJECTS[0].id]));
 
-  useEffect(() => {
-    const displayIndex = hoveredProjectIndex !== null ? hoveredProjectIndex : activeProjectIndex;
-    const currentId = WORK_PROJECTS[displayIndex].id;
-    setLoadedProjects(prev => {
-      if (prev.has(currentId)) return prev;
-      const next = new Set(prev);
-      next.add(currentId);
-      return next;
-    });
-  }, [hoveredProjectIndex, activeProjectIndex]);
+  const displayIndex = hoveredProjectIndex !== null ? hoveredProjectIndex : activeProjectIndex;
+  const currentId = WORK_PROJECTS[displayIndex].id;
+  
+  if (!loadedProjects.has(currentId)) {
+    const next = new Set(loadedProjects);
+    next.add(currentId);
+    setLoadedProjects(next);
+  }
 
   // Exit iframe interactive mode on Escape key
   useEffect(() => {
@@ -218,9 +217,9 @@ export default function Home() {
               </div>
 
               <div className={`${styles.heroActionWrapper} hero-action-wrapper`}>
-                <a href="/start" className={styles.heroBtnPrimary}>
+                <TransitionLink href="/start" className={styles.heroBtnPrimary}>
                   Hire Us
-                </a>
+                </TransitionLink>
               </div>
             </section>
           </div>
@@ -439,9 +438,9 @@ export default function Home() {
               <ObfuscatedEmail user="hello" domain="mzltd.tech" className={styles.ctaEmail} />
 
               <div className={styles.ctaActionWrapper}>
-                <a href="/start" className={styles.submitBtn}>
+                <TransitionLink href="/start" className={styles.submitBtn}>
                   START A PROJECT →
-                </a>
+                </TransitionLink>
               </div>
             </section>
           </div>

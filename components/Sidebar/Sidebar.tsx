@@ -1,6 +1,6 @@
 
 import { MzLogo } from '@/components/Logo/MzLogo';
-import Link from 'next/link';
+import { TransitionLink as Link } from '@/components/TransitionLink/TransitionLink';
 import styles from './Sidebar.module.css';
 
 export function Sidebar() {

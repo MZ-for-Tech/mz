@@ -1,6 +1,7 @@
 import styles from "./Footer.module.css";
 import { useRef, useEffect, useState } from "react";
 import ObfuscatedEmail from "../ObfuscatedEmail/ObfuscatedEmail";
+import { TransitionLink } from "@/components/TransitionLink/TransitionLink";
 
 export function Footer() {
   const footerRef = useRef<HTMLDivElement>(null);
@@ -56,7 +57,7 @@ export function Footer() {
                 <span>RESEARCH — SOFTWARE — KNOWLEDGE</span>
               </div>
             </span>
-            <span>All rights reserved. <a href="/privacy" style={{ textDecoration: 'underline', marginLeft: '1rem' }}>Privacy Policy</a></span>
+            <span>All rights reserved. <TransitionLink href="/privacy" style={{ textDecoration: 'underline', marginLeft: '1rem' }}>Privacy Policy</TransitionLink></span>
           </div>
         </div>
       </footer>

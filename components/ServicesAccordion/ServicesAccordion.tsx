@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useEffect } from "react";
+import { useRef } from "react";
 import { gsap } from "@/lib/gsap";
 import { useGSAP } from "@gsap/react";
 import pageStyles from "@/app/page.module.css";
@@ -47,20 +47,6 @@ const SERVICES = [
 
 export default function ServicesAccordion() {
   const sectionRef = useRef<HTMLElement>(null);
-  const [isMounted, setIsMounted] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const mql = window.matchMedia('(max-width: 768px)');
-    setTimeout(() => {
-      setIsMounted(true);
-      setIsMobile(mql.matches);
-    }, 0);
-    
-    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
-    mql.addEventListener('change', handler);
-    return () => mql.removeEventListener('change', handler);
-  }, []);
 
   // Section reveal on scroll
   useGSAP(() => {
@@ -85,7 +71,7 @@ export default function ServicesAccordion() {
       <div className={pageStyles.sectionHeader}>Services</div>
 
       <div className={pageStyles.desktopOnly} style={{ width: '100%', marginTop: '8rem', display: 'flex', flexDirection: 'column', gap: '30vh', paddingBottom: '20vh' }}>
-        {(!isMounted || !isMobile) && SERVICES.map((service, index) => (
+        {SERVICES.map((service, index) => (
           <div
             key={service.id}
             className={pageStyles.customCardFull}
@@ -116,7 +102,7 @@ export default function ServicesAccordion() {
       </div>
 
       <div className={`${pageStyles.mobileOnly} ${pageStyles.mobileServicesWrapper}`}>
-        {(!isMounted || isMobile) && SERVICES.map((service, index) => (
+        {SERVICES.map((service, index) => (
           <div
             key={service.id}
             style={{

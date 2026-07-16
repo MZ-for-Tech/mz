@@ -101,7 +101,10 @@ export default function DarkVeil({
   warpAmount = 0.5
 }: DarkVeilProps) {
   const ref = useRef<HTMLCanvasElement>(null);
+  const frameRef = useRef<number>(0);
+  const destroyedRef = useRef(false);
   useEffect(() => {
+    destroyedRef.current = false;
     const canvas = ref.current as HTMLCanvasElement;
     const parent = canvas.parentElement as HTMLElement;
 
@@ -170,40 +173,45 @@ export default function DarkVeil({
     window.addEventListener('mousemove', onMouseMove);
 
     const start = performance.now();
-    let frame = 0;
     let isVisible = false;
 
     const loop = () => {
-      if (!isVisible) return;
+      if (destroyedRef.current || !isVisible) return;
       mouse.x += (targetMouse.x - mouse.x) * 0.05;
       mouse.y += (targetMouse.y - mouse.y) * 0.05;
       program.uniforms.uMouse.value.copy(mouse);
 
       program.uniforms.uTime.value = ((performance.now() - start) / 1000) * speed;
-      renderer.render({ scene: mesh });
-      frame = requestAnimationFrame(loop);
+      try {
+        renderer.render({ scene: mesh });
+      } catch {
+        return; // GL context was lost mid-frame
+      }
+      frameRef.current = requestAnimationFrame(loop);
     };
 
     const observer = new IntersectionObserver(([entry]) => {
       isVisible = entry.isIntersecting;
       if (isVisible) {
-        cancelAnimationFrame(frame);
+        cancelAnimationFrame(frameRef.current);
         loop();
       }
     }, { threshold: 0.01 });
     observer.observe(parent);
 
     return () => {
+      destroyedRef.current = true;
+      cancelAnimationFrame(frameRef.current);
       themeObserver.disconnect();
       observer.disconnect();
-      cancelAnimationFrame(frame);
       cancelAnimationFrame(initialResizeFrame);
       window.removeEventListener('resize', resize);
       window.removeEventListener('mousemove', onMouseMove);
 
       geometry.remove();
       program.remove();
-      renderer.gl.getExtension('WEBGL_lose_context')?.loseContext();
+      // NOTE: Do NOT call loseContext() here. It permanently prevents the canvas
+      // from acquiring a new WebGL context on remount (e.g. returning to this page).
     };
   }, [primaryColor, backgroundColor, noiseIntensity, scanlineIntensity, speed, scanlineFrequency, warpAmount]);
   return <canvas ref={ref} className="darkveil-canvas" />;

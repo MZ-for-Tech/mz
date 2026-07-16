@@ -25,11 +25,10 @@ export const metadata: Metadata = {
   description: "Research-driven technology company. Cairo, Egypt.",
 };
 
-import Link from "next/link";
+import { TransitionLink } from "@/components/TransitionLink/TransitionLink";
 import { MzLogo } from "@/components/Logo/MzLogo";
 import FpsCounter from "@/components/FpsCounter";
 import { CustomCursor } from "@/components/CustomCursor/CustomCursor";
-
 
 export default function RootLayout({
   children,
@@ -44,7 +43,7 @@ export default function RootLayout({
       <body>
         <CustomCursor />
         <FpsCounter />
-        <Link href="/" className="layout-logo-link" style={{
+        <TransitionLink href="/" className="layout-logo-link" style={{
           position: 'fixed',
           top: '10px',
           left: '20px',
@@ -55,7 +54,7 @@ export default function RootLayout({
             height={100}
             className="layout-logo-img"
           />
-        </Link>
+        </TransitionLink>
         <SmoothScrolling>{children}</SmoothScrolling>
       </body>
     </html>
