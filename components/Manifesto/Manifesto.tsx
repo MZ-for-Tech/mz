@@ -13,11 +13,11 @@ export default function Manifesto() {
   const containerRef = useRef<HTMLElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
 
-  const text = "We don't just write code. We engineer systems designed for scale, rooted in statistical rigor, and built to outlast the hype.";
+  const text = "We don't just write code. We engineer customized systems designed for scale, rooted in statistical rigor, and built to outlast the hype.";
 
   useGSAP(() => {
     if (!textRef.current) return;
-    
+
     gsap.fromTo(
       `.${styles.word}`,
       { opacity: 0.1, y: 20 },

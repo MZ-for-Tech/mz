@@ -1,5 +1,6 @@
 import { useState, ReactNode } from "react";
 import styles from "./MobileServiceCard.module.css";
+import Grainient from "@/components/Grainient/Grainient";
 
 interface MobileServiceCardProps {
   title: string;
@@ -12,7 +13,23 @@ export default function MobileServiceCard({ title, tagline, capabilities, visual
   const [isActive, setIsActive] = useState(false);
 
   return (
-    <div className={styles.card} data-active={isActive}>
+    <div 
+      className={styles.card} 
+      data-active={isActive} 
+      onClick={() => setIsActive(!isActive)}
+      style={{ cursor: 'pointer' }}
+    >
+      <div className={styles.grainientWrapper}>
+        <Grainient
+          color1="var(--color-bg)"
+          color2="var(--color-bg)"
+          color3="var(--color-olive)"
+          timeSpeed={0.15}
+          colorBalance={0.0}
+          blendSoftness={0.2}
+          contrast={1.1}
+        />
+      </div>
       <div className={styles.lightLayer}>
         <div className={styles.slit}></div>
         <div className={styles.lumen}>
@@ -48,13 +65,11 @@ export default function MobileServiceCard({ title, tagline, capabilities, visual
               </li>
             ))}
           </ul>
-          <div 
-            className={styles.toggle}
-            data-active={isActive}
-            onClick={() => setIsActive(!isActive)}
-          >
-            <div className={styles.handle}></div>
-            <span>Activate Lumen</span>
+          <div className={styles.toggle} data-active={isActive}>
+            <div className={styles.track}>
+              <div className={styles.knob}></div>
+            </div>
+            <span className={styles.label}>LUMEN</span>
           </div>
         </div>
       </div>

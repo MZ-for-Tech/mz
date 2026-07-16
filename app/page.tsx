@@ -46,7 +46,7 @@ export default function Home() {
 
   const displayIndex = hoveredProjectIndex !== null ? hoveredProjectIndex : activeProjectIndex;
   const currentId = WORK_PROJECTS[displayIndex].id;
-  
+
   if (!loadedProjects.has(currentId)) {
     const next = new Set(loadedProjects);
     next.add(currentId);
@@ -218,7 +218,7 @@ export default function Home() {
 
               <div className={`${styles.heroActionWrapper} hero-action-wrapper`}>
                 <TransitionLink href="/start" className={styles.heroBtnPrimary}>
-                  Hire Us
+                  Let's talk.
                 </TransitionLink>
               </div>
             </section>

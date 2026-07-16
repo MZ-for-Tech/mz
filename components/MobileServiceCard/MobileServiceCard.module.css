@@ -1,6 +1,6 @@
 .card {
 	position: relative;
-	background: radial-gradient(circle at 50% 0%, var(--color-bg-light) 0%, var(--color-bg) 64%);
+	background: transparent;
 	box-shadow: inset 0 1.01em 0.2em -1em rgba(255,255,255,0),
 		inset 0 -1.01em 0.2em -1em rgba(0,0,0,0), 0 -1.02em 0.2em -1em rgba(255,255,255,0),
 		0 1em 0.2em -1em rgba(0,0,0,0), 0 0 0 1px rgba(245, 245, 240, 0.1), 0 4px 4px 0 rgba(0,0,0,0.4), 0 0 0 1px var(--color-border);
@@ -18,6 +18,18 @@
 	transition: all 0.4s ease-in-out, translate 0.4s ease-out;
   font-size: 16px; 
   margin: 0 auto;
+  overflow: hidden;
+}
+
+.grainientWrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  opacity: 1; /* Always visible */
+  transition: opacity 0.4s ease-in-out;
 }
 
 .card::before {
@@ -58,6 +70,8 @@
     var(--ax) var(--ax)
   );
   transition: all 0.4s ease-in-out;
+  z-index: 0;
+  pointer-events: none;
 }
 
 .card:hover {
@@ -259,80 +273,63 @@
   max-width: 70%;
 }
 
+/* Sleek digital switch */
 .toggle {
   position: absolute;
   right: 0;
   bottom: 0;
-  height: 2.2em;
-  width: 5.2em;
-  border-radius: 0.6em;
-  background: var(--color-bg-light);
-  box-shadow: inset 0 -8px 8px 0.3em rgba(0,0,0,0.4), inset 0 0 1px 0.3em var(--color-border),
-    inset 0 -2px 1px 0.3em rgba(245, 245, 240, 0.1), inset 0 1px 2px 0.3em rgba(0,0,0,0.6),
-    inset 0 0 1px 0.8em var(--color-border);
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  background: transparent;
+  box-shadow: none;
   cursor: pointer;
-  transition: all 0.4s ease-in-out;
+  z-index: 100;
+  pointer-events: none; /* Let the card handle clicks */
 }
 
-.toggle::before {
-  content: "";
-  display: block;
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  margin: auto;
-  width: 3.8em;
-  height: 0.8em;
-  border-radius: 0.2em;
-  background: var(--color-bg);
-  transition: all 0.4s ease-in-out;
+.track {
+  width: 2.6em;
+  height: 1.4em;
+  border-radius: 1em;
+  background: rgba(245, 245, 240, 0.1);
+  border: 1px solid rgba(245, 245, 240, 0.05);
+  position: relative;
+  transition: all 0.3s ease;
 }
 
-.handle {
+.knob {
   position: absolute;
-  top: 0;
-  bottom: 0.04em;
-  margin: auto;
-  left: 0.68em;
-  width: 40%;
-  height: 30%;
+  top: 0.15em;
+  left: 0.2em;
+  width: 1em;
+  height: 1em;
+  border-radius: 50%;
   background: var(--color-text-muted);
-  border-radius: 0.2em;
-  box-shadow: inset 0 1px 4px 0 rgba(245, 245, 240, 0.5), inset 0 -1px 1px 0 rgba(0,0,0,0.6),
-    0 0 1px 1px rgba(0,0,0,0.3), 1px 3px 6px 1px rgba(0,0,0,0.6);
-  transition: all 0.4s ease-in-out;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.toggle[data-active="true"] .handle {
-  transform: translateX(1.72em);
+.toggle[data-active="true"] .track {
+  background: rgba(175, 192, 32, 0.2);
+  border-color: rgba(175, 192, 32, 0.4);
+}
+
+.toggle[data-active="true"] .knob {
+  transform: translateX(1.1em);
   background: var(--color-acid-green);
-  box-shadow: inset 0 1px 4px 0 #fff, inset 0 -1px 1px 0 rgba(0,0,0,0.6),
-    0 0 1px 1px rgba(0,0,0,0.3), 1px 3px 6px 1px rgba(0,0,0,0.6);
+  box-shadow: 0 0 8px var(--color-acid-green);
 }
 
-.toggle span {
-  pointer-events: none;
-  text-align: center;
-  position: absolute;
-  left: 0;
-  right: 0;
-  margin: auto;
-  bottom: calc(100% + 0.4em);
-  font-size: 0.6em;
+.label {
+  font-size: 0.75em;
   font-weight: 600;
   color: var(--color-text-muted);
-  opacity: 0;
-  transition: opacity 0.4s ease-in-out;
+  letter-spacing: 0.05em;
+  transition: color 0.3s ease;
 }
 
-.toggle:hover span {
-  opacity: 1;
-}
-
-.toggle:not([data-active="true"]):hover .handle {
-  transform: translateX(0.2em);
+.toggle[data-active="true"] .label {
+  color: var(--color-acid-green);
 }
 
 /* Active State styles applied directly to .card[data-active="true"] */
@@ -363,10 +360,7 @@
   filter: drop-shadow(0 -1.2em 2px rgba(175, 192, 32, 0.2));
 }
 
-.card[data-active="true"] .toggle::before {
-  background: rgba(175, 192, 32, 0.15);
-  box-shadow: 0 0 0.4em 0.2em rgba(175, 192, 32, 0.4);
-}
+
 
 /* ========================================= */
 /* ==== LIGHT MODE OVERRIDES ==== */
@@ -384,4 +378,22 @@
 
 :global([data-theme="light"]) .card[data-active="true"] .icon {
   filter: drop-shadow(0 -1.2em 1px transparent) !important;
+}
+
+.productWatermark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: auto;
+  height: 80%;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.04;
+  filter: brightness(0) invert(1);
+}
+
+:global([data-theme="light"]) .productWatermark {
+  filter: brightness(0);
+  opacity: 0.04;
 }
