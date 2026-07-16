@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, FC, CSSProperties } from 'react';
+import { useRef, useState, FC } from 'react';
 import { TransitionLink as Link } from '@/components/TransitionLink/TransitionLink';
 import { gsap } from 'gsap';
 import './PillNav.css';
@@ -12,7 +12,6 @@ export type PillNavItem = {
 };
 
 export interface PillNavProps {
-
   items: PillNavItem[];
   activeHref?: string;
   className?: string;
@@ -36,325 +35,136 @@ const isExternalLink = (href: string) =>
 const isRouterLink = (href?: string) => href && !isExternalLink(href);
 
 const PillNav: FC<PillNavProps> = ({
-
   items,
   activeHref,
   className = '',
-  ease = 'power3.easeOut',
-  baseColor = '#fff',
-  pillColor = '#120F17',
-  hoveredPillTextColor = '#120F17',
-  pillTextColor,
   onMobileMenuClick,
-  initialLoadAnimation = true
 }) => {
-  const resolvedPillTextColor = pillTextColor ?? baseColor;
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const isMobileMenuOpenRef = useRef(isMobileMenuOpen);
-  useEffect(() => {
-    isMobileMenuOpenRef.current = isMobileMenuOpen;
-  }, [isMobileMenuOpen]);
   const [isDesktopMenuOpen, setIsDesktopMenuOpen] = useState(false);
   
-  // Desktop Refs
-  const circleRefs = useRef<Array<HTMLSpanElement | null>>([]);
-  const tlRefs = useRef<Array<gsap.core.Timeline | null>>([]);
-  const activeTweenRefs = useRef<Array<gsap.core.Tween | null>>([]);
-  const navItemsRef = useRef<HTMLDivElement | null>(null);
-
-
-  // Mobile Refs
-  const mobileNavRef = useRef<HTMLElement | null>(null);
-  const mobileContentRef = useRef<HTMLDivElement | null>(null);
-  const hamburgerRef = useRef<HTMLButtonElement | null>(null);
-
-
-  useEffect(() => {
-    // Desktop layout effect
-    const layout = () => {
-      circleRefs.current.forEach(circle => {
-        if (!circle?.parentElement) return;
-
-        const pill = circle.parentElement as HTMLElement;
-        const rect = pill.getBoundingClientRect();
-        const { width: w, height: h } = rect;
-        const R = ((w * w) / 4 + h * h) / (2 * h);
-        const D = Math.ceil(2 * R) + 2;
-        const delta = Math.ceil(R - Math.sqrt(Math.max(0, R * R - (w * w) / 4))) + 1;
-        const originY = D - delta;
-
-        circle.style.width = `${D}px`;
-        circle.style.height = `${D}px`;
-        circle.style.bottom = `-${delta}px`;
-
-        gsap.set(circle, {
-          xPercent: -50,
-          scale: 0,
-          transformOrigin: `50% ${originY}px`
-        });
-
-        const label = pill.querySelector<HTMLElement>('.pill-label');
-        const white = pill.querySelector<HTMLElement>('.pill-label-hover');
-
-        if (label) gsap.set(label, { y: 0 });
-        if (white) gsap.set(white, { y: h + 12, opacity: 0 });
-
-        const index = circleRefs.current.indexOf(circle);
-        if (index === -1) return;
-
-        tlRefs.current[index]?.kill();
-        const tl = gsap.timeline({ paused: true });
-
-        tl.to(circle, { scale: 1.2, xPercent: -50, duration: 2, ease, overwrite: 'auto' }, 0);
-
-        if (label) {
-          tl.to(label, { y: -(h + 8), duration: 2, ease, overwrite: 'auto' }, 0);
-        }
-
-        if (white) {
-          gsap.set(white, { y: Math.ceil(h + 100), opacity: 0 });
-          tl.to(white, { y: 0, opacity: 1, duration: 2, ease, overwrite: 'auto' }, 0);
-        }
-
-        tlRefs.current[index] = tl;
-      });
-    };
-
-    const initialFrameRef = requestAnimationFrame(() => {
-      layout();
-    });
-
-    const onResize = () => {
-      layout();
-      
-      // Reset mobile menu on resize to avoid stuck states
-      if (window.innerWidth > 768 && isMobileMenuOpenRef.current) {
-        setIsMobileMenuOpen(false);
-        if (mobileNavRef.current) gsap.set(mobileNavRef.current, { height: 60 });
-        const hamburger = hamburgerRef.current;
-        if (hamburger) {
-          const lines = hamburger.querySelectorAll('.hamburger-line');
-          gsap.set(lines[0], { rotation: 0, y: 0 });
-          gsap.set(lines[1], { rotation: 0, y: 0 });
-        }
-      }
-    };
-    window.addEventListener('resize', onResize);
-
-    if (document.fonts?.ready) {
-      document.fonts.ready.then(() => {
-        requestAnimationFrame(layout);
-      }).catch(() => {});
-    }
-
-    if (initialLoadAnimation) {
-      const navItems = navItemsRef.current;
-
-      if (navItems) {
-        gsap.set(navItems, { width: 0, overflow: 'hidden' });
-        // Removed auto-expand so it stays collapsed by default
-      }
-    }
-
-    return () => {
-      window.removeEventListener('resize', onResize);
-      cancelAnimationFrame(initialFrameRef);
-    };
-  }, [items, ease, initialLoadAnimation]);
+  const overlayRef = useRef<HTMLDivElement>(null);
+  const mobileLinksRef = useRef<HTMLUListElement>(null);
+  const desktopNavItemsRef = useRef<HTMLDivElement>(null);
+  const desktopLinksRef = useRef<HTMLUListElement>(null);
 
   const toggleDesktopMenu = () => {
     const nextState = !isDesktopMenuOpen;
     setIsDesktopMenuOpen(nextState);
 
-    const el = navItemsRef.current;
-    if (!el) return;
-
-    if (nextState) {
-      gsap.to(el, { width: 'auto', duration: 0.6, ease });
-    } else {
-      gsap.to(el, { width: 0, duration: 0.6, ease });
-    }
-  };
-
-  const handleEnter = (i: number) => {
-    const tl = tlRefs.current[i];
-    if (!tl) return;
-    activeTweenRefs.current[i]?.kill();
-    activeTweenRefs.current[i] = tl.tweenTo(tl.duration(), {
-      duration: 0.3,
-      ease,
-      overwrite: 'auto'
-    });
-  };
-
-  const handleLeave = (i: number) => {
-    const tl = tlRefs.current[i];
-    if (!tl) return;
-    activeTweenRefs.current[i]?.kill();
-    activeTweenRefs.current[i] = tl.tweenTo(0, {
-      duration: 0.2,
-      ease,
-      overwrite: 'auto'
-    });
-  };
-
-
-
-  const toggleMobileMenu = () => {
-    const newState = !isMobileMenuOpen;
-    setIsMobileMenuOpen(newState);
-
-    const hamburger = hamburgerRef.current;
-    const nav = mobileNavRef.current;
-    const content = mobileContentRef.current;
-
-    if (hamburger) {
-      const lines = hamburger.querySelectorAll('.hamburger-line');
-      if (newState) {
-        gsap.to(lines[0], { rotation: 45, y: 3, duration: 0.3, ease });
-        gsap.to(lines[1], { rotation: -45, y: -3, duration: 0.3, ease });
-      } else {
-        gsap.to(lines[0], { rotation: 0, y: 0, duration: 0.3, ease });
-        gsap.to(lines[1], { rotation: 0, y: 0, duration: 0.3, ease });
-      }
-    }
-
-    if (nav && content) {
-      if (newState) {
+    if (desktopNavItemsRef.current && desktopLinksRef.current) {
+      if (nextState) {
         // Expand
-        content.style.visibility = 'visible';
-        content.style.pointerEvents = 'auto';
-        
-        // Calculate needed height
-        const contentHeight = content.scrollHeight;
-        const totalHeight = 60 + contentHeight + 16; // 60 top bar + content + padding
-        
-        gsap.to(nav, { height: totalHeight, duration: 0.4, ease });
-        
-        const links = content.querySelectorAll('.mobile-menu-link');
-        gsap.fromTo(links, 
-          { y: 20, opacity: 0 }, 
-          { y: 0, opacity: 1, stagger: 0.05, duration: 0.3, delay: 0.1, ease }
+        gsap.to(desktopNavItemsRef.current, { width: 'auto', duration: 0.6, ease: 'power3.out' });
+        gsap.fromTo(desktopLinksRef.current.children,
+          { opacity: 0, x: -10 },
+          { opacity: 1, x: 0, stagger: 0.05, duration: 0.4, delay: 0.1, ease: 'power3.out' }
         );
       } else {
         // Collapse
-        gsap.to(nav, { height: 60, duration: 0.4, ease });
-        
-        const links = content.querySelectorAll('.mobile-menu-link');
-        gsap.to(links, { 
-          y: 10, 
-          opacity: 0, 
-          duration: 0.2, 
-          ease,
-          onComplete: () => {
-            content.style.visibility = 'hidden';
-            content.style.pointerEvents = 'none';
-          }
-        });
+        gsap.to(desktopLinksRef.current.children, { opacity: 0, x: 10, duration: 0.2, ease: 'power3.in' });
+        gsap.to(desktopNavItemsRef.current, { width: 0, duration: 0.6, ease: 'power3.inOut', delay: 0.1 });
       }
     }
-
-    onMobileMenuClick?.();
   };
 
+  const toggleMobileMenu = () => {
+    const nextState = !isMobileMenuOpen;
+    setIsMobileMenuOpen(nextState);
+    onMobileMenuClick?.();
 
-
-  const cssVars = {
-    ['--base']: baseColor,
-    ['--pill-bg']: pillColor,
-    ['--hover-text']: hoveredPillTextColor,
-    ['--pill-text']: resolvedPillTextColor
-  } as CSSProperties;
+    if (nextState) {
+      // Open animation
+      gsap.to(overlayRef.current, {
+        opacity: 1,
+        pointerEvents: 'auto',
+        duration: 0.5,
+        ease: 'power3.out'
+      });
+      
+      if (mobileLinksRef.current) {
+        const links = mobileLinksRef.current.children;
+        gsap.fromTo(links, 
+          { y: 30, opacity: 0 },
+          { y: 0, opacity: 1, stagger: 0.1, duration: 0.6, ease: 'power3.out', delay: 0.1 }
+        );
+      }
+    } else {
+      // Close animation
+      gsap.to(overlayRef.current, {
+        opacity: 0,
+        pointerEvents: 'none',
+        duration: 0.4,
+        ease: 'power3.in'
+      });
+    }
+  };
 
   return (
-    <div className="pill-nav-container">
-      {/* --- DESKTOP NAV --- */}
-      <nav className={`pill-nav desktop-only ${className}`} aria-label="Primary Desktop" style={cssVars}>
-
-
-        <div className="pill-nav-items" ref={navItemsRef} style={{ width: 0, overflow: 'hidden' }}>
-          <ul className="pill-list" role="menubar">
-            {items.map((item, i) => (
-              <li key={item.href} role="none">
-                {isRouterLink(item.href) ? (
-                  <Link
-                    role="menuitem"
-                    href={item.href}
-                    className={`pill${activeHref === item.href ? ' is-active' : ''}`}
-                    aria-label={item.ariaLabel || item.label}
-                    onMouseEnter={() => handleEnter(i)}
-                    onMouseLeave={() => handleLeave(i)}
-                  >
-                    <span
-                      className="hover-circle"
-                      aria-hidden="true"
-                      ref={el => { circleRefs.current[i] = el; }}
-                    />
-                    <span className="label-stack">
-                      <span className="pill-label">{item.label}</span>
-                      <span className="pill-label-hover" aria-hidden="true">{item.label}</span>
-                    </span>
-                  </Link>
-                ) : (
-                  <a
-                    role="menuitem"
-                    href={item.href}
-                    className={`pill${activeHref === item.href ? ' is-active' : ''}`}
-                    aria-label={item.ariaLabel || item.label}
-                    onMouseEnter={() => handleEnter(i)}
-                    onMouseLeave={() => handleLeave(i)}
-                  >
-                    <span
-                      className="hover-circle"
-                      aria-hidden="true"
-                      ref={el => { circleRefs.current[i] = el; }}
-                    />
-                    <span className="label-stack">
-                      <span className="pill-label">{item.label}</span>
-                      <span className="pill-label-hover" aria-hidden="true">{item.label}</span>
-                    </span>
-                  </a>
-                )}
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <button 
-          className="pill-menu-toggle" 
-          onClick={toggleDesktopMenu}
-          aria-label="Toggle Menu"
-          aria-expanded={isDesktopMenuOpen}
-        >
-          {isDesktopMenuOpen ? 'CLOSE' : 'MENU'}
-        </button>
-      </nav>
-
-      {/* --- MOBILE NAV (CardNav expanding pattern) --- */}
-      <nav className={`mobile-pill-nav mobile-only ${isMobileMenuOpen ? 'open' : ''} ${className}`} ref={mobileNavRef} style={cssVars}>
-        <div className="mobile-pill-nav-top">
-
-          <div style={{ flex: 1 }}></div>
-
-          <button
-            className="mobile-menu-button"
-            onClick={toggleMobileMenu}
+    <>
+      {/* Desktop Expanding Glass Pill */}
+      <div className={`premium-nav-container desktop-only ${className}`}>
+        <nav className="premium-nav">
+          <div className="premium-nav-items" ref={desktopNavItemsRef}>
+            <ul className="premium-nav-list" ref={desktopLinksRef}>
+              {items.map((item) => (
+                <li key={item.href} style={{ opacity: 0 }}>
+                  {isRouterLink(item.href) ? (
+                    <Link
+                      href={item.href}
+                      className={`premium-nav-link ${activeHref === item.href ? 'is-active' : ''}`}
+                      aria-label={item.ariaLabel || item.label}
+                    >
+                      {item.label}
+                    </Link>
+                  ) : (
+                    <a
+                      href={item.href}
+                      className={`premium-nav-link ${activeHref === item.href ? 'is-active' : ''}`}
+                      aria-label={item.ariaLabel || item.label}
+                      target={item.href.startsWith('http') ? '_blank' : '_self'}
+                      rel={item.href.startsWith('http') ? 'noopener noreferrer' : ''}
+                    >
+                      {item.label}
+                    </a>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
+          <button 
+            className="premium-menu-toggle"
+            onClick={toggleDesktopMenu}
             aria-label="Toggle menu"
-            ref={hamburgerRef}
           >
-            <span className="hamburger-line" />
-            <span className="hamburger-line" />
+            {isDesktopMenuOpen ? 'CLOSE' : 'MENU'}
           </button>
-        </div>
+        </nav>
+      </div>
 
-        <div className="mobile-pill-nav-content" ref={mobileContentRef} aria-hidden={!isMobileMenuOpen}>
-          <ul className="mobile-menu-list">
-            {items.map(item => (
+      {/* Mobile Floating Button */}
+      <div className={`premium-mobile-btn-container mobile-only ${className}`}>
+        <button 
+          className={`premium-mobile-btn ${isMobileMenuOpen ? 'is-open' : ''}`}
+          onClick={toggleMobileMenu}
+          aria-label="Toggle menu"
+        >
+          <span className="burger-line top"></span>
+          <span className="burger-line bottom"></span>
+        </button>
+      </div>
+
+      {/* Mobile Fullscreen Glass Overlay */}
+      <div className="premium-mobile-overlay" ref={overlayRef}>
+        <div className="premium-mobile-overlay-bg"></div>
+        <nav className="premium-mobile-nav">
+          <ul className="premium-mobile-list" ref={mobileLinksRef}>
+            {items.map((item) => (
               <li key={item.href}>
                 {isRouterLink(item.href) ? (
                   <Link
                     href={item.href}
-                    className={`mobile-menu-link${activeHref === item.href ? ' is-active' : ''}`}
+                    className={`premium-mobile-link ${activeHref === item.href ? 'is-active' : ''}`}
                     onClick={toggleMobileMenu}
                   >
                     {item.label}
@@ -362,7 +172,7 @@ const PillNav: FC<PillNavProps> = ({
                 ) : (
                   <a
                     href={item.href}
-                    className={`mobile-menu-link${activeHref === item.href ? ' is-active' : ''}`}
+                    className={`premium-mobile-link ${activeHref === item.href ? 'is-active' : ''}`}
                     onClick={toggleMobileMenu}
                   >
                     {item.label}
@@ -371,9 +181,9 @@ const PillNav: FC<PillNavProps> = ({
               </li>
             ))}
           </ul>
-        </div>
-      </nav>
-    </div>
+        </nav>
+      </div>
+    </>
   );
 };
 

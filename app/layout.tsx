@@ -36,6 +36,7 @@ import { TransitionLink } from "@/components/TransitionLink/TransitionLink";
 import { MzLogo } from "@/components/Logo/MzLogo";
 import FpsCounter from "@/components/FpsCounter";
 import { CustomCursor } from "@/components/CustomCursor/CustomCursor";
+import { Preloader } from "@/components/Preloader/Preloader";
 
 export default function RootLayout({
   children,
@@ -49,6 +50,7 @@ export default function RootLayout({
       data-theme="dark"
     >
       <body>
+        <Preloader />
         <CustomCursor />
         <FpsCounter />
         <TransitionLink href="/" className="layout-logo-link" style={{

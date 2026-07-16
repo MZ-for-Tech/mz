@@ -92,7 +92,7 @@ type DarkVeilProps = {
 };
 
 export default function DarkVeil({
-  primaryColor = "#afc020",
+  primaryColor = "#88b600",
   backgroundColor = "#000000",
   noiseIntensity = 0.08,
   scanlineIntensity = 0.05,
@@ -122,7 +122,7 @@ export default function DarkVeil({
       uniforms: {
         uTime: { value: 0 },
         uResolution: { value: new Vec2() },
-        uMouse: { value: new Vec2(window.innerWidth/2, window.innerHeight/2) },
+        uMouse: { value: new Vec2(window.innerWidth / 2, window.innerHeight / 2) },
         uPrimaryColor: { value: new Color(primaryColor) },
         uBackgroundColor: { value: new Color(backgroundColor) },
         uNoise: { value: noiseIntensity },
@@ -150,10 +150,10 @@ export default function DarkVeil({
       const isLight = document.documentElement.getAttribute('data-theme') === 'light';
       program.uniforms.uBackgroundColor.value.set(isLight ? '#ffe78d' : '#000000');
     };
-    
+
     // Initial check
     updateThemeColor();
-    
+
     const themeObserver = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {
         if (mutation.attributeName === 'data-theme') {
@@ -161,11 +161,11 @@ export default function DarkVeil({
         }
       });
     });
-    
+
     themeObserver.observe(document.documentElement, { attributes: true });
 
-    const mouse = new Vec2(window.innerWidth/2, window.innerHeight/2);
-    const targetMouse = new Vec2(window.innerWidth/2, window.innerHeight/2);
+    const mouse = new Vec2(window.innerWidth / 2, window.innerHeight / 2);
+    const targetMouse = new Vec2(window.innerWidth / 2, window.innerHeight / 2);
 
     const onMouseMove = (e: MouseEvent) => {
       targetMouse.set(e.clientX, window.innerHeight - e.clientY);

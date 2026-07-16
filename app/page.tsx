@@ -82,20 +82,19 @@ export default function Home() {
       const tl = gsap.timeline();
 
       tl.fromTo(".hero-word-inner", {
-        y: "110%",
-        rotationZ: 4,
-        transformOrigin: "left top"
+        y: 30,
+        opacity: 0
       }, {
-        y: "0%",
-        rotationZ: 0,
+        y: 0,
+        opacity: 1,
         duration: 1.4,
-        stagger: 0.15,
-        ease: "power4.out"
+        stagger: 0.2,
+        ease: "power3.out"
       });
 
       tl.fromTo(".hero-subtext", {
         opacity: 0,
-        y: 20
+        y: 15
       }, {
         opacity: 1,
         y: 0,
@@ -103,20 +102,36 @@ export default function Home() {
         ease: "power2.out"
       }, "-=0.8");
 
-      tl.fromTo(".hero-scroll-wrapper, .hero-action-wrapper", {
+      tl.fromTo(".hero-desc, .hero-scroll-wrapper, .hero-action-wrapper", {
         opacity: 0,
+        y: 10
       }, {
         opacity: 1,
+        y: 0,
         duration: 1,
+        stagger: 0.1,
         ease: "power2.out"
-      }, "-=0.5");
+      }, "-=0.6");
     };
 
     // Set initial states to hide elements before animation
-    gsap.set(".hero-word-inner", { y: "110%", rotationZ: 4, transformOrigin: "left top" });
-    gsap.set(".hero-subtext, .hero-scroll-wrapper, .hero-action-wrapper", { opacity: 0 });
+    gsap.set(".hero-word-inner", { y: 30, opacity: 0 });
+    gsap.set(".hero-subtext, .hero-desc, .hero-scroll-wrapper, .hero-action-wrapper", { opacity: 0, y: 10 });
 
-    gsap.delayedCall(0.2, playHeroAnimation);
+    // Wait for the correct signal before playing hero animations
+    const playWhenReady = () => {
+      window.removeEventListener('mz-preloader-done', playWhenReady);
+      window.removeEventListener('mz-transition-done', playWhenReady);
+      playHeroAnimation();
+    };
+
+    window.addEventListener('mz-preloader-done', playWhenReady, { once: true });
+    window.addEventListener('mz-transition-done', playWhenReady, { once: true });
+
+    return () => {
+      window.removeEventListener('mz-preloader-done', playWhenReady);
+      window.removeEventListener('mz-transition-done', playWhenReady);
+    };
 
     // Hero Parallax on Scroll
     gsap.to(".hero-word", {
@@ -181,7 +196,7 @@ export default function Home() {
           <div style={{ position: "sticky", top: 0, height: "100vh", width: "100%", zIndex: 1, overflow: "hidden" }}>
             <div style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100vh", zIndex: -1 }}>
               <DarkVeil
-                primaryColor="#00661a"
+                primaryColor="#88b600"
                 noiseIntensity={0.05}
                 scanlineIntensity={0.05}
                 scanlineFrequency={0.01}
@@ -199,33 +214,36 @@ export default function Home() {
               </div>
 
               <div className={styles.heroContent}>
-                <div className={`${styles.heroWord} hero-word ${styles.heroWordHover}`}>
-                  <div className="hero-word-inner">
-                    <a href="https://nullhypothesis.dev" target="_blank" rel="noopener noreferrer">RESEARCH.</a>
+                <div className={styles.heroWordsRow}>
+                  <div className={`${styles.heroWord} hero-word ${styles.heroWordHover}`}>
+                    <div className="hero-word-inner">
+                      <a href="https://nullhypothesis.dev" target="_blank" rel="noopener noreferrer">RESEARCH.</a>
+                    </div>
                   </div>
-                </div>
-                <div className={`${styles.heroWord} hero-word`}>
-                  <div className="hero-word-inner">SOFTWARE.</div>
-                </div>
-                <div className={`${styles.heroWord} hero-word`}>
-                  <div className="hero-word-inner">KNOWLEDGE.</div>
+                  <div className={`${styles.heroWord} hero-word`}>
+                    <div className="hero-word-inner">SOFTWARE.</div>
+                  </div>
+                  <div className={`${styles.heroWord} hero-word`}>
+                    <div className="hero-word-inner">KNOWLEDGE.</div>
+                  </div>
                 </div>
                 <div className={`${styles.heroSubtext} hero-subtext`}>In that order.</div>
               </div>
 
-              <div className={`${styles.heroScrollWrapper} hero-scroll-wrapper`}>
-                <div className={styles.heroDescription}>
-                  Engineered in Cairo. Owned by you. We build proprietary systems and transfer the exact knowledge you need to run them.
-                </div>
-                <div className={`${styles.scrollIndicator} scroll-indicator-line`}>
-                  <div className={styles.scrollLine}></div>
-                </div>
+              <div className={`${styles.heroDescription} hero-desc`}>
+                Engineered in Cairo. Owned by you. We build proprietary systems and transfer the exact knowledge you need to run them.
               </div>
 
               <div className={`${styles.heroActionWrapper} hero-action-wrapper`}>
                 <TransitionLink href="/start" className={styles.heroBtnPrimary}>
-                  Let's talk.
+                  Let&apos;s talk.
                 </TransitionLink>
+              </div>
+
+              <div className={`${styles.heroScrollWrapper} hero-scroll-wrapper`}>
+                <div className={`${styles.scrollIndicator} scroll-indicator-line`}>
+                  <div className={styles.scrollLine}></div>
+                </div>
               </div>
             </section>
           </div>
@@ -241,7 +259,7 @@ export default function Home() {
             <div style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0, pointerEvents: "none", zIndex: -1 }}>
               <div style={{ position: "sticky", top: 0, height: "100vh", overflow: "hidden" }}>
                 <Waves
-                  lineColor="rgba(var(--color-brand-yellow-rgb), 0.15)"
+                  lineColor="rgba(141, 184, 42, 0.15)"
                   backgroundColor="transparent"
                   waveSpeedX={0.02}
                   waveSpeedY={0.01}
