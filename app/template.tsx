@@ -49,13 +49,13 @@ export default function Template({ children }: { children: React.ReactNode }) {
             }}
           >
             {/* Top Olive Stripe (Invisible during entry since it's already above screen) */}
-            <div style={{ height: "15vh", backgroundColor: "var(--color-acid-green)", width: "100%" }} />
+            <div style={{ height: "15vh", backgroundColor: "var(--color-brand-yellow)", width: "100%" }} />
             
             {/* Main Dark Block (Covers screen initially) */}
             <div style={{ height: "100vh", backgroundColor: "var(--color-bg)", width: "100%" }} />
             
             {/* Bottom Olive Stripe (Trailing racing stripe) */}
-            <div style={{ height: "15vh", backgroundColor: "var(--color-acid-green)", width: "100%" }} />
+            <div style={{ height: "15vh", backgroundColor: "var(--color-brand-yellow)", width: "100%" }} />
           </motion.div>
         ))}
       </div>

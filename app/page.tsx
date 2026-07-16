@@ -14,6 +14,7 @@ import LineSidebar from "@/components/LineSidebar/LineSidebar";
 import DarkVeil from "@/components/DarkVeil/DarkVeil";
 import { gsap } from "@/lib/gsap";
 import { MzLogo } from "@/components/Logo/MzLogo";
+import MzLogo3D from "@/components/Logo/MzLogo3D";
 import { useGSAP } from "@gsap/react";
 import ServicesAccordion from "@/components/ServicesAccordion/ServicesAccordion";
 import PremiumShowcase from "@/components/PremiumShowcase/PremiumShowcase";
@@ -172,7 +173,7 @@ export default function Home() {
             items={NAV_ITEMS}
             baseColor="var(--color-bg)"
             pillColor="var(--color-text)"
-            hoveredPillTextColor="var(--color-acid-green)"
+            hoveredPillTextColor="var(--color-brand-yellow)"
             pillTextColor="var(--color-bg)"
           />
 
@@ -180,7 +181,7 @@ export default function Home() {
           <div style={{ position: "sticky", top: 0, height: "100vh", width: "100%", zIndex: 1, overflow: "hidden" }}>
             <div style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100vh", zIndex: -1 }}>
               <DarkVeil
-                primaryColor="#afc020"
+                primaryColor="#00661a"
                 noiseIntensity={0.05}
                 scanlineIntensity={0.05}
                 scanlineFrequency={0.01}
@@ -191,6 +192,11 @@ export default function Home() {
 
             {/* 01 — Hero */}
             <section className={`${styles.hero} hero-section`}>
+
+              {/* 3D Logo Background */}
+              <div className={styles.heroLogo3D}>
+                <MzLogo3D />
+              </div>
 
               <div className={styles.heroContent}>
                 <div className={`${styles.heroWord} hero-word ${styles.heroWordHover}`}>
@@ -235,7 +241,7 @@ export default function Home() {
             <div style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0, pointerEvents: "none", zIndex: -1 }}>
               <div style={{ position: "sticky", top: 0, height: "100vh", overflow: "hidden" }}>
                 <Waves
-                  lineColor="rgba(141, 184, 42, 0.15)"
+                  lineColor="rgba(var(--color-brand-yellow-rgb), 0.15)"
                   backgroundColor="transparent"
                   waveSpeedX={0.02}
                   waveSpeedY={0.01}
@@ -303,7 +309,7 @@ export default function Home() {
                 <div className={styles.workSidebar}>
                   <LineSidebar
                     items={WORK_PROJECTS.map(p => p.name)}
-                    accentColor="var(--color-acid-green)"
+                    accentColor="var(--color-brand-yellow)"
                     textColor="var(--color-text)"
                     markerColor="var(--color-text-muted)"
                     showIndex

@@ -7,7 +7,10 @@
   --color-text: #F5F5F0;
   --color-text-rgb: 245, 245, 240;
   --color-text-muted: rgba(245, 245, 240, 0.6);
-  --color-acid-green: #afc020;
+  --color-acid-green: #00ff41;
+  --color-acid-green-rgb: 0, 255, 65;
+  --color-brand-yellow: #ffe78d;
+  --color-brand-yellow-rgb: 255, 231, 141;
   --color-olive: #5A7A0A;
   --color-golden: #D4A820;
 
@@ -52,7 +55,7 @@
   --color-text-muted: rgba(13, 15, 8, 0.6);
 
   /* Existing Accents & Specifics */
-  --color-acid-green: #afc020;
+  --color-acid-green: #00ff41;
   --color-tnh-text: #F5F5F0;
   --color-tnh-text-rgb: 245, 245, 240;
   --color-footer-bg: #F8F7F2;
@@ -110,7 +113,7 @@ body {
 }
 
 ::selection {
-  background-color: var(--color-acid-green);
+  background-color: var(--color-brand-yellow);
   color: var(--color-bg);
 }
 

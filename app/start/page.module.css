@@ -59,7 +59,7 @@
 }
 
 .contactEmail:hover {
-  color: var(--color-accent, var(--color-acid-green));
+  color: var(--color-accent, var(--color-brand-yellow));
 }
 
 .faqText {
@@ -78,8 +78,8 @@
 }
 
 .faqLink:hover {
-  color: var(--color-accent, var(--color-acid-green));
-  border-bottom-color: var(--color-accent, var(--color-acid-green));
+  color: var(--color-accent, var(--color-brand-yellow));
+  border-bottom-color: var(--color-accent, var(--color-brand-yellow));
 }
 
 /* Right Column (Form) */
@@ -185,8 +185,8 @@
 
 .input:focus, .textarea:focus {
   outline: none;
-  border-color: var(--color-accent, var(--color-acid-green));
-  background: rgba(141, 184, 42, 0.05);
+  border-color: var(--color-accent, var(--color-brand-yellow));
+  background: rgba(var(--color-brand-yellow-rgb), 0.05);
 }
 
 .textarea {
@@ -219,9 +219,9 @@
 }
 
 .fileLabel:hover {
-  border-color: var(--color-accent, var(--color-acid-green));
+  border-color: var(--color-accent, var(--color-brand-yellow));
   color: var(--color-text, var(--color-text));
-  background: rgba(141, 184, 42, 0.05);
+  background: rgba(var(--color-brand-yellow-rgb), 0.05);
 }
 
 /* Submit Section */
@@ -286,7 +286,7 @@
 }
 
 .submitButton {
-  background: var(--color-accent, var(--color-acid-green));
+  background: var(--color-accent, var(--color-brand-yellow));
   color: var(--color-bg, var(--color-bg));
   border: none;
   border-radius: 100px;

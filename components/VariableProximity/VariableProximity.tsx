@@ -162,13 +162,13 @@ const VariableProximity = forwardRef<HTMLSpanElement, VariableProximityProps>((p
       // Premium Negative Space Effect Additions
       const intensity = falloffValue; // 0 to 1
       
-      // Interpolate color from normal text color to background color (negative) using color-mix
-      letterRef.style.color = `color-mix(in srgb, var(--color-bg) ${intensity * 100}%, var(--color-text))`;
+      // Interpolate color from normal text color to brand yellow using color-mix
+      letterRef.style.color = `color-mix(in srgb, var(--color-brand-yellow) ${intensity * 100}%, var(--color-text))`;
       
-      // Create a glowing halo of the normal text color behind the letter, revealing the silhouette
+      // Create a glowing halo of the yellow color behind the letter
       letterRef.style.textShadow = `
-        0 0 ${intensity * 20}px color-mix(in srgb, var(--color-text) ${intensity * 100}%, transparent),
-        0 0 ${intensity * 40}px color-mix(in srgb, var(--color-acid-green) ${intensity * 60}%, transparent)
+        0 0 ${intensity * 20}px color-mix(in srgb, var(--color-brand-yellow) ${intensity * 80}%, transparent),
+        0 0 ${intensity * 40}px color-mix(in srgb, var(--color-brand-yellow) ${intensity * 40}%, transparent)
       `;
       // slight pop out
       letterRef.style.transform = `translateY(${-intensity * 5}px) scale(${1 + (intensity * 0.05)})`;

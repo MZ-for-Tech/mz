@@ -3,7 +3,7 @@
   overflow-x: clip;
 }
 
-/* 01 — Hero */
+/* Hero */
 .hero {
   position: relative;
   min-height: 100vh;
@@ -20,11 +20,27 @@
   align-items: flex-start;
   gap: 0;
   width: 100%;
+  z-index: 2;
+  position: relative;
+  pointer-events: none;
+  margin-top: -15vh;
+}
+
+.heroLogo3D {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 55%;
+  height: 100%;
+  z-index: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .heroWord {
-  font-weight: 800;
-  font-size: clamp(2rem, 9vw, 11rem);
+  font-weight: 500;
+  font-size: clamp(2rem, 6vw, 7.5rem);
   line-height: 0.95;
   /* tighter line height for masks */
   text-transform: uppercase;
@@ -36,14 +52,15 @@
   /* prevents font descender clipping */
   margin-bottom: -0.1em;
   color: var(--color-text, var(--color-text));
+  pointer-events: auto;
 }
 
 .heroWord:nth-child(2) {
-  margin-left: 8%;
+  margin-left: 0;
 }
 
 .heroWord:nth-child(3) {
-  margin-left: 16%;
+  margin-left: 0;
   position: relative;
 }
 
@@ -63,19 +80,21 @@
 }
 
 .heroWordHover:hover a {
-  color: var(--color-acid-green) !important;
+  color: var(--color-brand-yellow) !important;
 }
 
 .heroSubtext {
   font-family: var(--font-base);
-  font-size: 0.85rem;
+  font-size: clamp(0.7rem, 2vw, 1.2rem);
   letter-spacing: 0.05em;
-  color: var(--color-acid-green);
+  color: var(--color-brand-yellow);
   /* brand green */
   position: absolute;
-  bottom: 0.5em;
-  right: -250px;
+  top: 100%;
+  left: 0;
+  margin-top: 1rem;
   width: max-content;
+  pointer-events: auto;
 }
 
 .heroTechDataTop {
@@ -95,7 +114,7 @@
   display: inline-block;
   width: 6px;
   height: 6px;
-  background-color: var(--color-acid-green);
+  background-color: var(--color-brand-yellow);
   border-radius: 50%;
   margin: 0 4px;
   animation: blink 1.5s infinite;
@@ -106,7 +125,7 @@
   0%,
   100% {
     opacity: 1;
-    box-shadow: 0 0 5px var(--color-acid-green);
+    box-shadow: 0 0 5px var(--color-brand-yellow);
   }
 
   50% {
@@ -125,6 +144,8 @@
   gap: 2rem;
   opacity: 0;
   text-align: right;
+  pointer-events: auto;
+  z-index: 2;
 }
 
 .heroDescription {
@@ -150,10 +171,12 @@
   display: flex;
   gap: 1rem;
   opacity: 0;
+  pointer-events: auto;
+  z-index: 2;
 }
 
 .heroBtnPrimary {
-  background: var(--color-acid-green);
+  background: var(--color-brand-yellow);
   color: var(--color-bg);
   border: none;
   border-radius: 100px;
@@ -200,7 +223,7 @@
 .scrollLine {
   width: 100%;
   height: 50%;
-  background-color: var(--color-acid-green);
+  background-color: var(--color-brand-yellow);
   animation: scrollAnim 2s infinite ease-in-out;
 }
 
@@ -361,15 +384,15 @@
   position: relative;
   overflow: hidden;
   border-radius: 24px;
-  background: radial-gradient(circle at top right, rgba(var(--color-acid-green-rgb), 0.05), transparent 50%),
-              radial-gradient(circle at bottom left, rgba(255, 255, 255, 0.02), transparent 40%);
+  background: radial-gradient(circle at top right, rgba(var(--color-brand-yellow-rgb), 0.05), transparent 50%),
+    radial-gradient(circle at bottom left, rgba(255, 255, 255, 0.02), transparent 40%);
   border: 1px solid rgba(var(--color-text-rgb), 0.1);
   box-shadow: inset 0 1px 0 rgba(var(--color-text-rgb), 0.05), inset 0 0 20px rgba(var(--color-text-rgb), 0.02);
 }
 
 :global([data-theme="light"]) .showcaseCard {
-  background: radial-gradient(circle at top right, rgba(var(--color-acid-green-rgb), 0.05), transparent 50%),
-              linear-gradient(145deg, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.4) 100%);
+  background: radial-gradient(circle at top right, rgba(var(--color-brand-yellow-rgb), 0.05), transparent 50%),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.4) 100%);
   border: 1px solid rgba(0, 0, 0, 0.05);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 1), inset 0 0 20px rgba(0, 0, 0, 0.02);
 }
@@ -377,8 +400,11 @@
 .showcaseCard::after {
   content: '';
   position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background-image: 
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image:
     linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
     linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
   background-size: 40px 40px;
@@ -388,7 +414,7 @@
 }
 
 :global([data-theme="light"]) .showcaseCard::after {
-  background-image: 
+  background-image:
     linear-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 1px),
     linear-gradient(90deg, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
 }
@@ -465,7 +491,7 @@
   font-size: 5rem;
   letter-spacing: -0.04em;
   font-weight: 600;
-  background: linear-gradient(135deg, var(--color-text) 0%, var(--color-acid-green) 150%);
+  background: linear-gradient(135deg, var(--color-text) 0%, var(--color-brand-yellow) 150%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -489,7 +515,7 @@
 .productTagline {
   font-size: 2rem;
   font-weight: 500;
-  color: var(--color-acid-green);
+  color: var(--color-brand-yellow);
   max-width: 600px;
   margin-top: -0.5rem;
   margin-bottom: 0.5rem;
@@ -522,15 +548,19 @@
     padding: 3rem 2rem;
     gap: 3rem;
   }
+
   .productName {
     font-size: 3rem;
   }
+
   .productTagline {
     font-size: 1.5rem;
   }
+
   .productDesc {
     font-size: 1rem;
   }
+
   .productVisual {
     width: 100%;
   }
@@ -541,12 +571,15 @@
     padding: 2rem 1.5rem;
     gap: 2rem;
   }
+
   .productName {
     font-size: 2.5rem;
   }
+
   .productTagline {
     font-size: 1.2rem;
   }
+
   .proprietaryStamp {
     position: relative;
     top: 0;
@@ -569,7 +602,7 @@
   display: flex;
   align-items: center;
   padding: 1.5rem 0;
-  border-bottom: 1px solid rgba(141, 184, 42, 0.08);
+  border-bottom: 1px solid rgba(var(--color-brand-yellow-rgb), 0.08);
   position: relative;
   transition: all 0.2s ease;
   will-change: opacity, transform;
@@ -577,7 +610,7 @@
 
 .caseItem:hover .caseNum,
 .caseItem:hover .caseName {
-  color: var(--color-acid-green);
+  color: var(--color-brand-yellow);
 }
 
 .caseNum {
@@ -662,13 +695,13 @@
 .ctaInquire {
   font-size: 1.5rem;
   font-weight: 700;
-  border-bottom: 2px solid var(--color-acid-green);
+  border-bottom: 2px solid var(--color-brand-yellow);
   padding-bottom: 0.25rem;
   transition: color 0.2s ease;
 }
 
 .ctaInquire:hover {
-  color: var(--color-acid-green);
+  color: var(--color-brand-yellow);
 }
 
 /* 06 — TNH Portal */
@@ -734,7 +767,7 @@
 .ctaEmail {
   font-family: var(--font-base);
   font-size: clamp(1.2rem, 3vw, 2rem);
-  color: var(--color-acid-green);
+  color: var(--color-brand-yellow);
   text-decoration: underline;
   text-underline-offset: 8px;
   margin-bottom: 4rem;
@@ -774,9 +807,9 @@
 .inputGroup input:focus,
 .inputGroup textarea:focus {
   outline: none;
-  border-color: var(--color-acid-green);
+  border-color: var(--color-brand-yellow);
   background: rgba(var(--color-text-rgb), 0.05);
-  box-shadow: 0 0 0 1px var(--color-acid-green);
+  box-shadow: 0 0 0 1px var(--color-brand-yellow);
 }
 
 .inputGroup textarea {
@@ -797,7 +830,7 @@
 }
 
 .submitBtn:hover {
-  background-color: var(--color-acid-green);
+  background-color: var(--color-brand-yellow);
 }
 
 @media (max-width: 768px) {
@@ -840,7 +873,7 @@
   position: relative;
   border-radius: 20px;
   overflow: hidden;
-  border: 1px solid rgba(141, 184, 42, 0.2);
+  border: 1px solid rgba(var(--color-brand-yellow-rgb), 0.2);
   background-color: var(--color-bg);
 }
 
@@ -877,7 +910,7 @@
   align-items: center;
   justify-content: center;
   background-color: var(--color-bg);
-  border: 1px dashed rgba(141, 184, 42, 0.3);
+  border: 1px dashed rgba(var(--color-brand-yellow-rgb), 0.3);
   margin: 1rem;
   border-radius: 12px;
 }
@@ -930,31 +963,31 @@
   z-index: 2;
   background-color: rgba(var(--color-bg-rgb), 0.85);
   border-radius: 9999px;
-  box-shadow: 0 4px 16px rgba(141, 184, 42, 0.15);
+  box-shadow: 0 4px 16px rgba(var(--color-brand-yellow-rgb), 0.15);
   opacity: 0;
   transform: translateY(8px);
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   padding: 0.6rem 1.25rem;
-  border: 1px solid rgba(141, 184, 42, 0.3);
+  border: 1px solid rgba(var(--color-brand-yellow-rgb), 0.3);
   display: flex;
   align-items: center;
   gap: 0.6rem;
   font-size: 0.85rem;
   font-weight: 500;
   letter-spacing: 0.02em;
-  color: var(--color-acid-green);
+  color: var(--color-brand-yellow);
 }
 
 .workInteractOverlay:hover .workInteractButton {
   opacity: 1;
   transform: translateY(0);
   background-color: rgba(var(--color-bg-rgb), 0.95);
-  border-color: rgba(141, 184, 42, 0.6);
-  box-shadow: 0 6px 20px rgba(141, 184, 42, 0.25);
+  border-color: rgba(var(--color-brand-yellow-rgb), 0.6);
+  box-shadow: 0 6px 20px rgba(var(--color-brand-yellow-rgb), 0.25);
 }
 
 .workInteractIcon {
-  color: var(--color-acid-green);
+  color: var(--color-brand-yellow);
 }
 
 .workIframe {
@@ -978,7 +1011,7 @@
   letter-spacing: 0.05em;
   color: var(--color-text-muted);
   background-color: rgba(var(--color-bg-rgb), 0.85);
-  border: 1px solid rgba(141, 184, 42, 0.2);
+  border: 1px solid rgba(var(--color-brand-yellow-rgb), 0.2);
   border-radius: var(--radius-sm);
   padding: 0.3rem 0.6rem;
   pointer-events: none;
@@ -1194,7 +1227,8 @@
     gap: 1rem;
   }
 
-  .heroBtnPrimary, .heroBtnSecondary {
+  .heroBtnPrimary,
+  .heroBtnSecondary {
     width: 100%;
     padding: 14px 24px;
     font-size: 1rem;
@@ -1203,24 +1237,26 @@
   /* --- Mobile Overrides for Products --- */
   .productCardWrapper {
     margin-top: 2rem;
-    --glow-padding: 16px !important; /* Push the glowing border closer to the physical edge */
+    --glow-padding: 16px !important;
+    /* Push the glowing border closer to the physical edge */
   }
-  
-  .productCardWrapper > div {
+
+  .productCardWrapper>div {
     height: auto !important;
     min-height: 800px;
   }
-  
+
   .customCardFull {
     height: var(--card-height, auto) !important;
-    min-height: 500px; /* Reduced from 800px so visuals can fit on screen */
+    min-height: 500px;
+    /* Reduced from 800px so visuals can fit on screen */
     transform: none !important;
     --card-top-offset: 12vh;
     --card-stack-offset: 20px;
     --card-height: auto;
   }
 
-  .productsSlider > div {
+  .productsSlider>div {
     height: 950px !important;
   }
 
@@ -1260,12 +1296,15 @@
     overflow: hidden;
   }
 }
+
 .desktopOnly {
   display: block;
 }
+
 .mobileOnly {
   display: none;
 }
+
 .mobileServicesWrapper {
   width: 100%;
   margin-top: 4rem;
@@ -1274,13 +1313,16 @@
   align-items: center;
   padding-bottom: 20vh;
 }
+
 @media (max-width: 768px) {
   .desktopOnly {
     display: none !important;
   }
+
   .mobileOnly {
     display: block;
   }
+
   .mobileServicesWrapper {
     display: flex !important;
   }

@@ -72,7 +72,7 @@
   --offset: 0.2em;
   --ax: 2.5em;
   border-radius: 1.2em;
-  box-shadow: inset 0 0 0 0.1em rgba(175, 192, 32, 0.4);
+  box-shadow: inset 0 0 0 0.1em rgba(var(--color-brand-yellow-rgb), 0.4);
 }
 
 .productWatermark {
@@ -213,7 +213,7 @@
 .bullet {
   width: 6px;
   height: 6px;
-  background-color: var(--color-acid-green);
+  background-color: var(--color-brand-yellow);
   border-radius: 50%;
   flex-shrink: 0;
 }
@@ -221,15 +221,15 @@
 
 /* --- HOVER STATE OVERRIDES --- */
 .card:hover {
-  box-shadow: inset 0 1.01em 0.1em -1em rgba(175, 192, 32, 0.2), inset 0 -4em 3em -3em rgba(0, 0, 0, 0.6),
-    0 -1.02em 0.2em -1em rgba(175, 192, 32, 0.2), 0 1em 0.2em -1em #000, 0 0 0 1px rgba(175, 192, 32, 0.3),
+  box-shadow: inset 0 1.01em 0.1em -1em rgba(var(--color-brand-yellow-rgb), 0.2), inset 0 -4em 3em -3em rgba(0, 0, 0, 0.6),
+    0 -1.02em 0.2em -1em rgba(var(--color-brand-yellow-rgb), 0.2), 0 1em 0.2em -1em #000, 0 0 0 1px rgba(var(--color-brand-yellow-rgb), 0.3),
     0 4px 4px 0 rgba(0, 0, 0, 0.4), 0 0 0 1px var(--color-border);
 }
 
 
 
 .card:hover .icon {
-  filter: drop-shadow(0 -1.2em 2px rgba(175, 192, 32, 0.2));
+  filter: drop-shadow(0 -1.2em 2px rgba(var(--color-brand-yellow-rgb), 0.2));
 }
 
 .card:hover .visualWrapper {

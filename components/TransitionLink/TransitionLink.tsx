@@ -49,7 +49,7 @@ export const TransitionLink = ({ children, href, className, style, ...props }: T
       
       const accentTop = document.createElement("div");
       accentTop.style.height = "15vh";
-      accentTop.style.backgroundColor = "var(--color-acid-green)";
+      accentTop.style.backgroundColor = "var(--color-brand-yellow)";
       accentTop.style.width = "100%";
       
       const primary = document.createElement("div");
@@ -59,7 +59,7 @@ export const TransitionLink = ({ children, href, className, style, ...props }: T
 
       const accentBottom = document.createElement("div");
       accentBottom.style.height = "15vh";
-      accentBottom.style.backgroundColor = "var(--color-acid-green)";
+      accentBottom.style.backgroundColor = "var(--color-brand-yellow)";
       accentBottom.style.width = "100%";
 
       col.appendChild(accentTop);
@@ -85,9 +85,9 @@ export const TransitionLink = ({ children, href, className, style, ...props }: T
 
     await tl.play();
     
-    // Don't remove the overlay here. Template.tsx removes it via useLayoutEffect
-    // (before paint) so there's zero flash during the handoff.
-    router.push(href);
+    // Force scroll to top before navigation handoff
+    window.scrollTo(0, 0);
+    router.push(href, { scroll: true });
   };
 
   return (

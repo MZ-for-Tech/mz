@@ -32,7 +32,7 @@
 }
 
 .word:last-child {
-  color: var(--color-acid-green);
+  color: var(--color-brand-yellow);
 }
 
 /* Ensure contrast in light mode */

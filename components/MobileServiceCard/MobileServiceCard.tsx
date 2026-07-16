@@ -60,7 +60,7 @@ export default function MobileServiceCard({ title, tagline, capabilities, visual
           <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '8px', opacity: isActive ? 1 : 0.8, transition: 'opacity 0.4s', marginTop: '1.2em', maxWidth: '75%' }}>
             {capabilities.map((cap, i) => (
               <li key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: '0.95em', color: 'var(--color-text)' }}>
-                <span style={{ width: '5px', height: '5px', backgroundColor: 'var(--color-acid-green)', borderRadius: '50%', flexShrink: 0, marginTop: '0.55em' }}></span>
+                <span style={{ width: '5px', height: '5px', backgroundColor: 'var(--color-brand-yellow)', borderRadius: '50%', flexShrink: 0, marginTop: '0.55em' }}></span>
                 {cap}
               </li>
             ))}
