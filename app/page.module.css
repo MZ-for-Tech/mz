@@ -38,6 +38,12 @@
   justify-content: center;
 }
 
+@media (max-width: 768px) {
+  .heroLogo3D {
+    display: none;
+  }
+}
+
 .heroWord {
   font-weight: 500;
   font-size: clamp(2rem, 6vw, 7.5rem);

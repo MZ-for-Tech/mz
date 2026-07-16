@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, JetBrains_Mono, Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
 import { SmoothScrolling } from "@/components/SmoothScrolling/SmoothScrolling";
@@ -23,6 +23,13 @@ const cormorant = Cormorant_Garamond({
 export const metadata: Metadata = {
   title: "MZ | Research. Software. Knowledge.",
   description: "Research-driven technology company. Cairo, Egypt.",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
 };
 
 import { TransitionLink } from "@/components/TransitionLink/TransitionLink";
