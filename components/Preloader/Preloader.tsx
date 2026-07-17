@@ -32,11 +32,11 @@ export const Preloader = () => {
 
   // Lock scrolling on mount
   useEffect(() => {
-    if (isActive) {
+    if (isActive && visible) {
       document.body.style.overflow = 'hidden';
       return () => { document.body.style.overflow = ''; };
     }
-  }, [isActive]);
+  }, [isActive, visible]);
 
   // Counter animation
   useEffect(() => {
