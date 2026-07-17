@@ -30,10 +30,6 @@ export default function PrivacyPolicyPage() {
 
         <PillNav
           items={NAV_ITEMS}
-          baseColor="#0D0F08"
-          pillColor="#F5F0E8"
-          hoveredPillTextColor="var(--color-acid-green)"
-          pillTextColor="#0D0F08"
         />
 
         <main className={styles.main}>

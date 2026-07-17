@@ -186,10 +186,6 @@ export default function Home() {
         <main ref={mainRef} className={styles.main}>
           <PillNav
             items={NAV_ITEMS}
-            baseColor="var(--color-bg)"
-            pillColor="var(--color-text)"
-            hoveredPillTextColor="var(--color-brand-yellow)"
-            pillTextColor="var(--color-bg)"
           />
 
           {/* Sticky Hero Wrapper */}

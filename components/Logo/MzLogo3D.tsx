@@ -103,9 +103,6 @@ function Logo() {
       });
     });
 
-    console.log(
-      `[MzLogo3D] ${items.length} meshes, ${materialCache.size} unique materials, Z stack: ${((pathIndex - 1) * Z_STEP).toFixed(2)} SVG units`
-    );
 
     return items;
   }, [svg, extrudeSettings]);
@@ -211,7 +208,9 @@ function Logo() {
 
     // --- Camera parallax ---
     // Camera pulls back slightly on scroll (cinematic recede)
-    const targetZ_cam = 12 + scrollProgress * 2.5;
+    const isMobile = state.size.width < 768;
+    const baseZ = isMobile ? 19 : 12;
+    const targetZ_cam = baseZ + scrollProgress * 2.5;
     state.camera.position.x = THREE.MathUtils.lerp(state.camera.position.x, state.pointer.x * 0.6, 0.03);
     state.camera.position.y = THREE.MathUtils.lerp(state.camera.position.y, state.pointer.y * 0.35, 0.03);
     state.camera.position.z = THREE.MathUtils.lerp(state.camera.position.z, targetZ_cam, 0.04);

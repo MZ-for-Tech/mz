@@ -13,67 +13,83 @@ export const Preloader = () => {
   const { progress } = useProgress();
   const isReadyRef = useRef(false);
   const [isActive] = useState(() => !hasRunOnce); // frozen at mount time
+  const [visible, setVisible] = useState(true);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const topPanelRef = useRef<HTMLDivElement>(null);
   const bottomPanelRef = useRef<HTMLDivElement>(null);
   const counterRef = useRef<HTMLDivElement>(null);
   const uiWrapperRef = useRef<HTMLDivElement>(null);
+  const ringOuterRef = useRef<HTMLDivElement>(null);
+  const ringMiddleRef = useRef<HTMLDivElement>(null);
+  const ringInnerRef = useRef<HTMLDivElement>(null);
+  const centerDotRef = useRef<HTMLDivElement>(null);
+  const crosshairXRef = useRef<HTMLDivElement>(null);
+  const crosshairYRef = useRef<HTMLDivElement>(null);
+  const dataWrapperRef = useRef<HTMLDivElement>(null);
 
-  const displayProgress = useRef({ val: 0 });
+  const displayProgress = useRef({ val: 14 });
 
-  const [minTimeElapsed, setMinTimeElapsed] = useState(false);
-
-  // Enforce a minimum viewing time for the cinematic experience
+  // Lock scrolling on mount
   useEffect(() => {
-    if (!isActive) return;
-    const timer = setTimeout(() => setMinTimeElapsed(true), 2500);
-    return () => clearTimeout(timer);
+    if (isActive) {
+      document.body.style.overflow = 'hidden';
+      return () => { document.body.style.overflow = ''; };
+    }
   }, [isActive]);
 
-  // Main animation + progress tracking
+  // Counter animation
   useEffect(() => {
     if (!isActive) return;
 
-    document.body.style.overflow = 'hidden';
+    // Fake progress trick: if real progress is stuck at 0 (due to main thread blocking),
+    // we slowly count up to 85% to assure the user the site hasn't frozen.
+    // Once real progress updates, it takes over.
+    const target = progress === 0 ? 85 : (progress >= 95 ? 100 : progress);
+    const dur = progress === 0 ? 3.5 : (progress >= 95 ? 0.8 : 0.3);
 
-    // Continuously spin the rings
-    const spinTweens = [
-      gsap.to('.ring-outer', { rotation: 360, duration: 20, repeat: -1, ease: 'linear' }),
-      gsap.to('.ring-middle', { rotation: -360, duration: 15, repeat: -1, ease: 'linear' }),
-      gsap.to('.ring-inner', { rotation: 360, duration: 8, repeat: -1, ease: 'linear' }),
-    ];
-
-    // Smoothly animate the displayed counter
-    gsap.to(displayProgress.current, {
-      val: progress,
-      duration: progress === 100 ? 1.5 : 0.5, // Artificially slow down to look cool
-      ease: 'power2.out',
+    const tween = gsap.to(displayProgress.current, {
+      val: target,
+      duration: dur,
+      ease: progress === 0 ? 'power1.out' : 'power2.out',
+      overwrite: 'auto',
       onUpdate: () => {
         if (counterRef.current) {
           const n = Math.floor(displayProgress.current.val);
-          counterRef.current.innerText = n.toString().padStart(3, '0');
+          const clamped = Math.min(100, n);
+          counterRef.current.innerText = clamped.toString().padStart(3, '0');
         }
       },
     });
 
-    if (progress === 100 && minTimeElapsed && !isReadyRef.current) {
+    return () => {
+      tween.kill();
+    };
+  }, [progress, isActive]);
+
+  // Exit animation
+  useEffect(() => {
+    if (!isActive) return;
+    // Check if we hit the "good enough" progress threshold
+    if (progress >= 95 && !isReadyRef.current) {
       isReadyRef.current = true;
       hasRunOnce = true; // prevent future mounts in this tab from activating
 
-
-      spinTweens.forEach(t => t.pause());
-
       const tl = gsap.timeline();
 
+      // Stop CSS animations from fighting GSAP transform matrix
+      if (ringOuterRef.current) ringOuterRef.current.style.animation = 'none';
+      if (ringMiddleRef.current) ringMiddleRef.current.style.animation = 'none';
+      if (ringInnerRef.current) ringInnerRef.current.style.animation = 'none';
+
       // 1. UI collapses inward
-      tl.to(['.preloader-counter', '.preloader-center-dot'], {
+      tl.to([dataWrapperRef.current, centerDotRef.current], {
         scale: 0.85,
         opacity: 0,
         duration: 0.5,
         ease: 'power3.inOut',
       }, 0);
-      tl.to('.preloader-ring', {
+      tl.to([ringOuterRef.current, ringMiddleRef.current, ringInnerRef.current], {
         rotation: "+=90",
         scale: 0,
         opacity: 0,
@@ -81,11 +97,12 @@ export const Preloader = () => {
         stagger: 0.05,
         ease: 'power2.inOut',
       }, 0);
-      tl.to(['.preloader-crosshair-x', '.preloader-crosshair-y', '.preloader-meta'], {
+      tl.to([crosshairXRef.current, crosshairYRef.current], {
         opacity: 0,
         duration: 0.3,
         ease: 'power2.out',
       }, 0.2);
+
       // 2. Cinematic shutter split — brief pause then fast snap
       tl.add(() => {
         // Fire the event halfway through the shutter animation (0.35 start + 0.6)
@@ -103,12 +120,15 @@ export const Preloader = () => {
         duration: 1.2,
         ease: 'expo.inOut',
         onComplete: () => {
-          document.body.style.overflow = '';
-          if (containerRef.current) containerRef.current.style.display = 'none';
+          setVisible(false);
         },
       }, 0.35);
+
+      return () => {
+        tl.kill();
+      };
     }
-  }, [progress, isActive, minTimeElapsed]);
+  }, [progress, isActive]);
 
   // If this isn't the first load, render nothing and immediately fire done
   useEffect(() => {
@@ -117,28 +137,23 @@ export const Preloader = () => {
     }
   }, [isActive]);
 
-  if (!isActive) return null;
+  if (!isActive || !visible) return null;
 
   return (
     <div className="preloader-container" ref={containerRef}>
       {/* Background cinematic crosshairs */}
-      <div className="preloader-crosshair-x"></div>
-      <div className="preloader-crosshair-y"></div>
+      <div className="preloader-crosshair-x" ref={crosshairXRef}></div>
+      <div className="preloader-crosshair-y" ref={crosshairYRef}></div>
 
-      {/* Corner Meta Data */}
-      <div className="preloader-meta top-left">SYS.VER.1.0.4</div>
-      <div className="preloader-meta top-right">CAIRO_EGYPT</div>
-      <div className="preloader-meta bottom-left">LAT.30.0444_LON.31.2357</div>
-      <div className="preloader-meta bottom-right">ENG.NULL_HYPOTHESIS</div>
 
       <div className="preloader-panel top" ref={topPanelRef}></div>
       <div className="preloader-panel bottom" ref={bottomPanelRef}></div>
 
       <div className="preloader-ui" ref={uiWrapperRef}>
-        <div className="preloader-center-dot"></div>
-        
+        <div className="preloader-center-dot" ref={centerDotRef}></div>
+
         {/* Outer slow ring */}
-        <div className="preloader-ring ring-outer">
+        <div className="preloader-ring ring-outer" ref={ringOuterRef}>
           <svg viewBox="0 0 100 100">
             <circle
               cx="50"
@@ -153,7 +168,7 @@ export const Preloader = () => {
         </div>
 
         {/* Middle precise ring */}
-        <div className="preloader-ring ring-middle">
+        <div className="preloader-ring ring-middle" ref={ringMiddleRef}>
           <svg viewBox="0 0 100 100">
             <circle
               cx="50"
@@ -172,7 +187,7 @@ export const Preloader = () => {
         </div>
 
         {/* Inner fast ring */}
-        <div className="preloader-ring ring-inner">
+        <div className="preloader-ring ring-inner" ref={ringInnerRef}>
           <svg viewBox="0 0 100 100">
             <circle
               cx="50"
@@ -186,7 +201,7 @@ export const Preloader = () => {
           </svg>
         </div>
 
-        <div className="preloader-data">
+        <div className="preloader-data" ref={dataWrapperRef}>
           <div className="preloader-counter">
             <span ref={counterRef}>000</span>
             <span className="preloader-percent">%</span>
