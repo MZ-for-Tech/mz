@@ -7,7 +7,8 @@ import './Preloader.css';
 
 let hasRunOnce = false;
 
-
+// Preload the SVG at module load time so it's instantly available before React even mounts
+const svgPreload = typeof window !== 'undefined' ? fetch('/mz.svg').then(r => r.text()) : Promise.resolve('');
 
 export const Preloader = () => {
   const { progress } = useProgress();
@@ -15,6 +16,7 @@ export const Preloader = () => {
   const [isActive] = useState(() => !hasRunOnce);
   const [visible, setVisible] = useState(true);
   const [isVisualReady, setIsVisualReady] = useState(false);
+  const [pathsReady, setPathsReady] = useState(false);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const topPanelRef = useRef<HTMLDivElement>(null);
@@ -36,24 +38,19 @@ export const Preloader = () => {
   useEffect(() => {
     if (!isActive || !canvasRef.current) return;
     const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext('2d', { willReadFrequently: false });
     if (!ctx) return;
 
-    const dpr = window.devicePixelRatio || 1;
-    const size = 800;
-    canvas.width = size * dpr;
-    canvas.height = size * dpr;
-    canvas.style.width = `${size}px`;
-    canvas.style.height = `${size}px`;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+    canvas.width = width * dpr;
+    canvas.height = height * dpr;
+    canvas.style.width = `${width}px`;
+    canvas.style.height = `${height}px`;
     ctx.scale(dpr, dpr);
 
-    // Offscreen accumulation canvas — assembled paths are baked here once.
-    // Each frame costs only a single drawImage for ALL assembled paths.
-    const accCanvas = document.createElement('canvas');
-    accCanvas.width = size * dpr;
-    accCanvas.height = size * dpr;
-    const accCtx = accCanvas.getContext('2d')!;
-    accCtx.scale(dpr, dpr);
+
 
     let animationFrameId: number;
 
@@ -67,6 +64,8 @@ export const Preloader = () => {
       scatterDy: number;
       scatterAngle: number;
       delay: number; // 0..MAX_STAGGER
+      bboxSize: number;
+      lineWidth: number;
     }
 
     let paths: PathData[] = [];
@@ -74,220 +73,295 @@ export const Preloader = () => {
     let targetCx = 0;
     let targetCy = 0;
 
-    const MAX_STAGGER = 0.65; // Spread out the assembly more
-    const SCATTER_PX = 600;
+    const MAX_STAGGER = 0.5; // Decreased from 0.8 so individual pieces have more overall travel time
 
-    const easeOutBack = (t: number): number => {
-      const c1 = 1.70158;
-      const c3 = c1 + 1;
-      return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2);
+    const easeInExpoSnap = (t: number): number => {
+      // Perfectly matched velocities at the 0.80 split point (p=8) for a massive, slow zero-g float phase
+      if (t < 0.80) {
+        return 0.5 * Math.pow(t / 0.80, 8); // Long, slow drift
+      }
+      const t2 = (t - 0.80) / 0.20;
+      return 0.5 + 0.5 * (1 - Math.pow(1 - t2, 2)); // Fast snap
     };
 
     const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 
-    // Tracks which path indices have been baked to the accumulation canvas
-    const assembledSet = new Set<number>();
+    let isCancelled = false;
+    displayProgress.current.val = 0;
 
-    // SVG is 2289x2289. Base approximate values before transforms.
-    const BASE_CX = 1143.5;
-    const BASE_CY = 1145.5;
-    const SVG_LOGO_W = 1093;
-    const SVG_LOGO_H = 1109;
-
-    // Tweak these offsets to optically center the logo against the crosshair
-    const OPTICAL_OFFSET_X = 280; // Shift left/right
-    const OPTICAL_OFFSET_Y = 150; // Shift up/down
-
-    targetScale = 400 / Math.max(SVG_LOGO_W, SVG_LOGO_H); // ~0.361
-    targetCx = BASE_CX + OPTICAL_OFFSET_X;
-    targetCy = BASE_CY + OPTICAL_OFFSET_Y;
-
-    fetch('/mz.svg')
-      .then(res => res.text())
+    svgPreload
       .then(svgText => {
+        if (isCancelled) return;
+
         const parser = new DOMParser();
         const doc = parser.parseFromString(svgText, 'image/svg+xml');
         const svgEl = doc.documentElement;
 
-        const rawPaths = Array.from(svgEl.querySelectorAll('path')).filter(p => {
+          // Temporarily append to DOM to use the browser's native C++ SVG engine for perfect bounding boxes
+          svgEl.style.position = 'absolute';
+          svgEl.style.visibility = 'hidden';
+          svgEl.style.pointerEvents = 'none';
+          svgEl.style.width = '0';
+          svgEl.style.height = '0';
+          document.body.appendChild(svgEl);
+
+          // Force a single layout calculation now, so the subsequent loop of getBBox() reads from cache
+          (svgEl as unknown as SVGGraphicsElement).getBBox();
+
+          const rawPaths = Array.from(svgEl.querySelectorAll('path')).filter(p => {
           const d = p.getAttribute('d');
           return d && d.trim() !== '';
         });
 
-        const svgScatter = SCATTER_PX / targetScale;
+        const parsedPaths: PathData[] = [];
+        const svgScatter = 3500; // Increased scatter range so pieces cover the whole screen
 
-        paths = rawPaths.map(pm => {
+        // Pre-compute the SVG root CTM to convert from screen back to SVG coordinates
+        const svgCtm = (svgEl as unknown as SVGGraphicsElement).getScreenCTM()!;
+
+        rawPaths.forEach(pm => {
           let tx = 0, ty = 0;
           const transform = pm.getAttribute('transform');
           if (transform) {
             const match = transform.match(/translate\(\s*([^,\s)]+)[,\s]+([^)]+)\)/);
-            if (match) { tx = parseFloat(match[1]); ty = parseFloat(match[2]); }
+            if (match) {
+              tx = parseFloat(match[1]);
+              ty = parseFloat(match[2]);
+            }
           }
+          
+          const pmGraphics = pm as unknown as SVGGraphicsElement;
+          const bbox = pmGraphics.getBBox();
+          const bboxSize = Math.max(bbox.width, bbox.height);
+          
+          // Compute true global centroid in SVG coordinate space using DOM matrices
+          const pt = (svgEl as unknown as SVGSVGElement).createSVGPoint();
+          pt.x = bbox.x + bbox.width / 2;
+          pt.y = bbox.y + bbox.height / 2;
+          const ctm = pmGraphics.getCTM()!;
+          const globalPt = pt.matrixTransform(ctm).matrixTransform(svgCtm.inverse());
+          
+          const pathCx = globalPt.x;
+          const pathCy = globalPt.y;
+
           const d = pm.getAttribute('d') || '';
-
-          // Incorporate tx/ty into the pivot point so shards rotate properly around their true origin
-          const pathCx = tx + (Math.random() - 0.5) * SVG_LOGO_W * 0.2;
-          const pathCy = ty + (Math.random() - 0.5) * SVG_LOGO_H * 0.2;
-
-          // Force the scatter cloud to center on targetCx/targetCy so it's not off-center during assembly
-          const pullToCenter = 1.0;
-
-          return {
+          
+          parsedPaths.push({
             p2d: new Path2D(d),
             tx, ty,
             pathCx,
             pathCy,
-            scatterDx: (targetCx - pathCx) * pullToCenter + (Math.random() - 0.5) * 2 * svgScatter,
-            scatterDy: (targetCy - pathCy) * pullToCenter + (Math.random() - 0.5) * 2 * svgScatter,
+            scatterDx: 0,
+            scatterDy: 0,
             scatterAngle: (Math.random() - 0.5) * Math.PI * 3,
-            delay: Math.random() * MAX_STAGGER,
-          };
+            delay: 0,
+            bboxSize,
+            lineWidth: 0,
+          });
         });
+
+        // Compute the absolute mathematical center of the artwork natively
+        const svgBBox = (svgEl as unknown as SVGGraphicsElement).getBBox();
+        targetCx = svgBBox.x + svgBBox.width / 2;
+        targetCy = svgBBox.y + svgBBox.height / 2;
+        targetScale = 400 / Math.max(svgBBox.width, svgBBox.height);
+
+        document.body.removeChild(svgEl);
+
+        // To normalize distances, find max distance
+        let maxDist = 0;
+        parsedPaths.forEach(pd => {
+          const dist = Math.hypot(targetCx - pd.pathCx, targetCy - pd.pathCy);
+          if (dist > maxDist) maxDist = dist;
+        });
+
+        // Now that we have the exact center, compute scatter pulls
+        parsedPaths.forEach(pd => {
+          const pullX = targetCx - pd.pathCx;
+          const pullY = targetCy - pd.pathCy;
+          pd.scatterDx = pullX + (Math.random() - 0.5) * 2 * svgScatter;
+          pd.scatterDy = pullY + (Math.random() - 0.5) * 2 * svgScatter;
+
+          // Compute delay based on distance to center (outer pieces assemble first)
+          const distNorm = Math.hypot(pullX, pullY) / (maxDist || 1); // 0 at center, 1 at edge
+          const baseDelay = (1 - distNorm) * MAX_STAGGER; 
+          pd.delay = Math.min(MAX_STAGGER, Math.max(0, baseDelay + (Math.random() - 0.5) * 0.1 * MAX_STAGGER));
+
+          // Group into lineWidth buckets (thin, medium, thick) to minimize canvas state changes
+          const rawLineWidth = Math.max(0.2, Math.min(2.0, pd.bboxSize / 50));
+          let category = 1.0;
+          if (rawLineWidth < 0.8) category = 0.5;
+          else if (rawLineWidth > 1.2) category = 1.5;
+          pd.lineWidth = category / targetScale;
+        });
+
+        // Sort by lineWidth to minimize state changes in render loop
+        parsedPaths.sort((a, b) => a.lineWidth - b.lineWidth);
+
+        paths = parsedPaths;
+        setPathsReady(true);
+
+        if (isCancelled) return;
+
+        let isFinalFrameDrawn = false;
+
+        const render = () => {
+          const time = performance.now() * 0.001;
+          const p = displayProgress.current.val / 100;
+          const drawProgress = Math.max(0, Math.min(1, (p - 0.05) / 0.8));
+          const ringsActive = (p > 0.87 && p < 0.97);
+          const glowActive = (drawProgress > 0.85 && drawProgress < 1.0);
+
+          // Stop the rAF loop entirely once everything is assembled and all effects have finished firing
+          if (drawProgress === 1 && !ringsActive && !glowActive) {
+            if (isFinalFrameDrawn) return;
+            isFinalFrameDrawn = true;
+          }
+
+          ctx.clearRect(0, 0, width, height);
+
+          if (paths.length > 0) {
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            
+            if (drawProgress < 0.85) {
+              ctx.globalCompositeOperation = 'lighter';
+            } else {
+              ctx.globalCompositeOperation = 'source-over';
+            }
+
+            let currentLineWidth = -1;
+
+            paths.forEach((pd) => {
+              const localT = Math.max(0, Math.min(1, (drawProgress - pd.delay) / (1 - MAX_STAGGER)));
+              const easedT = Math.min(1.0, easeInExpoSnap(localT));
+              
+              const floatDx = Math.sin(time * 0.5 + pd.delay * 20) * 250 * (1 - easedT);
+              const floatDy = Math.cos(time * 0.4 + pd.delay * 20) * 250 * (1 - easedT);
+              const floatAngle = Math.sin(time * 0.3 + pd.delay * 20) * 1.0 * (1 - easedT);
+
+              const curDx = pd.scatterDx * (1 - easedT) + floatDx;
+              const curDy = pd.scatterDy * (1 - easedT) + floatDy;
+              const curAngle = pd.scatterAngle * (1 - easedT) + floatAngle;
+              
+              // Fade in immediately at the start of the whole animation, independent of individual delay
+              const alpha = Math.min(1, drawProgress * 10);
+              const scaleIn = lerp(0.4, 1, easedT);
+              
+              if (pd.lineWidth !== currentLineWidth) {
+                currentLineWidth = pd.lineWidth;
+                ctx.lineWidth = currentLineWidth;
+              }
+
+              // Draw motion blur trail during the fast snap phase
+              if (easedT > 0.5 && easedT < 1.0) {
+                const ghostT = Math.max(0, localT - 0.02); // 2% lag
+                const ghostEasedT = Math.min(1.0, easeInExpoSnap(ghostT));
+                const gFloatDx = Math.sin(time * 0.5 + pd.delay * 20) * 250 * (1 - ghostEasedT);
+                const gFloatDy = Math.cos(time * 0.4 + pd.delay * 20) * 250 * (1 - ghostEasedT);
+                const gFloatAngle = Math.sin(time * 0.3 + pd.delay * 20) * 1.0 * (1 - ghostEasedT);
+
+                const gDx = pd.scatterDx * (1 - ghostEasedT) + gFloatDx;
+                const gDy = pd.scatterDy * (1 - ghostEasedT) + gFloatDy;
+                const gAngle = pd.scatterAngle * (1 - ghostEasedT) + gFloatAngle;
+                const gScaleIn = lerp(0.2, 1, ghostEasedT);
+
+                ctx.globalAlpha = alpha * 0.15;
+                const gScale = dpr * targetScale * gScaleIn;
+                const gCosA = Math.cos(gAngle);
+                const gSinA = Math.sin(gAngle);
+                
+                ctx.setTransform(
+                  gScale * gCosA,
+                  gScale * gSinA,
+                  -gScale * gSinA,
+                  gScale * gCosA,
+                  dpr * (width / 2 + (pd.pathCx + gDx - targetCx) * targetScale),
+                  dpr * (height / 2 + (pd.pathCy + gDy - targetCy) * targetScale)
+                );
+                ctx.translate(pd.tx - pd.pathCx, pd.ty - pd.pathCy);
+                ctx.stroke(pd.p2d);
+              }
+
+              ctx.globalAlpha = alpha;
+              const globalScale = dpr * targetScale * scaleIn;
+              const cosA = Math.cos(curAngle);
+              const sinA = Math.sin(curAngle);
+              
+              ctx.setTransform(
+                globalScale * cosA,
+                globalScale * sinA,
+                -globalScale * sinA,
+                globalScale * cosA,
+                dpr * (width / 2 + (pd.pathCx + curDx - targetCx) * targetScale),
+                dpr * (height / 2 + (pd.pathCy + curDy - targetCy) * targetScale)
+              );
+              ctx.translate(pd.tx - pd.pathCx, pd.ty - pd.pathCy);
+              ctx.stroke(pd.p2d);
+            });
+
+            // Reset state after loop
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            ctx.globalAlpha = 1;
+            ctx.globalCompositeOperation = 'source-over';
+
+            // Single landing glow overlay (pulsing radial gradient)
+            if (drawProgress > 0.85) {
+              const glowT = (drawProgress - 0.85) / 0.15;
+              const glowAlpha = Math.sin(glowT * Math.PI) * 0.15;
+              if (glowAlpha > 0.01) {
+                ctx.save();
+                const grad = ctx.createRadialGradient(width / 2, height / 2, 0, width / 2, height / 2, Math.max(width, height) / 3);
+                grad.addColorStop(0, `rgba(255,255,255,${glowAlpha.toFixed(3)})`);
+                grad.addColorStop(1, 'rgba(255,255,255,0)');
+                ctx.fillStyle = grad;
+                ctx.fillRect(0, 0, width, height);
+                ctx.restore();
+              }
+            }
+
+            // Burst rings — concentric cinematic effect
+            const rings = [0, 0.02, 0.04];
+            rings.forEach(delay => {
+              const start = 0.87 + delay;
+              const end = start + 0.10;
+              if (p > start && p < end) {
+                const burstT = (p - start) / 0.10;
+                ctx.save();
+                ctx.translate(width / 2, height / 2);
+                ctx.scale(targetScale, targetScale);
+                ctx.translate(-targetCx, -targetCy);
+                ctx.beginPath();
+                ctx.arc(targetCx, targetCy, (burstT * 500) / targetScale, 0, Math.PI * 2);
+                ctx.strokeStyle = `rgba(255,255,255,${((1 - burstT) * 0.55).toFixed(3)})`;
+                ctx.lineWidth = 3 / targetScale;
+                ctx.stroke();
+                ctx.restore();
+              }
+            });
+          }
+
+          animationFrameId = requestAnimationFrame(render);
+        };
+
+        render();
       })
       .catch(err => console.error('Error fetching SVG:', err));
 
-    // Bake a batch of newly-assembled paths into the accumulation canvas.
-    // Called at most once per path ever.
-    const bakeToAcc = (batch: PathData[]) => {
-      if (batch.length === 0) return;
-      accCtx.save();
-      accCtx.translate(size / 2, size / 2);
-      accCtx.scale(targetScale, targetScale);
-      accCtx.translate(-targetCx, -targetCy);
-      accCtx.strokeStyle = '#ffffff';
-      accCtx.lineWidth = 1.0 / targetScale; // Thinner for a sharper shard look
-      accCtx.lineCap = 'round';
-      accCtx.lineJoin = 'round';
-
-      // Add a slight glow to the baked result
-      accCtx.shadowColor = 'rgba(255, 255, 255, 0.4)';
-      accCtx.shadowBlur = 4 / targetScale;
-
-      batch.forEach(pd => {
-        accCtx.save();
-        accCtx.translate(pd.tx, pd.ty);
-        accCtx.stroke(pd.p2d);
-        accCtx.restore();
-      });
-      accCtx.restore();
+    return () => {
+      isCancelled = true;
+      cancelAnimationFrame(animationFrameId);
     };
-
-    const render = () => {
-      ctx.clearRect(0, 0, size, size);
-
-      const p = displayProgress.current.val / 100;
-
-      // Single call renders ALL assembled paths
-      ctx.drawImage(accCanvas, 0, 0);
-
-      if (paths.length > 0) {
-        // drawProgress: 0→1 maps to p=0.05→0.85
-        const drawProgress = Math.max(0, Math.min(1, (p - 0.05) / 0.8));
-
-        const newlyAssembled: PathData[] = [];
-
-        ctx.save();
-        ctx.translate(size / 2, size / 2);
-        ctx.scale(targetScale, targetScale);
-        ctx.translate(-targetCx, -targetCy);
-        ctx.strokeStyle = '#ffffff';
-        ctx.lineWidth = 1.0 / targetScale;
-        ctx.lineCap = 'round';
-        ctx.lineJoin = 'round';
-
-        paths.forEach((pd, i) => {
-          const localT = Math.max(0, Math.min(1,
-            (drawProgress - pd.delay) / (1 - MAX_STAGGER)
-          ));
-
-          if (localT <= 0) return; // hasn't started yet — cheapest skip
-
-          if (assembledSet.has(i)) return; // already baked to accCanvas
-
-          if (localT >= 1) {
-            // Mark as done, collect for baking
-            assembledSet.add(i);
-            newlyAssembled.push(pd);
-            return;
-          }
-
-          // In-flight: apply scatter + easeOutBack interpolation
-          const easedT = easeOutBack(localT);
-          const clampedT = Math.max(0, Math.min(1.06, easedT));
-
-          const curDx = pd.scatterDx * (1 - clampedT);
-          const curDy = pd.scatterDy * (1 - clampedT);
-          const curAngle = pd.scatterAngle * (1 - clampedT);
-
-          // Fade in smoothly as it travels
-          const alpha = lerp(0.0, 1, Math.min(1, localT * 2));
-          // Scale from tiny shard to full size
-          const scaleIn = lerp(0.2, 1, clampedT);
-
-          ctx.save();
-          ctx.globalAlpha = alpha;
-          // Rotate around path's own centroid while scattering
-          ctx.translate(pd.pathCx + curDx, pd.pathCy + curDy);
-          ctx.rotate(curAngle);
-          ctx.scale(scaleIn, scaleIn);
-          ctx.translate(pd.tx - pd.pathCx, pd.ty - pd.pathCy);
-          ctx.stroke(pd.p2d);
-          ctx.restore();
-        });
-
-        ctx.restore();
-
-        // Bake newly assembled to accCanvas + draw them this frame too
-        // (accCanvas update only takes effect on the NEXT drawImage call)
-        if (newlyAssembled.length > 0) {
-          bakeToAcc(newlyAssembled);
-          ctx.save();
-          ctx.translate(size / 2, size / 2);
-          ctx.scale(targetScale, targetScale);
-          ctx.translate(-targetCx, -targetCy);
-          ctx.strokeStyle = '#ffffff';
-          ctx.lineWidth = 1.0 / targetScale;
-          ctx.lineCap = 'round';
-          ctx.lineJoin = 'round';
-          newlyAssembled.forEach(pd => {
-            ctx.save();
-            ctx.translate(pd.tx, pd.ty);
-            ctx.stroke(pd.p2d);
-            ctx.restore();
-          });
-          ctx.restore();
-        }
-
-        // Burst ring — no shadowBlur
-        if (p > 0.87 && p < 0.97) {
-          const burstT = (p - 0.87) / 0.10;
-          ctx.save();
-          ctx.translate(size / 2, size / 2);
-          ctx.scale(targetScale, targetScale);
-          ctx.translate(-targetCx, -targetCy);
-          ctx.beginPath();
-          ctx.arc(targetCx, targetCy, (burstT * 500) / targetScale, 0, Math.PI * 2);
-          ctx.strokeStyle = `rgba(255,255,255,${((1 - burstT) * 0.55).toFixed(3)})`;
-          ctx.lineWidth = 3 / targetScale;
-          ctx.stroke();
-          ctx.restore();
-        }
-      }
-
-      animationFrameId = requestAnimationFrame(render);
-    };
-
-    render();
-    return () => cancelAnimationFrame(animationFrameId);
   }, [isActive]);
 
   // Internal animation progress
   useEffect(() => {
-    if (!isActive) return;
+    if (!isActive || !pathsReady) return;
 
     const target = progress === 0 ? 85 : (progress >= 95 ? 100 : Math.max(progress, 85));
-    // Slower duration for visual clarity
-    const dur = progress === 0 ? 7.0 : (progress >= 95 ? 4.0 : 1.5);
+    // Slower initial duration to allow for a longer zero-g float phase
+    const dur = progress === 0 ? 6.0 : (progress >= 95 ? 4.0 : 1.5);
 
     const tween = gsap.to(displayProgress.current, {
       val: target,
@@ -304,7 +378,7 @@ export const Preloader = () => {
     return () => {
       tween.kill();
     };
-  }, [progress, isActive]);
+  }, [progress, isActive, pathsReady]);
 
   // Exit animation
   useEffect(() => {
@@ -315,36 +389,14 @@ export const Preloader = () => {
 
       const tl = gsap.timeline();
 
-      // 1. The Core smoothly compresses into the final logo size
-      tl.to(canvasRef.current, {
-        scale: 0.35, // 400px down to 140px
-        duration: 1.5,
-        ease: 'power3.inOut',
-      }, 0.5);
-
-      // 2. Cinematic shutter split
-      tl.add(() => {
-        window.dispatchEvent(new Event('mz-preloader-done'));
-      }, 2.5);
-
-      tl.to(uiWrapperRef.current, {
-        scale: 1.3,
-        opacity: 0,
-        duration: 0.8,
-        ease: 'power2.in',
-      }, 2.3);
-
-      tl.to(topPanelRef.current, {
-        y: '-100%',
-        duration: 1.4,
-        ease: 'expo.inOut',
-      }, 2.5);
-      tl.to(bottomPanelRef.current, {
-        y: '100%',
-        duration: 1.4,
-        ease: 'expo.inOut',
-        onComplete: () => setVisible(false),
-      }, 2.5);
+      // Hold + breathe
+      tl.to(canvasRef.current, { scale: 1.04, duration: 0.8, ease: 'power2.inOut' }, 0);
+      
+      // Clean split — no flash, no flicker
+      tl.to(canvasRef.current, { opacity: 0, duration: 0.5, ease: 'power2.in' }, 0.6);
+      tl.to(topPanelRef.current, { y: '-100%', duration: 1.2, ease: 'expo.inOut' }, 0.7);
+      tl.to(bottomPanelRef.current, { y: '100%', duration: 1.2, ease: 'expo.inOut', onComplete: () => setVisible(false) }, 0.7);
+      tl.add(() => window.dispatchEvent(new Event('mz-preloader-done')), 0.8);
 
       return () => { tl.kill(); };
     }
@@ -364,13 +416,11 @@ export const Preloader = () => {
 
       <div className="preloader-ui" ref={uiWrapperRef} style={{ display: 'flex', width: '100%', height: '100%', alignItems: 'center', justifyContent: 'center' }}>
 
-        {/* The scatter-assemble canvas — 800×800 set here so flexbox centers it BEFORE useEffect runs */}
+        {/* The scatter-assemble canvas — full screen so shards don't clip */}
         <canvas
           className="preloader-canvas"
           ref={canvasRef}
-          width={800}
-          height={800}
-          style={{ width: '800px', height: '800px', display: 'block' }}
+          style={{ width: '100vw', height: '100vh', display: 'block' }}
         />
       </div>
     </div>
