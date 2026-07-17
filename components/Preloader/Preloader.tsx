@@ -97,16 +97,31 @@ export const Preloader = () => {
         const doc = parser.parseFromString(svgText, 'image/svg+xml');
         const svgEl = doc.documentElement;
 
-          // Temporarily append to DOM to use the browser's native C++ SVG engine for perfect bounding boxes
-          svgEl.style.position = 'absolute';
-          svgEl.style.visibility = 'hidden';
-          svgEl.style.pointerEvents = 'none';
-          svgEl.style.width = '0';
-          svgEl.style.height = '0';
-          document.body.appendChild(svgEl);
+          // Parse viewBox to get exact mathematical center of the artwork natively
+          let vbX = 0, vbY = 0, vbW = 1000, vbH = 1000;
+          const vb = svgEl.getAttribute('viewBox');
+          if (vb) {
+            const parts = vb.split(/\s+/).map(parseFloat);
+            if (parts.length === 4) {
+              [vbX, vbY, vbW, vbH] = parts;
+            }
+          }
+          
+          targetCx = vbX + vbW / 2;
+          targetCy = vbY + vbH / 2;
+          const targetDisplaySize = Math.min(window.innerWidth * 0.8, 400); // 80% of screen width, up to 400px
+          targetScale = targetDisplaySize / Math.max(1, Math.max(vbW, vbH));
 
-          // Force a single layout calculation now, so the subsequent loop of getBBox() reads from cache
-          (svgEl as unknown as SVGGraphicsElement).getBBox();
+          // Temporarily append to DOM to use the browser's native C++ SVG engine for bounding box sizes
+          svgEl.style.position = 'absolute';
+          svgEl.style.opacity = '0.001';
+          svgEl.style.pointerEvents = 'none';
+          svgEl.style.zIndex = '-9999';
+          svgEl.style.left = '0px';
+          svgEl.style.top = '0px';
+          svgEl.style.width = '100px';
+          svgEl.style.height = '100px';
+          document.body.appendChild(svgEl);
 
           const rawPaths = Array.from(svgEl.querySelectorAll('path')).filter(p => {
           const d = p.getAttribute('d');
@@ -114,10 +129,7 @@ export const Preloader = () => {
         });
 
         const parsedPaths: PathData[] = [];
-        const svgScatter = 3500; // Increased scatter range so pieces cover the whole screen
-
-        // Pre-compute the SVG root CTM to convert from screen back to SVG coordinates
-        const svgCtm = (svgEl as unknown as SVGGraphicsElement).getScreenCTM()!;
+        const svgScatter = Math.max(window.innerWidth, window.innerHeight) * 1.5; // Responsive scatter range
 
         rawPaths.forEach(pm => {
           let tx = 0, ty = 0;
@@ -130,19 +142,25 @@ export const Preloader = () => {
             }
           }
           
-          const pmGraphics = pm as unknown as SVGGraphicsElement;
-          const bbox = pmGraphics.getBBox();
+          // Use getBBox to find the centroid of the path in its local un-translated space.
+          // Fallback to a default if the mobile browser refuses to render it.
+          let bbox = { x: 0, y: 0, width: 50, height: 50 };
+          try {
+            const pmGraphics = pm as unknown as SVGGraphicsElement;
+            const b = pmGraphics.getBBox();
+            if (b && (b.width > 0 || b.height > 0)) {
+               bbox = { x: b.x, y: b.y, width: b.width, height: b.height };
+            }
+          } catch (e) {
+            // Ignore error
+          }
+          
           const bboxSize = Math.max(bbox.width, bbox.height);
           
-          // Compute true global centroid in SVG coordinate space using DOM matrices
-          const pt = (svgEl as unknown as SVGSVGElement).createSVGPoint();
-          pt.x = bbox.x + bbox.width / 2;
-          pt.y = bbox.y + bbox.height / 2;
-          const ctm = pmGraphics.getCTM()!;
-          const globalPt = pt.matrixTransform(ctm).matrixTransform(svgCtm.inverse());
-          
-          const pathCx = globalPt.x;
-          const pathCy = globalPt.y;
+          // Since there are no nested groups or rotations in mz.svg,
+          // the global centroid in viewBox space is just the local centroid + the translation.
+          const pathCx = tx + bbox.x + bbox.width / 2;
+          const pathCy = ty + bbox.y + bbox.height / 2;
 
           const d = pm.getAttribute('d') || '';
           
@@ -159,12 +177,6 @@ export const Preloader = () => {
             lineWidth: 0,
           });
         });
-
-        // Compute the absolute mathematical center of the artwork natively
-        const svgBBox = (svgEl as unknown as SVGGraphicsElement).getBBox();
-        targetCx = svgBBox.x + svgBBox.width / 2;
-        targetCy = svgBBox.y + svgBBox.height / 2;
-        targetScale = 400 / Math.max(svgBBox.width, svgBBox.height);
 
         document.body.removeChild(svgEl);
 
@@ -211,6 +223,7 @@ export const Preloader = () => {
           const drawProgress = Math.max(0, Math.min(1, (p - 0.05) / 0.8));
           const ringsActive = (p > 0.87 && p < 0.97);
           const glowActive = (drawProgress > 0.85 && drawProgress < 1.0);
+          const floatAmplitude = Math.min(250, width * 0.3); // Responsive float radius
 
           // Stop the rAF loop entirely once everything is assembled and all effects have finished firing
           if (drawProgress === 1 && !ringsActive && !glowActive) {
@@ -237,8 +250,8 @@ export const Preloader = () => {
               const localT = Math.max(0, Math.min(1, (drawProgress - pd.delay) / (1 - MAX_STAGGER)));
               const easedT = Math.min(1.0, easeInExpoSnap(localT));
               
-              const floatDx = Math.sin(time * 0.5 + pd.delay * 20) * 250 * (1 - easedT);
-              const floatDy = Math.cos(time * 0.4 + pd.delay * 20) * 250 * (1 - easedT);
+              const floatDx = Math.sin(time * 0.5 + pd.delay * 20) * floatAmplitude * (1 - easedT);
+              const floatDy = Math.cos(time * 0.4 + pd.delay * 20) * floatAmplitude * (1 - easedT);
               const floatAngle = Math.sin(time * 0.3 + pd.delay * 20) * 1.0 * (1 - easedT);
 
               const curDx = pd.scatterDx * (1 - easedT) + floatDx;
@@ -258,8 +271,8 @@ export const Preloader = () => {
               if (easedT > 0.5 && easedT < 1.0) {
                 const ghostT = Math.max(0, localT - 0.02); // 2% lag
                 const ghostEasedT = Math.min(1.0, easeInExpoSnap(ghostT));
-                const gFloatDx = Math.sin(time * 0.5 + pd.delay * 20) * 250 * (1 - ghostEasedT);
-                const gFloatDy = Math.cos(time * 0.4 + pd.delay * 20) * 250 * (1 - ghostEasedT);
+                const gFloatDx = Math.sin(time * 0.5 + pd.delay * 20) * floatAmplitude * (1 - ghostEasedT);
+                const gFloatDy = Math.cos(time * 0.4 + pd.delay * 20) * floatAmplitude * (1 - ghostEasedT);
                 const gFloatAngle = Math.sin(time * 0.3 + pd.delay * 20) * 1.0 * (1 - ghostEasedT);
 
                 const gDx = pd.scatterDx * (1 - ghostEasedT) + gFloatDx;
