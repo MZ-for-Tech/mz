@@ -165,7 +165,7 @@ function Logo() {
     
     // Base organic sway (feels like it's floating in fluid)
     const swayX = Math.sin(t * 0.8) * 0.03;
-    const swayY = Math.cos(t * 0.6) * 0.05;
+    const swayY = Math.cos(t * 0.4) * 0.18; // Increased amplitude for more noticeable left/right rotation
     const floatY = Math.sin(t * 1.2) * 0.1;
 
     // Apply floating
@@ -292,12 +292,12 @@ export default function MzLogo3D({
         </Suspense>
 
         {/* Darkness */}
-        <ambientLight intensity={0.07} />
+        <ambientLight intensity={0.2} />
 
         {/* Main spotlight */}
         <directionalLight
           position={[8, 10, 8]}
-          intensity={3}
+          intensity={4.5}
           color="#FFE78D"
         />
 
