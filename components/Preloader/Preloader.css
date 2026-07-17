@@ -13,31 +13,6 @@
   justify-content: center;
 }
 
-/* Precision full-screen crosshairs */
-.preloader-crosshair-x,
-.preloader-crosshair-y {
-  position: absolute;
-  background-color: rgba(255, 255, 255, 0.04);
-  z-index: 2;
-  will-change: transform, opacity;
-}
-
-.preloader-crosshair-x {
-  top: 50%;
-  left: 0;
-  width: 100%;
-  height: 1px;
-  transform: translateY(-50%);
-}
-
-.preloader-crosshair-y {
-  top: 0;
-  left: 50%;
-  width: 1px;
-  height: 100%;
-  transform: translateX(-50%);
-}
-
 .preloader-panel {
   position: absolute;
   left: 0;
@@ -48,8 +23,6 @@
   will-change: transform;
   z-index: 1;
 }
-
-
 
 .preloader-panel.top {
   top: 0;
@@ -65,84 +38,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 320px;
-  height: 320px;
-}
-
-.preloader-ring {
-  position: absolute;
   width: 100%;
   height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  justify-content: center;
-  will-change: transform;
 }
 
-@keyframes spin-cw {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-@keyframes spin-ccw {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(-360deg); }
-}
-
-.ring-outer {
-  animation: spin-cw 20s linear infinite;
-}
-
-.ring-middle {
-  animation: spin-ccw 15s linear infinite;
-}
-
-.ring-inner {
-  animation: spin-cw 8s linear infinite;
-}
-
-/* Add absolute center dot */
-.preloader-center-dot {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 4px;
-  height: 4px;
-  background-color: var(--color-brand-yellow, #e5ff00);
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 5;
-  box-shadow: 0 0 10px rgba(229, 255, 0, 0.5);
-}
-
-.preloader-data {
-  position: absolute;
-  top: 55%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.75rem;
+.preloader-canvas {
+  z-index: 2;
   will-change: transform, opacity;
-  z-index: 5;
-}
-
-.preloader-counter {
-  font-family: var(--font-mono);
-  font-size: 1.25rem;
-  font-weight: 300;
-  color: #ffffff;
-  letter-spacing: 0.15em;
-  display: flex;
-  align-items: baseline;
-  gap: 0.2rem;
-  line-height: 1;
-  background: rgba(3, 3, 3, 0.8);
-  padding: 0.2rem 0.5rem;
-}
-
-.preloader-percent {
-  font-size: 0.75rem;
-  color: var(--color-brand-yellow, #e5ff00);
-  font-weight: 500;
 }
