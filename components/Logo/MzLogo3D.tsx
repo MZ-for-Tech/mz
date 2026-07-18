@@ -289,6 +289,7 @@ export default function MzLogo3D({
           antialias: true,
           alpha: true,
           powerPreference: "high-performance",
+          logarithmicDepthBuffer: true,
         }}
       >
         <PerformanceMonitor onIncline={() => setDpr(1.5)} onDecline={() => setDpr(1)} />
