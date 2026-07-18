@@ -170,7 +170,9 @@ const Waves: FC<WavesProps> = ({
       let { xGap, yGap } = configRef.current;
 
       // Ensure we don't blow up memory on 4K/Ultrawide screens by aggressively capping the total points
-      const TARGET_POINTS = 2000;
+      // We reduce the target points significantly on mobile devices to maintain 60fps on lower-end CPUs (like MediaTek G99)
+      const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+      const TARGET_POINTS = isMobile ? 600 : 2000;
       const currentPointsEstimate = Math.ceil(oWidth / xGap) * Math.ceil(oHeight / yGap);
       if (currentPointsEstimate > TARGET_POINTS) {
         const scale = Math.sqrt(currentPointsEstimate / TARGET_POINTS);

@@ -402,6 +402,7 @@ export default function Home() {
                                 title={project.name}
                                 className={styles.workIframe}
                                 loading="lazy"
+                                sandbox="allow-scripts allow-same-origin"
                                 style={{ pointerEvents: isInteractive && isActive ? 'auto' : 'none' }}
                               />
                             )}

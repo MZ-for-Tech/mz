@@ -4,7 +4,8 @@ import {
   Suspense,
   useMemo,
   useRef,
-  useEffect
+  useEffect,
+  useState
 } from "react";
 
 import {
@@ -14,7 +15,7 @@ import {
   useThree
 } from "@react-three/fiber";
 
-import { Center } from "@react-three/drei";
+import { Center, PerformanceMonitor } from "@react-three/drei";
 
 import * as THREE from "three";
 import { SVGLoader } from "three/examples/jsm/loaders/SVGLoader.js";
@@ -38,7 +39,10 @@ function Logo() {
   const logoRef = useRef<THREE.Group>(null);
   const sweepLightRef = useRef<THREE.PointLight>(null);
 
-  const { gl } = useThree();
+  const { gl, size } = useThree();
+
+  const isMobile = size.width < 768;
+  const logoScale = isMobile ? 0.0022 : 0.0035;
 
   // Interaction state — all in refs, never triggers re-render
   const hovered = useRef(false);
@@ -51,7 +55,7 @@ function Logo() {
       bevelEnabled: true,
       bevelThickness: 2,
       bevelSize: 1.5,
-      bevelSegments: 2,
+      bevelSegments: 1, // Reduced from 2 for better performance on mobile GPUs
       curveSegments: 1,
     }),
     []
@@ -208,8 +212,7 @@ function Logo() {
 
     // --- Camera parallax ---
     // Camera pulls back slightly on scroll (cinematic recede)
-    const isMobile = state.size.width < 768;
-    const baseZ = isMobile ? 19 : 12;
+    const baseZ = 12;
     const targetZ_cam = baseZ + scrollProgress * 2.5;
     state.camera.position.x = THREE.MathUtils.lerp(state.camera.position.x, state.pointer.x * 0.6, 0.03);
     state.camera.position.y = THREE.MathUtils.lerp(state.camera.position.y, state.pointer.y * 0.35, 0.03);
@@ -235,7 +238,7 @@ function Logo() {
   return (
     <>
       <group ref={logoRef}>
-        <Center scale={[0.0035, -0.0035, 0.0035]}>
+        <Center scale={[logoScale, -logoScale, logoScale]}>
           {meshData.map((item, i) => (
             <mesh
               key={i}
@@ -265,6 +268,8 @@ export default function MzLogo3D({
 }: {
   className?: string;
 }) {
+  const [dpr, setDpr] = useState(1.5);
+
   return (
     <div
       className={className}
@@ -275,7 +280,7 @@ export default function MzLogo3D({
       }}
     >
       <Canvas
-        dpr={[1, 1.5]}
+        dpr={dpr}
         camera={{
           position: [0, 0, 12],
           fov: 38
@@ -284,9 +289,9 @@ export default function MzLogo3D({
           antialias: true,
           alpha: true,
           powerPreference: "high-performance",
-          logarithmicDepthBuffer: true,
         }}
       >
+        <PerformanceMonitor onIncline={() => setDpr(1.5)} onDecline={() => setDpr(1)} />
         <Suspense fallback={null}>
           <Logo />
         </Suspense>
