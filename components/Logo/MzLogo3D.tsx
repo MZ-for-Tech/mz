@@ -33,6 +33,13 @@ import { SVGLoader } from "three/examples/jsm/loaders/SVGLoader.js";
  */
 const Z_STEP = 0.02;
 
+// Global cache to prevent re-building 480 geometries every time the user returns to the main page
+let globalMeshData: {
+  geometry: THREE.ExtrudeGeometry;
+  material: THREE.MeshStandardMaterial;
+  zOffset: number;
+}[] | null = null;
+
 function Logo() {
   const svg = useLoader(SVGLoader, "/mz.svg");
 
@@ -70,6 +77,8 @@ function Logo() {
    * so we never create more materials than there are unique colors.
    */
   const meshData = useMemo(() => {
+    if (globalMeshData) return globalMeshData;
+
     const materialCache = new Map<string, THREE.MeshStandardMaterial>();
 
     const getMaterial = (color: string) => {
@@ -107,18 +116,16 @@ function Logo() {
       });
     });
 
-
     return items;
   }, [svg, extrudeSettings]);
 
   useEffect(() => {
-    const geos = meshData.map((d) => d.geometry);
-    const mats = new Set(meshData.map((d) => d.material));
-    return () => {
-      geos.forEach((g) => g.dispose());
-      mats.forEach((m) => m.dispose());
-    };
+    if (!globalMeshData) {
+      globalMeshData = meshData;
+    }
   }, [meshData]);
+
+  // Removed the useEffect that disposes the geometries so they can be reused across route transitions
 
   // Hover tracking on the WebGL canvas element
   useEffect(() => {

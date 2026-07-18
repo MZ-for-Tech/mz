@@ -11,7 +11,8 @@ let hasRunOnce = false;
 const svgPreload = typeof window !== 'undefined' ? fetch('/mz.svg').then(r => r.text()) : Promise.resolve('');
 
 export const Preloader = () => {
-  const { progress } = useProgress();
+  const { progress, active, total } = useProgress();
+  const [fakeProgress, setFakeProgress] = useState(0);
   const isReadyRef = useRef(false);
   const [isActive] = useState(() => !hasRunOnce);
   const [visible, setVisible] = useState(true);
@@ -33,6 +34,25 @@ export const Preloader = () => {
       return () => { document.body.style.overflow = ''; };
     }
   }, [isActive, visible]);
+
+  // Fallback for non-3D pages (e.g. /privacy) where useProgress() never fires
+  useEffect(() => {
+    if (!isActive) return;
+    let timer: NodeJS.Timeout;
+    
+    // If no 3D assets are loading after a short delay, assume it's a non-3D page
+    if (!active && total === 0) {
+      timer = setTimeout(() => {
+        setFakeProgress(100);
+      }, 600); 
+    }
+
+    return () => {
+      if (timer) clearTimeout(timer);
+    };
+  }, [active, total, isActive]);
+
+  const effectiveProgress = Math.max(progress, fakeProgress);
 
   // Path-Scatter / Assemble Animation Logic
   useEffect(() => {
@@ -152,7 +172,7 @@ export const Preloader = () => {
             if (b && (b.width > 0 || b.height > 0)) {
                bbox = { x: b.x, y: b.y, width: b.width, height: b.height };
             }
-          } catch (e) {
+          } catch {
             // Ignore error
           }
           
@@ -373,14 +393,14 @@ export const Preloader = () => {
   useEffect(() => {
     if (!isActive || !pathsReady) return;
 
-    const target = progress === 0 ? 85 : (progress >= 95 ? 100 : Math.max(progress, 85));
-    // Slower initial duration to allow for a longer zero-g float phase
-    const dur = progress === 0 ? 6.0 : (progress >= 95 ? 4.0 : 1.5);
+    const target = effectiveProgress === 0 ? 85 : (effectiveProgress >= 95 ? 100 : Math.max(effectiveProgress, 85));
+    // Moderate duration to keep the majestic feel but without taking too long
+    const dur = effectiveProgress === 0 ? 2.5 : (effectiveProgress >= 95 ? 2.0 : 1.5);
 
     const tween = gsap.to(displayProgress.current, {
       val: target,
       duration: dur,
-      ease: progress === 0 ? 'power1.out' : 'power2.inOut',
+      ease: effectiveProgress === 0 ? 'power1.out' : 'power2.inOut',
       overwrite: 'auto',
       onUpdate: () => {
         if (displayProgress.current.val >= 95 && !isReadyRef.current) {
@@ -392,12 +412,12 @@ export const Preloader = () => {
     return () => {
       tween.kill();
     };
-  }, [progress, isActive, pathsReady]);
+  }, [effectiveProgress, isActive, pathsReady]);
 
   // Exit animation
   useEffect(() => {
     if (!isActive) return;
-    if (isVisualReady && progress >= 95 && !isReadyRef.current) {
+    if (isVisualReady && effectiveProgress >= 95 && !isReadyRef.current) {
       isReadyRef.current = true;
       hasRunOnce = true;
 
@@ -414,7 +434,7 @@ export const Preloader = () => {
 
       return () => { tl.kill(); };
     }
-  }, [progress, isActive, isVisualReady]);
+  }, [effectiveProgress, isActive, isVisualReady]);
 
   if (!isActive) {
     // If client-side navigation, immediately dispatch to unblock hero
