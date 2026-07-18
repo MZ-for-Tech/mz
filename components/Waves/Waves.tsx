@@ -313,7 +313,9 @@ const Waves: FC<WavesProps> = ({
 
       movePoints(t);
       drawLines();
-      frameIdRef.current = requestAnimationFrame(tick);
+      if (isVisible) {
+        frameIdRef.current = requestAnimationFrame(tick);
+      }
     }
 
     function onResize() { setSize(); setLines(); }
@@ -334,6 +336,24 @@ const Waves: FC<WavesProps> = ({
       }
     }
 
+    let isVisible = true;
+    const visibilityObserver = new IntersectionObserver(([entry]) => {
+      isVisible = entry.isIntersecting;
+      if (isVisible) {
+        // Restart the loop when scrolled back into view
+        if (frameIdRef.current === null) {
+          frameIdRef.current = requestAnimationFrame(tick);
+        }
+      } else {
+        // Stop the loop when off-screen
+        if (frameIdRef.current !== null) {
+          cancelAnimationFrame(frameIdRef.current);
+          frameIdRef.current = null;
+        }
+      }
+    }, { threshold: 0, rootMargin: '100px' });
+    visibilityObserver.observe(container);
+
     setSize();
     setLines();
     frameIdRef.current = requestAnimationFrame(tick);
@@ -342,6 +362,7 @@ const Waves: FC<WavesProps> = ({
     window.addEventListener('touchmove', onTouchMove, { passive: false });
 
     return () => {
+      visibilityObserver.disconnect();
       window.removeEventListener('resize', onResize);
       window.removeEventListener('mousemove', onMouseMove);
       window.removeEventListener('touchmove', onTouchMove);

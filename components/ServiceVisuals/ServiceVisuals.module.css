@@ -483,6 +483,13 @@
   .container::before { display: none; }
 }
 
+/* Pause all animations when the section is not visible */
+:global([data-paused='true']) *,
+:global([data-paused='true']) {
+  animation-play-state: paused !important;
+}
+
+
 :global([data-theme="light"]) .terminalWindow,
 :global([data-theme="light"]) .stage1Model,
 :global([data-theme="light"]) .stage2Pruning {

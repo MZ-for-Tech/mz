@@ -41,7 +41,8 @@ export const Preloader = () => {
     const ctx = canvas.getContext('2d', { willReadFrequently: false });
     if (!ctx) return;
 
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const isMobile = window.innerWidth < 768;
+    const dpr = Math.min(window.devicePixelRatio || 1, isMobile ? 1 : 2);
     const width = window.innerWidth;
     const height = window.innerHeight;
     canvas.width = width * dpr;
@@ -267,8 +268,8 @@ export const Preloader = () => {
                 ctx.lineWidth = currentLineWidth;
               }
 
-              // Draw motion blur trail during the fast snap phase
-              if (easedT > 0.5 && easedT < 1.0) {
+              // Draw motion blur trail during the fast snap phase (desktop only — too expensive on mobile)
+              if (!isMobile && easedT > 0.5 && easedT < 1.0) {
                 const ghostT = Math.max(0, localT - 0.02); // 2% lag
                 const ghostEasedT = Math.min(1.0, easeInExpoSnap(ghostT));
                 const gFloatDx = Math.sin(time * 0.5 + pd.delay * 20) * floatAmplitude * (1 - ghostEasedT);

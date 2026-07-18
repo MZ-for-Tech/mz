@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import { gsap } from "@/lib/gsap";
 import { useGSAP } from "@gsap/react";
 import pageStyles from "@/app/page.module.css";
@@ -47,6 +47,20 @@ const SERVICES = [
 
 export default function ServicesAccordion() {
   const sectionRef = useRef<HTMLElement>(null);
+
+  // Pause all ServiceVisual CSS animations when section is not on screen
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        section.dataset.paused = entry.isIntersecting ? 'false' : 'true';
+      },
+      { threshold: 0, rootMargin: '200px' }
+    );
+    observer.observe(section);
+    return () => observer.disconnect();
+  }, []);
 
   // Section reveal on scroll
   useGSAP(() => {
