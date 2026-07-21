@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import { gsap } from "@/lib/gsap";
 import { useGSAP } from "@gsap/react";
 import pageStyles from "@/app/page.module.css";
@@ -47,13 +47,15 @@ const SERVICES = [
 
 export default function ServicesAccordion() {
   const sectionRef = useRef<HTMLElement>(null);
+  const [isSectionVisible, setIsSectionVisible] = useState(false);
 
-  // Pause all ServiceVisual CSS animations when section is not on screen
+  // Pause all ServiceVisual CSS animations and WebGL canvases when section is not on screen
   useEffect(() => {
     const section = sectionRef.current;
     if (!section) return;
     const observer = new IntersectionObserver(
       ([entry]) => {
+        setIsSectionVisible(entry.isIntersecting);
         section.dataset.paused = entry.isIntersecting ? 'false' : 'true';
       },
       { threshold: 0, rootMargin: '200px' }
@@ -97,7 +99,6 @@ export default function ServicesAccordion() {
               width: '100%',
               willChange: 'transform',
               transform: 'perspective(1200px) skewY(6deg)',
-              transformStyle: 'preserve-3d'
             }}
           >
             <DesktopServiceCard
@@ -105,6 +106,7 @@ export default function ServicesAccordion() {
               title={service.title}
               tagline={service.tagline}
               capabilities={service.capabilities}
+              paused={!isSectionVisible}
               visual={
                 service.pillar === "BUILD" ? <BuildVisual /> :
                   service.pillar === "DEPLOY" ? <DeployVisual /> :

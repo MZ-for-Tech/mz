@@ -174,27 +174,50 @@ export default function DarkVeil({
 
     const start = performance.now();
     let isVisible = false;
+    let isPreloaderActive = typeof document !== 'undefined' && document.querySelector('.preloader-container') !== null;
+    let frameCount = 0;
+    let lastFrameTime = 0;
+    let skipFactor = 1; // 1 = render every frame, 2 = render every other frame
 
-    const loop = () => {
-      if (destroyedRef.current || !isVisible) return;
+    const onPreloaderDone = () => {
+      isPreloaderActive = false;
+      if (isVisible) {
+        cancelAnimationFrame(frameRef.current);
+        frameRef.current = requestAnimationFrame(loop);
+      }
+    };
+    window.addEventListener('mz-preloader-done', onPreloaderDone);
+
+    const loop = (now: number) => {
+      if (destroyedRef.current || !isVisible || isPreloaderActive) return;
+      frameRef.current = requestAnimationFrame(loop);
+
+      // Adaptive frame-skip: if last frame took >20ms (sub-60fps), render every other frame
+      const delta = now - lastFrameTime;
+      if (lastFrameTime > 0) {
+        skipFactor = delta > 20 ? 2 : 1;
+      }
+      lastFrameTime = now;
+      frameCount++;
+      if (frameCount % skipFactor !== 0) return;
+
       mouse.x += (targetMouse.x - mouse.x) * 0.05;
       mouse.y += (targetMouse.y - mouse.y) * 0.05;
       program.uniforms.uMouse.value.copy(mouse);
 
-      program.uniforms.uTime.value = ((performance.now() - start) / 1000) * speed;
+      program.uniforms.uTime.value = ((now - start) / 1000) * speed;
       try {
         renderer.render({ scene: mesh });
       } catch {
         return; // GL context was lost mid-frame
       }
-      frameRef.current = requestAnimationFrame(loop);
     };
 
     const observer = new IntersectionObserver(([entry]) => {
       isVisible = entry.isIntersecting;
-      if (isVisible) {
+      if (isVisible && !isPreloaderActive) {
         cancelAnimationFrame(frameRef.current);
-        loop();
+        frameRef.current = requestAnimationFrame(loop);
       }
     }, { threshold: 0.01 });
     observer.observe(parent);
@@ -207,11 +230,10 @@ export default function DarkVeil({
       cancelAnimationFrame(initialResizeFrame);
       window.removeEventListener('resize', resize);
       window.removeEventListener('mousemove', onMouseMove);
+      window.removeEventListener('mz-preloader-done', onPreloaderDone);
 
       geometry.remove();
       program.remove();
-      // NOTE: Do NOT call loseContext() here. It permanently prevents the canvas
-      // from acquiring a new WebGL context on remount (e.g. returning to this page).
     };
   }, [primaryColor, backgroundColor, noiseIntensity, scanlineIntensity, speed, scanlineFrequency, warpAmount]);
   return <canvas ref={ref} className="darkveil-canvas" />;

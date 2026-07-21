@@ -157,6 +157,7 @@ export default function DataStreamHero({ className = "" }: { className?: string 
             const mx = mouse.x;
             const my = mouse.y;
             const mRadius = mouse.radius;
+            const radiusSq = mRadius * mRadius; // constant per frame, compute once
             
             for (let i = 0; i < numParticles; i++) {
                 let px = pX[i];
@@ -167,8 +168,9 @@ export default function DataStreamHero({ className = "" }: { className?: string 
                 if (mx != null && my != null) {
                     const dx = mx - px;
                     const dy = my - py;
-                    const distance = Math.sqrt(dx * dx + dy * dy);
-                    if (distance < mRadius) {
+                    const distSq = dx * dx + dy * dy;
+                    if (distSq < radiusSq) {
+                        const distance = Math.sqrt(distSq);
                         const forceDirectionX = dx / distance;
                         const forceDirectionY = dy / distance;
                         const force = (mRadius - distance) / mRadius;

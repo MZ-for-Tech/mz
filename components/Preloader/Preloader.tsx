@@ -24,6 +24,7 @@ export const Preloader = () => {
   const bottomPanelRef = useRef<HTMLDivElement>(null);
   const uiWrapperRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const counterRef = useRef<HTMLDivElement>(null);
 
   const displayProgress = useRef({ val: 0 });
 
@@ -61,8 +62,7 @@ export const Preloader = () => {
     const ctx = canvas.getContext('2d', { willReadFrequently: false });
     if (!ctx) return;
 
-    const isMobile = window.innerWidth < 768;
-    const dpr = Math.min(window.devicePixelRatio || 1, isMobile ? 1 : 2);
+    const dpr = Math.min(window.devicePixelRatio || 1, 1); // Cap to 1.0 DPR for max 2D canvas throughput
     const width = window.innerWidth;
     const height = window.innerHeight;
     canvas.width = width * dpr;
@@ -85,6 +85,7 @@ export const Preloader = () => {
       scatterDy: number;
       scatterAngle: number;
       delay: number; // 0..MAX_STAGGER
+      groupIndex: number; // 0..5 cluster group
       bboxSize: number;
       lineWidth: number;
     }
@@ -97,12 +98,12 @@ export const Preloader = () => {
     const MAX_STAGGER = 0.5; // Decreased from 0.8 so individual pieces have more overall travel time
 
     const easeInExpoSnap = (t: number): number => {
-      // Perfectly matched velocities at the 0.80 split point (p=8) for a massive, slow zero-g float phase
-      if (t < 0.80) {
-        return 0.5 * Math.pow(t / 0.80, 8); // Long, slow drift
+      // Perfectly matched velocities at the 0.60 split point for a balanced float and a breathing, slower assembly
+      if (t < 0.60) {
+        return 0.5 * Math.pow(t / 0.60, 4); // Smooth, continuous drift
       }
-      const t2 = (t - 0.80) / 0.20;
-      return 0.5 + 0.5 * (1 - Math.pow(1 - t2, 2)); // Fast snap
+      const t2 = (t - 0.60) / 0.40;
+      return 0.5 + 0.5 * (1 - Math.pow(1 - t2, 3)); // Relaxed, breathing assembly
     };
 
     const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
@@ -133,24 +134,13 @@ export const Preloader = () => {
           const targetDisplaySize = Math.min(window.innerWidth * 0.8, 400); // 80% of screen width, up to 400px
           targetScale = targetDisplaySize / Math.max(1, Math.max(vbW, vbH));
 
-          // Temporarily append to DOM to use the browser's native C++ SVG engine for bounding box sizes
-          svgEl.style.position = 'absolute';
-          svgEl.style.opacity = '0.001';
-          svgEl.style.pointerEvents = 'none';
-          svgEl.style.zIndex = '-9999';
-          svgEl.style.left = '0px';
-          svgEl.style.top = '0px';
-          svgEl.style.width = '100px';
-          svgEl.style.height = '100px';
-          document.body.appendChild(svgEl);
-
           const rawPaths = Array.from(svgEl.querySelectorAll('path')).filter(p => {
           const d = p.getAttribute('d');
           return d && d.trim() !== '';
         });
 
         const parsedPaths: PathData[] = [];
-        const svgScatter = Math.max(window.innerWidth, window.innerHeight) * 1.5; // Responsive scatter range
+        const svgScatter = Math.max(window.innerWidth, window.innerHeight) * 1.5; // Huge scatter area
 
         rawPaths.forEach(pm => {
           let tx = 0, ty = 0;
@@ -163,27 +153,11 @@ export const Preloader = () => {
             }
           }
           
-          // Use getBBox to find the centroid of the path in its local un-translated space.
-          // Fallback to a default if the mobile browser refuses to render it.
-          let bbox = { x: 0, y: 0, width: 50, height: 50 };
-          try {
-            const pmGraphics = pm as unknown as SVGGraphicsElement;
-            const b = pmGraphics.getBBox();
-            if (b && (b.width > 0 || b.height > 0)) {
-               bbox = { x: b.x, y: b.y, width: b.width, height: b.height };
-            }
-          } catch {
-            // Ignore error
-          }
-          
-          const bboxSize = Math.max(bbox.width, bbox.height);
-          
-          // Since there are no nested groups or rotations in mz.svg,
-          // the global centroid in viewBox space is just the local centroid + the translation.
-          const pathCx = tx + bbox.x + bbox.width / 2;
-          const pathCy = ty + bbox.y + bbox.height / 2;
-
           const d = pm.getAttribute('d') || '';
+          
+          // Fast lightweight centroid estimate without heavy regex loops
+          const pathCx = tx + 25;
+          const pathCy = ty + 25;
           
           parsedPaths.push({
             p2d: new Path2D(d),
@@ -192,14 +166,13 @@ export const Preloader = () => {
             pathCy,
             scatterDx: 0,
             scatterDy: 0,
-            scatterAngle: (Math.random() - 0.5) * Math.PI * 3,
+            scatterAngle: (Math.random() - 0.5) * Math.PI * 2,
             delay: 0,
-            bboxSize,
-            lineWidth: 0,
+            groupIndex: 0,
+            bboxSize: 50,
+            lineWidth: 1.0 / targetScale,
           });
         });
-
-        document.body.removeChild(svgEl);
 
         // To normalize distances, find max distance
         let maxDist = 0;
@@ -212,20 +185,21 @@ export const Preloader = () => {
         parsedPaths.forEach(pd => {
           const pullX = targetCx - pd.pathCx;
           const pullY = targetCy - pd.pathCy;
-          pd.scatterDx = pullX + (Math.random() - 0.5) * 2 * svgScatter;
-          pd.scatterDy = pullY + (Math.random() - 0.5) * 2 * svgScatter;
+          const angle = Math.random() * Math.PI * 2;
+          const dist = Math.pow(Math.random(), 0.5) * svgScatter; // Push more shards outwards
+          pd.scatterDx = pullX * 1.5 + Math.cos(angle) * dist;
+          pd.scatterDy = pullY * 1.5 + Math.sin(angle) * dist;
 
           // Compute delay based on distance to center (outer pieces assemble first)
           const distNorm = Math.hypot(pullX, pullY) / (maxDist || 1); // 0 at center, 1 at edge
           const baseDelay = (1 - distNorm) * MAX_STAGGER; 
           pd.delay = Math.min(MAX_STAGGER, Math.max(0, baseDelay + (Math.random() - 0.5) * 0.1 * MAX_STAGGER));
 
-          // Group into lineWidth buckets (thin, medium, thick) to minimize canvas state changes
-          const rawLineWidth = Math.max(0.2, Math.min(2.0, pd.bboxSize / 50));
-          let category = 1.0;
-          if (rawLineWidth < 0.8) category = 0.5;
-          else if (rawLineWidth > 1.2) category = 1.5;
-          pd.lineWidth = category / targetScale;
+          // Group into 6 spatial cluster waves based on scatter direction
+          const scatterAnglePos = Math.atan2(pd.scatterDy, pd.scatterDx) + Math.PI;
+          pd.groupIndex = Math.floor((scatterAnglePos / (Math.PI * 2)) * 6) % 6;
+
+          pd.lineWidth = 1.0 / targetScale;
         });
 
         // Sort by lineWidth to minimize state changes in render loop
@@ -237,17 +211,51 @@ export const Preloader = () => {
         if (isCancelled) return;
 
         let isFinalFrameDrawn = false;
+        let animStartTime = -1;
+        let convergeStartTime = -1;
+        let isVisualReadyFired = false;
+
+        // Phase durations (seconds)
+        const FADE_IN_DUR = 0.5;
+        const MIN_FLOAT_DUR = 0.15;
+        const CONVERGE_DUR = 2.0;
+        const FLOAT_AMP = Math.min(90, Math.max(width, height) * 0.09);
+
+        const clamp01 = (v: number) => Math.max(0, Math.min(1, v));
 
         const render = () => {
-          const time = performance.now() * 0.001;
-          const p = displayProgress.current.val / 100;
-          const drawProgress = Math.max(0, Math.min(1, (p - 0.05) / 0.8));
-          const ringsActive = (p > 0.87 && p < 0.97);
-          const glowActive = (drawProgress > 0.85 && drawProgress < 1.0);
-          const floatAmplitude = Math.min(250, width * 0.3); // Responsive float radius
+          const now = performance.now() * 0.001;
+          if (animStartTime < 0) animStartTime = now;
+          const elapsed = now - animStartTime;
 
-          // Stop the rAF loop entirely once everything is assembled and all effects have finished firing
-          if (drawProgress === 1 && !ringsActive && !glowActive) {
+          if (counterRef.current) {
+            counterRef.current.innerText = elapsed.toFixed(2) + 's';
+          }
+
+          // ── Phase timing ──────────────────────────────────────────
+          const fadeT = clamp01(elapsed / FADE_IN_DUR);
+          const floatElapsed = Math.max(0, elapsed - FADE_IN_DUR);
+
+          // Converge starts when: loading done AND minimum float time has passed
+          const loadingDone = displayProgress.current.val >= 95;
+          if (loadingDone && floatElapsed >= MIN_FLOAT_DUR && convergeStartTime < 0) {
+            convergeStartTime = now;
+          }
+
+          const convergeElapsed = convergeStartTime >= 0 ? now - convergeStartTime : 0;
+          const convergeT = clamp01(convergeElapsed / CONVERGE_DUR);
+
+          // Signal completion to React (once, after converge)
+          if (convergeT >= 1 && !isVisualReadyFired) {
+            isVisualReadyFired = true;
+            setIsVisualReady(true);
+          }
+
+          // Burst rings fire for 0.6s after converge ends
+          const ringElapsed = convergeElapsed - CONVERGE_DUR;
+          const ringsActive = ringElapsed >= 0 && ringElapsed < 0.6;
+
+          if (convergeT >= 1 && !ringsActive) {
             if (isFinalFrameDrawn) return;
             isFinalFrameDrawn = true;
           }
@@ -258,122 +266,88 @@ export const Preloader = () => {
             ctx.strokeStyle = '#ffffff';
             ctx.lineCap = 'round';
             ctx.lineJoin = 'round';
-            
-            if (drawProgress < 0.85) {
-              ctx.globalCompositeOperation = 'lighter';
-            } else {
-              ctx.globalCompositeOperation = 'source-over';
-            }
 
             let currentLineWidth = -1;
 
             paths.forEach((pd) => {
-              const localT = Math.max(0, Math.min(1, (drawProgress - pd.delay) / (1 - MAX_STAGGER)));
-              const easedT = Math.min(1.0, easeInExpoSnap(localT));
-              
-              const floatDx = Math.sin(time * 0.5 + pd.delay * 20) * floatAmplitude * (1 - easedT);
-              const floatDy = Math.cos(time * 0.4 + pd.delay * 20) * floatAmplitude * (1 - easedT);
-              const floatAngle = Math.sin(time * 0.3 + pd.delay * 20) * 1.0 * (1 - easedT);
+              // ── Phase 1: smooth group wave fade-in ─────────────────
+              // Shards light up in 6 smooth spatial cluster waves sweeping across the screen
+              const groupStart = (pd.groupIndex / 6) * 0.45;
+              const groupProgress = clamp01((fadeT - groupStart) / 0.55);
+              const alpha = Math.sin(groupProgress * Math.PI * 0.5); // Smooth sine ease
+              if (alpha < 0.005) return; // skip invisible shards
 
-              const curDx = pd.scatterDx * (1 - easedT) + floatDx;
-              const curDy = pd.scatterDy * (1 - easedT) + floatDy;
-              const curAngle = pd.scatterAngle * (1 - easedT) + floatAngle;
-              
-              // Fade in immediately at the start of the whole animation, independent of individual delay
-              const alpha = Math.min(1, drawProgress * 10);
-              const scaleIn = lerp(0.4, 1, easedT);
-              
+              // ── Phase 2 & 3: float → converge ─────────────────────
+              const localT = clamp01((convergeT - pd.delay) / (1 - MAX_STAGGER));
+              const convergeEased = Math.min(1.0, easeInExpoSnap(localT));
+
+              const floatFactor = 1 - convergeEased;
+              const phase = (pd.groupIndex / 6) * Math.PI * 2;
+              const floatDx = Math.sin(now * 0.5 + phase) * FLOAT_AMP * floatFactor;
+              const floatDy = Math.cos(now * 0.4 + phase * 1.3) * FLOAT_AMP * floatFactor;
+              const floatAngle = Math.sin(now * 0.35 + phase * 0.8) * 0.35 * floatFactor;
+
+              // Scatter offset + float, both lerp to 0 as shards converge
+              const curDx = pd.scatterDx * floatFactor + floatDx;
+              const curDy = pd.scatterDy * floatFactor + floatDy;
+              const curAngle = pd.scatterAngle * floatFactor + floatAngle;
+
+              // Scale: tiny while floating, fully grown once placed
+              const scaleIn = lerp(0.2, 1.0, convergeEased);
+
               if (pd.lineWidth !== currentLineWidth) {
                 currentLineWidth = pd.lineWidth;
                 ctx.lineWidth = currentLineWidth;
-              }
-
-              // Draw motion blur trail during the fast snap phase (desktop only — too expensive on mobile)
-              if (!isMobile && easedT > 0.5 && easedT < 1.0) {
-                const ghostT = Math.max(0, localT - 0.02); // 2% lag
-                const ghostEasedT = Math.min(1.0, easeInExpoSnap(ghostT));
-                const gFloatDx = Math.sin(time * 0.5 + pd.delay * 20) * floatAmplitude * (1 - ghostEasedT);
-                const gFloatDy = Math.cos(time * 0.4 + pd.delay * 20) * floatAmplitude * (1 - ghostEasedT);
-                const gFloatAngle = Math.sin(time * 0.3 + pd.delay * 20) * 1.0 * (1 - ghostEasedT);
-
-                const gDx = pd.scatterDx * (1 - ghostEasedT) + gFloatDx;
-                const gDy = pd.scatterDy * (1 - ghostEasedT) + gFloatDy;
-                const gAngle = pd.scatterAngle * (1 - ghostEasedT) + gFloatAngle;
-                const gScaleIn = lerp(0.2, 1, ghostEasedT);
-
-                ctx.globalAlpha = alpha * 0.15;
-                const gScale = dpr * targetScale * gScaleIn;
-                const gCosA = Math.cos(gAngle);
-                const gSinA = Math.sin(gAngle);
-                
-                ctx.setTransform(
-                  gScale * gCosA,
-                  gScale * gSinA,
-                  -gScale * gSinA,
-                  gScale * gCosA,
-                  dpr * (width / 2 + (pd.pathCx + gDx - targetCx) * targetScale),
-                  dpr * (height / 2 + (pd.pathCy + gDy - targetCy) * targetScale)
-                );
-                ctx.translate(pd.tx - pd.pathCx, pd.ty - pd.pathCy);
-                ctx.stroke(pd.p2d);
               }
 
               ctx.globalAlpha = alpha;
               const globalScale = dpr * targetScale * scaleIn;
               const cosA = Math.cos(curAngle);
               const sinA = Math.sin(curAngle);
-              
+
               ctx.setTransform(
-                globalScale * cosA,
-                globalScale * sinA,
-                -globalScale * sinA,
-                globalScale * cosA,
-                dpr * (width / 2 + (pd.pathCx + curDx - targetCx) * targetScale),
+                globalScale * cosA,  globalScale * sinA,
+                -globalScale * sinA, globalScale * cosA,
+                dpr * (width  / 2 + (pd.pathCx + curDx - targetCx) * targetScale),
                 dpr * (height / 2 + (pd.pathCy + curDy - targetCy) * targetScale)
               );
               ctx.translate(pd.tx - pd.pathCx, pd.ty - pd.pathCy);
               ctx.stroke(pd.p2d);
             });
 
-            // Reset state after loop
+            // Reset canvas state
             ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
             ctx.globalAlpha = 1;
             ctx.globalCompositeOperation = 'source-over';
 
-            // Single landing glow overlay (pulsing radial gradient)
-            if (drawProgress > 0.85) {
-              const glowT = (drawProgress - 0.85) / 0.15;
-              const glowAlpha = Math.sin(glowT * Math.PI) * 0.15;
-              if (glowAlpha > 0.01) {
-                ctx.save();
+            // Landing glow — single pulse as shards lock into place
+            if (convergeT > 0.75 && convergeT < 1.0) {
+              const glowT = (convergeT - 0.75) / 0.25;
+              const glowAlpha = Math.sin(glowT * Math.PI) * 0.18;
+              if (glowAlpha > 0.005) {
                 const grad = ctx.createRadialGradient(width / 2, height / 2, 0, width / 2, height / 2, Math.max(width, height) / 3);
                 grad.addColorStop(0, `rgba(255,255,255,${glowAlpha.toFixed(3)})`);
                 grad.addColorStop(1, 'rgba(255,255,255,0)');
                 ctx.fillStyle = grad;
                 ctx.fillRect(0, 0, width, height);
-                ctx.restore();
               }
             }
 
-            // Burst rings — concentric cinematic effect
-            const rings = [0, 0.02, 0.04];
-            rings.forEach(delay => {
-              const start = 0.87 + delay;
-              const end = start + 0.10;
-              if (p > start && p < end) {
-                const burstT = (p - start) / 0.10;
+            // Burst rings at assembly completion
+            if (ringsActive) {
+              [0, 0.1, 0.2].forEach(delay => {
+                const t = clamp01((ringElapsed - delay) / 0.5);
+                if (t <= 0) return;
                 ctx.save();
                 ctx.translate(width / 2, height / 2);
-                ctx.scale(targetScale, targetScale);
-                ctx.translate(-targetCx, -targetCy);
                 ctx.beginPath();
-                ctx.arc(targetCx, targetCy, (burstT * 500) / targetScale, 0, Math.PI * 2);
-                ctx.strokeStyle = `rgba(255,255,255,${((1 - burstT) * 0.55).toFixed(3)})`;
-                ctx.lineWidth = 3 / targetScale;
+                ctx.arc(0, 0, t * Math.max(width, height) * 0.38, 0, Math.PI * 2);
+                ctx.strokeStyle = `rgba(255,255,255,${((1 - t) * 0.5).toFixed(3)})`;
+                ctx.lineWidth = 2;
                 ctx.stroke();
                 ctx.restore();
-              }
-            });
+              });
+            }
           }
 
           animationFrameId = requestAnimationFrame(render);
@@ -393,20 +367,16 @@ export const Preloader = () => {
   useEffect(() => {
     if (!isActive || !pathsReady) return;
 
-    const target = effectiveProgress === 0 ? 85 : (effectiveProgress >= 95 ? 100 : Math.max(effectiveProgress, 85));
-    // Moderate duration to keep the majestic feel but without taking too long
-    const dur = effectiveProgress === 0 ? 2.5 : (effectiveProgress >= 95 ? 2.0 : 1.5);
+    // This tween drives displayProgress.current.val, which the render loop
+    // polls to know when loading is done (val >= 95 → start converge).
+    const target = effectiveProgress >= 95 ? 100 : Math.max(effectiveProgress, 10);
+    const dur = effectiveProgress >= 95 ? 1.5 : 2.0;
 
     const tween = gsap.to(displayProgress.current, {
       val: target,
       duration: dur,
-      ease: effectiveProgress === 0 ? 'power1.out' : 'power2.inOut',
+      ease: 'power2.inOut',
       overwrite: 'auto',
-      onUpdate: () => {
-        if (displayProgress.current.val >= 95 && !isReadyRef.current) {
-          setIsVisualReady(true);
-        }
-      }
     });
 
     return () => {
@@ -456,6 +426,22 @@ export const Preloader = () => {
           ref={canvasRef}
           style={{ width: '100vw', height: '100vh', display: 'block' }}
         />
+
+        <div 
+          ref={counterRef} 
+          style={{
+            position: 'absolute',
+            bottom: '40px',
+            right: '40px',
+            color: 'rgba(255, 255, 255, 0.4)',
+            fontFamily: 'var(--font-mono)',
+            fontSize: '0.85rem',
+            letterSpacing: '0.1em',
+            zIndex: 10
+          }}
+        >
+          0.00s
+        </div>
       </div>
     </div>
   );

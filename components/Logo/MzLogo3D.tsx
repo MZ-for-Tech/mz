@@ -15,7 +15,7 @@ import {
   useThree
 } from "@react-three/fiber";
 
-import { Center, PerformanceMonitor } from "@react-three/drei";
+import { Center, PerformanceMonitor, Environment } from "@react-three/drei";
 
 import * as THREE from "three";
 import { SVGLoader } from "three/examples/jsm/loaders/SVGLoader.js";
@@ -51,10 +51,14 @@ function Logo() {
   const isMobile = size.width < 768;
   const logoScale = isMobile ? 0.0022 : 0.0035;
 
-  // Interaction state — all in refs, never triggers re-render
+  // Mouse tracking & drag interaction refs
   const hovered = useRef(false);
   const scrollY = useRef(0);
-  const scrollVel = useRef(0);  // scroll velocity for spin kick
+  const scrollVel = useRef(0);
+  const isDragging = useRef(false);
+  const prevPointerPos = useRef({ x: 0, y: 0 });
+  const dragRotation = useRef({ x: 0, y: 0 });
+  const dragVelocity = useRef({ x: 0, y: 0 });
 
   const extrudeSettings = useMemo(
     () => ({
@@ -125,18 +129,54 @@ function Logo() {
     }
   }, [meshData]);
 
-  // Removed the useEffect that disposes the geometries so they can be reused across route transitions
-
-  // Hover tracking on the WebGL canvas element
+  // Hover & Mouse Drag tracking on the WebGL canvas element
   useEffect(() => {
     const el = gl.domElement;
-    const onEnter = () => { hovered.current = true; };
-    const onLeave = () => { hovered.current = false; };
+    
+    const onEnter = () => { hovered.current = true; el.style.cursor = 'grab'; };
+    const onLeave = () => { 
+      hovered.current = false; 
+      isDragging.current = false; 
+      el.style.cursor = 'auto';
+    };
+
+    const onPointerDown = (e: PointerEvent) => {
+      isDragging.current = true;
+      prevPointerPos.current = { x: e.clientX, y: e.clientY };
+      el.style.cursor = 'grabbing';
+    };
+
+    const onPointerMove = (e: PointerEvent) => {
+      if (!isDragging.current) return;
+      const dx = e.clientX - prevPointerPos.current.x;
+      const dy = e.clientY - prevPointerPos.current.y;
+      
+      dragRotation.current.y += dx * 0.008;
+      dragRotation.current.x += dy * 0.008;
+
+      dragVelocity.current.y = dx * 0.008;
+      dragVelocity.current.x = dy * 0.008;
+
+      prevPointerPos.current = { x: e.clientX, y: e.clientY };
+    };
+
+    const onPointerUp = () => {
+      isDragging.current = false;
+      if (hovered.current) el.style.cursor = 'grab';
+    };
+
     el.addEventListener("pointerenter", onEnter);
     el.addEventListener("pointerleave", onLeave);
+    el.addEventListener("pointerdown", onPointerDown);
+    window.addEventListener("pointermove", onPointerMove);
+    window.addEventListener("pointerup", onPointerUp);
+
     return () => {
       el.removeEventListener("pointerenter", onEnter);
       el.removeEventListener("pointerleave", onLeave);
+      el.removeEventListener("pointerdown", onPointerDown);
+      window.removeEventListener("pointermove", onPointerMove);
+      window.removeEventListener("pointerup", onPointerUp);
     };
   }, [gl]);
 
@@ -162,9 +202,20 @@ function Logo() {
 
   useFrame((state) => {
     if (!logoRef.current) return;
+    if (typeof document !== 'undefined' && document.querySelector('.preloader-container') !== null) {
+      return; // Suspend 3D logo loop while preloader is active
+    }
 
     const t = state.clock.elapsedTime;
     const isHovered = hovered.current;
+
+    // Apply inertia when mouse drag is released
+    if (!isDragging.current) {
+      dragRotation.current.x += dragVelocity.current.x;
+      dragRotation.current.y += dragVelocity.current.y;
+      dragVelocity.current.x *= 0.92;
+      dragVelocity.current.y *= 0.92;
+    }
 
     // --- Scroll tilt: logo tilts back as user scrolls down ---
     const scrollProgress = Math.min(scrollY.current / (window.innerHeight * 0.8), 1);
@@ -173,7 +224,7 @@ function Logo() {
     // --- Mouse tracking & interaction ---
     // Tilt influence doubles while hovering (feels magnetic)
     const tiltStrength = isHovered ? 0.22 : 0.10;
-    
+
     // Base organic sway (feels like it's floating in fluid)
     const swayX = Math.sin(t * 0.8) * 0.03;
     const swayY = Math.cos(t * 0.4) * 0.18; // Increased amplitude for more noticeable left/right rotation
@@ -186,25 +237,25 @@ function Logo() {
       0.04
     );
 
-    // Combine scroll tilt, mouse tracking, and organic sway
-    const targetX = scrollTiltX + state.pointer.y * tiltStrength + swayX;
-    const targetY = state.pointer.x * (isHovered ? 0.25 : 0.15) + swayY;
+    // Combine scroll tilt, mouse tracking, drag rotation, and organic sway
+    const targetX = scrollTiltX + state.pointer.y * tiltStrength + swayX + dragRotation.current.x;
+    const targetY = state.pointer.x * (isHovered ? 0.25 : 0.15) + swayY + dragRotation.current.y;
     const targetZ = -state.pointer.x * (isHovered ? 0.10 : 0.05);
 
     logoRef.current.rotation.x = THREE.MathUtils.lerp(
       logoRef.current.rotation.x,
       targetX,
-      0.04
+      0.08
     );
     logoRef.current.rotation.y = THREE.MathUtils.lerp(
       logoRef.current.rotation.y,
       targetY + scrollVel.current,
-      0.04
+      0.08
     );
     logoRef.current.rotation.z = THREE.MathUtils.lerp(
       logoRef.current.rotation.z,
       targetZ,
-      0.04
+      0.08
     );
 
     // Decay the scroll kick each frame
@@ -226,17 +277,21 @@ function Logo() {
     state.camera.position.z = THREE.MathUtils.lerp(state.camera.position.z, targetZ_cam, 0.04);
     state.camera.lookAt(0, 0, 0);
 
-    // --- Sweep light ---
-    // Flares brighter on hover, still sweeps in ambient mode
+    // --- Sweep light / Interactive Spotlight ---
+    // In ambient mode, light sweeps slowly. On hover, it tracks the cursor like a flashlight.
     if (sweepLightRef.current) {
-      sweepLightRef.current.position.x = Math.sin(t * 0.35) * 8;
-      sweepLightRef.current.position.y = 2 + Math.cos(t * 0.45) * 3;
-      sweepLightRef.current.position.z = 6;
+      const targetLightX = isHovered ? state.pointer.x * 15 : Math.sin(t * 0.35) * 8;
+      const targetLightY = isHovered ? state.pointer.y * 15 : 2 + Math.cos(t * 0.45) * 3;
+      const targetLightZ = isHovered ? 4 : 6;
 
-      const baseIntensity = isHovered ? 6.5 : 3.5;
+      sweepLightRef.current.position.x = THREE.MathUtils.lerp(sweepLightRef.current.position.x, targetLightX, 0.08);
+      sweepLightRef.current.position.y = THREE.MathUtils.lerp(sweepLightRef.current.position.y, targetLightY, 0.08);
+      sweepLightRef.current.position.z = THREE.MathUtils.lerp(sweepLightRef.current.position.z, targetLightZ, 0.08);
+
+      const baseIntensity = isHovered ? 8.5 : 3.5;
       sweepLightRef.current.intensity = THREE.MathUtils.lerp(
         sweepLightRef.current.intensity,
-        baseIntensity + Math.sin(t * 0.6) * 0.5,
+        baseIntensity + (isHovered ? 0 : Math.sin(t * 0.6) * 0.5),
         0.08
       );
     }
@@ -275,7 +330,7 @@ export default function MzLogo3D({
 }: {
   className?: string;
 }) {
-  const [dpr, setDpr] = useState(1.5);
+  const [dpr, setDpr] = useState(1.0);
 
   return (
     <div
@@ -296,22 +351,24 @@ export default function MzLogo3D({
           antialias: true,
           alpha: true,
           powerPreference: "high-performance",
-          logarithmicDepthBuffer: true,
         }}
       >
-        <PerformanceMonitor onIncline={() => setDpr(1.5)} onDecline={() => setDpr(1)} />
+        <PerformanceMonitor onIncline={() => setDpr(1.0)} onDecline={() => setDpr(0.75)} />
         <Suspense fallback={null}>
           <Logo />
         </Suspense>
 
-        {/* Darkness */}
-        <ambientLight intensity={0.2} />
+        {/* Environment map for realistic metallic reflections */}
+        <Environment preset="forest" environmentIntensity={0.6} />
 
-        {/* Main spotlight */}
+        {/* Darkness / Base ambient */}
+        <ambientLight intensity={0.4} />
+
+        {/* Main spotlight - brighter and warmer */}
         <directionalLight
           position={[8, 10, 8]}
-          intensity={4.5}
-          color="#FFE78D"
+          intensity={5.5}
+          color="#FFF2B2"
         />
 
         {/* Rim light */}

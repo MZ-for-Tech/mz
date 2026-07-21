@@ -9,9 +9,10 @@ interface DesktopServiceCardProps {
   tagline: string;
   capabilities: string[];
   visual?: ReactNode;
+  paused?: boolean;
 }
 
-export default function DesktopServiceCard({ pillar, title, tagline, capabilities, visual }: DesktopServiceCardProps) {
+export default function DesktopServiceCard({ pillar, title, tagline, capabilities, visual, paused = false }: DesktopServiceCardProps) {
   return (
     <div className={styles.card}>
       <div className={styles.grainientWrapper}>
@@ -23,6 +24,7 @@ export default function DesktopServiceCard({ pillar, title, tagline, capabilitie
           colorBalance={0.0}
           blendSoftness={0.2}
           contrast={1.1}
+          paused={paused}
         />
       </div>
       <MzLogo width={400} height={400} className={styles.productWatermark} />

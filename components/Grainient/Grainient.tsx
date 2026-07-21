@@ -27,6 +27,7 @@ interface GrainientProps {
   color1?: string;
   color2?: string;
   color3?: string;
+  paused?: boolean;
   className?: string;
 }
 
@@ -172,9 +173,14 @@ const Grainient: React.FC<GrainientProps> = ({
   color1 = '#FF9FFC',
   color2 = '#5227FF',
   color3 = '#B497CF',
+  paused = false,
   className = ''
 }) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const pausedRef = useRef(paused);
+  useEffect(() => {
+    pausedRef.current = paused;
+  }, [paused]);
 
   // Effect 1: build WebGL context once, pause when offscreen / tab hidden
   useEffect(() => {
@@ -185,7 +191,7 @@ const Grainient: React.FC<GrainientProps> = ({
       webgl: 2,
       alpha: true,
       antialias: false,
-      dpr: Math.min(window.devicePixelRatio || 1, 2)
+      dpr: Math.min(window.devicePixelRatio || 1, 1)
     });
 
     const gl = renderer.gl;
@@ -256,7 +262,7 @@ const Grainient: React.FC<GrainientProps> = ({
     };
 
     const tryStart = () => {
-      if (isVisible && isPageVisible && raf === 0) raf = requestAnimationFrame(loop);
+      if (isVisible && isPageVisible && !pausedRef.current && raf === 0) raf = requestAnimationFrame(loop);
     };
     const tryStop = () => {
       if (raf !== 0) { cancelAnimationFrame(raf); raf = 0; }
@@ -341,6 +347,16 @@ const Grainient: React.FC<GrainientProps> = ({
     grainAmount, grainScale, grainAnimated, contrast, gamma, saturation,
     centerX, centerY, zoom, color1, color2, color3
   ]);
+
+  // Effect 3: respond immediately to paused prop changes
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+    const ctx = ctxMap.get(container);
+    if (!ctx) return;
+    // trigger a check via visibility/paused state change
+    window.dispatchEvent(new Event('grainient-toggle'));
+  }, [paused]);
 
 
   return <div ref={containerRef} className={`grainient-container ${className}`.trim()} />;

@@ -110,6 +110,15 @@ const PillNav: FC<PillNavProps> = ({
             ))}
           </ul>
         </div>
+        
+        <Link 
+          href="/start" 
+          className="premium-hire-btn"
+          onClick={() => setIsOpen(false)}
+        >
+          Hire us
+        </Link>
+
         <button 
           className={`premium-menu-toggle ${isOpen ? 'is-open' : ''}`}
           onClick={toggleMenu}

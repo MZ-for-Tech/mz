@@ -49,6 +49,12 @@ export default function RootLayout({
       className={`${geistSans.variable} ${jetbrainsMono.variable} ${cormorant.variable}`}
       data-theme="dark"
     >
+      <head>
+        {/* Preload the SVG used by the Preloader so the browser fetches it during HTML
+            parsing — before any JS runs. Without this it starts fetching only after
+            React hydrates, causing a 2-3s blank screen before shards appear. */}
+        <link rel="preload" href="/mz.svg" as="fetch" crossOrigin="anonymous" />
+      </head>
       <body>
         <Preloader />
         <CustomCursor />

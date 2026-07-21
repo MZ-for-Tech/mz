@@ -8,8 +8,11 @@ import { usePathname } from "next/navigation";
 export function CustomCursor() {
   const cursorRef = useRef<HTMLDivElement>(null);
   const [isHovering, setIsHovering] = useState(false);
-  const [isHidden, setIsHidden] = useState(false);
+  const [isHidden, setIsHidden] = useState(true);
   const pathname = usePathname();
+  // Track current state in refs so event handlers don't trigger re-renders on every event
+  const isHiddenRef = useRef(true);
+  const isHoveringRef = useRef(false);
 
   useEffect(() => {
     // Disable on touch devices
@@ -26,14 +29,27 @@ export function CustomCursor() {
     const yTo = gsap.quickTo(cursor, "y", { duration: 0.2, ease: "power3" });
 
     const onMouseMove = (e: MouseEvent) => {
-      // Show cursor when moving (in case mouseenter failed to fire)
-      setIsHidden(false);
       xTo(e.clientX);
       yTo(e.clientY);
+      // Only update state when the value actually changes
+      if (isHiddenRef.current) {
+        isHiddenRef.current = false;
+        setIsHidden(false);
+      }
     };
 
-    const onMouseEnter = () => setIsHidden(false);
-    const onMouseLeave = () => setIsHidden(true);
+    const onMouseEnter = () => {
+      if (isHiddenRef.current) {
+        isHiddenRef.current = false;
+        setIsHidden(false);
+      }
+    };
+    const onMouseLeave = () => {
+      if (!isHiddenRef.current) {
+        isHiddenRef.current = true;
+        setIsHidden(true);
+      }
+    };
 
     window.addEventListener("mousemove", onMouseMove);
     document.addEventListener("mouseenter", onMouseEnter);
@@ -42,7 +58,7 @@ export function CustomCursor() {
     // Interactive elements detection for magnetic/hover state
     const handleMouseOver = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
-      if (
+      const shouldHover = !!(
         target.tagName.toLowerCase() === "a" ||
         target.tagName.toLowerCase() === "button" ||
         target.closest("a") ||
@@ -50,10 +66,11 @@ export function CustomCursor() {
         target.closest("[data-magnetic]") ||
         target.closest("[data-partner-logo]") ||
         target.closest("[data-cursor-lens]")
-      ) {
-        setIsHovering(true);
-      } else {
-        setIsHovering(false);
+      );
+      // Only trigger a re-render when the hover state actually changes
+      if (shouldHover !== isHoveringRef.current) {
+        isHoveringRef.current = shouldHover;
+        setIsHovering(shouldHover);
       }
     };
 

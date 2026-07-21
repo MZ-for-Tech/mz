@@ -1,6 +1,5 @@
 "use client";
 import { useRef, useState, useEffect } from "react";
-import Image from "next/image";
 import styles from "./page.module.css";
 import PillNav from "../components/PillNav/PillNav";
 import { Footer } from "../components/Footer/Footer";
@@ -43,16 +42,7 @@ export default function Home() {
   const [activeProjectIndex, setActiveProjectIndex] = useState<number>(0);
   const [hoveredProjectIndex, setHoveredProjectIndex] = useState<number | null>(null);
   const [isInteractive, setIsInteractive] = useState(false);
-  const [loadedProjects, setLoadedProjects] = useState<Set<string>>(new Set([WORK_PROJECTS[0].id]));
-
   const displayIndex = hoveredProjectIndex !== null ? hoveredProjectIndex : activeProjectIndex;
-  const currentId = WORK_PROJECTS[displayIndex].id;
-
-  if (!loadedProjects.has(currentId)) {
-    const next = new Set(loadedProjects);
-    next.add(currentId);
-    setLoadedProjects(next);
-  }
 
   // Exit iframe interactive mode on Escape key
   useEffect(() => {
@@ -230,11 +220,7 @@ export default function Home() {
                 Engineered in Cairo. Owned by you. We build proprietary systems and transfer the exact knowledge you need to run them.
               </div>
 
-              <div className={`${styles.heroActionWrapper} hero-action-wrapper`}>
-                <TransitionLink href="/start" className={styles.heroBtnPrimary}>
-                  Let&apos;s talk.
-                </TransitionLink>
-              </div>
+
 
               <div className={`${styles.heroScrollWrapper} hero-scroll-wrapper`}>
                 <div className={`${styles.scrollIndicator} scroll-indicator-line`}>
@@ -396,14 +382,14 @@ export default function Home() {
                               </div>
                             )}
 
-                            {(isActive || loadedProjects.has(project.id)) && (
+                            {isActive && isInteractive && (
                               <iframe
                                 src={project.link}
                                 title={project.name}
                                 className={styles.workIframe}
                                 loading="lazy"
                                 sandbox="allow-scripts allow-same-origin"
-                                style={{ pointerEvents: isInteractive && isActive ? 'auto' : 'none' }}
+                                style={{ pointerEvents: 'auto' }}
                               />
                             )}
                           </>
@@ -417,6 +403,7 @@ export default function Home() {
 
 
             {/* 06 — Partners */}
+            {/* 
             <section className={`${styles.partnersSection} partners-section`}>
               <div className={styles.sectionHeader}>Our Partners</div>
               <div className={styles.partnersGrid}>
@@ -431,6 +418,7 @@ export default function Home() {
                 </div>
               </div>
             </section>
+            */}
 
 
 

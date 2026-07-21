@@ -256,11 +256,11 @@ const Waves: FC<WavesProps> = ({
     }
 
     function movedX(idx: number, withCursor: boolean) {
-      return Math.round((pX[idx] + pWaveX[idx] + (withCursor ? pCurX[idx] : 0)) * 10) / 10;
+      return pX[idx] + pWaveX[idx] + (withCursor ? pCurX[idx] : 0);
     }
     
     function movedY(idx: number, withCursor: boolean) {
-      return Math.round((pY[idx] + pWaveY[idx] + (withCursor ? pCurY[idx] : 0)) * 10) / 10;
+      return pY[idx] + pWaveY[idx] + (withCursor ? pCurY[idx] : 0);
     }
 
     function drawLines() {
@@ -294,6 +294,9 @@ const Waves: FC<WavesProps> = ({
       ctx.stroke();
     }
 
+    let lastWaveX0 = 0;
+    let drawFrameCount = 0;
+
     function tick(t: number) {
       if (!container) return;
       const mouse = mouseRef.current;
@@ -312,7 +315,18 @@ const Waves: FC<WavesProps> = ({
       container.style.setProperty('--y', `${mouse.sy}px`);
 
       movePoints(t);
-      drawLines();
+
+      // Throttle draws: when mouse is idle, render at ~30fps (every other frame).
+      // When mouse is moving (vs > 1), render every frame for responsive feel.
+      drawFrameCount++;
+      const curWaveX0 = pWaveX[0];
+      const waveChange = Math.abs(curWaveX0 - lastWaveX0);
+      lastWaveX0 = curWaveX0;
+      const isIdle = mouse.v < 1 && waveChange < 0.5;
+      if (!isIdle || drawFrameCount % 2 === 0) {
+        drawLines();
+      }
+
       if (isVisible) {
         frameIdRef.current = requestAnimationFrame(tick);
       }
@@ -325,10 +339,11 @@ const Waves: FC<WavesProps> = ({
       updateMouse(touch.clientX, touch.clientY);
     }
     function updateMouse(x: number, y: number) {
+      if (!container) return;
+      const rect = container.getBoundingClientRect();
       const mouse = mouseRef.current;
-      const b = boundingRef.current;
-      mouse.x = x - b.left;
-      mouse.y = y - b.top;
+      mouse.x = x - rect.left;
+      mouse.y = y - rect.top;
       if (!mouse.set) {
         mouse.sx = mouse.x; mouse.sy = mouse.y;
         mouse.lx = mouse.x; mouse.ly = mouse.y;

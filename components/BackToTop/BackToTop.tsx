@@ -8,17 +8,21 @@ export default function BackToTop() {
 
   useEffect(() => {
     const toggleVisibility = () => {
-      // Show button when page is scrolled down 500px
-      if (window.scrollY > 500) {
+      const scrollY = window.scrollY;
+      const totalHeight = document.documentElement.scrollHeight;
+      const viewportHeight = window.innerHeight;
+      
+      // Hide button if scrolled near top (<500px) OR near footer (> scrollHeight - 700px)
+      const isNearFooter = (viewportHeight + scrollY) >= (totalHeight - 700);
+      
+      if (scrollY > 500 && !isNearFooter) {
         setIsVisible(true);
       } else {
         setIsVisible(false);
       }
     };
 
-    window.addEventListener('scroll', toggleVisibility);
-    
-    // Check initially
+    window.addEventListener('scroll', toggleVisibility, { passive: true });
     toggleVisibility();
 
     return () => window.removeEventListener('scroll', toggleVisibility);

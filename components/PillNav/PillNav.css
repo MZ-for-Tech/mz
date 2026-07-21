@@ -70,6 +70,30 @@
   transform: translateX(-50%) scaleX(1);
 }
 
+.premium-hire-btn {
+  background: var(--color-brand-yellow, #e5ff00);
+  color: var(--color-bg, #0a0a0a);
+  border: none;
+  border-radius: 100px;
+  padding: 10px 24px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  text-decoration: none;
+  margin-right: 8px;
+  margin-left: 12px;
+}
+
+.premium-hire-btn:hover {
+  background: var(--color-text, #ffffff);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
 .premium-menu-toggle {
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.05);
