@@ -1,0 +1,12 @@
+{
+  "$schema": "https://agentskills.io/schema/v0.2.0/index.json",
+  "skills": [
+    {
+      "name": "MZ Agent",
+      "type": "api",
+      "description": "Agent skills descriptor for MZ — Research, Software, Knowledge.",
+      "url": "https://mzltd.tech/.well-known/agent.json",
+      "sha256": "5c1f510a2eb68b3d7b42055627256db02d244976fa8f6e897dfcb8e078be1a80"
+    }
+  ]
+}

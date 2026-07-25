@@ -37,6 +37,7 @@ import { MzLogo } from "@/components/Logo/MzLogo";
 import FpsCounter from "@/components/FpsCounter";
 import { CustomCursor } from "@/components/CustomCursor/CustomCursor";
 import { Preloader } from "@/components/Preloader/Preloader";
+import WebMCP from "@/components/WebMCP/WebMCP";
 
 export default function RootLayout({
   children,
@@ -56,6 +57,7 @@ export default function RootLayout({
         <link rel="preload" href="/mz.svg" as="fetch" crossOrigin="anonymous" />
       </head>
       <body>
+        <WebMCP />
         <Preloader />
         <CustomCursor />
         <FpsCounter />

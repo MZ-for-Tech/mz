@@ -1,0 +1,21 @@
+{
+  "serverInfo": {
+    "name": "mz-mcp-server",
+    "version": "1.0.0"
+  },
+  "description": "MCP Server for MZ — Research, Software, Knowledge in Cairo.",
+  "transport": {
+    "type": "sse",
+    "endpoint": "https://mzltd.tech/api/mcp/messages"
+  },
+  "capabilities": {
+    "resources": true,
+    "tools": true,
+    "prompts": false
+  },
+  "organization": {
+    "name": "MZ",
+    "url": "https://mzltd.tech",
+    "contact": "hello@mzltd.tech"
+  }
+}

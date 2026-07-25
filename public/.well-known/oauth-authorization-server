@@ -11,5 +11,11 @@
   "service_documentation": "https://mzltd.tech/.well-known/openapi.json",
   "ui_locales_supported": ["en-US"],
   "op_policy_uri": "https://mzltd.tech",
-  "op_tos_uri": "https://mzltd.tech"
+  "op_tos_uri": "https://mzltd.tech",
+  "agent_auth": {
+    "register_uri": "https://mzltd.tech/oauth/register",
+    "supported_identity_types": ["did:web", "x509"],
+    "supported_credential_types": ["jwt_vc"],
+    "revocation_uri": "https://mzltd.tech/oauth/revoke"
+  }
 }

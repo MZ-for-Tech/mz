@@ -1,0 +1,25 @@
+{
+  "linkset": [
+    {
+      "anchor": "https://mzltd.tech/api",
+      "service-desc": [
+        {
+          "href": "https://mzltd.tech/.well-known/openapi.json",
+          "type": "application/openapi+json"
+        }
+      ],
+      "service-doc": [
+        {
+          "href": "https://mzltd.tech/docs",
+          "type": "text/html"
+        }
+      ],
+      "status": [
+        {
+          "href": "https://mzltd.tech/api/health",
+          "type": "application/health+json"
+        }
+      ]
+    }
+  ]
+}
