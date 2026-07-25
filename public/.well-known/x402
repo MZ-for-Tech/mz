@@ -1,0 +1,8 @@
+{
+  "x402_version": "1.0",
+  "endpoint_url": "https://mzltd.tech/payments/x402",
+  "supported_methods": ["stripe", "apple_pay", "google_pay"],
+  "currency": "USD",
+  "payment_required_code": 402,
+  "description": "Payment endpoint for AI agent initiated purchases or service bookings at MZ."
+}

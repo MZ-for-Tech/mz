@@ -1,0 +1,12 @@
+{
+  "ucp_version": "1.0",
+  "name": "MZ Commerce",
+  "catalog_url": "https://mzltd.tech/api/ucp/catalog",
+  "order_url": "https://mzltd.tech/api/ucp/orders",
+  "invoice_url": "https://mzltd.tech/api/ucp/invoices",
+  "currency": "USD",
+  "auth": {
+    "type": "bearer",
+    "token_url": "https://mzltd.tech/oauth/token"
+  }
+}

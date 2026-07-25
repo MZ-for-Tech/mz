@@ -1,0 +1,37 @@
+{
+  "agentVersion": "1.0",
+  "name": "MZ Agent",
+  "description": "Agent skills descriptor for MZ — Research, Software, Knowledge.",
+  "provider": {
+    "organization": "MZ",
+    "url": "https://mzltd.tech",
+    "email": "hello@mzltd.tech",
+    "location": {
+      "city": "Cairo",
+      "country": "EG"
+    }
+  },
+  "skills": [
+    {
+      "id": "service-inquiry",
+      "name": "Project Initiation",
+      "description": "Information about initiating a project, software engineering, and research capabilities.",
+      "inputModes": ["text"],
+      "outputModes": ["text"]
+    },
+    {
+      "id": "product-info",
+      "name": "Product Information",
+      "description": "Provide information about MZ proprietary systems like Occhio (Arabic OCR).",
+      "inputModes": ["text"],
+      "outputModes": ["text"]
+    }
+  ],
+  "authentication": {
+    "type": "none"
+  },
+  "rateLimit": {
+    "requestsPerMinute": 60
+  },
+  "supportedLanguages": ["en"]
+}

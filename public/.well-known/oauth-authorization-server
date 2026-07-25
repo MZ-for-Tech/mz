@@ -1,0 +1,15 @@
+{
+  "issuer": "https://mzltd.tech",
+  "authorization_endpoint": "https://mzltd.tech/oauth/authorize",
+  "token_endpoint": "https://mzltd.tech/oauth/token",
+  "jwks_uri": "https://mzltd.tech/.well-known/jwks.json",
+  "response_types_supported": ["code", "token"],
+  "grant_types_supported": ["authorization_code", "client_credentials"],
+  "subject_types_supported": ["public"],
+  "scopes_supported": ["read:products", "read:case_studies"],
+  "token_endpoint_auth_methods_supported": ["client_secret_basic", "client_secret_post", "none"],
+  "service_documentation": "https://mzltd.tech/.well-known/openapi.json",
+  "ui_locales_supported": ["en-US"],
+  "op_policy_uri": "https://mzltd.tech",
+  "op_tos_uri": "https://mzltd.tech"
+}

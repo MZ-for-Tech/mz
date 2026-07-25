@@ -1,0 +1,14 @@
+{
+  "acp_version": "1.0",
+  "name": "MZ Agent Commerce",
+  "merchant_id": "mz_eg",
+  "supported_intents": ["buy_software", "book_consultation"],
+  "intent_endpoints": {
+    "buy_software": "https://mzltd.tech/api/acp/software/buy",
+    "book_consultation": "https://mzltd.tech/api/acp/consultation/book"
+  },
+  "auth": {
+    "type": "oauth2",
+    "scopes": ["commerce:write"]
+  }
+}

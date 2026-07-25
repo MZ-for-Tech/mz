@@ -1,0 +1,14 @@
+{
+  "mpp_version": "1.0",
+  "name": "MZ Payment Gateway",
+  "supported_currencies": ["USD", "EGP"],
+  "payment_endpoints": {
+    "tokenize": "https://mzltd.tech/api/mpp/tokenize",
+    "charge": "https://mzltd.tech/api/mpp/charge",
+    "status": "https://mzltd.tech/api/mpp/status"
+  },
+  "authentication": {
+    "type": "oauth2",
+    "token_endpoint": "https://mzltd.tech/oauth/token"
+  }
+}

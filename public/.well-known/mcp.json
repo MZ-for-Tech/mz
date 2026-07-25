@@ -1,0 +1,37 @@
+{
+  "mcpVersion": "1.0",
+  "name": "MZ",
+  "description": "MCP server card for MZ — Research, Software, Knowledge in Cairo, Egypt.",
+  "serverUrl": "https://mzltd.tech/api/mcp",
+  "documentationUrl": "https://mzltd.tech/.well-known/openapi.json",
+  "organization": {
+    "name": "MZ",
+    "url": "https://mzltd.tech",
+    "contact": "hello@mzltd.tech"
+  },
+  "capabilities": {
+    "resources": true,
+    "tools": false,
+    "prompts": false,
+    "sampling": false
+  },
+  "resources": [
+    {
+      "uri": "mz://products",
+      "name": "Products Overview",
+      "description": "Information about MZ products including Occhio OCR",
+      "mimeType": "text/markdown"
+    },
+    {
+      "uri": "mz://work",
+      "name": "Case Studies",
+      "description": "Information about MZ's past work and projects",
+      "mimeType": "text/markdown"
+    }
+  ],
+  "authentication": {
+    "type": "none"
+  },
+  "region": "EG",
+  "languages": ["en-US"]
+}

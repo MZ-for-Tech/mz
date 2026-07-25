@@ -1,0 +1,31 @@
+# MZ | Research. Software. Knowledge.
+> Research-driven technology company. Engineered in Cairo. Owned by you.
+
+## About MZ
+MZ (MZ.LTD) is a technology engineering firm based in Cairo, Egypt. We build proprietary systems and transfer the exact knowledge our clients need to run them.
+- **Location:** Cairo, Egypt
+- **Email:** hello@mzltd.tech
+- **Website:** https://mzltd.tech
+- **Research Portal:** https://nullhypothesis.dev
+
+## Core Philosophy
+Research, Software, Knowledge. In that order.
+
+## Products
+
+### Occhio (OK-yoo)
+An OCR (Optical Character Recognition) system that reads Arabic the way Arabic should be read.
+Most document processing tools were built for Latin scripts and extended to Arabic later. Occhio starts where the region starts: Arabic, French, and English as equal priorities, designed for the institutional documents governments, universities, and enterprises in MENA actually handle. (Currently in development).
+
+## Selected Work / Case Studies
+- **Nested United:** A unified ecosystem of specialized brands delivering smart project operations, hospitality management, and sustainable business growth. (https://nestedunited.com)
+- **The Null Hypothesis:** Our research portal. Research doesn't stay internal. (https://nullhypothesis.dev)
+- **SSC League:** Internal proprietary system. (Access Restricted)
+- **ERP System:** Internal proprietary system. (Access Restricted)
+
+## Machine-Readable Resources
+- Sitemap: https://mzltd.tech/sitemap.xml
+- OpenAPI: https://mzltd.tech/.well-known/openapi.json
+- Agent Card: https://mzltd.tech/.well-known/agent.json
+- AI Plugin: https://mzltd.tech/.well-known/ai-plugin.json
+- MCP Server: https://mzltd.tech/.well-known/mcp.json

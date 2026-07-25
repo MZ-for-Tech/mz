@@ -1,0 +1,27 @@
+User-agent: *
+Allow: /
+
+# Block internal Next.js paths
+Disallow: /_next/
+Disallow: /api/
+
+# Allow major AI crawlers explicitly
+User-agent: GPTBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Amazonbot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: Omgilibot
+Allow: /
+
+Sitemap: https://mzltd.tech/sitemap.xml

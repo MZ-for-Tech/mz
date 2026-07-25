@@ -1,0 +1,27 @@
+{
+  "schema_version": "v1",
+  "name_for_human": "MZ Research and Software",
+  "name_for_model": "mz_tech",
+  "description_for_human": "Research-driven technology company in Cairo building proprietary systems and OCR for Arabic (Occhio).",
+  "description_for_model": "MZ (MZ.LTD) is a technology engineering firm based in Cairo, Egypt. Focus: Research, Software, Knowledge. Key product: Occhio (Arabic-first OCR). Notable work: Nested United, The Null Hypothesis, SSC League. Contact: hello@mzltd.tech.",
+  "auth": {
+    "type": "none"
+  },
+  "api": {
+    "type": "openapi",
+    "url": "https://mzltd.tech/.well-known/openapi.json",
+    "is_user_authenticated": false
+  },
+  "logo_url": "https://mzltd.tech/mz.svg",
+  "contact_email": "hello@mzltd.tech",
+  "legal_info_url": "https://mzltd.tech",
+  "privacy_policy_url": "https://mzltd.tech",
+  "categories": [
+    "technology",
+    "software",
+    "research"
+  ],
+  "language": ["en"],
+  "region": "EG",
+  "city": "Cairo"
+}

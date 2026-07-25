@@ -1,0 +1,69 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "MZ API",
+    "description": "API catalog for MZ — Research. Software. Knowledge.",
+    "version": "1.0.0",
+    "contact": {
+      "name": "MZ",
+      "email": "hello@mzltd.tech",
+      "url": "https://mzltd.tech"
+    },
+    "license": {
+      "name": "All Rights Reserved",
+      "url": "https://mzltd.tech"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://mzltd.tech",
+      "description": "Production server"
+    }
+  ],
+  "paths": {
+    "/llms.txt": {
+      "get": {
+        "summary": "LLM-readable site manifest",
+        "operationId": "getLLMsText",
+        "responses": {
+          "200": {
+            "description": "LLM-readable content",
+            "content": {
+              "text/plain": {
+                "schema": { "type": "string" }
+              }
+            }
+          }
+        },
+        "tags": ["Discovery"]
+      }
+    },
+    "/content.md": {
+      "get": {
+        "summary": "Markdown content of the website",
+        "operationId": "getMarkdownContent",
+        "responses": {
+          "200": {
+            "description": "Markdown website content",
+            "content": {
+              "text/markdown": {
+                "schema": { "type": "string" }
+              }
+            }
+          }
+        },
+        "tags": ["Content"]
+      }
+    }
+  },
+  "tags": [
+    { "name": "Discovery", "description": "AI discoverability endpoints" },
+    { "name": "Content", "description": "Content access endpoints" }
+  ],
+  "info_extensions": {
+    "x-region": "EG",
+    "x-city": "Cairo",
+    "x-languages": ["en-US"],
+    "x-ai-accessible": true
+  }
+}

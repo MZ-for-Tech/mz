@@ -1,0 +1,20 @@
+{
+  "resource": "https://mzltd.tech",
+  "resource_name": "MZ API",
+  "resource_documentation": "https://mzltd.tech/.well-known/openapi.json",
+  "authorization_servers": ["https://mzltd.tech"],
+  "bearer_methods_supported": ["header"],
+  "resource_signing_alg_values_supported": ["RS256"],
+  "scopes_provided": [
+    {
+      "name": "read:products",
+      "description": "Read MZ products information"
+    },
+    {
+      "name": "read:case_studies",
+      "description": "Read MZ case studies and past work"
+    }
+  ],
+  "introspection_endpoint": "https://mzltd.tech/oauth/introspect",
+  "introspection_endpoint_auth_methods_supported": ["client_secret_basic"]
+}
