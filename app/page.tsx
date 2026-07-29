@@ -1,5 +1,5 @@
 "use client";
-import { useRef, useState, useEffect } from "react";
+import { useRef } from "react";
 import styles from "./page.module.css";
 import PillNav from "../components/PillNav/PillNav";
 import { Footer } from "../components/Footer/Footer";
@@ -8,8 +8,6 @@ import { StatusDot } from "@/components/StatusDot/StatusDot";
 import DataStreamHero from "@/components/DataStreamHero/DataStreamHero";
 import Waves from "@/components/Waves/Waves";
 import { OcrScanner } from "@/components/OcrScanner/OcrScanner";
-import { MousePointerClick, Lock } from "lucide-react";
-import LineSidebar from "@/components/LineSidebar/LineSidebar";
 import DarkVeil from "@/components/DarkVeil/DarkVeil";
 import { gsap } from "@/lib/gsap";
 import { MzLogo } from "@/components/Logo/MzLogo";
@@ -21,14 +19,10 @@ import Manifesto from "@/components/Manifesto/Manifesto";
 import BackToTop from "@/components/BackToTop/BackToTop";
 import ObfuscatedEmail from "@/components/ObfuscatedEmail/ObfuscatedEmail";
 import { TransitionLink } from "@/components/TransitionLink/TransitionLink";
+import { WorkGrid } from "@/components/sections/WorkGrid";
 
 
-const WORK_PROJECTS = [
-  { id: "01", name: 'Nested United', link: 'https://nestedunited.com', isPrivate: false },
-  { id: "02", name: 'The Null Hypothesis', link: 'https://nullhypothesis.dev', isPrivate: false },
-  { id: "03", name: 'SSC League', link: '#', isPrivate: true },
-  { id: "04", name: 'ERP System', link: '#', isPrivate: true },
-];
+
 
 const NAV_ITEMS = [
   { label: 'Work', href: '#work' },
@@ -39,20 +33,6 @@ const NAV_ITEMS = [
 
 export default function Home() {
   const mainRef = useRef<HTMLElement>(null);
-  const [activeProjectIndex, setActiveProjectIndex] = useState<number>(0);
-  const [hoveredProjectIndex, setHoveredProjectIndex] = useState<number | null>(null);
-  const [isInteractive, setIsInteractive] = useState(false);
-  const displayIndex = hoveredProjectIndex !== null ? hoveredProjectIndex : activeProjectIndex;
-
-  // Exit iframe interactive mode on Escape key
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setIsInteractive(false);
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
-
 
   useGSAP(() => {
     // Respect prefers-reduced-motion
@@ -301,105 +281,7 @@ export default function Home() {
 
 
             {/* 05 — Work */}
-            <section id="work" className={styles.caseStudies}>
-              <div className={styles.sectionHeader}>Work</div>
-
-              <div className={styles.workLayout} style={{ marginTop: '3rem' }}>
-                {/* Sidebar */}
-                <div className={styles.workSidebar}>
-                  <LineSidebar
-                    items={WORK_PROJECTS.map(p => p.name)}
-                    accentColor="var(--color-brand-yellow)"
-                    textColor="var(--color-text)"
-                    markerColor="var(--color-text-muted)"
-                    showIndex
-                    showMarker
-                    proximityRadius={100}
-                    maxShift={40}
-                    falloff="smooth"
-                    markerLength={80}
-                    markerGap={20}
-                    tickScale={0.5}
-                    scaleTick
-                    itemGap={40}
-                    fontSize={2.5}
-                    smoothing={100}
-                    defaultActive={0}
-                    onItemClick={(index) => {
-                      setActiveProjectIndex(index);
-                      setIsInteractive(false);
-                    }}
-                    onItemHover={(index) => {
-                      if (index !== hoveredProjectIndex) {
-                        setHoveredProjectIndex(index);
-                        setIsInteractive(false);
-                      }
-                    }}
-                  />
-                </div>
-
-                {/* Iframe Preview */}
-                <div
-                  className={styles.workPreviewContainer}
-                  onMouseLeave={() => setIsInteractive(false)}
-                >
-                  {WORK_PROJECTS.map((project, idx) => {
-                    const displayIndex = hoveredProjectIndex !== null ? hoveredProjectIndex : activeProjectIndex;
-                    const isActive = idx === displayIndex;
-
-                    return (
-                      <div
-                        key={project.id}
-                        className={styles.workPreviewInner}
-                        style={{
-                          opacity: isActive ? 1 : 0,
-                          pointerEvents: isActive ? 'auto' : 'none',
-                          zIndex: isActive ? 10 : 0,
-                          position: 'absolute',
-                          inset: 0,
-                          transition: 'opacity 0.3s ease-in-out'
-                        }}
-                      >
-                        {project.isPrivate ? (
-                          <div className={styles.workPrivateOverlay}>
-                            <Lock size={48} className={styles.workPrivateIcon} />
-                            <p className={styles.workPrivateTitle}>Internal System</p>
-                            <p className={styles.workPrivateSubtitle}>Access Restricted</p>
-                          </div>
-                        ) : (
-                          <>
-                            {(!isInteractive || !isActive) && (
-                              <div
-                                onClick={() => {
-                                  if (isActive) setIsInteractive(true);
-                                }}
-                                className={styles.workInteractOverlay}
-                              >
-                                <div className={styles.workInteractBg}></div>
-                                <div className={styles.workInteractButton}>
-                                  <MousePointerClick size={14} className={styles.workInteractIcon} /> CLICK TO INTERACT
-                                </div>
-                              </div>
-                            )}
-
-                            {isActive && isInteractive && (
-                              <iframe
-                                src={project.link}
-                                title={project.name}
-                                className={styles.workIframe}
-                                loading="lazy"
-                                sandbox="allow-scripts allow-same-origin"
-                                style={{ pointerEvents: 'auto' }}
-                              />
-                            )}
-                          </>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            </section>
+            <WorkGrid />
 
 
             {/* 06 — Partners */}

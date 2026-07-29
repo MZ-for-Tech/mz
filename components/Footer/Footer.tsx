@@ -4,6 +4,7 @@ import styles from "./Footer.module.css";
 import { useRef, useEffect, useState } from "react";
 import ObfuscatedEmail from "../ObfuscatedEmail/ObfuscatedEmail";
 import { TransitionLink } from "@/components/TransitionLink/TransitionLink";
+import DarkVeil from "@/components/DarkVeil/DarkVeil";
 
 export function Footer() {
   const footerRef = useRef<HTMLDivElement>(null);
@@ -56,6 +57,19 @@ export function Footer() {
   return (
     <div className={styles.footerWrapper} ref={footerRef}>
       <footer className={styles.footerContent}>
+        {/* Animated Background */}
+        <div style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", zIndex: -1, overflow: "hidden" }}>
+          <DarkVeil
+            primaryColor="#88b600"
+            backgroundColor="#070707"
+            noiseIntensity={0.05}
+            scanlineIntensity={0.05}
+            scanlineFrequency={0.01}
+            speed={0.15}
+            warpAmount={0.3}
+          />
+        </div>
+
         {/* Open Statement CTA (No Heavy Boxes) */}
         <div className={styles.statementSection}>
           <h2 className={styles.statementTitle}>

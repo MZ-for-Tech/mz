@@ -33,7 +33,8 @@ import { SVGLoader } from "three/examples/jsm/loaders/SVGLoader.js";
  */
 const Z_STEP = 0.02;
 
-// Global cache to prevent re-building 480 geometries every time the user returns to the main page
+// Global cache to prevent re-building 480 geometries every time the user returns to the main page.
+// Reset to null here so HMR picks up material changes during development.
 let globalMeshData: {
   geometry: THREE.ExtrudeGeometry;
   material: THREE.MeshStandardMaterial;
@@ -85,6 +86,7 @@ function Logo() {
 
     const materialCache = new Map<string, THREE.MeshStandardMaterial>();
 
+    let matIndex = 0;
     const getMaterial = (color: string) => {
       if (!materialCache.has(color)) {
         materialCache.set(
@@ -93,8 +95,14 @@ function Logo() {
             color,
             metalness: 0.9,
             roughness: 0.25,
+            // Push each unique material slightly further in depth so back-faces
+            // from adjacent paths don't occupy the exact same depth plane.
+            polygonOffset: true,
+            polygonOffsetFactor: matIndex,
+            polygonOffsetUnits: matIndex,
           })
         );
+        matIndex++;
       }
       return materialCache.get(color)!;
     };
@@ -351,6 +359,9 @@ export default function MzLogo3D({
           antialias: true,
           alpha: true,
           powerPreference: "high-performance",
+          // Higher depth-buffer precision near the camera eliminates
+          // back-face z-fighting when the logo rotates to show its rear.
+          logarithmicDepthBuffer: true,
         }}
       >
         <PerformanceMonitor onIncline={() => setDpr(1.0)} onDecline={() => setDpr(0.75)} />

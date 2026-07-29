@@ -40,12 +40,12 @@ export const Preloader = () => {
   useEffect(() => {
     if (!isActive) return;
     let timer: NodeJS.Timeout;
-    
+
     // If no 3D assets are loading after a short delay, assume it's a non-3D page
     if (!active && total === 0) {
       timer = setTimeout(() => {
         setFakeProgress(100);
-      }, 600); 
+      }, 600);
     }
 
     return () => {
@@ -119,22 +119,22 @@ export const Preloader = () => {
         const doc = parser.parseFromString(svgText, 'image/svg+xml');
         const svgEl = doc.documentElement;
 
-          // Parse viewBox to get exact mathematical center of the artwork natively
-          let vbX = 0, vbY = 0, vbW = 1000, vbH = 1000;
-          const vb = svgEl.getAttribute('viewBox');
-          if (vb) {
-            const parts = vb.split(/\s+/).map(parseFloat);
-            if (parts.length === 4) {
-              [vbX, vbY, vbW, vbH] = parts;
-            }
+        // Parse viewBox to get exact mathematical center of the artwork natively
+        let vbX = 0, vbY = 0, vbW = 1000, vbH = 1000;
+        const vb = svgEl.getAttribute('viewBox');
+        if (vb) {
+          const parts = vb.split(/\s+/).map(parseFloat);
+          if (parts.length === 4) {
+            [vbX, vbY, vbW, vbH] = parts;
           }
-          
-          targetCx = vbX + vbW / 2;
-          targetCy = vbY + vbH / 2;
-          const targetDisplaySize = Math.min(window.innerWidth * 0.8, 400); // 80% of screen width, up to 400px
-          targetScale = targetDisplaySize / Math.max(1, Math.max(vbW, vbH));
+        }
 
-          const rawPaths = Array.from(svgEl.querySelectorAll('path')).filter(p => {
+        targetCx = vbX + vbW / 2;
+        targetCy = vbY + vbH / 2;
+        const targetDisplaySize = Math.min(window.innerWidth * 0.8, 400); // 80% of screen width, up to 400px
+        targetScale = targetDisplaySize / Math.max(1, Math.max(vbW, vbH));
+
+        const rawPaths = Array.from(svgEl.querySelectorAll('path')).filter(p => {
           const d = p.getAttribute('d');
           return d && d.trim() !== '';
         });
@@ -152,13 +152,13 @@ export const Preloader = () => {
               ty = parseFloat(match[2]);
             }
           }
-          
+
           const d = pm.getAttribute('d') || '';
-          
+
           // Fast lightweight centroid estimate without heavy regex loops
           const pathCx = tx + 25;
           const pathCy = ty + 25;
-          
+
           parsedPaths.push({
             p2d: new Path2D(d),
             tx, ty,
@@ -192,7 +192,7 @@ export const Preloader = () => {
 
           // Compute delay based on distance to center (outer pieces assemble first)
           const distNorm = Math.hypot(pullX, pullY) / (maxDist || 1); // 0 at center, 1 at edge
-          const baseDelay = (1 - distNorm) * MAX_STAGGER; 
+          const baseDelay = (1 - distNorm) * MAX_STAGGER;
           pd.delay = Math.min(MAX_STAGGER, Math.max(0, baseDelay + (Math.random() - 0.5) * 0.1 * MAX_STAGGER));
 
           // Group into 6 spatial cluster waves based on scatter direction
@@ -216,9 +216,9 @@ export const Preloader = () => {
         let isVisualReadyFired = false;
 
         // Phase durations (seconds)
-        const FADE_IN_DUR = 0.5;
-        const MIN_FLOAT_DUR = 0.15;
-        const CONVERGE_DUR = 2.0;
+        const FADE_IN_DUR = 0.4;
+        const MIN_FLOAT_DUR = 0.1;
+        const CONVERGE_DUR = 1.5;
         const FLOAT_AMP = Math.min(90, Math.max(width, height) * 0.09);
 
         const clamp01 = (v: number) => Math.max(0, Math.min(1, v));
@@ -306,9 +306,9 @@ export const Preloader = () => {
               const sinA = Math.sin(curAngle);
 
               ctx.setTransform(
-                globalScale * cosA,  globalScale * sinA,
+                globalScale * cosA, globalScale * sinA,
                 -globalScale * sinA, globalScale * cosA,
-                dpr * (width  / 2 + (pd.pathCx + curDx - targetCx) * targetScale),
+                dpr * (width / 2 + (pd.pathCx + curDx - targetCx) * targetScale),
                 dpr * (height / 2 + (pd.pathCy + curDy - targetCy) * targetScale)
               );
               ctx.translate(pd.tx - pd.pathCx, pd.ty - pd.pathCy);
@@ -370,7 +370,7 @@ export const Preloader = () => {
     // This tween drives displayProgress.current.val, which the render loop
     // polls to know when loading is done (val >= 95 → start converge).
     const target = effectiveProgress >= 95 ? 100 : Math.max(effectiveProgress, 10);
-    const dur = effectiveProgress >= 95 ? 1.5 : 2.0;
+    const dur = effectiveProgress >= 95 ? 0.5 : 1.5;
 
     const tween = gsap.to(displayProgress.current, {
       val: target,
@@ -395,7 +395,7 @@ export const Preloader = () => {
 
       // Hold + breathe
       tl.to(canvasRef.current, { scale: 1.04, duration: 0.8, ease: 'power2.inOut' }, 0);
-      
+
       // Clean split — no flash, no flicker
       tl.to(canvasRef.current, { opacity: 0, duration: 0.5, ease: 'power2.in' }, 0.6);
       tl.to(topPanelRef.current, { y: '-100%', duration: 1.2, ease: 'expo.inOut' }, 0.7);
@@ -427,8 +427,8 @@ export const Preloader = () => {
           style={{ width: '100vw', height: '100vh', display: 'block' }}
         />
 
-        <div 
-          ref={counterRef} 
+        <div
+          ref={counterRef}
           style={{
             position: 'absolute',
             bottom: '40px',
