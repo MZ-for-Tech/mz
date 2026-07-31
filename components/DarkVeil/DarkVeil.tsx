@@ -89,9 +89,6 @@ type DarkVeilProps = {
   speed?: number;
   scanlineFrequency?: number;
   warpAmount?: number;
-  /** Skip IntersectionObserver visibility gating — use for instances inside
-   *  sticky/overflow:hidden containers where the observer is unreliable on mobile. */
-  alwaysRender?: boolean;
 };
 
 export default function DarkVeil({
@@ -101,19 +98,15 @@ export default function DarkVeil({
   scanlineIntensity = 0.05,
   scanlineFrequency = 0.01,
   speed = 0.2,
-  warpAmount = 0.5,
-  alwaysRender = false
+  warpAmount = 0.5
 }: DarkVeilProps) {
   const ref = useRef<HTMLCanvasElement>(null);
-  const frameRef = useRef<number>(0);
-  const destroyedRef = useRef(false);
   useEffect(() => {
-    destroyedRef.current = false;
     const canvas = ref.current as HTMLCanvasElement;
     const parent = canvas.parentElement as HTMLElement;
 
     const renderer = new Renderer({
-      dpr: Math.min(window.devicePixelRatio, 1),
+      dpr: Math.min(window.devicePixelRatio, 2),
       canvas
     });
 
@@ -139,31 +132,20 @@ export default function DarkVeil({
     const mesh = new Mesh(gl, { geometry, program });
 
     const resize = () => {
-      let w = parent.clientWidth;
-      let h = parent.clientHeight;
-      
-      // Fallback for mobile if parent hasn't laid out yet
-      if (w === 0) w = window.innerWidth;
-      if (h === 0) h = window.innerHeight;
-
-      if (w > 0 && h > 0) {
-        renderer.setSize(w, h);
-        program.uniforms.uResolution.value.set(w, h);
-      }
+      const w = parent.clientWidth || window.innerWidth;
+      const h = parent.clientHeight || window.innerHeight;
+      renderer.setSize(w, h);
+      program.uniforms.uResolution.value.set(w, h);
     };
 
     window.addEventListener('resize', resize);
-    // Call synchronously first, then once more after layout
     resize();
-    const initialResizeFrame = requestAnimationFrame(resize);
 
     // Watch for theme changes
     const updateThemeColor = () => {
       const isLight = document.documentElement.getAttribute('data-theme') === 'light';
       program.uniforms.uBackgroundColor.value.set(isLight ? '#ffe78d' : '#000000');
     };
-
-    // Initial check
     updateThemeColor();
 
     const themeObserver = new MutationObserver((mutations) => {
@@ -173,92 +155,38 @@ export default function DarkVeil({
         }
       });
     });
-
     themeObserver.observe(document.documentElement, { attributes: true });
 
+    // Mouse tracking
     const mouse = new Vec2(window.innerWidth / 2, window.innerHeight / 2);
     const targetMouse = new Vec2(window.innerWidth / 2, window.innerHeight / 2);
-
     const onMouseMove = (e: MouseEvent) => {
       targetMouse.set(e.clientX, window.innerHeight - e.clientY);
     };
     window.addEventListener('mousemove', onMouseMove);
 
     const start = performance.now();
-    let isVisible = false;
-    const loop = (now: number) => {
-      if (destroyedRef.current || !isVisible) return;
-      frameRef.current = requestAnimationFrame(loop);
+    let frame = 0;
 
+    const loop = () => {
       mouse.x += (targetMouse.x - mouse.x) * 0.05;
       mouse.y += (targetMouse.y - mouse.y) * 0.05;
       program.uniforms.uMouse.value.copy(mouse);
-
-      program.uniforms.uTime.value = ((now - start) / 1000) * speed;
-      try {
-        renderer.render({ scene: mesh });
-      } catch {
-        return; // GL context was lost mid-frame
-      }
+      program.uniforms.uTime.value = ((performance.now() - start) / 1000) * speed;
+      renderer.render({ scene: mesh });
+      frame = requestAnimationFrame(loop);
     };
 
-    let observer: IntersectionObserver | null = null;
-
-    if (alwaysRender) {
-      // For sticky/overflow:hidden contexts where IntersectionObserver is
-      // unreliable on mobile — just run continuously, pausing only when
-      // the browser tab is hidden.
-      isVisible = true;
-      frameRef.current = requestAnimationFrame(loop);
-
-      const onVisChange = () => {
-        if (document.hidden) {
-          isVisible = false;
-        } else {
-          isVisible = true;
-          cancelAnimationFrame(frameRef.current);
-          frameRef.current = requestAnimationFrame(loop);
-        }
-      };
-      document.addEventListener('visibilitychange', onVisChange);
-
-      return () => {
-        destroyedRef.current = true;
-        cancelAnimationFrame(frameRef.current);
-        themeObserver.disconnect();
-        cancelAnimationFrame(initialResizeFrame);
-        window.removeEventListener('resize', resize);
-        window.removeEventListener('mousemove', onMouseMove);
-        document.removeEventListener('visibilitychange', onVisChange);
-        geometry.remove();
-        program.remove();
-      };
-    }
-
-    // Default path: use IntersectionObserver for off-screen pausing
-    observer = new IntersectionObserver(([entry]) => {
-      isVisible = entry.isIntersecting;
-      if (isVisible) {
-        cancelAnimationFrame(frameRef.current);
-        frameRef.current = requestAnimationFrame(loop);
-      }
-    }, { threshold: 0 });
-    observer.observe(canvas);
-
-    isVisible = true;
-    frameRef.current = requestAnimationFrame(loop);
+    loop();
 
     return () => {
-      destroyedRef.current = true;
-      cancelAnimationFrame(frameRef.current);
+      cancelAnimationFrame(frame);
       themeObserver.disconnect();
-      observer?.disconnect();
-      cancelAnimationFrame(initialResizeFrame);
       window.removeEventListener('resize', resize);
       window.removeEventListener('mousemove', onMouseMove);
       geometry.remove();
       program.remove();
     };
-  }, [primaryColor, backgroundColor, noiseIntensity, scanlineIntensity, speed, scanlineFrequency, warpAmount, alwaysRender]);
+  }, [primaryColor, backgroundColor, noiseIntensity, scanlineIntensity, speed, scanlineFrequency, warpAmount]);
   return <canvas ref={ref} className="darkveil-canvas" />;
 }
