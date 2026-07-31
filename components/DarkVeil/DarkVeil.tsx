@@ -259,6 +259,6 @@ export default function DarkVeil({
       geometry.remove();
       program.remove();
     };
-  }, [primaryColor, backgroundColor, noiseIntensity, scanlineIntensity, speed, scanlineFrequency, warpAmount]);
+  }, [primaryColor, backgroundColor, noiseIntensity, scanlineIntensity, speed, scanlineFrequency, warpAmount, alwaysRender]);
   return <canvas ref={ref} className="darkveil-canvas" />;
 }
