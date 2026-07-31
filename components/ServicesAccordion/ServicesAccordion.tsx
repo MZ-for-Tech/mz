@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect } from "react";
 import { gsap } from "@/lib/gsap";
 import { useGSAP } from "@gsap/react";
 import pageStyles from "@/app/page.module.css";
@@ -47,7 +47,6 @@ const SERVICES = [
 
 export default function ServicesAccordion() {
   const sectionRef = useRef<HTMLElement>(null);
-  const [isSectionVisible, setIsSectionVisible] = useState(false);
 
   // Pause all ServiceVisual CSS animations and WebGL canvases when section is not on screen
   useEffect(() => {
@@ -55,7 +54,6 @@ export default function ServicesAccordion() {
     if (!section) return;
     const observer = new IntersectionObserver(
       ([entry]) => {
-        setIsSectionVisible(entry.isIntersecting);
         section.dataset.paused = entry.isIntersecting ? 'false' : 'true';
       },
       { threshold: 0, rootMargin: '200px' }

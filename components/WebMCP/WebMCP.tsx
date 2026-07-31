@@ -6,7 +6,7 @@ import { useEffect } from "react";
 declare global {
   interface Navigator {
     modelContext?: {
-      provideContext: (config: any) => void;
+      provideContext: (config: unknown) => void;
     };
   }
 }
@@ -32,7 +32,7 @@ export default function WebMCP() {
                 },
                 required: ["projectType"]
               },
-              execute: async (input: any) => {
+              execute: async () => {
                 // In a real implementation this would navigate to the contact form or open a modal
                 window.location.href = "/start";
                 return { success: true, message: "Redirected user to project initiation." };

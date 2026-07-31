@@ -8,7 +8,7 @@ const WIPE_DURATION = 0.9; // seconds — must match transition below
 const WIPE_STAGGER = 0.04; // seconds per column
 const WIPE_TOTAL_MS = (WIPE_DURATION + WIPE_STAGGER * (COLUMNS - 1)) * 1000;
 
-let isInitialLoad = true;
+
 
 export default function Template({ children }: { children: React.ReactNode }) {
   const columns = COLUMNS;
@@ -17,7 +17,6 @@ export default function Template({ children }: { children: React.ReactNode }) {
   // synchronously before the browser paints, so our columns (initial y:0%)
   // are already covering the screen when the exit overlay disappears — zero flash.
   useLayoutEffect(() => {
-    isInitialLoad = false;
     const exitOverlay = document.querySelector("[data-transition-exit]");
     exitOverlay?.remove();
 

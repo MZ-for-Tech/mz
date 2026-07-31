@@ -149,6 +149,8 @@ export default function DarkVeil({
     };
 
     window.addEventListener('resize', resize);
+    // Call synchronously first, then once more after layout
+    resize();
     const initialResizeFrame = requestAnimationFrame(resize);
 
     // Watch for theme changes
@@ -196,14 +198,20 @@ export default function DarkVeil({
       }
     };
 
+    // Observe the canvas itself — not the parent — so overflow:hidden / sticky
+    // positioning doesn't fool the IntersectionObserver on mobile.
     const observer = new IntersectionObserver(([entry]) => {
       isVisible = entry.isIntersecting;
       if (isVisible) {
         cancelAnimationFrame(frameRef.current);
         frameRef.current = requestAnimationFrame(loop);
       }
-    }, { threshold: 0.01 });
-    observer.observe(parent);
+    }, { threshold: 0 });
+    observer.observe(canvas);
+
+    // Kick off immediately in case the observer fires late on mobile
+    isVisible = true;
+    frameRef.current = requestAnimationFrame(loop);
 
     return () => {
       destroyedRef.current = true;

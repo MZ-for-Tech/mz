@@ -36,18 +36,21 @@ const Z_STEP = 0.02;
 // Global cache to prevent re-building 480 geometries every time the user returns to the main page.
 // Reset to null here so HMR picks up material changes during development.
 let globalMeshData: {
-  geometry: THREE.ExtrudeGeometry;
-  material: THREE.MeshStandardMaterial;
-  zOffset: number;
-  scatterX: number;
-  scatterY: number;
-  scatterZ: number;
-  rotX: number;
-  rotY: number;
-  rotZ: number;
-}[] | null = null;
-let globalCx = 0;
-let globalCy = 0;
+  items: {
+    geometry: THREE.ExtrudeGeometry;
+    material: THREE.MeshStandardMaterial;
+    zOffset: number;
+    scatterX: number;
+    scatterY: number;
+    scatterZ: number;
+    rotX: number;
+    rotY: number;
+    rotZ: number;
+  }[];
+  cx: number;
+  cy: number;
+} | null = null;
+
 
 function Logo({ onLoad }: { onLoad?: () => void }) {
   const svg = useLoader(SVGLoader, "/mz.svg");
@@ -132,7 +135,7 @@ function Logo({ onLoad }: { onLoad?: () => void }) {
     let cx = 0;
     let cy = 0;
     if (svg.xml) {
-      const vb = (svg.xml as any).getAttribute('viewBox');
+      const vb = (svg.xml as unknown as Element).getAttribute('viewBox');
       if (vb) {
         const parts = vb.split(/\s+/).map(parseFloat);
         if (parts.length === 4) {
@@ -141,8 +144,6 @@ function Logo({ onLoad }: { onLoad?: () => void }) {
         }
       }
     }
-    globalCx = cx;
-    globalCy = cy;
 
     svg.paths.forEach((path) => {
       const color = `#${path.color.getHexString()}`;
@@ -164,7 +165,7 @@ function Logo({ onLoad }: { onLoad?: () => void }) {
       });
     });
 
-    return items;
+    return { items, cx, cy };
   }, [svg, extrudeSettings]);
 
   useEffect(() => {
@@ -272,7 +273,7 @@ function Logo({ onLoad }: { onLoad?: () => void }) {
       const easeOut = 1 - Math.pow(1 - progress, 3);
       const invEase = 1 - easeOut;
 
-      meshData.forEach((item, i) => {
+      meshData.items.forEach((item, i) => {
         const mesh = meshRefs.current[i];
         if (!mesh) return;
 
@@ -299,6 +300,10 @@ function Logo({ onLoad }: { onLoad?: () => void }) {
       dragRotation.current.y += dragVelocity.current.y;
       dragVelocity.current.x *= 0.92;
       dragVelocity.current.y *= 0.92;
+
+      // Slowly pull back to default orientation over time
+      dragRotation.current.x = THREE.MathUtils.lerp(dragRotation.current.x, 0, 0.003);
+      dragRotation.current.y = THREE.MathUtils.lerp(dragRotation.current.y, 0, 0.003);
     }
 
     // --- Scroll tilt: logo tilts back as user scrolls down ---
@@ -385,8 +390,8 @@ function Logo({ onLoad }: { onLoad?: () => void }) {
     <>
       <group ref={logoRef}>
         <group scale={[logoScale, -logoScale, logoScale]}>
-          <group position={[-globalCx, -globalCy, 0]}>
-            {meshData.map((item, i) => (
+          <group position={[-meshData.cx, -meshData.cy, 0]}>
+            {meshData.items.map((item, i) => (
               <mesh
                 key={i}
                 ref={(el) => { meshRefs.current[i] = el; }}
