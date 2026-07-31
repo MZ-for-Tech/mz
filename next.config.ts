@@ -1,6 +1,6 @@
 import type { NextConfig } from "next";
 
-const SITE = "https://mzltd.tech";
+const SITE = "https://mzfortech.com";
 
 const nextConfig: NextConfig = {
   // mz-specific config if any

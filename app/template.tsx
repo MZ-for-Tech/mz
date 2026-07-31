@@ -17,28 +17,18 @@ export default function Template({ children }: { children: React.ReactNode }) {
   // synchronously before the browser paints, so our columns (initial y:0%)
   // are already covering the screen when the exit overlay disappears — zero flash.
   useLayoutEffect(() => {
-    const wasInitial = isInitialLoad;
     isInitialLoad = false;
     const exitOverlay = document.querySelector("[data-transition-exit]");
     exitOverlay?.remove();
 
-    if (!wasInitial) {
-      // Fire event when the entry wipe fully completes, so hero animations
-      // can sync precisely instead of using a blind delay.
-      const timer = setTimeout(() => {
-        window.dispatchEvent(new Event('mz-transition-done'));
-      }, WIPE_TOTAL_MS);
+    // Fire event when the entry wipe fully completes, so hero animations
+    // can sync precisely instead of using a blind delay.
+    const timer = setTimeout(() => {
+      window.dispatchEvent(new Event('mz-transition-done'));
+    }, WIPE_TOTAL_MS);
 
-      return () => clearTimeout(timer);
-    }
+    return () => clearTimeout(timer);
   }, []);
-
-  if (isInitialLoad) {
-    // The Preloader handles the entrance on the very first load.
-    // Do not render the transition overlay at all to avoid z-index fighting
-    // or flashing over the jaw-dropping preloader sequence.
-    return <>{children}</>;
-  }
 
   return (
     <>

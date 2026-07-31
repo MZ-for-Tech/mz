@@ -1,5 +1,5 @@
 "use client";
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import styles from "./page.module.css";
 import PillNav from "../components/PillNav/PillNav";
 import { Footer } from "../components/Footer/Footer";
@@ -33,6 +33,19 @@ const NAV_ITEMS = [
 
 export default function Home() {
   const mainRef = useRef<HTMLElement>(null);
+  const [isReadyForHeavy, setIsReadyForHeavy] = useState(false);
+
+  useEffect(() => {
+    const onReady = () => setIsReadyForHeavy(true);
+    window.addEventListener('mz-transition-done', onReady, { once: true });
+
+    // Fallback just in case event fired before mount
+    const timer = setTimeout(onReady, 1500);
+    return () => {
+      window.removeEventListener('mz-transition-done', onReady);
+      clearTimeout(timer);
+    };
+  }, []);
 
   useGSAP(() => {
     // Respect prefers-reduced-motion
@@ -90,16 +103,13 @@ export default function Home() {
 
     // Wait for the correct signal before playing hero animations
     const playWhenReady = () => {
-      window.removeEventListener('mz-preloader-done', playWhenReady);
       window.removeEventListener('mz-transition-done', playWhenReady);
       playHeroAnimation();
     };
 
-    window.addEventListener('mz-preloader-done', playWhenReady, { once: true });
     window.addEventListener('mz-transition-done', playWhenReady, { once: true });
 
     return () => {
-      window.removeEventListener('mz-preloader-done', playWhenReady);
       window.removeEventListener('mz-transition-done', playWhenReady);
     };
 
@@ -174,9 +184,15 @@ export default function Home() {
             {/* 01 — Hero */}
             <section className={`${styles.hero} hero-section`}>
 
-              {/* 3D Logo Background */}
-              <div className={styles.heroLogo3D}>
-                <MzLogo3D />
+              {/* 3D Logo Background - Deferred until wipe finishes to prevent lag */}
+              <div
+                className={styles.heroLogo3D}
+                style={{
+                  opacity: isReadyForHeavy ? 1 : 0,
+                  transition: 'opacity 1.5s ease-out'
+                }}
+              >
+                {isReadyForHeavy && <MzLogo3D />}
               </div>
 
               <div className={styles.heroContent}>
@@ -256,7 +272,7 @@ export default function Home() {
                         className={styles.productWatermark}
                       />
                       <div className={styles.proprietaryStamp}>
-                        MZ.LTD © PROPRIETARY TECHNOLOGY
+                        MZ © PROPRIETARY TECHNOLOGY
                       </div>
 
                       <div className={styles.productContent}>
@@ -326,7 +342,7 @@ export default function Home() {
                 We&apos;ll tell you what it&apos;s missing.
               </div>
 
-              <ObfuscatedEmail user="hello" domain="mzltd.tech" className={styles.ctaEmail} />
+              <ObfuscatedEmail user="hello" domain="mzfortech.com" className={styles.ctaEmail} />
 
               <div className={styles.ctaActionWrapper}>
                 <TransitionLink href="/start" className={styles.submitBtn}>

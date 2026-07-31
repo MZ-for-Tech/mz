@@ -99,7 +99,7 @@ export default function StartProjectPage() {
                 What do you wanna talk about?              </h1>
               <div className={styles.contactDetails}>
                 <div className={styles.contactLabel}>GENERAL INQUIRIES</div>
-                <ObfuscatedEmail user="hello" domain="mzltd.tech" className={styles.contactEmail} />
+                <ObfuscatedEmail user="hello" domain="mzfortech.com" className={styles.contactEmail} />
 
                 <div className={styles.faqText}>
                   Want to learn about our process?<br />

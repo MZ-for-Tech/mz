@@ -1,0 +1,190 @@
+.bentoGrid {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr 1fr;
+  grid-template-rows: 240px 200px 280px 300px;
+  grid-template-areas:
+    "build-text build-text build-visual"
+    "build-text build-text accent"
+    "deploy-vis ai-text    ai-text"
+    "deploy-vis know-text  know-visual";
+  gap: 24px;
+  width: 100%;
+}
+
+.bentoTile {
+  border-radius: 24px;
+  position: relative;
+  overflow: hidden;
+  will-change: transform, opacity;
+  transition: opacity 0.5s ease, filter 0.5s ease;
+}
+
+.bentoTile > *:not(.pillarLabel) {
+  will-change: transform;
+  transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.bentoTile:hover > *:not(.pillarLabel) {
+  transform: scale(1.035);
+}
+
+.buildText {
+  grid-area: build-text;
+}
+
+.buildVisual {
+  grid-area: build-visual;
+}
+
+.aiText {
+  grid-area: ai-text;
+}
+
+.deployVis {
+  grid-area: deploy-vis;
+}
+
+.accent {
+  grid-area: accent;
+}
+
+.knowText {
+  grid-area: know-text;
+}
+
+.knowVisual {
+  grid-area: know-visual;
+}
+
+.textTile {
+  background: linear-gradient(145deg, rgba(var(--color-text-rgb), 0.03) 0%, rgba(var(--color-text-rgb), 0.01) 100%);
+  border: 1px solid rgba(var(--color-text-rgb), 0.1);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+}
+
+:global(:root[data-theme="light"]) .textTile {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.4) 100%);
+  border-color: rgba(0, 0, 0, 0.05);
+}
+
+.visualTile {
+  background: rgba(var(--color-text-rgb), 0.04);
+  border: 1px solid rgba(var(--color-text-rgb), 0.08);
+  display: grid;
+  place-items: center;
+}
+
+:global(:root[data-theme="light"]) .visualTile {
+  background: rgba(255, 255, 255, 0.6);
+  border-color: rgba(0, 0, 0, 0.05);
+}
+
+.pillarLabel {
+  position: absolute;
+  top: 32px;
+  right: 32px;
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-brand-yellow);
+  font-family: var(--font-base);
+}
+
+.tileContent {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.tileTitle {
+  font-size: clamp(1.8rem, 2.5vw, 2.8rem);
+  font-weight: 500;
+  margin: 0;
+  line-height: 1.1;
+  color: var(--color-text, var(--color-text));
+}
+
+.tileTagline {
+  font-family: var(--font-base);
+  font-size: 0.9rem;
+  color: rgba(var(--color-text-rgb), 0.5);
+  margin: 0;
+}
+
+.capabilitiesList {
+  list-style: none;
+  padding: 0;
+  margin: 16px 0 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.capabilitiesList li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 1rem;
+  color: rgba(var(--color-text-rgb), 0.8);
+  line-height: 1.4;
+}
+
+.bullet {
+  margin-top: 6px;
+  width: 6px;
+  height: 6px;
+  background-color: var(--color-brand-yellow);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.accent {
+  background: linear-gradient(135deg, var(--color-olive), var(--color-brand-yellow));
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  color: #000;
+}
+
+.accentCounter {
+  background: rgba(0, 0, 0, 0.1);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  align-self: flex-start;
+}
+
+.accentCopy {
+  font-size: clamp(1.2rem, 1.5vw, 1.5rem);
+  font-weight: 500;
+  line-height: 1.2;
+  margin-bottom: 8px;
+}
+
+.accentSub {
+  font-size: 0.8rem;
+  opacity: 0.7;
+}
+
+.grainientWrapper {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 1;
+}
+
+.textTile>*:not(.grainientWrapper) {
+  z-index: 1;
+}
+
+.textTile>*:not(.grainientWrapper):not(.pillarLabel) {
+  position: relative;
+}

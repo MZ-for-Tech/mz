@@ -24,4 +24,4 @@ Allow: /
 User-agent: Omgilibot
 Allow: /
 
-Sitemap: https://mzltd.tech/sitemap.xml
+Sitemap: https://mzfortech.com/sitemap.xml

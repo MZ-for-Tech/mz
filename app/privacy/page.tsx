@@ -50,7 +50,7 @@ export default function PrivacyPolicyPage() {
             <p>We may use third-party services that collect, monitor and analyze information to improve our services functionality. These third-party service providers have their own privacy policies addressing how they use such information.</p>
 
             <h2>5. Contact Us</h2>
-            <p>If you have any questions about this Privacy Policy, please contact us at <ObfuscatedEmail user="hello" domain="mzltd.tech" />.</p>
+            <p>If you have any questions about this Privacy Policy, please contact us at <ObfuscatedEmail user="hello" domain="mzfortech.com" />.</p>
           </div>
         </main>
 

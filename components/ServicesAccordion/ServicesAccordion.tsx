@@ -4,7 +4,7 @@ import { useRef, useEffect, useState } from "react";
 import { gsap } from "@/lib/gsap";
 import { useGSAP } from "@gsap/react";
 import pageStyles from "@/app/page.module.css";
-import DesktopServiceCard from "@/components/DesktopServiceCard/DesktopServiceCard";
+import ServicesBento from "@/components/ServicesBento/ServicesBento";
 import { BuildVisual, DeployVisual, TeachVisual } from "@/components/ServiceVisuals/ServiceVisuals";
 import MobileServiceCard from "@/components/MobileServiceCard/MobileServiceCard";
 
@@ -86,35 +86,8 @@ export default function ServicesAccordion() {
     <section ref={sectionRef} id="services" style={{ padding: '120px 8vw', position: 'relative', zIndex: 10 }}>
       <div className={pageStyles.sectionHeader}>Services</div>
 
-      <div className={pageStyles.desktopOnly} style={{ width: '100%', marginTop: '8rem', display: 'flex', flexDirection: 'column', gap: '30vh', paddingBottom: '20vh' }}>
-        {SERVICES.map((service, index) => (
-          <div
-            key={service.id}
-            className={pageStyles.customCardFull}
-            style={{
-              position: 'sticky',
-              top: `calc(var(--card-top-offset, 15vh) + calc(${index} * var(--card-stack-offset, 40px)))`,
-              zIndex: index,
-              height: 'var(--card-height, min(700px, 70vh))',
-              width: '100%',
-              willChange: 'transform',
-              transform: 'perspective(1200px) skewY(6deg)',
-            }}
-          >
-            <DesktopServiceCard
-              pillar={service.pillar}
-              title={service.title}
-              tagline={service.tagline}
-              capabilities={service.capabilities}
-              paused={!isSectionVisible}
-              visual={
-                service.pillar === "BUILD" ? <BuildVisual /> :
-                  service.pillar === "DEPLOY" ? <DeployVisual /> :
-                    service.pillar === "TEACH" ? <TeachVisual /> : undefined
-              }
-            />
-          </div>
-        ))}
+      <div className={pageStyles.desktopOnly} style={{ width: '100%', marginTop: '4rem' }}>
+        <ServicesBento />
       </div>
 
       <div className={`${pageStyles.mobileOnly} ${pageStyles.mobileServicesWrapper}`}>

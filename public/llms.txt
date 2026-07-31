@@ -2,10 +2,10 @@
 > Research-driven technology company. Engineered in Cairo. Owned by you.
 
 ## About MZ
-MZ (MZ.LTD) is a technology engineering firm based in Cairo, Egypt. We build proprietary systems and transfer the exact knowledge our clients need to run them.
+MZ is a technology engineering firm based in Cairo, Egypt. We build proprietary systems and transfer the exact knowledge our clients need to run them.
 - **Location:** Cairo, Egypt
-- **Email:** hello@mzltd.tech
-- **Website:** https://mzltd.tech
+- **Email:** hello@mzfortech.com
+- **Website:** https://mzfortech.com
 - **Research Portal:** https://nullhypothesis.dev
 
 ## Core Philosophy
@@ -24,8 +24,8 @@ Most document processing tools were built for Latin scripts and extended to Arab
 - **ERP System:** Internal proprietary system. (Access Restricted)
 
 ## Machine-Readable Resources
-- Sitemap: https://mzltd.tech/sitemap.xml
-- OpenAPI: https://mzltd.tech/.well-known/openapi.json
-- Agent Card: https://mzltd.tech/.well-known/agent.json
-- AI Plugin: https://mzltd.tech/.well-known/ai-plugin.json
-- MCP Server: https://mzltd.tech/.well-known/mcp.json
+- Sitemap: https://mzfortech.com/sitemap.xml
+- OpenAPI: https://mzfortech.com/.well-known/openapi.json
+- Agent Card: https://mzfortech.com/.well-known/agent.json
+- AI Plugin: https://mzfortech.com/.well-known/ai-plugin.json
+- MCP Server: https://mzfortech.com/.well-known/mcp.json

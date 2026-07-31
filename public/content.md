@@ -19,4 +19,4 @@ Most document processing tools were built for Latin scripts and extended to Arab
 ## Initiate
 
 Tell us what you're building. We'll tell you what it's missing.
-**Contact:** hello@mzltd.tech
+**Contact:** hello@mzfortech.com

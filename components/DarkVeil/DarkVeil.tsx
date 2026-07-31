@@ -174,22 +174,12 @@ export default function DarkVeil({
 
     const start = performance.now();
     let isVisible = false;
-    let isPreloaderActive = typeof document !== 'undefined' && document.querySelector('.preloader-container') !== null;
     let frameCount = 0;
     let lastFrameTime = 0;
     let skipFactor = 1; // 1 = render every frame, 2 = render every other frame
 
-    const onPreloaderDone = () => {
-      isPreloaderActive = false;
-      if (isVisible) {
-        cancelAnimationFrame(frameRef.current);
-        frameRef.current = requestAnimationFrame(loop);
-      }
-    };
-    window.addEventListener('mz-preloader-done', onPreloaderDone);
-
     const loop = (now: number) => {
-      if (destroyedRef.current || !isVisible || isPreloaderActive) return;
+      if (destroyedRef.current || !isVisible) return;
       frameRef.current = requestAnimationFrame(loop);
 
       // Adaptive frame-skip: if last frame took >20ms (sub-60fps), render every other frame
@@ -215,7 +205,7 @@ export default function DarkVeil({
 
     const observer = new IntersectionObserver(([entry]) => {
       isVisible = entry.isIntersecting;
-      if (isVisible && !isPreloaderActive) {
+      if (isVisible) {
         cancelAnimationFrame(frameRef.current);
         frameRef.current = requestAnimationFrame(loop);
       }
@@ -230,7 +220,6 @@ export default function DarkVeil({
       cancelAnimationFrame(initialResizeFrame);
       window.removeEventListener('resize', resize);
       window.removeEventListener('mousemove', onMouseMove);
-      window.removeEventListener('mz-preloader-done', onPreloaderDone);
 
       geometry.remove();
       program.remove();

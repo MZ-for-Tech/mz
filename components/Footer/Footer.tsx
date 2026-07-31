@@ -45,7 +45,7 @@ export function Footer() {
   }, []);
 
   const handleCopyEmail = () => {
-    navigator.clipboard.writeText("hello@mzltd.tech");
+    navigator.clipboard.writeText("hello@mzfortech.com");
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -79,7 +79,7 @@ export function Footer() {
           <div className={styles.statementAction}>
             <span>Drop us a line at</span>
             <div className={styles.emailPill}>
-              <ObfuscatedEmail user="hello" domain="mzltd.tech" className={styles.emailText} />
+              <ObfuscatedEmail user="hello" domain="mzfortech.com" className={styles.emailText} />
               <button onClick={handleCopyEmail} className={styles.copyBtn}>
                 {copied ? "COPIED" : "COPY"}
               </button>
@@ -123,11 +123,6 @@ export function Footer() {
             <span className={styles.colLabel}>CONNECT</span>
             <ul className={styles.linkList}>
               <li>
-                <a href="https://nullhypothesis.dev" target="_blank" rel="noopener noreferrer" className={styles.linkItem}>
-                  The Null Hypothesis <span className={styles.arr}>↗</span>
-                </a>
-              </li>
-              <li>
                 <a href="https://www.facebook.com/mzfortech/" target="_blank" rel="noopener noreferrer" className={styles.linkItem}>
                   Facebook <span className={styles.arr}>↗</span>
                 </a>
@@ -140,7 +135,7 @@ export function Footer() {
         <div className={styles.bottomSection}>
           <div className={styles.subFooterBar}>
             <div className={styles.copyrightText}>
-              &copy; {new Date().getFullYear()} MZ LTD. ALL RIGHTS RESERVED.
+              &copy; {new Date().getFullYear()} MZ ALL RIGHTS RESERVED.
             </div>
 
             <div className={styles.marqueeWrapper}>

@@ -10,7 +10,7 @@ interface ObfuscatedEmailProps {
 
 export default function ObfuscatedEmail({
   user = "hello",
-  domain = "mzltd.tech",
+  domain = "mzfortech.com",
   className = "",
 }: ObfuscatedEmailProps) {
   const [copied, setCopied] = useState(false);

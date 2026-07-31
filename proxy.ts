@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   // Check for Content Accessibility — Markdown content negotiation
   const acceptHeader = request.headers.get('accept');
   
@@ -24,7 +24,7 @@ export function middleware(request: NextRequest) {
     return response;
   }
 
-  const site = "https://mzltd.tech";
+  const site = "https://mzfortech.com";
   const links = [
     `<${site}/.well-known/api-catalog>; rel="api-catalog"`,
     `<${site}/.well-known/openapi.json>; rel="service-desc"`,

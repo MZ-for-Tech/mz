@@ -59,7 +59,7 @@
   flex-direction: column;
   overflow: hidden;
   box-shadow: inset 0 1px 0 rgba(var(--color-text-rgb), 0.05), inset 0 0 20px rgba(var(--color-text-rgb), 0.02);
-  animation: stage1Fade 8s infinite;
+  animation: stage1Fade var(--anim-duration, 8s) infinite;
   will-change: transform, opacity;
 }
 .windowHeader {
@@ -81,11 +81,11 @@
   font-size: 0.7rem;
 }
 .terminalBody { padding: 16px; display: flex; flex-direction: column; gap: 8px; }
-.cmd { color: #888; font-size: 0.9rem; opacity: 0; animation: cmdType 8s infinite; }
+.cmd { color: #888; font-size: 0.9rem; opacity: 0; animation: cmdType var(--anim-duration, 8s) infinite; }
 .cmd:nth-child(1) { animation-delay: 0s; }
 .cmd:nth-child(2) { animation-delay: 0.5s; }
 .cmd:nth-child(3) { animation-delay: 1.0s; }
-.cmdSuccess { color: var(--color-acid-green); font-size: 0.9rem; opacity: 0; animation: cmdType 8s infinite; animation-delay: 1.5s; margin-top: 8px; }
+.cmdSuccess { color: var(--color-acid-green); font-size: 0.9rem; opacity: 0; animation: cmdType var(--anim-duration, 8s) infinite; animation-delay: 1.5s; margin-top: 8px; }
 
 @keyframes cmdType {
   0%, 5% { opacity: 0; transform: translateX(-10px); }
@@ -104,7 +104,7 @@
   flex-direction: column;
   overflow: hidden;
   box-shadow: inset 0 1px 0 rgba(141, 184, 42, 0.2), inset 0 0 20px rgba(141, 184, 42, 0.05);
-  animation: stage2Fade 8s infinite;
+  animation: stage2Fade var(--anim-duration, 8s) infinite;
   will-change: transform, opacity;
   opacity: 0;
 }
@@ -120,7 +120,7 @@
 .bpScanLine {
   position: absolute; top: 0; left: 0; width: 100%; height: 2px;
   background: var(--color-acid-green); box-shadow: 0 0 15px var(--color-acid-green);
-  animation: bpScan 8s infinite;
+  animation: bpScan var(--anim-duration, 8s) infinite;
 }
 
 @keyframes bpScan {
@@ -142,7 +142,7 @@
   flex-direction: column;
   overflow: hidden;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 1), inset 0 0 20px rgba(0, 0, 0, 0.02);
-  animation: stage3Fade 8s infinite;
+  animation: stage3Fade var(--anim-duration, 8s) infinite;
   will-change: transform, opacity;
   opacity: 0;
 }
@@ -202,7 +202,7 @@
   flex-direction: column;
   gap: 16px;
   box-shadow: inset 0 1px 0 rgba(var(--color-text-rgb), 0.05), inset 0 0 20px rgba(var(--color-text-rgb), 0.02);
-  animation: stage1Fade 8s infinite;
+  animation: stage1Fade var(--anim-duration, 8s) infinite;
   opacity: 0;
 }
 .bloatHeader {
@@ -234,7 +234,7 @@
   flex-direction: column;
   gap: 16px;
   box-shadow: inset 0 1px 0 rgba(var(--color-text-rgb), 0.05), inset 0 0 20px rgba(var(--color-text-rgb), 0.02);
-  animation: stage2Fade 8s infinite;
+  animation: stage2Fade var(--anim-duration, 8s) infinite;
   opacity: 0;
   overflow: hidden;
 }
@@ -246,7 +246,7 @@
   height: 2px;
   background: var(--color-acid-green);
   box-shadow: 0 0 15px var(--color-acid-green);
-  animation: scanLaser 8s infinite;
+  animation: scanLaser var(--anim-duration, 8s) infinite;
   z-index: 10;
 }
 @keyframes scanLaser {
@@ -261,7 +261,7 @@
   aspect-ratio: 1;
   background: #333;
   border-radius: 2px;
-  animation: pruneNode 8s infinite;
+  animation: pruneNode var(--anim-duration, 8s) infinite;
   will-change: transform, background-color, opacity;
 }
 @keyframes pruneNode {
@@ -275,7 +275,7 @@
   aspect-ratio: 1;
   background: #333;
   border-radius: 2px;
-  animation: keepNode 8s infinite;
+  animation: keepNode var(--anim-duration, 8s) infinite;
   will-change: background-color, box-shadow;
 }
 @keyframes keepNode {
@@ -297,7 +297,7 @@
   align-items: center;
   gap: 20px;
   box-shadow: inset 0 1px 0 rgba(141, 184, 42, 0.2), inset 0 0 20px rgba(141, 184, 42, 0.05);
-  animation: stage3Fade 8s infinite;
+  animation: stage3Fade var(--anim-duration, 8s) infinite;
   opacity: 0;
 }
 .specHeader {
@@ -360,7 +360,7 @@
   position: absolute;
   width: 100%;
   height: 100%;
-  animation: stage1Fade 8s infinite;
+  animation: stage1Fade var(--anim-duration, 8s) infinite;
   opacity: 0;
 }
 .cNode {
@@ -391,7 +391,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  animation: stage2Fade 8s infinite;
+  animation: stage2Fade var(--anim-duration, 8s) infinite;
   opacity: 0;
 }
 .synCore {
@@ -420,7 +420,7 @@
   position: absolute;
   width: 260px;
   height: 260px;
-  animation: stage3Fade 8s infinite;
+  animation: stage3Fade var(--anim-duration, 8s) infinite;
   opacity: 0;
 }
 .netSvg {
@@ -431,7 +431,7 @@
   stroke-width: 2;
   stroke-dasharray: 1000;
   stroke-dashoffset: 1000;
-  animation: drawNet 8s infinite;
+  animation: drawNet var(--anim-duration, 8s) infinite;
 }
 .netNode {
   position: absolute;
