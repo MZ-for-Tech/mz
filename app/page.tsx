@@ -184,6 +184,7 @@ export default function Home() {
                   scanlineFrequency={0.01}
                   speed={0.2}
                   warpAmount={0.5}
+                  alwaysRender
                 />
               </div>
 

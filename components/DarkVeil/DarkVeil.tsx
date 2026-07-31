@@ -89,6 +89,9 @@ type DarkVeilProps = {
   speed?: number;
   scanlineFrequency?: number;
   warpAmount?: number;
+  /** Skip IntersectionObserver visibility gating — use for instances inside
+   *  sticky/overflow:hidden containers where the observer is unreliable on mobile. */
+  alwaysRender?: boolean;
 };
 
 export default function DarkVeil({
@@ -98,7 +101,8 @@ export default function DarkVeil({
   scanlineIntensity = 0.05,
   scanlineFrequency = 0.01,
   speed = 0.2,
-  warpAmount = 0.5
+  warpAmount = 0.5,
+  alwaysRender = false
 }: DarkVeilProps) {
   const ref = useRef<HTMLCanvasElement>(null);
   const frameRef = useRef<number>(0);
@@ -198,9 +202,41 @@ export default function DarkVeil({
       }
     };
 
-    // Observe the canvas itself — not the parent — so overflow:hidden / sticky
-    // positioning doesn't fool the IntersectionObserver on mobile.
-    const observer = new IntersectionObserver(([entry]) => {
+    let observer: IntersectionObserver | null = null;
+
+    if (alwaysRender) {
+      // For sticky/overflow:hidden contexts where IntersectionObserver is
+      // unreliable on mobile — just run continuously, pausing only when
+      // the browser tab is hidden.
+      isVisible = true;
+      frameRef.current = requestAnimationFrame(loop);
+
+      const onVisChange = () => {
+        if (document.hidden) {
+          isVisible = false;
+        } else {
+          isVisible = true;
+          cancelAnimationFrame(frameRef.current);
+          frameRef.current = requestAnimationFrame(loop);
+        }
+      };
+      document.addEventListener('visibilitychange', onVisChange);
+
+      return () => {
+        destroyedRef.current = true;
+        cancelAnimationFrame(frameRef.current);
+        themeObserver.disconnect();
+        cancelAnimationFrame(initialResizeFrame);
+        window.removeEventListener('resize', resize);
+        window.removeEventListener('mousemove', onMouseMove);
+        document.removeEventListener('visibilitychange', onVisChange);
+        geometry.remove();
+        program.remove();
+      };
+    }
+
+    // Default path: use IntersectionObserver for off-screen pausing
+    observer = new IntersectionObserver(([entry]) => {
       isVisible = entry.isIntersecting;
       if (isVisible) {
         cancelAnimationFrame(frameRef.current);
@@ -209,7 +245,6 @@ export default function DarkVeil({
     }, { threshold: 0 });
     observer.observe(canvas);
 
-    // Kick off immediately in case the observer fires late on mobile
     isVisible = true;
     frameRef.current = requestAnimationFrame(loop);
 
@@ -217,11 +252,10 @@ export default function DarkVeil({
       destroyedRef.current = true;
       cancelAnimationFrame(frameRef.current);
       themeObserver.disconnect();
-      observer.disconnect();
+      observer?.disconnect();
       cancelAnimationFrame(initialResizeFrame);
       window.removeEventListener('resize', resize);
       window.removeEventListener('mousemove', onMouseMove);
-
       geometry.remove();
       program.remove();
     };
