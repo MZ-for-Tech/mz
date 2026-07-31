@@ -15,7 +15,7 @@ import {
   useThree
 } from "@react-three/fiber";
 
-import { Center, PerformanceMonitor, Environment } from "@react-three/drei";
+import { PerformanceMonitor, Environment } from "@react-three/drei";
 
 import * as THREE from "three";
 import { SVGLoader } from "three/examples/jsm/loaders/SVGLoader.js";
@@ -39,9 +39,17 @@ let globalMeshData: {
   geometry: THREE.ExtrudeGeometry;
   material: THREE.MeshStandardMaterial;
   zOffset: number;
+  scatterX: number;
+  scatterY: number;
+  scatterZ: number;
+  rotX: number;
+  rotY: number;
+  rotZ: number;
 }[] | null = null;
+let globalCx = 0;
+let globalCy = 0;
 
-function Logo() {
+function Logo({ onLoad }: { onLoad?: () => void }) {
   const svg = useLoader(SVGLoader, "/mz.svg");
 
   const logoRef = useRef<THREE.Group>(null);
@@ -112,7 +120,29 @@ function Logo() {
       geometry: THREE.ExtrudeGeometry;
       material: THREE.MeshStandardMaterial;
       zOffset: number;
+      scatterX: number;
+      scatterY: number;
+      scatterZ: number;
+      rotX: number;
+      rotY: number;
+      rotZ: number;
     }[] = [];
+
+    // Parse viewBox to find exact mathematical center
+    let cx = 0;
+    let cy = 0;
+    if (svg.xml) {
+      const vb = (svg.xml as any).getAttribute('viewBox');
+      if (vb) {
+        const parts = vb.split(/\s+/).map(parseFloat);
+        if (parts.length === 4) {
+          cx = parts[0] + parts[2] / 2;
+          cy = parts[1] + parts[3] / 2;
+        }
+      }
+    }
+    globalCx = cx;
+    globalCy = cy;
 
     svg.paths.forEach((path) => {
       const color = `#${path.color.getHexString()}`;
@@ -124,6 +154,12 @@ function Logo() {
           geometry: new THREE.ExtrudeGeometry(shape, extrudeSettings),
           material: getMaterial(color),
           zOffset,
+          scatterX: (Math.random() - 0.5) * 3000,
+          scatterY: (Math.random() - 0.5) * 3000,
+          scatterZ: 500 + Math.random() * 2000,
+          rotX: (Math.random() - 0.5) * Math.PI * 2,
+          rotY: (Math.random() - 0.5) * Math.PI * 2,
+          rotZ: (Math.random() - 0.5) * Math.PI * 2,
         });
       });
     });
@@ -135,7 +171,11 @@ function Logo() {
     if (!globalMeshData) {
       globalMeshData = meshData;
     }
-  }, [meshData]);
+    // Geometries are ready, signal load complete after a tiny frame delay to ensure paint
+    if (onLoad) {
+      requestAnimationFrame(() => requestAnimationFrame(() => onLoad()));
+    }
+  }, [meshData, onLoad]);
 
   // Hover & Mouse Drag tracking on the WebGL canvas element
   useEffect(() => {
@@ -208,6 +248,10 @@ function Logo() {
     };
   }, []);
 
+  const meshRefs = useRef<(THREE.Mesh | null)[]>([]);
+  const animStartTime = useRef<number>(-1);
+  const assemblyDone = useRef(false);
+
   useFrame((state) => {
     if (!logoRef.current) return;
     if (typeof document !== 'undefined' && document.querySelector('.preloader-container') !== null) {
@@ -215,6 +259,38 @@ function Logo() {
     }
 
     const t = state.clock.elapsedTime;
+    
+    // --- Assembly Animation ---
+    if (animStartTime.current === -1) {
+      animStartTime.current = t;
+    }
+    
+    if (!assemblyDone.current) {
+      const elapsed = t - animStartTime.current;
+      const progress = Math.min(1, elapsed / 1.5); // 1.5s assembly time
+      // Fast, smooth ease-out curve
+      const easeOut = 1 - Math.pow(1 - progress, 3);
+      const invEase = 1 - easeOut;
+
+      meshData.forEach((item, i) => {
+        const mesh = meshRefs.current[i];
+        if (!mesh) return;
+
+        mesh.position.set(
+          item.scatterX * invEase,
+          item.scatterY * invEase,
+          item.scatterZ * invEase + item.zOffset
+        );
+        mesh.rotation.set(
+          item.rotX * invEase,
+          item.rotY * invEase,
+          item.rotZ * invEase
+        );
+      });
+
+      if (progress >= 1) assemblyDone.current = true;
+    }
+
     const isHovered = hovered.current;
 
     // Apply inertia when mouse drag is released
@@ -308,19 +384,23 @@ function Logo() {
   return (
     <>
       <group ref={logoRef}>
-        <Center scale={[logoScale, -logoScale, logoScale]}>
-          {meshData.map((item, i) => (
-            <mesh
-              key={i}
-              geometry={item.geometry}
-              material={item.material}
-              position={[0, 0, item.zOffset]}
-              castShadow={false}
-              receiveShadow={false}
-              frustumCulled
-            />
-          ))}
-        </Center>
+        <group scale={[logoScale, -logoScale, logoScale]}>
+          <group position={[-globalCx, -globalCy, 0]}>
+            {meshData.map((item, i) => (
+              <mesh
+                key={i}
+                ref={(el) => { meshRefs.current[i] = el; }}
+                geometry={item.geometry}
+                material={item.material}
+                position={[0, 0, item.zOffset]}
+                rotation={[0, 0, 0]}
+                castShadow={false}
+                receiveShadow={false}
+                frustumCulled
+              />
+            ))}
+          </group>
+        </group>
       </group>
 
       <pointLight
@@ -334,9 +414,11 @@ function Logo() {
 }
 
 export default function MzLogo3D({
-  className
+  className,
+  onLoad
 }: {
   className?: string;
+  onLoad?: () => void;
 }) {
   const [dpr, setDpr] = useState(1.0);
 
@@ -366,7 +448,7 @@ export default function MzLogo3D({
       >
         <PerformanceMonitor onIncline={() => setDpr(1.0)} onDecline={() => setDpr(0.75)} />
         <Suspense fallback={null}>
-          <Logo />
+          <Logo onLoad={onLoad} />
         </Suspense>
 
         {/* Environment map for realistic metallic reflections */}

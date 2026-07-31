@@ -34,6 +34,7 @@ const NAV_ITEMS = [
 export default function Home() {
   const mainRef = useRef<HTMLElement>(null);
   const [isReadyForHeavy, setIsReadyForHeavy] = useState(false);
+  const [isLogoLoaded, setIsLogoLoaded] = useState(false);
 
   useEffect(() => {
     const onReady = () => setIsReadyForHeavy(true);
@@ -188,11 +189,11 @@ export default function Home() {
               <div
                 className={styles.heroLogo3D}
                 style={{
-                  opacity: isReadyForHeavy ? 1 : 0,
-                  transition: 'opacity 1.5s ease-out'
+                  opacity: isLogoLoaded ? 1 : 0,
+                  transition: 'opacity 0.3s ease-out'
                 }}
               >
-                {isReadyForHeavy && <MzLogo3D />}
+                {isReadyForHeavy && <MzLogo3D onLoad={() => setIsLogoLoaded(true)} />}
               </div>
 
               <div className={styles.heroContent}>

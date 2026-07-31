@@ -135,11 +135,17 @@ export default function DarkVeil({
     const mesh = new Mesh(gl, { geometry, program });
 
     const resize = () => {
-      const w = parent.clientWidth,
-        h = parent.clientHeight;
+      let w = parent.clientWidth;
+      let h = parent.clientHeight;
+      
+      // Fallback for mobile if parent hasn't laid out yet
+      if (w === 0) w = window.innerWidth;
+      if (h === 0) h = window.innerHeight;
 
-      renderer.setSize(w, h);
-      program.uniforms.uResolution.value.set(w, h);
+      if (w > 0 && h > 0) {
+        renderer.setSize(w, h);
+        program.uniforms.uResolution.value.set(w, h);
+      }
     };
 
     window.addEventListener('resize', resize);
@@ -174,22 +180,9 @@ export default function DarkVeil({
 
     const start = performance.now();
     let isVisible = false;
-    let frameCount = 0;
-    let lastFrameTime = 0;
-    let skipFactor = 1; // 1 = render every frame, 2 = render every other frame
-
     const loop = (now: number) => {
       if (destroyedRef.current || !isVisible) return;
       frameRef.current = requestAnimationFrame(loop);
-
-      // Adaptive frame-skip: if last frame took >20ms (sub-60fps), render every other frame
-      const delta = now - lastFrameTime;
-      if (lastFrameTime > 0) {
-        skipFactor = delta > 20 ? 2 : 1;
-      }
-      lastFrameTime = now;
-      frameCount++;
-      if (frameCount % skipFactor !== 0) return;
 
       mouse.x += (targetMouse.x - mouse.x) * 0.05;
       mouse.y += (targetMouse.y - mouse.y) * 0.05;
