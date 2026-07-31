@@ -171,7 +171,7 @@ export default function Home() {
 
           {/* Sticky Hero Wrapper */}
           <div style={{ position: "sticky", top: 0, height: "100vh", width: "100%", zIndex: 1, overflow: "hidden" }}>
-            <div style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100vh", zIndex: -1 }}>
+            <div style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", zIndex: 0 }}>
               <DarkVeil
                 primaryColor="#88b600"
                 noiseIntensity={0.05}
@@ -183,7 +183,7 @@ export default function Home() {
             </div>
 
             {/* 01 — Hero */}
-            <section className={`${styles.hero} hero-section`}>
+            <section className={`${styles.hero} hero-section`} style={{ zIndex: 1 }}>
 
               {/* 3D Logo Background - Deferred until wipe finishes to prevent lag */}
               <div
