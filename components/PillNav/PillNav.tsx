@@ -108,12 +108,21 @@ const PillNav: FC<PillNavProps> = ({
                 )}
               </li>
             ))}
+            <li className="mobile-only-hire" style={{ opacity: 0 }}>
+              <Link 
+                href="/start" 
+                className="premium-hire-btn"
+                onClick={() => setIsOpen(false)}
+              >
+                Hire us
+              </Link>
+            </li>
           </ul>
         </div>
         
         <Link 
           href="/start" 
-          className="premium-hire-btn"
+          className="premium-hire-btn desktop-only-hire"
           onClick={() => setIsOpen(false)}
         >
           Hire us

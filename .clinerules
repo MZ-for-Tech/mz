@@ -1,0 +1,27 @@
+# Ubuntu Terminal and Tool-Calling Rules
+- The current operating system is Ubuntu Linux, and the default terminal is Bash.
+- Use valid Bash syntax for every terminal command.
+- Do not use PowerShell, Windows, or macOS-specific commands.
+- Use standard GNU/Linux tools: rm, cp, mv, grep, sed, awk, cat, chmod, 
+  export, find, xargs, etc.
+- Place Bash commands only in the command parameter of the terminal tool. 
+  Do not present a command as if it were a normal assistant response.
+- Follow the tool names, parameter schemas, and tool-calling protocol 
+  provided by the current version of Cline.
+- Do not invent tools, parameters, XML tags, or JSON fields.
+- Do not manually write, simulate, explain, or display tool calls in 
+  ordinary responses or code blocks.
+- Do not modify, escape, wrap, suppress, or replace the internal 
+  tool-call format required by Cline.
+- If a tool call fails, first verify the tool name, required parameters, 
+  Bash quoting, and Linux path syntax before retrying.
+- Prefer absolute paths starting from /home/ezzio/ or the project root. 
+  Quote paths containing spaces.
+- Use forward slashes for all paths. Never use backslashes.
+- Read and evaluate the actual result of each tool call before deciding 
+  on the next action.
+- Python commands use ./venv/bin/python, not python or python3 directly, 
+  unless the venv is activated.
+- The project virtual environment is at ./venv/. Always use 
+  ./venv/bin/python and ./venv/bin/pytest for Python execution.
+- Environment variables are set with export NAME="value" in Bash.

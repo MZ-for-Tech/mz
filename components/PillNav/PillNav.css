@@ -131,8 +131,27 @@
   transform: translateY(-3.25px) rotate(-45deg);
 }
 
+.mobile-only-hire {
+  display: none;
+}
+
 /* --- MOBILE STYLES --- */
 @media (max-width: 768px) {
+  .desktop-only-hire {
+    display: none;
+  }
+
+  .mobile-only-hire {
+    display: block;
+    margin-top: 1rem;
+    width: 100%;
+  }
+
+  .mobile-only-hire .premium-hire-btn {
+    margin: 0;
+    width: 100%;
+  }
+
   .premium-nav-container {
     top: 1.5rem;
     right: 1.5rem;
