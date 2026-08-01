@@ -112,12 +112,15 @@ export default function Home() {
     gsap.set(".hero-subtext, .hero-desc, .hero-scroll-wrapper, .hero-action-wrapper", { opacity: 0, y: 10 });
 
     // Wait for the correct signal before playing hero animations
+    let timer: NodeJS.Timeout;
     const playWhenReady = () => {
       window.removeEventListener('mz-transition-done', playWhenReady);
+      clearTimeout(timer);
       playHeroAnimation();
     };
 
     window.addEventListener('mz-transition-done', playWhenReady, { once: true });
+    timer = setTimeout(playWhenReady, 100);
 
     // Hero Parallax on Scroll
     gsap.to(".hero-word", {
