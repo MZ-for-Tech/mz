@@ -6,7 +6,7 @@ import { SmoothScrolling } from "@/components/SmoothScrolling/SmoothScrolling";
 const geistSans = Geist({
   variable: "--font-geist",
   subsets: ["latin"],
-  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+  display: "swap",
 });
 
 const jetbrainsMono = JetBrains_Mono({
