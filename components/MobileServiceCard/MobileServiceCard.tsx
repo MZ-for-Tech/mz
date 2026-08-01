@@ -21,8 +21,6 @@ export default function MobileServiceCard({ title, tagline, capabilities, visual
     >
       <div className={styles.grainientWrapper}>
         <Grainient
-          active={false}
-          fallbackImage="/grainient-snapshot.webp"
           color1="var(--color-bg)"
           color2="var(--color-bg)"
           color3="var(--color-olive)"
