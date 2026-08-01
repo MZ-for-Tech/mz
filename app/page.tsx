@@ -7,7 +7,7 @@ import { ScaleReveal } from "../components/ScaleReveal/ScaleReveal";
 import { StatusDot } from "@/components/StatusDot/StatusDot";
 import DataStreamHero from "@/components/DataStreamHero/DataStreamHero";
 const Waves = dynamic(() => import("@/components/Waves/Waves"), { ssr: false });
-import { OcrScanner } from "@/components/OcrScanner/OcrScanner";
+const OcrScanner = dynamic(() => import("@/components/OcrScanner/OcrScanner").then(m => m.OcrScanner), { ssr: false });
 import DarkVeil from "@/components/DarkVeil/DarkVeil";
 import { gsap } from "@/lib/gsap";
 import { MzLogo } from "@/components/Logo/MzLogo";
