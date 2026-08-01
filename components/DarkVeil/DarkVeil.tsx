@@ -2,6 +2,7 @@
 
 import { useRef, useEffect } from 'react';
 import { Renderer, Program, Mesh, Triangle, Vec2, Color } from 'ogl';
+import { prefersReducedMotion } from '@/lib/useReducedMotion';
 import './DarkVeil.css';
 
 const vertex = `
@@ -196,7 +197,13 @@ export default function DarkVeil({
     };
 
     const tryStart = () => {
-      if (isVisible && isPageVisible && frame === 0) frame = requestAnimationFrame(loop);
+      if (prefersReducedMotion()) {
+        renderer.render({ scene: mesh });
+        return;
+      }
+      if (isVisible && isPageVisible && frame === 0) {
+        frame = requestAnimationFrame(loop);
+      }
     };
     const tryStop = () => {
       if (frame !== 0) { cancelAnimationFrame(frame); frame = 0; }
