@@ -1,17 +1,16 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { useLayoutEffect } from "react";
+import { useLayoutEffect, useRef } from "react";
+import { gsap } from "@/lib/gsap";
 
 const COLUMNS = 5;
 const WIPE_DURATION = 0.9; // seconds — must match transition below
 const WIPE_STAGGER = 0.04; // seconds per column
 const WIPE_TOTAL_MS = (WIPE_DURATION + WIPE_STAGGER * (COLUMNS - 1)) * 1000;
 
-
-
 export default function Template({ children }: { children: React.ReactNode }) {
   const columns = COLUMNS;
+  const containerRef = useRef<HTMLDivElement>(null);
 
   // Remove any exit overlay injected by TransitionLink. useLayoutEffect fires
   // synchronously before the browser paints, so our columns (initial y:0%)
@@ -19,6 +18,20 @@ export default function Template({ children }: { children: React.ReactNode }) {
   useLayoutEffect(() => {
     const exitOverlay = document.querySelector("[data-transition-exit]");
     exitOverlay?.remove();
+
+    if (containerRef.current) {
+      const cols = containerRef.current.children;
+      gsap.fromTo(
+        cols,
+        { y: "-15vh" },
+        {
+          y: "-130vh",
+          duration: WIPE_DURATION,
+          ease: "power4.inOut",
+          stagger: WIPE_STAGGER,
+        }
+      );
+    }
 
     // Fire event when the entry wipe fully completes, so hero animations
     // can sync precisely instead of using a blind delay.
@@ -33,6 +46,7 @@ export default function Template({ children }: { children: React.ReactNode }) {
     <>
       {/* Unified Transition Overlay */}
       <div
+        ref={containerRef}
         style={{
           position: "fixed",
           top: 0,
@@ -45,15 +59,8 @@ export default function Template({ children }: { children: React.ReactNode }) {
         }}
       >
         {Array.from({ length: columns }).map((_, i) => (
-          <motion.div
+          <div
             key={`col-${i}`}
-            initial={{ y: "-15vh" }} // Exactly where TransitionLink exit left off
-            animate={{ y: "-130vh" }} // Move up so bottom Olive stripe crosses the screen
-            transition={{
-              duration: 0.9,
-              ease: [0.76, 0, 0.24, 1], // Exact match for power4.inOut
-              delay: i * 0.04, // Stagger left to right
-            }}
             style={{
               position: "relative",
               flex: 1,
@@ -61,6 +68,7 @@ export default function Template({ children }: { children: React.ReactNode }) {
               display: "flex",
               flexDirection: "column",
               marginLeft: i > 0 ? "-1px" : "0", // Prevent subpixel rendering gaps
+              transform: "translateY(-15vh)", // Initial state
             }}
           >
             {/* Top Olive Stripe (Invisible during entry since it's already above screen) */}
@@ -71,7 +79,7 @@ export default function Template({ children }: { children: React.ReactNode }) {
             
             {/* Bottom Olive Stripe (Trailing racing stripe) */}
             <div style={{ height: "15vh", backgroundColor: "var(--color-brand-yellow)", width: "100%" }} />
-          </motion.div>
+          </div>
         ))}
       </div>
       
