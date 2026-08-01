@@ -42,6 +42,10 @@ export default function Home() {
   const [isLogoLoaded, setIsLogoLoaded] = useState(false);
 
   useEffect(() => {
+    import("@/components/Logo/MzLogo3D");
+  }, []);
+
+  useEffect(() => {
     const onReady = () => setIsReadyForHeavy(true);
     window.addEventListener('mz-transition-done', onReady, { once: true });
 
