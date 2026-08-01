@@ -70,57 +70,69 @@ export default function Home() {
       return;
     }
 
-    // Hero Entry Animation
-    const playHeroAnimation = () => {
-      const tl = gsap.timeline();
+    const hasPlayed = sessionStorage.getItem("mz_hero_animated");
 
-      tl.fromTo(".hero-word-inner", {
-        y: 30,
-        opacity: 0
-      }, {
-        y: 0,
+    if (hasPlayed && !prefersReducedMotion) {
+      // Just set initial states to visible, skip the timeline entry
+      gsap.set(".hero-word-inner, .hero-subtext, .hero-desc, .hero-scroll-wrapper, .hero-action-wrapper", {
         opacity: 1,
-        duration: 1.4,
-        stagger: 0.2,
-        ease: "power3.out"
+        y: 0
       });
+    } else if (!prefersReducedMotion) {
+      // Hero Entry Animation
+      const playHeroAnimation = () => {
+        const tl = gsap.timeline({
+          onComplete: () => sessionStorage.setItem("mz_hero_animated", "true")
+        });
 
-      tl.fromTo(".hero-subtext", {
-        opacity: 0,
-        y: 15
-      }, {
-        opacity: 1,
-        y: 0,
-        duration: 1,
-        ease: "power2.out"
-      }, "-=0.8");
+        tl.fromTo(".hero-word-inner", {
+          y: 30,
+          opacity: 0
+        }, {
+          y: 0,
+          opacity: 1,
+          duration: 1.4,
+          stagger: 0.2,
+          ease: "power3.out"
+        });
 
-      tl.fromTo(".hero-desc, .hero-scroll-wrapper, .hero-action-wrapper", {
-        opacity: 0,
-        y: 10
-      }, {
-        opacity: 1,
-        y: 0,
-        duration: 1,
-        stagger: 0.1,
-        ease: "power2.out"
-      }, "-=0.6");
-    };
+        tl.fromTo(".hero-subtext", {
+          opacity: 0,
+          y: 15
+        }, {
+          opacity: 1,
+          y: 0,
+          duration: 1,
+          ease: "power2.out"
+        }, "-=0.8");
 
-    // Set initial states to hide elements before animation
-    gsap.set(".hero-word-inner", { y: 30, opacity: 0 });
-    gsap.set(".hero-subtext, .hero-desc, .hero-scroll-wrapper, .hero-action-wrapper", { opacity: 0, y: 10 });
+        tl.fromTo(".hero-desc, .hero-scroll-wrapper, .hero-action-wrapper", {
+          opacity: 0,
+          y: 10
+        }, {
+          opacity: 1,
+          y: 0,
+          duration: 1,
+          stagger: 0.1,
+          ease: "power2.out"
+        }, "-=0.6");
+      };
 
-    // Wait for the correct signal before playing hero animations
-    let timer: NodeJS.Timeout;
-    const playWhenReady = () => {
-      window.removeEventListener('mz-transition-done', playWhenReady);
-      clearTimeout(timer);
-      playHeroAnimation();
-    };
+      // Set initial states to hide elements before animation
+      gsap.set(".hero-word-inner", { y: 30, opacity: 0 });
+      gsap.set(".hero-subtext, .hero-desc, .hero-scroll-wrapper, .hero-action-wrapper", { opacity: 0, y: 10 });
 
-    window.addEventListener('mz-transition-done', playWhenReady, { once: true });
-    timer = setTimeout(playWhenReady, 100);
+      // Wait for the correct signal before playing hero animations
+      let timer: NodeJS.Timeout;
+      const playWhenReady = () => {
+        window.removeEventListener('mz-transition-done', playWhenReady);
+        clearTimeout(timer);
+        playHeroAnimation();
+      };
+
+      window.addEventListener('mz-transition-done', playWhenReady, { once: true });
+      timer = setTimeout(playWhenReady, 100);
+    }
 
     // Hero Parallax on Scroll
     gsap.to(".hero-word", {
