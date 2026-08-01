@@ -457,7 +457,7 @@ export default function MzLogo3D({
         </Suspense>
 
         {/* Environment map for realistic metallic reflections */}
-        <Environment preset="forest" environmentIntensity={0.6} />
+        <Environment files="/hdr/forest_1k.hdr" environmentIntensity={0.6} />
 
         {/* Darkness / Base ambient */}
         <ambientLight intensity={0.4} />
