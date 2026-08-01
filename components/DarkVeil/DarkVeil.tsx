@@ -106,7 +106,7 @@ export default function DarkVeil({
     const parent = canvas.parentElement as HTMLElement;
 
     const renderer = new Renderer({
-      dpr: Math.min(window.devicePixelRatio, 2),
+      dpr: Math.min(window.devicePixelRatio || 1, 1.5),
       canvas
     });
 
@@ -167,6 +167,8 @@ export default function DarkVeil({
 
     const start = performance.now();
     let frame = 0;
+    let isVisible = true;
+    let isPageVisible = !document.hidden;
 
     const loop = () => {
       mouse.x += (targetMouse.x - mouse.x) * 0.05;
@@ -177,10 +179,31 @@ export default function DarkVeil({
       frame = requestAnimationFrame(loop);
     };
 
-    loop();
+    const tryStart = () => {
+      if (isVisible && isPageVisible && frame === 0) frame = requestAnimationFrame(loop);
+    };
+    const tryStop = () => {
+      if (frame !== 0) { cancelAnimationFrame(frame); frame = 0; }
+    };
+
+    const io = new IntersectionObserver(
+      ([entry]) => { isVisible = entry.isIntersecting; isVisible ? tryStart() : tryStop(); },
+      { threshold: 0 }
+    );
+    io.observe(parent);
+
+    const onVisibility = () => {
+      isPageVisible = !document.hidden;
+      isPageVisible ? tryStart() : tryStop();
+    };
+    document.addEventListener("visibilitychange", onVisibility);
+
+    tryStart();
 
     return () => {
-      cancelAnimationFrame(frame);
+      tryStop();
+      io.disconnect();
+      document.removeEventListener("visibilitychange", onVisibility);
       themeObserver.disconnect();
       window.removeEventListener('resize', resize);
       window.removeEventListener('mousemove', onMouseMove);
