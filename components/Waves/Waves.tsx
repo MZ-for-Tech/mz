@@ -340,7 +340,7 @@ const Waves: FC<WavesProps> = ({
     }
     function updateMouse(x: number, y: number) {
       if (!container) return;
-      const rect = container.getBoundingClientRect();
+      const rect = boundingRef.current;
       const mouse = mouseRef.current;
       mouse.x = x - rect.left;
       mouse.y = y - rect.top;
@@ -374,7 +374,7 @@ const Waves: FC<WavesProps> = ({
     frameIdRef.current = requestAnimationFrame(tick);
     window.addEventListener('resize', onResize);
     window.addEventListener('mousemove', onMouseMove);
-    window.addEventListener('touchmove', onTouchMove, { passive: false });
+    window.addEventListener('touchmove', onTouchMove, { passive: true });
 
     return () => {
       visibilityObserver.disconnect();
