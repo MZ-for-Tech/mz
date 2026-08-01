@@ -60,9 +60,6 @@ export function Footer() {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
 
   return (
     <div className={styles.footerWrapper} ref={footerRef}>
@@ -167,10 +164,7 @@ export function Footer() {
                 PRIVACY POLICY
               </TransitionLink>
 
-              <button onClick={scrollToTop} className={styles.topBtn} aria-label="Back to top">
-                <span>BACK TO TOP</span>
-                <span className={styles.topArr}>↑</span>
-              </button>
+
             </div>
           </div>
         </div>

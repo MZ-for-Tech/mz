@@ -336,37 +336,6 @@
   color: var(--color-brand-yellow, #e5ff00);
 }
 
-.topBtn {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: var(--color-footer-text, #ffffff);
-  padding: 8px 18px;
-  border-radius: 100px;
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  letter-spacing: 0.08em;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.topArr {
-  font-size: 0.85rem;
-  transition: transform 0.3s ease;
-}
-
-.topBtn:hover {
-  background: var(--color-brand-yellow, #e5ff00);
-  color: #000000;
-  border-color: var(--color-brand-yellow, #e5ff00);
-  transform: translateY(-2px);
-}
-
-.topBtn:hover .topArr {
-  transform: translateY(-3px);
-}
 
 /* --- MOBILE RESPONSIVE OVERRIDES --- */
 @media (max-width: 768px) {
