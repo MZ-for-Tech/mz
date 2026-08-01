@@ -18,7 +18,7 @@ import { useGSAP } from "@gsap/react";
 const ServicesAccordion = dynamic(() => import("@/components/ServicesAccordion/ServicesAccordion"), { ssr: false });
 import PremiumShowcase from "@/components/PremiumShowcase/PremiumShowcase";
 import Manifesto from "@/components/Manifesto/Manifesto";
-import BackToTop from "@/components/BackToTop/BackToTop";
+
 import ObfuscatedEmail from "@/components/ObfuscatedEmail/ObfuscatedEmail";
 import { TransitionLink } from "@/components/TransitionLink/TransitionLink";
 import { WorkGrid } from "@/components/sections/WorkGrid";
@@ -416,8 +416,6 @@ export default function Home() {
       <div style={{ position: "relative", height: "100svh", zIndex: 0 }}>
         <Footer />
       </div>
-
-      <BackToTop />
     </>
   );
 }
