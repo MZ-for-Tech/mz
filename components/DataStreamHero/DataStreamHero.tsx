@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useEffect } from 'react';
+import { prefersReducedMotion } from '@/lib/useReducedMotion';
 
 const SYMBOLS = ['∫', '∑', '∂', '∇', 'α', 'β', 'μ', 'σ', 'φ', 'θ', 'λ', 'π', '∞', '≈', '≠', '≤', '≥'];
 
@@ -145,7 +146,7 @@ export default function DataStreamHero({ className = "" }: { className?: string 
         let isAnimating = false;
 
         const animate = () => {
-            if (!isVisible) {
+            if (!isVisible && !prefersReducedMotion()) {
                 isAnimating = false;
                 return;
             }
@@ -197,11 +198,17 @@ export default function DataStreamHero({ className = "" }: { className?: string 
                 ctx.fillText(SYMBOLS[pSymbolIndex[i]], px, py);
             }
             
-            animationFrameId = requestAnimationFrame(animate);
+            if (!prefersReducedMotion()) {
+                animationFrameId = requestAnimationFrame(animate);
+            }
         };
 
         const observer = new IntersectionObserver(([entry]) => {
             isVisible = entry.isIntersecting;
+            if (prefersReducedMotion()) {
+                if (isVisible) animate();
+                return;
+            }
             if (isVisible && !isAnimating) {
                 isAnimating = true;
                 if (animationFrameId) cancelAnimationFrame(animationFrameId);
