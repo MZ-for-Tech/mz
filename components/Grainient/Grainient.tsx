@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef } from 'react';
 import { Renderer, Program, Mesh, Triangle } from 'ogl';
+import { prefersReducedMotion } from "@/lib/useReducedMotion";
 import './Grainient.css';
 
 interface GrainientProps {
@@ -269,6 +270,10 @@ const Grainient: React.FC<GrainientProps> = ({
     };
 
     const tryStart = () => {
+      if (prefersReducedMotion()) {
+        renderer.render({ scene: mesh });
+        return;
+      }
       if (isVisible && isPageVisible && !pausedRef.current && raf === 0) raf = requestAnimationFrame(loop);
     };
     const tryStop = () => {
