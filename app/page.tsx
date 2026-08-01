@@ -11,7 +11,12 @@ import { OcrScanner } from "@/components/OcrScanner/OcrScanner";
 import DarkVeil from "@/components/DarkVeil/DarkVeil";
 import { gsap } from "@/lib/gsap";
 import { MzLogo } from "@/components/Logo/MzLogo";
-import MzLogo3D from "@/components/Logo/MzLogo3D";
+import dynamic from "next/dynamic";
+
+const MzLogo3D = dynamic(() => import("@/components/Logo/MzLogo3D"), {
+  ssr: false,
+  loading: () => null,
+});
 import { useGSAP } from "@gsap/react";
 import ServicesAccordion from "@/components/ServicesAccordion/ServicesAccordion";
 import PremiumShowcase from "@/components/PremiumShowcase/PremiumShowcase";
