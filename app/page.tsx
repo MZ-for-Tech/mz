@@ -153,6 +153,7 @@ export default function Home() {
     });
 
     // Partners Animation
+    /*
     gsap.to("[data-partner-logo]", {
       opacity: 0.6,
       x: 0,
@@ -164,6 +165,7 @@ export default function Home() {
         start: "top 85%",
       }
     });
+    */
 
     // Case studies scroll animation
     const caseItems = gsap.utils.toArray(".case-item") as HTMLElement[];
@@ -207,7 +209,7 @@ export default function Home() {
                   compositors don't skip painting it behind a separate stacking context */}
               <div style={{ position: "absolute", inset: 0, zIndex: 0 }}>
                 <DarkVeil
-                  primaryColor="#88b600"
+                  hueShift={-30}
                   noiseIntensity={0.05}
                   scanlineIntensity={0.05}
                   scanlineFrequency={0.01}

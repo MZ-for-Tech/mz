@@ -68,13 +68,12 @@ export function Footer() {
         <div style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", zIndex: -1, overflow: "hidden" }}>
           {hasScrolledToFooter && (
             <DarkVeil
-              primaryColor="#88b600"
-              backgroundColor="#070707"
-              noiseIntensity={0.05}
+              hueShift={-30}
+              noiseIntensity={0.08}
               scanlineIntensity={0.05}
               scanlineFrequency={0.01}
-              speed={0.15}
-              warpAmount={0.3}
+              speed={0.2}
+              warpAmount={0.5}
             />
           )}
         </div>

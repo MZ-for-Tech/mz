@@ -54,7 +54,7 @@ export default async function ProjectRoomPage({ params }: { params: Promise<{ sl
       <section className={styles.hero}>
         <div style={{ position: "absolute", inset: 0, opacity: 0.15, zIndex: 0, pointerEvents: "none" }}>
           <DarkVeil
-            primaryColor={project.accentColor}
+            hueShift={-30}
             noiseIntensity={0.08}
             scanlineIntensity={0.04}
             speed={0.1}

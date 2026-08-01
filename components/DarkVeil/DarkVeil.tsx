@@ -1,8 +1,7 @@
 "use client";
 
 import { useRef, useEffect } from 'react';
-import { Renderer, Program, Mesh, Triangle, Vec2, Color } from 'ogl';
-import { prefersReducedMotion } from '@/lib/useReducedMotion';
+import { Renderer, Program, Mesh, Triangle, Vec2 } from 'ogl';
 import './DarkVeil.css';
 
 const vertex = `
@@ -16,18 +15,27 @@ precision lowp float;
 #endif
 uniform vec2 uResolution;
 uniform float uTime;
-uniform vec3 uPrimaryColor;
-uniform vec3 uBackgroundColor;
+uniform float uHueShift;
 uniform float uNoise;
 uniform float uScan;
 uniform float uScanFreq;
 uniform float uWarp;
-uniform vec2 uMouse;
 #define iTime uTime
 #define iResolution uResolution
 
 vec4 buf[8];
 float rand(vec2 c){return fract(sin(dot(c,vec2(12.9898,78.233)))*43758.5453);}
+
+mat3 rgb2yiq=mat3(0.299,0.587,0.114,0.596,-0.274,-0.322,0.211,-0.523,0.312);
+mat3 yiq2rgb=mat3(1.0,0.956,0.621,1.0,-0.272,-0.647,1.0,-1.106,1.703);
+
+vec3 hueShiftRGB(vec3 col,float deg){
+    vec3 yiq=rgb2yiq*col;
+    float rad=radians(deg);
+    float cosh=cos(rad),sinh=sin(rad);
+    vec3 yiqShift=vec3(yiq.x,yiq.y*cosh-yiq.z*sinh,yiq.y*sinh+yiq.z*cosh);
+    return clamp(yiq2rgb*yiqShift,0.0,1.0);
+}
 
 vec4 sigmoid(vec4 x){return 1./(1.+exp(-x));}
 
@@ -53,28 +61,15 @@ vec4 cppn_fn(vec2 coordinate,float in0,float in1,float in2){
 
 void mainImage(out vec4 fragColor,in vec2 fragCoord){
     vec2 uv=fragCoord/uResolution.xy*2.-1.;
+    uv.x*=uResolution.x/uResolution.y;
     uv.y*=-1.;
-    
-    vec2 mouseUv = uMouse/uResolution.xy*2.-1.;
-    mouseUv.y *= -1.;
-    
-    float dist = length(uv - mouseUv);
-    float mouseWarp = exp(-dist * 3.0) * 0.15;
-    
-    vec2 push = (dist > 0.0) ? normalize(uv - mouseUv) * mouseWarp : vec2(0.0);
-    uv += push;
-    
-    uv+=(uWarp + mouseWarp * 2.0)*vec2(sin(uv.y*6.283+uTime*0.5),cos(uv.x*6.283+uTime*0.5))*0.05;
+    uv+=uWarp*vec2(sin(uv.y*6.283+uTime*0.5),cos(uv.x*6.283+uTime*0.5))*0.05;
     fragColor=cppn_fn(uv,0.1*sin(0.3*uTime),0.1*sin(0.69*uTime),0.1*sin(0.44*uTime));
 }
 
 void main(){
     vec4 col;mainImage(col,gl_FragCoord.xy);
-    
-    // Calculate luminance to map it to our primary color
-    float luminance = dot(col.rgb, vec3(0.299, 0.587, 0.114));
-    col.rgb = mix(uBackgroundColor, uPrimaryColor, luminance * 2.2);
-    
+    col.rgb=hueShiftRGB(col.rgb,uHueShift);
     float scanline_val=sin(gl_FragCoord.y*uScanFreq)*0.5+0.5;
     col.rgb*=1.-(scanline_val*scanline_val)*uScan;
     col.rgb+=(rand(gl_FragCoord.xy+uTime)-0.5)*uNoise;
@@ -82,181 +77,84 @@ void main(){
 }
 `;
 
-type DarkVeilProps = {
-  primaryColor?: string;
-  backgroundColor?: string;
+type Props = {
+  hueShift?: number;
   noiseIntensity?: number;
   scanlineIntensity?: number;
   speed?: number;
   scanlineFrequency?: number;
   warpAmount?: number;
+  resolutionScale?: number;
 };
 
 export default function DarkVeil({
-  primaryColor = "#88b600",
-  backgroundColor = "#000000",
-  noiseIntensity = 0.08,
-  scanlineIntensity = 0.05,
-  scanlineFrequency = 0.01,
-  speed = 0.2,
-  warpAmount = 0.5
-}: DarkVeilProps) {
+                                   hueShift = 0,
+                                   noiseIntensity = 0,
+                                   scanlineIntensity = 0,
+                                   speed = 0.5,
+                                   scanlineFrequency = 0,
+                                   warpAmount = 0,
+                                   resolutionScale = 1
+                                 }: Props) {
   const ref = useRef<HTMLCanvasElement>(null);
   useEffect(() => {
     const canvas = ref.current as HTMLCanvasElement;
     const parent = canvas.parentElement as HTMLElement;
 
-    // Teardown for everything created inside the deferred frame. Stays null if
-    // we unmount before that frame runs — in which case there is no context,
-    // no listeners and no loop to tear down.
-    let disposeGl: (() => void) | null = null;
-
-    // Defer context creation by one frame. On mobile the hero mounts in the
-    // same tick as MzLogo3D, Waves and the Grainient shaders, and requesting
-    // GPU memory while the GPU process is already at peak pressure crashes it
-    // outright. The footer instance is gated behind a scroll flag so it never
-    // competes with that burst; this gives the hero the same breathing room.
-    const initFrame = requestAnimationFrame(() => {
-      let renderer: Renderer | null = null;
-      try {
-        renderer = new Renderer({
-          dpr: Math.min(window.devicePixelRatio || 1, 1.5),
-          canvas
-        });
-      } catch {
-        return; // Context refused — likely hit device limit. Bail silently.
-      }
-      if (!renderer) return;
-
-      const gl = renderer.gl;
-      const geometry = new Triangle(gl);
-
-      const program = new Program(gl, {
-        vertex,
-        fragment,
-        uniforms: {
-          uTime: { value: 0 },
-          uResolution: { value: new Vec2() },
-          uMouse: { value: new Vec2(window.innerWidth / 2, window.innerHeight / 2) },
-          uPrimaryColor: { value: new Color(primaryColor) },
-          uBackgroundColor: { value: new Color(backgroundColor) },
-          uNoise: { value: noiseIntensity },
-          uScan: { value: scanlineIntensity },
-          uScanFreq: { value: scanlineFrequency },
-          uWarp: { value: warpAmount }
-        }
-      });
-
-      if (!program.attributeLocations) {
-        const err = gl.getProgramInfoLog(program.program);
-        console.warn("DarkVeil WebGL Error:", err);
-        console.warn("DarkVeil: Shader failed to compile or context lost. Aborting render.");
-        return;
-      }
-
-      const mesh = new Mesh(gl, { geometry, program });
-
-      const resize = () => {
-        const w = parent.clientWidth || window.innerWidth;
-        const h = parent.clientHeight || window.innerHeight;
-        renderer.setSize(w, h);
-        program.uniforms.uResolution.value.set(w, h);
-      };
-
-      window.addEventListener('resize', resize);
-      resize();
-      // Deferred resize: covers late-mount case (e.g. footer IO gate)
-      // where parent dimensions may be zero at effect time.
-      const deferredResizeFrame = requestAnimationFrame(resize);
-
-      // Watch for theme changes
-      const updateThemeColor = () => {
-        const isLight = document.documentElement.getAttribute('data-theme') === 'light';
-        program.uniforms.uBackgroundColor.value.set(isLight ? '#ffe78d' : '#000000');
-      };
-      updateThemeColor();
-
-      const themeObserver = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-          if (mutation.attributeName === 'data-theme') {
-            updateThemeColor();
-          }
-        });
-      });
-      themeObserver.observe(document.documentElement, { attributes: true });
-
-      // Mouse tracking
-      const mouse = new Vec2(window.innerWidth / 2, window.innerHeight / 2);
-      const targetMouse = new Vec2(window.innerWidth / 2, window.innerHeight / 2);
-      const onMouseMove = (e: MouseEvent) => {
-        targetMouse.set(e.clientX, window.innerHeight - e.clientY);
-      };
-      window.addEventListener('mousemove', onMouseMove);
-
-      const start = performance.now();
-      let frame = 0;
-      let isVisible = true;
-      let isPageVisible = !document.hidden;
-
-      const loop = () => {
-        mouse.x += (targetMouse.x - mouse.x) * 0.05;
-        mouse.y += (targetMouse.y - mouse.y) * 0.05;
-        program.uniforms.uMouse.value.copy(mouse);
-        program.uniforms.uTime.value = ((performance.now() - start) / 1000) * speed;
-        renderer.render({ scene: mesh });
-        frame = requestAnimationFrame(loop);
-      };
-
-      const tryStart = () => {
-        if (prefersReducedMotion()) {
-          renderer.render({ scene: mesh });
-          return;
-        }
-        if (isVisible && isPageVisible && frame === 0) {
-          frame = requestAnimationFrame(loop);
-        }
-      };
-      const tryStop = () => {
-        if (frame !== 0) { cancelAnimationFrame(frame); frame = 0; }
-      };
-
-      const io = new IntersectionObserver(
-        ([entry]) => { 
-          isVisible = entry.isIntersecting; 
-          if (isVisible) { tryStart(); } else { tryStop(); } 
-        },
-        { threshold: 0 }
-      );
-      io.observe(parent);
-
-      const onVisibility = () => {
-        isPageVisible = !document.hidden;
-        if (isPageVisible) { tryStart(); } else { tryStop(); }
-      };
-      document.addEventListener("visibilitychange", onVisibility);
-
-      tryStart();
-
-      disposeGl = () => {
-        cancelAnimationFrame(deferredResizeFrame);
-        tryStop();
-        io.disconnect();
-        document.removeEventListener("visibilitychange", onVisibility);
-        themeObserver.disconnect();
-        window.removeEventListener('resize', resize);
-        window.removeEventListener('mousemove', onMouseMove);
-        geometry.remove();
-        program.remove();
-        const ext = gl.getExtension('WEBGL_lose_context');
-        if (ext) ext.loseContext();
-      };
+    const renderer = new Renderer({
+      dpr: Math.min(window.devicePixelRatio, 2),
+      canvas
     });
 
-    return () => {
-      cancelAnimationFrame(initFrame);
-      disposeGl?.();
-    };
-  }, [primaryColor, backgroundColor, noiseIntensity, scanlineIntensity, speed, scanlineFrequency, warpAmount]);
+    const gl = renderer.gl;
+    const geometry = new Triangle(gl);
 
+    const program = new Program(gl, {
+      vertex,
+      fragment,
+      uniforms: {
+        uTime: { value: 0 },
+        uResolution: { value: new Vec2() },
+        uHueShift: { value: hueShift },
+        uNoise: { value: noiseIntensity },
+        uScan: { value: scanlineIntensity },
+        uScanFreq: { value: scanlineFrequency },
+        uWarp: { value: warpAmount }
+      }
+    });
+
+    const mesh = new Mesh(gl, { geometry, program });
+
+    const resize = () => {
+      const w = parent.clientWidth,
+        h = parent.clientHeight;
+      renderer.setSize(w * resolutionScale, h * resolutionScale);
+      program.uniforms.uResolution.value.set(w, h);
+    };
+
+    window.addEventListener('resize', resize);
+    resize();
+
+    const start = performance.now();
+    let frame = 0;
+
+    const loop = () => {
+      program.uniforms.uTime.value = ((performance.now() - start) / 1000) * speed;
+      program.uniforms.uHueShift.value = hueShift;
+      program.uniforms.uNoise.value = noiseIntensity;
+      program.uniforms.uScan.value = scanlineIntensity;
+      program.uniforms.uScanFreq.value = scanlineFrequency;
+      program.uniforms.uWarp.value = warpAmount;
+      renderer.render({ scene: mesh });
+      frame = requestAnimationFrame(loop);
+    };
+
+    loop();
+
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener('resize', resize);
+    };
+  }, [hueShift, noiseIntensity, scanlineIntensity, speed, scanlineFrequency, warpAmount, resolutionScale]);
   return <canvas ref={ref} className="darkveil-canvas" />;
 }

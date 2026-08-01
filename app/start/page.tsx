@@ -77,7 +77,7 @@ export default function StartProjectPage() {
       <div className={styles.container}>
         <div style={{ position: "fixed", top: 0, left: 0, width: "100%", height: "100vh", zIndex: -1 }}>
           <DarkVeil
-            primaryColor="#88b600"
+            hueShift={-30}
             noiseIntensity={0.05}
             scanlineIntensity={0.05}
             scanlineFrequency={0.01}
