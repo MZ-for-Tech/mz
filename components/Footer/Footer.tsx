@@ -9,6 +9,7 @@ import DarkVeil from "@/components/DarkVeil/DarkVeil";
 export function Footer() {
   const footerRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
+  const [hasScrolledToFooter, setHasScrolledToFooter] = useState(false);
   const [cairoTime, setCairoTime] = useState("");
   const [copied, setCopied] = useState(false);
 
@@ -33,15 +34,24 @@ export function Footer() {
     return () => clearInterval(interval);
   }, []);
 
-  // Visibility tracking for marquee
+  // Visibility tracking for marquee and background
   useEffect(() => {
     if (!footerRef.current) return;
     const observer = new IntersectionObserver(([entry]) => {
       setIsVisible(entry.isIntersecting);
     }, { threshold: 0 });
 
+    const preloadObserver = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) setHasScrolledToFooter(true);
+    }, { threshold: 0, rootMargin: '200px' });
+
     observer.observe(footerRef.current);
-    return () => observer.disconnect();
+    preloadObserver.observe(footerRef.current);
+    
+    return () => {
+      observer.disconnect();
+      preloadObserver.disconnect();
+    };
   }, []);
 
   const handleCopyEmail = () => {
@@ -59,15 +69,17 @@ export function Footer() {
       <footer className={styles.footerContent}>
         {/* Animated Background */}
         <div style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", zIndex: -1, overflow: "hidden" }}>
-          <DarkVeil
-            primaryColor="#88b600"
-            backgroundColor="#070707"
-            noiseIntensity={0.05}
-            scanlineIntensity={0.05}
-            scanlineFrequency={0.01}
-            speed={0.15}
-            warpAmount={0.3}
-          />
+          {hasScrolledToFooter && (
+            <DarkVeil
+              primaryColor="#88b600"
+              backgroundColor="#070707"
+              noiseIntensity={0.05}
+              scanlineIntensity={0.05}
+              scanlineFrequency={0.01}
+              speed={0.15}
+              warpAmount={0.3}
+            />
+          )}
         </div>
 
         {/* Open Statement CTA (No Heavy Boxes) */}
