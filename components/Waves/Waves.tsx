@@ -1,6 +1,8 @@
 import { useRef, useEffect, CSSProperties, FC } from 'react';
 import './Waves.css';
 
+import { prefersReducedMotion } from '@/lib/useReducedMotion';
+
 class Grad {
   x: number;
   y: number;
@@ -354,6 +356,8 @@ const Waves: FC<WavesProps> = ({
     let isVisible = true;
     const visibilityObserver = new IntersectionObserver(([entry]) => {
       isVisible = entry.isIntersecting;
+      if (prefersReducedMotion()) return;
+
       if (isVisible) {
         // Restart the loop when scrolled back into view
         if (frameIdRef.current === null) {
@@ -371,7 +375,11 @@ const Waves: FC<WavesProps> = ({
 
     setSize();
     setLines();
-    frameIdRef.current = requestAnimationFrame(tick);
+    if (prefersReducedMotion()) {
+      drawLines();
+    } else {
+      frameIdRef.current = requestAnimationFrame(tick);
+    }
     window.addEventListener('resize', onResize);
     window.addEventListener('mousemove', onMouseMove);
     window.addEventListener('touchmove', onTouchMove, { passive: true });
