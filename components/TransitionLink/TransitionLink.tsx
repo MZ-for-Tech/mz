@@ -18,6 +18,11 @@ export const TransitionLink = ({ children, href, className, style, ...props }: T
   const handleTransition = async (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
     e.preventDefault();
     
+    // If the consumer passed an onClick (like closing a menu), call it now
+    if (props.onClick) {
+      props.onClick(e);
+    }
+    
     const targetUrl = new URL(href, window.location.href);
     if (targetUrl.pathname === window.location.pathname) {
       return; // Already on this page
@@ -83,18 +88,24 @@ export const TransitionLink = ({ children, href, className, style, ...props }: T
       stagger: 0.04,
     });
 
-    // Kick the navigation off immediately — React will suspend and swap
-    // when ready, while the wipe covers the screen.
-    router.push(href, { scroll: true });
-
+    // Wait for the exit wipe to fully cover the screen
     await tl;
-    
+
     // Force scroll to top before navigation handoff
     window.scrollTo(0, 0);
+
+    // Now trigger the navigation — React will swap the page out underneath
+    // the dark screen, and the new template.tsx will remove this overlay
+    // and play the entrance wipe.
+    router.push(href, { scroll: true });
   };
 
+  // Remove onClick from props before spreading to avoid overriding handleTransition
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { onClick: _onClick, ...restProps } = props;
+
   return (
-    <Link href={href} className={className} style={style} onClick={handleTransition} onMouseEnter={() => router.prefetch(href)} {...props}>
+    <Link href={href} className={className} style={style} onClick={handleTransition} onMouseEnter={() => router.prefetch(href)} {...restProps}>
       {children}
     </Link>
   );

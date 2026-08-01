@@ -60,7 +60,7 @@ export default function Home() {
 
   useGSAP(() => {
     let playWhenReady: (() => void) | undefined;
-    
+
     // Respect prefers-reduced-motion
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -73,20 +73,10 @@ export default function Home() {
       return;
     }
 
-    const hasPlayed = sessionStorage.getItem("mz_hero_animated");
-
-    if (hasPlayed && !prefersReducedMotion) {
-      // Just set initial states to visible, skip the timeline entry
-      gsap.set(".hero-word-inner, .hero-subtext, .hero-desc, .hero-scroll-wrapper, .hero-action-wrapper", {
-        opacity: 1,
-        y: 0
-      });
-    } else if (!prefersReducedMotion) {
+    if (!prefersReducedMotion) {
       // Hero Entry Animation
       const playHeroAnimation = () => {
-        const tl = gsap.timeline({
-          onComplete: () => sessionStorage.setItem("mz_hero_animated", "true")
-        });
+        const tl = gsap.timeline();
 
         tl.fromTo(".hero-word-inner", {
           y: 30,
@@ -123,13 +113,13 @@ export default function Home() {
 
       // eslint-disable-next-line prefer-const
       let timer: NodeJS.Timeout;
-    
+
       playWhenReady = () => {
         window.removeEventListener('mz-transition-done', playWhenReady!);
         clearTimeout(timer);
         playHeroAnimation();
       };
-  
+
       // Set initial states to hide elements before animation
       gsap.set(".hero-word-inner", { y: 30, opacity: 0 });
       gsap.set(".hero-subtext, .hero-desc, .hero-scroll-wrapper, .hero-action-wrapper", { opacity: 0, y: 10 });
@@ -209,12 +199,13 @@ export default function Home() {
                   compositors don't skip painting it behind a separate stacking context */}
               <div style={{ position: "absolute", inset: 0, zIndex: 0 }}>
                 <DarkVeil
-                  hueShift={-30}
+                  hueShift={198}
                   noiseIntensity={0.05}
                   scanlineIntensity={0.05}
                   scanlineFrequency={0.01}
                   speed={0.2}
                   warpAmount={0.5}
+                  variant="wave"
                 />
               </div>
 

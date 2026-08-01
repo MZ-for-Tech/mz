@@ -128,7 +128,12 @@
 
 @media (max-width: 768px) {
   .heroDescription {
-    display: none;
+    display: block;
+    bottom: 10rem;
+    left: 1.5rem;
+    right: 1.5rem;
+    font-size: 0.8rem;
+    max-width: none;
   }
 
   .heroScrollWrapper {

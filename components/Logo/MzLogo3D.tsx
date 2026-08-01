@@ -251,7 +251,9 @@ function Logo({ onLoad }: { onLoad?: () => void }) {
 
   const meshRefs = useRef<(THREE.Mesh | null)[]>([]);
   const animStartTime = useRef<number>(-1);
-  const assemblyDone = useRef(false);
+  const assemblyDone = useRef(
+    typeof window !== 'undefined' && sessionStorage.getItem('mz_logo_animated') === 'true'
+  );
 
   useFrame((state) => {
     if (!logoRef.current) return;
@@ -289,7 +291,12 @@ function Logo({ onLoad }: { onLoad?: () => void }) {
         );
       });
 
-      if (progress >= 1) assemblyDone.current = true;
+      if (progress >= 1) {
+        assemblyDone.current = true;
+        if (typeof window !== 'undefined') {
+          sessionStorage.setItem('mz_logo_animated', 'true');
+        }
+      }
     }
 
     const isHovered = hovered.current;

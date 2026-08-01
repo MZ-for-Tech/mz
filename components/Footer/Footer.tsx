@@ -47,7 +47,7 @@ export function Footer() {
 
     observer.observe(footerRef.current);
     preloadObserver.observe(footerRef.current);
-    
+
     return () => {
       observer.disconnect();
       preloadObserver.disconnect();
@@ -68,12 +68,13 @@ export function Footer() {
         <div style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", zIndex: -1, overflow: "hidden" }}>
           {hasScrolledToFooter && (
             <DarkVeil
-              hueShift={-30}
+              hueShift={180}
               noiseIntensity={0.08}
               scanlineIntensity={0.05}
               scanlineFrequency={0.01}
               speed={0.2}
               warpAmount={0.5}
+              variant="wave"
             />
           )}
         </div>

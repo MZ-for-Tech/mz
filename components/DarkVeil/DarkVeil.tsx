@@ -14,6 +14,8 @@ const fragment = `
 precision lowp float;
 #endif
 uniform vec2 uResolution;
+uniform vec2 uMouse;
+uniform float uVariant;
 uniform float uTime;
 uniform float uHueShift;
 uniform float uNoise;
@@ -63,8 +65,38 @@ void mainImage(out vec4 fragColor,in vec2 fragCoord){
     vec2 uv=fragCoord/uResolution.xy*2.-1.;
     uv.x*=uResolution.x/uResolution.y;
     uv.y*=-1.;
-    uv+=uWarp*vec2(sin(uv.y*6.283+uTime*0.5),cos(uv.x*6.283+uTime*0.5))*0.05;
-    fragColor=cppn_fn(uv,0.1*sin(0.3*uTime),0.1*sin(0.69*uTime),0.1*sin(0.44*uTime));
+
+    vec2 mouseUv = uMouse/uResolution.xy*2.-1.;
+    mouseUv.x*=uResolution.x/uResolution.y;
+    mouseUv.y *= -1.;
+
+    float dist = length(uv - mouseUv);
+    float mouseWarp = exp(-dist * 3.0) * 0.15;
+
+    vec2 push = (dist > 0.0) ? normalize(uv - mouseUv) * mouseWarp : vec2(0.0);
+    uv += push;
+
+    vec2 offsetUv = uv;
+
+    if (uVariant > 0.5) {
+        // Wave variant (Hero/Footer)
+        offsetUv.y -= 1.0;
+        offsetUv.x *= 0.5;
+        offsetUv.y *= 1.5;
+        offsetUv.y += sin(uv.x * 4.0 + uTime * 1.5) * 0.4;
+        offsetUv.y += sin(uv.x * 7.0 - uTime * 0.8) * 0.2;
+    } else {
+        // Default variant (Subtle rotated structure for content pages)
+        offsetUv = vec2(uv.y, uv.x) * 0.85;
+    }
+
+    offsetUv += (uWarp + mouseWarp * 2.0)*vec2(sin(offsetUv.y*6.283+uTime*0.5),cos(offsetUv.x*6.283+uTime*0.5))*0.05;
+    
+    float t0 = (uVariant > 0.5) ? 0.1 * sin(0.3 * uTime) : 0.1 * sin(0.3 * uTime + 1.0);
+    float t1 = (uVariant > 0.5) ? 0.1 * sin(0.69 * uTime) : 0.1 * sin(0.69 * uTime + 2.0);
+    float t2 = (uVariant > 0.5) ? 0.1 * sin(0.44 * uTime) : 0.1 * sin(0.44 * uTime);
+
+    fragColor=cppn_fn(offsetUv, t0, t1, t2);
 }
 
 void main(){
@@ -85,6 +117,7 @@ type Props = {
   scanlineFrequency?: number;
   warpAmount?: number;
   resolutionScale?: number;
+  variant?: 'default' | 'wave';
 };
 
 export default function DarkVeil({
@@ -94,20 +127,32 @@ export default function DarkVeil({
                                    speed = 0.5,
                                    scanlineFrequency = 0,
                                    warpAmount = 0,
-                                   resolutionScale = 1
+                                   resolutionScale = 1,
+                                   variant = 'default'
                                  }: Props) {
   const ref = useRef<HTMLCanvasElement>(null);
   useEffect(() => {
     const canvas = ref.current as HTMLCanvasElement;
     const parent = canvas.parentElement as HTMLElement;
 
-    const renderer = new Renderer({
-      dpr: Math.min(window.devicePixelRatio, 2),
-      canvas
-    });
+    let disposeGl: (() => void) | null = null;
 
-    const gl = renderer.gl;
-    const geometry = new Triangle(gl);
+    // Defer context creation by one frame to prevent mobile GPU crash on load burst
+    const initFrame = requestAnimationFrame(() => {
+      let renderer: Renderer | null = null;
+      try {
+        renderer = new Renderer({
+          dpr: Math.min(window.devicePixelRatio || 1, 1.5),
+          canvas
+        });
+      } catch (_err) {
+        console.error('Failed to parse DarkVeil shaders:', _err);
+        return;
+      }
+
+      if (!renderer) return;
+      const gl = renderer.gl;
+      const geometry = new Triangle(gl);
 
     const program = new Program(gl, {
       vertex,
@@ -115,6 +160,8 @@ export default function DarkVeil({
       uniforms: {
         uTime: { value: 0 },
         uResolution: { value: new Vec2() },
+        uMouse: { value: new Vec2(window.innerWidth / 2, window.innerHeight / 2) },
+        uVariant: { value: variant === 'wave' ? 1.0 : 0.0 },
         uHueShift: { value: hueShift },
         uNoise: { value: noiseIntensity },
         uScan: { value: scanlineIntensity },
@@ -125,36 +172,62 @@ export default function DarkVeil({
 
     const mesh = new Mesh(gl, { geometry, program });
 
-    const resize = () => {
-      const w = parent.clientWidth,
-        h = parent.clientHeight;
-      renderer.setSize(w * resolutionScale, h * resolutionScale);
-      program.uniforms.uResolution.value.set(w, h);
-    };
+      const resize = () => {
+        const w = parent.clientWidth || window.innerWidth,
+          h = parent.clientHeight || window.innerHeight;
+        renderer!.setSize(w * resolutionScale, h * resolutionScale);
+        program.uniforms.uResolution.value.set(w, h);
+      };
 
-    window.addEventListener('resize', resize);
-    resize();
+      window.addEventListener('resize', resize);
+      resize();
 
-    const start = performance.now();
-    let frame = 0;
+      const mouse = new Vec2(window.innerWidth / 2, window.innerHeight / 2);
+      const targetMouse = new Vec2(window.innerWidth / 2, window.innerHeight / 2);
 
-    const loop = () => {
-      program.uniforms.uTime.value = ((performance.now() - start) / 1000) * speed;
-      program.uniforms.uHueShift.value = hueShift;
-      program.uniforms.uNoise.value = noiseIntensity;
-      program.uniforms.uScan.value = scanlineIntensity;
-      program.uniforms.uScanFreq.value = scanlineFrequency;
-      program.uniforms.uWarp.value = warpAmount;
-      renderer.render({ scene: mesh });
-      frame = requestAnimationFrame(loop);
-    };
+      const onMouseMove = (e: MouseEvent) => {
+        targetMouse.set(e.clientX, window.innerHeight - e.clientY);
+      };
+      window.addEventListener('mousemove', onMouseMove);
 
-    loop();
+      const start = performance.now();
+      let frame = 0;
+
+      const loop = () => {
+        mouse.x += (targetMouse.x - mouse.x) * 0.05;
+        mouse.y += (targetMouse.y - mouse.y) * 0.05;
+        program.uniforms.uMouse.value.copy(mouse);
+
+        program.uniforms.uTime.value = ((performance.now() - start) / 1000) * speed;
+        program.uniforms.uVariant.value = variant === 'wave' ? 1.0 : 0.0;
+        program.uniforms.uHueShift.value = hueShift;
+        program.uniforms.uNoise.value = noiseIntensity;
+        program.uniforms.uScan.value = scanlineIntensity;
+        program.uniforms.uScanFreq.value = scanlineFrequency;
+        program.uniforms.uWarp.value = warpAmount;
+        try {
+          renderer!.render({ scene: mesh });
+        } catch {
+          return; // GL context lost mid-frame
+        }
+        frame = requestAnimationFrame(loop);
+      };
+
+      loop();
+
+      disposeGl = () => {
+        cancelAnimationFrame(frame);
+        window.removeEventListener('resize', resize);
+        window.removeEventListener('mousemove', onMouseMove);
+        geometry.remove();
+        program.remove();
+      };
+    });
 
     return () => {
-      cancelAnimationFrame(frame);
-      window.removeEventListener('resize', resize);
+      cancelAnimationFrame(initFrame);
+      if (disposeGl) disposeGl();
     };
-  }, [hueShift, noiseIntensity, scanlineIntensity, speed, scanlineFrequency, warpAmount, resolutionScale]);
+  }, [hueShift, noiseIntensity, scanlineIntensity, speed, scanlineFrequency, warpAmount, resolutionScale, variant]);
   return <canvas ref={ref} className="darkveil-canvas" />;
 }

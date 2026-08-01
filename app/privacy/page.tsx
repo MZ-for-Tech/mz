@@ -19,7 +19,7 @@ export default function PrivacyPolicyPage() {
       <div className={styles.container}>
         <div style={{ position: "fixed", top: 0, left: 0, width: "100%", height: "100vh", zIndex: -1 }}>
           <DarkVeil
-            hueShift={-30}
+            hueShift={180}
             noiseIntensity={0.05}
             scanlineIntensity={0.05}
             scanlineFrequency={0.01}
@@ -36,7 +36,7 @@ export default function PrivacyPolicyPage() {
           <h1 className={styles.title}>Privacy Policy</h1>
           <div className={styles.content}>
             <p>Last updated: {new Date().toLocaleDateString()}</p>
-            
+
             <h2>1. Information We Collect</h2>
             <p>We collect information you provide directly to us when you use our services, such as when you submit a project brief or contact us. This may include your name, email address, and project details.</p>
 
