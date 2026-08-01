@@ -22,6 +22,7 @@ import BackToTop from "@/components/BackToTop/BackToTop";
 import ObfuscatedEmail from "@/components/ObfuscatedEmail/ObfuscatedEmail";
 import { TransitionLink } from "@/components/TransitionLink/TransitionLink";
 import { WorkGrid } from "@/components/sections/WorkGrid";
+import VariableProximity from "@/components/VariableProximity/VariableProximity";
 
 
 
@@ -37,6 +38,11 @@ export default function Home() {
   const mainRef = useRef<HTMLElement>(null);
   const [isReadyForHeavy, setIsReadyForHeavy] = useState(false);
   const [isLogoLoaded, setIsLogoLoaded] = useState(false);
+  const [reduceMotion, setReduceMotion] = useState(false);
+
+  useEffect(() => {
+    setReduceMotion(window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+  }, []);
 
 
   useEffect(() => {
@@ -207,14 +213,47 @@ export default function Home() {
                 <div className={styles.heroWordsRow}>
                   <div className={`${styles.heroWord} hero-word ${styles.heroWordHover}`}>
                     <div className="hero-word-inner">
-                      <a href="https://nullhypothesis.dev" target="_blank" rel="noopener noreferrer">RESEARCH.</a>
+                      <a href="https://nullhypothesis.dev" target="_blank" rel="noopener noreferrer">
+                        {reduceMotion ? "RESEARCH." : (
+                          <VariableProximity
+                            label="RESEARCH."
+                            fromFontVariationSettings="'wght' 400"
+                            toFontVariationSettings="'wght' 900"
+                            containerRef={mainRef}
+                            radius={200}
+                            falloff="exponential"
+                          />
+                        )}
+                      </a>
                     </div>
                   </div>
                   <div className={`${styles.heroWord} hero-word`}>
-                    <div className="hero-word-inner">SOFTWARE.</div>
+                    <div className="hero-word-inner">
+                      {reduceMotion ? "SOFTWARE." : (
+                        <VariableProximity
+                          label="SOFTWARE."
+                          fromFontVariationSettings="'wght' 400"
+                          toFontVariationSettings="'wght' 900"
+                          containerRef={mainRef}
+                          radius={200}
+                          falloff="exponential"
+                        />
+                      )}
+                    </div>
                   </div>
                   <div className={`${styles.heroWord} hero-word`}>
-                    <div className="hero-word-inner">KNOWLEDGE.</div>
+                    <div className="hero-word-inner">
+                      {reduceMotion ? "KNOWLEDGE." : (
+                        <VariableProximity
+                          label="KNOWLEDGE."
+                          fromFontVariationSettings="'wght' 400"
+                          toFontVariationSettings="'wght' 900"
+                          containerRef={mainRef}
+                          radius={200}
+                          falloff="exponential"
+                        />
+                      )}
+                    </div>
                   </div>
                 </div>
                 <div className={`${styles.heroSubtext} hero-subtext`}>In that order.</div>
