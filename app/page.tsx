@@ -18,7 +18,7 @@ const MzLogo3D = dynamic(() => import("@/components/Logo/MzLogo3D"), {
   loading: () => null,
 });
 import { useGSAP } from "@gsap/react";
-import ServicesAccordion from "@/components/ServicesAccordion/ServicesAccordion";
+const ServicesAccordion = dynamic(() => import("@/components/ServicesAccordion/ServicesAccordion"), { ssr: false });
 import PremiumShowcase from "@/components/PremiumShowcase/PremiumShowcase";
 import Manifesto from "@/components/Manifesto/Manifesto";
 import BackToTop from "@/components/BackToTop/BackToTop";
