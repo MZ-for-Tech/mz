@@ -83,15 +83,18 @@ export const TransitionLink = ({ children, href, className, style, ...props }: T
       stagger: 0.04,
     });
 
-    await tl.play();
+    // Kick the navigation off immediately — React will suspend and swap
+    // when ready, while the wipe covers the screen.
+    router.push(href, { scroll: true });
+
+    await tl;
     
     // Force scroll to top before navigation handoff
     window.scrollTo(0, 0);
-    router.push(href, { scroll: true });
   };
 
   return (
-    <Link href={href} className={className} style={style} onClick={handleTransition} {...props}>
+    <Link href={href} className={className} style={style} onClick={handleTransition} onMouseEnter={() => router.prefetch(href)} {...props}>
       {children}
     </Link>
   );
