@@ -144,9 +144,26 @@ export default function DataStreamHero({ className = "" }: { className?: string 
 
         let isVisible = false;
         let isAnimating = false;
+        let isPageVisible = !document.hidden;
+        
+        const serif = getComputedStyle(document.documentElement).getPropertyValue('--font-serif').trim() || 'serif';
+
+        const onVisibility = () => {
+            isPageVisible = !document.hidden;
+            if (prefersReducedMotion()) return;
+            if (isPageVisible && isVisible && !isAnimating) {
+                isAnimating = true;
+                if (animationFrameId) cancelAnimationFrame(animationFrameId);
+                animate();
+            } else if ((!isPageVisible || !isVisible) && isAnimating) {
+                cancelAnimationFrame(animationFrameId);
+                isAnimating = false;
+            }
+        };
+        document.addEventListener("visibilitychange", onVisibility);
 
         const animate = () => {
-            if (!isVisible && !prefersReducedMotion()) {
+            if ((!isVisible || !isPageVisible) && !prefersReducedMotion()) {
                 isAnimating = false;
                 return;
             }
@@ -193,7 +210,7 @@ export default function DataStreamHero({ className = "" }: { className?: string 
                 const size = pSize[i];
                 if (size !== currentSize) {
                     currentSize = size;
-                    ctx.font = `${currentSize}px "Cormorant Garamond", serif`;
+                    ctx.font = `${currentSize}px ${serif}`;
                 }
                 ctx.fillText(SYMBOLS[pSymbolIndex[i]], px, py);
             }
@@ -209,11 +226,11 @@ export default function DataStreamHero({ className = "" }: { className?: string 
                 if (isVisible) animate();
                 return;
             }
-            if (isVisible && !isAnimating) {
+            if (isVisible && isPageVisible && !isAnimating) {
                 isAnimating = true;
                 if (animationFrameId) cancelAnimationFrame(animationFrameId);
                 animate();
-            } else if (!isVisible && animationFrameId) {
+            } else if ((!isVisible || !isPageVisible) && isAnimating) {
                 cancelAnimationFrame(animationFrameId);
                 isAnimating = false;
             }
@@ -227,6 +244,7 @@ export default function DataStreamHero({ className = "" }: { className?: string 
         canvas.addEventListener('mouseleave', handleMouseLeave);
 
         return () => {
+            document.removeEventListener("visibilitychange", onVisibility);
             themeObserver.disconnect();
             observer.disconnect();
             resizeObserver.disconnect();
