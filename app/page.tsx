@@ -13,10 +13,7 @@ import { gsap } from "@/lib/gsap";
 import { MzLogo } from "@/components/Logo/MzLogo";
 import dynamic from "next/dynamic";
 
-const MzLogo3D = dynamic(() => import("@/components/Logo/MzLogo3D"), {
-  ssr: false,
-  loading: () => null,
-});
+import MzLogo3D from "@/components/Logo/MzLogo3D";
 import { useGSAP } from "@gsap/react";
 const ServicesAccordion = dynamic(() => import("@/components/ServicesAccordion/ServicesAccordion"), { ssr: false });
 import PremiumShowcase from "@/components/PremiumShowcase/PremiumShowcase";
@@ -41,9 +38,6 @@ export default function Home() {
   const [isReadyForHeavy, setIsReadyForHeavy] = useState(false);
   const [isLogoLoaded, setIsLogoLoaded] = useState(false);
 
-  useEffect(() => {
-    import("@/components/Logo/MzLogo3D");
-  }, []);
 
   useEffect(() => {
     const onReady = () => setIsReadyForHeavy(true);
