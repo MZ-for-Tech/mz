@@ -129,6 +129,11 @@ export default function DarkVeil({
       }
     });
 
+    if (!program.attributeLocations) {
+      console.warn("DarkVeil: Shader failed to compile or context lost. Aborting render.");
+      return;
+    }
+
     const mesh = new Mesh(gl, { geometry, program });
 
     const resize = () => {
@@ -209,6 +214,8 @@ export default function DarkVeil({
       window.removeEventListener('mousemove', onMouseMove);
       geometry.remove();
       program.remove();
+      const ext = gl.getExtension('WEBGL_lose_context');
+      if (ext) ext.loseContext();
     };
   }, [primaryColor, backgroundColor, noiseIntensity, scanlineIntensity, speed, scanlineFrequency, warpAmount]);
   return <canvas ref={ref} className="darkveil-canvas" />;
