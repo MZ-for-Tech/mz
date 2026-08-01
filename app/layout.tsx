@@ -25,8 +25,19 @@ const cormorant = Cormorant_Garamond({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://mzfortech.com"),
   title: "MZ | Research. Software. Knowledge.",
   description: "Research-driven technology company. Cairo, Egypt.",
+  openGraph: {
+    title: "MZ | Research. Software. Knowledge.",
+    description: "Research-driven technology company. Cairo, Egypt.",
+    url: "https://mzfortech.com",
+    siteName: "MZ",
+    images: [{ url: "/og.jpg", width: 1200, height: 630 }],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: { card: "summary_large_image" },
 };
 
 export const viewport: Viewport = {
