@@ -181,7 +181,7 @@ export default function Home() {
           />
 
           {/* Sticky Hero Wrapper */}
-          <div style={{ position: "sticky", top: 0, height: "100vh", width: "100%", zIndex: 1, overflow: "hidden" }}>
+          <div style={{ position: "sticky", top: 0, height: "100svh", width: "100%", zIndex: 1, overflow: "hidden" }}>
 
             {/* 01 — Hero */}
             <section className={`${styles.hero} hero-section`}>
@@ -282,7 +282,7 @@ export default function Home() {
             boxShadow: "0 -20px 80px rgba(0,0,0,0.8)"
           }}>
             <div style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0, pointerEvents: "none", zIndex: -1 }}>
-              <div style={{ position: "sticky", top: 0, height: "100vh", overflow: "hidden" }}>
+              <div style={{ position: "sticky", top: 0, height: "100svh", overflow: "hidden" }}>
                 <Waves
                   lineColor="rgba(141, 184, 42, 0.15)"
                   backgroundColor="transparent"
@@ -401,7 +401,7 @@ export default function Home() {
         </main>
       </div>
 
-      <div style={{ position: "relative", height: "100vh", zIndex: 0 }}>
+      <div style={{ position: "relative", height: "100svh", zIndex: 0 }}>
         <Footer />
       </div>
 
