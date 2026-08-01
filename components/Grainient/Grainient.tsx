@@ -268,6 +268,9 @@ const Grainient: React.FC<GrainientProps> = ({
       if (raf !== 0) { cancelAnimationFrame(raf); raf = 0; }
     };
 
+    const onLost = (e: Event) => { e.preventDefault(); tryStop(); };
+    canvas.addEventListener("webglcontextlost", onLost, false);
+
     const io = new IntersectionObserver(
       ([entry]) => { 
         isVisible = entry.isIntersecting; 
@@ -286,6 +289,7 @@ const Grainient: React.FC<GrainientProps> = ({
     tryStart();
 
     return () => {
+      canvas.removeEventListener("webglcontextlost", onLost, false);
       tryStop();
       ro.disconnect();
       io.disconnect();
