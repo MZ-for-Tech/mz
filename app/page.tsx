@@ -124,11 +124,15 @@ export default function Home() {
 
       // Wait for the correct signal before playing hero animations
       let timer: NodeJS.Timeout;
+      
       const playWhenReady = () => {
         window.removeEventListener('mz-transition-done', playWhenReady);
         clearTimeout(timer);
         playHeroAnimation();
       };
+      
+      // Store on window so cleanup can find it
+      (window as any)._playWhenReady = playWhenReady;
 
       window.addEventListener('mz-transition-done', playWhenReady, { once: true });
       timer = setTimeout(playWhenReady, 100);
@@ -180,7 +184,9 @@ export default function Home() {
     });
 
     return () => {
-      window.removeEventListener('mz-transition-done', playWhenReady);
+      if ((window as any)._playWhenReady) {
+        window.removeEventListener('mz-transition-done', (window as any)._playWhenReady);
+      }
     };
   }, { scope: mainRef });
 
