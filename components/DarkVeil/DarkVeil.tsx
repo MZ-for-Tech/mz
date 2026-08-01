@@ -106,139 +106,157 @@ export default function DarkVeil({
     const canvas = ref.current as HTMLCanvasElement;
     const parent = canvas.parentElement as HTMLElement;
 
-    let renderer: Renderer | null = null;
-    try {
-      renderer = new Renderer({
-        dpr: Math.min(window.devicePixelRatio || 1, 1.5),
-        canvas
-      });
-    } catch {
-      return; // Context refused — likely hit device limit. Bail silently.
-    }
-    if (!renderer) return;
+    // Teardown for everything created inside the deferred frame. Stays null if
+    // we unmount before that frame runs — in which case there is no context,
+    // no listeners and no loop to tear down.
+    let disposeGl: (() => void) | null = null;
 
-    const gl = renderer.gl;
-    const geometry = new Triangle(gl);
-
-    const program = new Program(gl, {
-      vertex,
-      fragment,
-      uniforms: {
-        uTime: { value: 0 },
-        uResolution: { value: new Vec2() },
-        uMouse: { value: new Vec2(window.innerWidth / 2, window.innerHeight / 2) },
-        uPrimaryColor: { value: new Color(primaryColor) },
-        uBackgroundColor: { value: new Color(backgroundColor) },
-        uNoise: { value: noiseIntensity },
-        uScan: { value: scanlineIntensity },
-        uScanFreq: { value: scanlineFrequency },
-        uWarp: { value: warpAmount }
+    // Defer context creation by one frame. On mobile the hero mounts in the
+    // same tick as MzLogo3D, Waves and the Grainient shaders, and requesting
+    // GPU memory while the GPU process is already at peak pressure crashes it
+    // outright. The footer instance is gated behind a scroll flag so it never
+    // competes with that burst; this gives the hero the same breathing room.
+    const initFrame = requestAnimationFrame(() => {
+      let renderer: Renderer | null = null;
+      try {
+        renderer = new Renderer({
+          dpr: Math.min(window.devicePixelRatio || 1, 1.5),
+          canvas
+        });
+      } catch {
+        return; // Context refused — likely hit device limit. Bail silently.
       }
-    });
+      if (!renderer) return;
 
-    if (!program.attributeLocations) {
-      const err = gl.getProgramInfoLog(program.program);
-      console.warn("DarkVeil WebGL Error:", err);
-      console.warn("DarkVeil: Shader failed to compile or context lost. Aborting render.");
-      return;
-    }
+      const gl = renderer.gl;
+      const geometry = new Triangle(gl);
 
-    const mesh = new Mesh(gl, { geometry, program });
-
-    const resize = () => {
-      const w = parent.clientWidth || window.innerWidth;
-      const h = parent.clientHeight || window.innerHeight;
-      renderer.setSize(w, h);
-      program.uniforms.uResolution.value.set(w, h);
-    };
-
-    window.addEventListener('resize', resize);
-    resize();
-    // Deferred resize: covers late-mount case (e.g. footer IO gate)
-    // where parent dimensions may be zero at effect time.
-    const deferredResizeFrame = requestAnimationFrame(resize);
-
-    // Watch for theme changes
-    const updateThemeColor = () => {
-      const isLight = document.documentElement.getAttribute('data-theme') === 'light';
-      program.uniforms.uBackgroundColor.value.set(isLight ? '#ffe78d' : '#000000');
-    };
-    updateThemeColor();
-
-    const themeObserver = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
-        if (mutation.attributeName === 'data-theme') {
-          updateThemeColor();
+      const program = new Program(gl, {
+        vertex,
+        fragment,
+        uniforms: {
+          uTime: { value: 0 },
+          uResolution: { value: new Vec2() },
+          uMouse: { value: new Vec2(window.innerWidth / 2, window.innerHeight / 2) },
+          uPrimaryColor: { value: new Color(primaryColor) },
+          uBackgroundColor: { value: new Color(backgroundColor) },
+          uNoise: { value: noiseIntensity },
+          uScan: { value: scanlineIntensity },
+          uScanFreq: { value: scanlineFrequency },
+          uWarp: { value: warpAmount }
         }
       });
-    });
-    themeObserver.observe(document.documentElement, { attributes: true });
 
-    // Mouse tracking
-    const mouse = new Vec2(window.innerWidth / 2, window.innerHeight / 2);
-    const targetMouse = new Vec2(window.innerWidth / 2, window.innerHeight / 2);
-    const onMouseMove = (e: MouseEvent) => {
-      targetMouse.set(e.clientX, window.innerHeight - e.clientY);
-    };
-    window.addEventListener('mousemove', onMouseMove);
-
-    const start = performance.now();
-    let frame = 0;
-    let isVisible = true;
-    let isPageVisible = !document.hidden;
-
-    const loop = () => {
-      mouse.x += (targetMouse.x - mouse.x) * 0.05;
-      mouse.y += (targetMouse.y - mouse.y) * 0.05;
-      program.uniforms.uMouse.value.copy(mouse);
-      program.uniforms.uTime.value = ((performance.now() - start) / 1000) * speed;
-      renderer.render({ scene: mesh });
-      frame = requestAnimationFrame(loop);
-    };
-
-    const tryStart = () => {
-      if (prefersReducedMotion()) {
-        renderer.render({ scene: mesh });
+      if (!program.attributeLocations) {
+        const err = gl.getProgramInfoLog(program.program);
+        console.warn("DarkVeil WebGL Error:", err);
+        console.warn("DarkVeil: Shader failed to compile or context lost. Aborting render.");
         return;
       }
-      if (isVisible && isPageVisible && frame === 0) {
+
+      const mesh = new Mesh(gl, { geometry, program });
+
+      const resize = () => {
+        const w = parent.clientWidth || window.innerWidth;
+        const h = parent.clientHeight || window.innerHeight;
+        renderer.setSize(w, h);
+        program.uniforms.uResolution.value.set(w, h);
+      };
+
+      window.addEventListener('resize', resize);
+      resize();
+      // Deferred resize: covers late-mount case (e.g. footer IO gate)
+      // where parent dimensions may be zero at effect time.
+      const deferredResizeFrame = requestAnimationFrame(resize);
+
+      // Watch for theme changes
+      const updateThemeColor = () => {
+        const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+        program.uniforms.uBackgroundColor.value.set(isLight ? '#ffe78d' : '#000000');
+      };
+      updateThemeColor();
+
+      const themeObserver = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+          if (mutation.attributeName === 'data-theme') {
+            updateThemeColor();
+          }
+        });
+      });
+      themeObserver.observe(document.documentElement, { attributes: true });
+
+      // Mouse tracking
+      const mouse = new Vec2(window.innerWidth / 2, window.innerHeight / 2);
+      const targetMouse = new Vec2(window.innerWidth / 2, window.innerHeight / 2);
+      const onMouseMove = (e: MouseEvent) => {
+        targetMouse.set(e.clientX, window.innerHeight - e.clientY);
+      };
+      window.addEventListener('mousemove', onMouseMove);
+
+      const start = performance.now();
+      let frame = 0;
+      let isVisible = true;
+      let isPageVisible = !document.hidden;
+
+      const loop = () => {
+        mouse.x += (targetMouse.x - mouse.x) * 0.05;
+        mouse.y += (targetMouse.y - mouse.y) * 0.05;
+        program.uniforms.uMouse.value.copy(mouse);
+        program.uniforms.uTime.value = ((performance.now() - start) / 1000) * speed;
+        renderer.render({ scene: mesh });
         frame = requestAnimationFrame(loop);
-      }
-    };
-    const tryStop = () => {
-      if (frame !== 0) { cancelAnimationFrame(frame); frame = 0; }
-    };
+      };
 
-    const io = new IntersectionObserver(
-      ([entry]) => { 
-        isVisible = entry.isIntersecting; 
-        if (isVisible) { tryStart(); } else { tryStop(); } 
-      },
-      { threshold: 0 }
-    );
-    io.observe(parent);
+      const tryStart = () => {
+        if (prefersReducedMotion()) {
+          renderer.render({ scene: mesh });
+          return;
+        }
+        if (isVisible && isPageVisible && frame === 0) {
+          frame = requestAnimationFrame(loop);
+        }
+      };
+      const tryStop = () => {
+        if (frame !== 0) { cancelAnimationFrame(frame); frame = 0; }
+      };
 
-    const onVisibility = () => {
-      isPageVisible = !document.hidden;
-      if (isPageVisible) { tryStart(); } else { tryStop(); }
-    };
-    document.addEventListener("visibilitychange", onVisibility);
+      const io = new IntersectionObserver(
+        ([entry]) => { 
+          isVisible = entry.isIntersecting; 
+          if (isVisible) { tryStart(); } else { tryStop(); } 
+        },
+        { threshold: 0 }
+      );
+      io.observe(parent);
 
-    tryStart();
+      const onVisibility = () => {
+        isPageVisible = !document.hidden;
+        if (isPageVisible) { tryStart(); } else { tryStop(); }
+      };
+      document.addEventListener("visibilitychange", onVisibility);
+
+      tryStart();
+
+      disposeGl = () => {
+        cancelAnimationFrame(deferredResizeFrame);
+        tryStop();
+        io.disconnect();
+        document.removeEventListener("visibilitychange", onVisibility);
+        themeObserver.disconnect();
+        window.removeEventListener('resize', resize);
+        window.removeEventListener('mousemove', onMouseMove);
+        geometry.remove();
+        program.remove();
+        const ext = gl.getExtension('WEBGL_lose_context');
+        if (ext) ext.loseContext();
+      };
+    });
 
     return () => {
-      cancelAnimationFrame(deferredResizeFrame);
-      tryStop();
-      io.disconnect();
-      document.removeEventListener("visibilitychange", onVisibility);
-      themeObserver.disconnect();
-      window.removeEventListener('resize', resize);
-      window.removeEventListener('mousemove', onMouseMove);
-      geometry.remove();
-      program.remove();
-      const ext = gl.getExtension('WEBGL_lose_context');
-      if (ext) ext.loseContext();
+      cancelAnimationFrame(initFrame);
+      disposeGl?.();
     };
   }, [primaryColor, backgroundColor, noiseIntensity, scanlineIntensity, speed, scanlineFrequency, warpAmount]);
+
   return <canvas ref={ref} className="darkveil-canvas" />;
 }
