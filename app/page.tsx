@@ -6,7 +6,7 @@ import { Footer } from "../components/Footer/Footer";
 import { ScaleReveal } from "../components/ScaleReveal/ScaleReveal";
 import { StatusDot } from "@/components/StatusDot/StatusDot";
 import DataStreamHero from "@/components/DataStreamHero/DataStreamHero";
-import Waves from "@/components/Waves/Waves";
+const Waves = dynamic(() => import("@/components/Waves/Waves"), { ssr: false });
 import { OcrScanner } from "@/components/OcrScanner/OcrScanner";
 import DarkVeil from "@/components/DarkVeil/DarkVeil";
 import { gsap } from "@/lib/gsap";
