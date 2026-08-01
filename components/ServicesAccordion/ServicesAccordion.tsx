@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import { gsap } from "@/lib/gsap";
 import { useGSAP } from "@gsap/react";
 import pageStyles from "@/app/page.module.css";
@@ -45,8 +45,21 @@ const SERVICES = [
 ];
 
 
+function useMediaQuery(query: string) {
+  const [matches, setMatches] = useState(false);
+  useEffect(() => {
+    const media = window.matchMedia(query);
+    if (media.matches !== matches) setMatches(media.matches);
+    const listener = () => setMatches(media.matches);
+    media.addEventListener("change", listener);
+    return () => media.removeEventListener("change", listener);
+  }, [matches, query]);
+  return matches;
+}
+
 export default function ServicesAccordion() {
   const sectionRef = useRef<HTMLElement>(null);
+  const isMobile = useMediaQuery("(max-width: 768px)");
 
   // Pause all ServiceVisual CSS animations and WebGL canvases when section is not on screen
   useEffect(() => {
@@ -84,35 +97,37 @@ export default function ServicesAccordion() {
     <section ref={sectionRef} id="services" style={{ padding: '120px 8vw', position: 'relative', zIndex: 10 }}>
       <div className={pageStyles.sectionHeader}>Services</div>
 
-      <div className={pageStyles.desktopOnly} style={{ width: '100%', marginTop: '4rem' }}>
-        <ServicesBento />
-      </div>
-
-      <div className={`${pageStyles.mobileOnly} ${pageStyles.mobileServicesWrapper}`}>
-        {SERVICES.map((service, index) => (
-          <div
-            key={service.id}
-            style={{
-              position: 'sticky',
-              top: `calc(12vh + ${index * 1.5}rem)`,
-              width: '100%',
-              display: 'flex',
-              justifyContent: 'center'
-            }}
-          >
-            <MobileServiceCard
-              title={service.title}
-              tagline={service.tagline}
-              capabilities={service.capabilities}
-              visual={
-                service.pillar === "BUILD" ? <BuildVisual /> :
-                  service.pillar === "DEPLOY" ? <DeployVisual /> :
-                    service.pillar === "TEACH" ? <TeachVisual /> : undefined
-              }
-            />
-          </div>
-        ))}
-      </div>
+      {!isMobile ? (
+        <div className={pageStyles.desktopOnly} style={{ width: '100%', marginTop: '4rem' }}>
+          <ServicesBento />
+        </div>
+      ) : (
+        <div className={`${pageStyles.mobileOnly} ${pageStyles.mobileServicesWrapper}`}>
+          {SERVICES.map((service, index) => (
+            <div
+              key={service.id}
+              style={{
+                position: 'sticky',
+                top: `calc(12vh + ${index * 1.5}rem)`,
+                width: '100%',
+                display: 'flex',
+                justifyContent: 'center'
+              }}
+            >
+              <MobileServiceCard
+                title={service.title}
+                tagline={service.tagline}
+                capabilities={service.capabilities}
+                visual={
+                  service.pillar === "BUILD" ? <BuildVisual /> :
+                    service.pillar === "DEPLOY" ? <DeployVisual /> :
+                      service.pillar === "TEACH" ? <TeachVisual /> : undefined
+                }
+              />
+            </div>
+          ))}
+        </div>
+      )}
     </section>
   );
 }
