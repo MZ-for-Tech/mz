@@ -28,6 +28,8 @@ interface GrainientProps {
   color2?: string;
   color3?: string;
   paused?: boolean;
+  active?: boolean;
+  fallbackImage?: string;
   className?: string;
 }
 
@@ -174,9 +176,12 @@ const Grainient: React.FC<GrainientProps> = ({
   color2 = '#5227FF',
   color3 = '#B497CF',
   paused = false,
+  active = true,
+  fallbackImage,
   className = ''
 }) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
   const pausedRef = useRef(paused);
   useEffect(() => {
     pausedRef.current = paused;
@@ -184,6 +189,7 @@ const Grainient: React.FC<GrainientProps> = ({
 
   // Effect 1: build WebGL context once, pause when offscreen / tab hidden
   useEffect(() => {
+    if (!active) return;
     const container = containerRef.current;
     if (!container) return;
 
@@ -196,6 +202,7 @@ const Grainient: React.FC<GrainientProps> = ({
 
     const gl = renderer.gl;
     const canvas = gl.canvas as HTMLCanvasElement;
+    canvas.className = 'grainient-canvas';
     canvas.style.width = '100%';
     canvas.style.height = '100%';
     canvas.style.display = 'block';
@@ -295,9 +302,11 @@ const Grainient: React.FC<GrainientProps> = ({
       io.disconnect();
       document.removeEventListener('visibilitychange', onVisibility);
       ctxMap.delete(container);
+      const ext = gl.getExtension('WEBGL_lose_context');
+      if (ext) ext.loseContext();
       try { container.removeChild(canvas); } catch { /* ignore */ }
     };
-  }, []); // renderer created once
+  }, [active]); // renderer created once
 
   // Effect 2: sync props to uniforms — zero GPU cost, no teardown
   useEffect(() => {
@@ -363,7 +372,18 @@ const Grainient: React.FC<GrainientProps> = ({
   }, [paused]);
 
 
-  return <div ref={containerRef} className={`grainient-container ${className}`.trim()} />;
+  return (
+    <div ref={containerRef} className={`grainient-container ${className}`.trim()}>
+      {!active && fallbackImage ? (
+        <img 
+          src={fallbackImage} 
+          alt="" 
+          className="grainient-canvas" 
+          style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+        />
+      ) : null}
+    </div>
+  );
 };
 
 export default Grainient;

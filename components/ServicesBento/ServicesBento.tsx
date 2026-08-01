@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import { gsap } from "@/lib/gsap";
 import { useGSAP } from "@gsap/react";
 import styles from "./ServicesBento.module.css";
@@ -9,6 +9,7 @@ import Grainient from "@/components/Grainient/Grainient";
 
 export default function ServicesBento() {
   const sectionRef = useRef<HTMLDivElement>(null);
+  const [hoveredCard, setHoveredCard] = useState<number | null>(null);
 
   // Pause animations when section is not on screen
   useEffect(() => {
@@ -45,10 +46,15 @@ export default function ServicesBento() {
 
   return (
     <div className={styles.bentoGrid} ref={sectionRef}>
-      {/* Build Text */}
-      <div className={`${styles.bentoTile} ${styles.buildText} ${styles.textTile}`}>
+      <div 
+        className={`${styles.bentoTile} ${styles.buildText} ${styles.textTile}`}
+        onMouseEnter={() => setHoveredCard(0)}
+        onMouseLeave={() => setHoveredCard(null)}
+      >
         <div className={styles.grainientWrapper}>
           <Grainient
+            active={hoveredCard === 0}
+            fallbackImage="/grainient-snapshot.webp"
             color1="var(--color-bg)"
             color2="var(--color-bg)"
             color3="var(--color-olive)"
@@ -76,10 +82,15 @@ export default function ServicesBento() {
         <BuildVisual />
       </div>
 
-      {/* AI Text */}
-      <div className={`${styles.bentoTile} ${styles.aiText} ${styles.textTile}`}>
+      <div 
+        className={`${styles.bentoTile} ${styles.aiText} ${styles.textTile}`}
+        onMouseEnter={() => setHoveredCard(1)}
+        onMouseLeave={() => setHoveredCard(null)}
+      >
         <div className={styles.grainientWrapper}>
           <Grainient
+            active={hoveredCard === 1}
+            fallbackImage="/grainient-snapshot.webp"
             color1="var(--color-bg)"
             color2="var(--color-bg)"
             color3="var(--color-olive)"
@@ -116,10 +127,15 @@ export default function ServicesBento() {
         </div>
       </div>
 
-      {/* Knowledge Text */}
-      <div className={`${styles.bentoTile} ${styles.knowText} ${styles.textTile}`}>
+      <div 
+        className={`${styles.bentoTile} ${styles.knowText} ${styles.textTile}`}
+        onMouseEnter={() => setHoveredCard(2)}
+        onMouseLeave={() => setHoveredCard(null)}
+      >
         <div className={styles.grainientWrapper}>
           <Grainient
+            active={hoveredCard === 2}
+            fallbackImage="/grainient-snapshot.webp"
             color1="var(--color-bg)"
             color2="var(--color-bg)"
             color3="var(--color-olive)"
