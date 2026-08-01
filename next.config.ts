@@ -3,6 +3,7 @@ import type { NextConfig } from "next";
 const SITE = "https://mzfortech.com";
 
 const nextConfig: NextConfig = {
+  reactStrictMode: false,
   // mz-specific config if any
   async headers() {
     return [

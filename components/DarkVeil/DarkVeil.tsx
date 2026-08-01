@@ -105,10 +105,16 @@ export default function DarkVeil({
     const canvas = ref.current as HTMLCanvasElement;
     const parent = canvas.parentElement as HTMLElement;
 
-    const renderer = new Renderer({
-      dpr: Math.min(window.devicePixelRatio || 1, 1.5),
-      canvas
-    });
+    let renderer: ReturnType<typeof Renderer.prototype.constructor> | null = null;
+    try {
+      renderer = new Renderer({
+        dpr: Math.min(window.devicePixelRatio || 1, 1.5),
+        canvas
+      });
+    } catch {
+      return; // Context refused — likely hit device limit. Bail silently.
+    }
+    if (!renderer) return;
 
     const gl = renderer.gl;
     const geometry = new Triangle(gl);
@@ -130,6 +136,8 @@ export default function DarkVeil({
     });
 
     if (!program.attributeLocations) {
+      const err = gl.getProgramInfoLog(program.program);
+      console.warn("DarkVeil WebGL Error:", err);
       console.warn("DarkVeil: Shader failed to compile or context lost. Aborting render.");
       return;
     }
@@ -145,6 +153,9 @@ export default function DarkVeil({
 
     window.addEventListener('resize', resize);
     resize();
+    // Deferred resize: covers late-mount case (e.g. footer IO gate)
+    // where parent dimensions may be zero at effect time.
+    const deferredResizeFrame = requestAnimationFrame(resize);
 
     // Watch for theme changes
     const updateThemeColor = () => {
@@ -206,6 +217,7 @@ export default function DarkVeil({
     tryStart();
 
     return () => {
+      cancelAnimationFrame(deferredResizeFrame);
       tryStop();
       io.disconnect();
       document.removeEventListener("visibilitychange", onVisibility);
