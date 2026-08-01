@@ -110,10 +110,6 @@ export default function Home() {
 
     window.addEventListener('mz-transition-done', playWhenReady, { once: true });
 
-    return () => {
-      window.removeEventListener('mz-transition-done', playWhenReady);
-    };
-
     // Hero Parallax on Scroll
     gsap.to(".hero-word", {
       scale: 0.85,
@@ -159,6 +155,9 @@ export default function Home() {
       });
     });
 
+    return () => {
+      window.removeEventListener('mz-transition-done', playWhenReady);
+    };
   }, { scope: mainRef });
 
   return (
