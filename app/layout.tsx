@@ -33,7 +33,7 @@ export const viewport: Viewport = {
 };
 
 import { TransitionLink } from "@/components/TransitionLink/TransitionLink";
-import { MzLogo } from "@/components/Logo/MzLogo";
+import Image from "next/image";
 import FpsCounter from "@/components/FpsCounter";
 import { CustomCursor } from "@/components/CustomCursor/CustomCursor";
 import WebMCP from "@/components/WebMCP/WebMCP";
@@ -61,9 +61,12 @@ export default function RootLayout({
           left: '20px',
           zIndex: 9999,
         }}>
-          <MzLogo
+          <Image
+            src="/mz-logo.min.svg"
+            alt="MZ"
             width={100}
             height={100}
+            priority
             className="layout-logo-img"
           />
         </TransitionLink>
