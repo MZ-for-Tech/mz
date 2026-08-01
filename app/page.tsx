@@ -314,13 +314,13 @@ export default function Home() {
               <div className={styles.sectionHeader}>Our Partners</div>
               <div className={styles.partnersGrid}>
                 <div className={styles.partnerLogo} data-partner-logo>
-                  <Image src="/nested-logo.png" alt="Nested" width={300} height={140} style={{ width: "auto", height: "auto" }} />
+                  <Image src="/nested-logo.png" alt="Nested" width={300} height={140} style={{ height: "40px", width: "auto" }} />
                 </div>
                 <div className={styles.partnerLogo} data-partner-logo>
                   <Image src="/feps-logo.png" alt="FEPS" width={300} height={140} style={{ width: "auto", height: "auto" }} />
                 </div>
                 <div className={styles.partnerLogo} data-partner-logo>
-                  <Image src="/ef-logo.png" alt="EF" width={300} height={140} style={{ width: "auto", height: "auto", transform: "scale(1.5)" }} />
+                  <Image src="/ef-logo.png" alt="EF" width={300} height={140} style={{ height: "60px", width: "auto" }} />
                 </div>
               </div>
             </section>
