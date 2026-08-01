@@ -41,6 +41,7 @@ export default function Home() {
   const [reduceMotion, setReduceMotion] = useState(false);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setReduceMotion(window.matchMedia("(prefers-reduced-motion: reduce)").matches);
   }, []);
 
@@ -58,6 +59,8 @@ export default function Home() {
   }, []);
 
   useGSAP(() => {
+    let playWhenReady: (() => void) | undefined;
+    
     // Respect prefers-reduced-motion
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -118,21 +121,18 @@ export default function Home() {
         }, "-=0.6");
       };
 
-      // Set initial states to hide elements before animation
-      gsap.set(".hero-word-inner", { y: 30, opacity: 0 });
-      gsap.set(".hero-subtext, .hero-desc, .hero-scroll-wrapper, .hero-action-wrapper", { opacity: 0, y: 10 });
-
-      // Wait for the correct signal before playing hero animations
+      // eslint-disable-next-line prefer-const
       let timer: NodeJS.Timeout;
-      
-      const playWhenReady = () => {
-        window.removeEventListener('mz-transition-done', playWhenReady);
+    
+      playWhenReady = () => {
+        window.removeEventListener('mz-transition-done', playWhenReady!);
         clearTimeout(timer);
         playHeroAnimation();
       };
-      
-      // Store on window so cleanup can find it
-      (window as any)._playWhenReady = playWhenReady;
+  
+      // Set initial states to hide elements before animation
+      gsap.set(".hero-word-inner", { y: 30, opacity: 0 });
+      gsap.set(".hero-subtext, .hero-desc, .hero-scroll-wrapper, .hero-action-wrapper", { opacity: 0, y: 10 });
 
       window.addEventListener('mz-transition-done', playWhenReady, { once: true });
       timer = setTimeout(playWhenReady, 100);
@@ -184,8 +184,8 @@ export default function Home() {
     });
 
     return () => {
-      if ((window as any)._playWhenReady) {
-        window.removeEventListener('mz-transition-done', (window as any)._playWhenReady);
+      if (playWhenReady) {
+        window.removeEventListener('mz-transition-done', playWhenReady);
       }
     };
   }, { scope: mainRef });

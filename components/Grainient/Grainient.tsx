@@ -182,7 +182,6 @@ const Grainient: React.FC<GrainientProps> = ({
   className = ''
 }) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
   const pausedRef = useRef(paused);
   useEffect(() => {
     pausedRef.current = paused;
@@ -380,6 +379,7 @@ const Grainient: React.FC<GrainientProps> = ({
   return (
     <div ref={containerRef} className={`grainient-container ${className}`.trim()}>
       {!active && fallbackImage ? (
+        // eslint-disable-next-line @next/next/no-img-element
         <img 
           src={fallbackImage} 
           alt="" 

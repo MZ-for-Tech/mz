@@ -210,14 +210,17 @@ export default function DarkVeil({
     };
 
     const io = new IntersectionObserver(
-      ([entry]) => { isVisible = entry.isIntersecting; isVisible ? tryStart() : tryStop(); },
+      ([entry]) => { 
+        isVisible = entry.isIntersecting; 
+        if (isVisible) { tryStart(); } else { tryStop(); } 
+      },
       { threshold: 0 }
     );
     io.observe(parent);
 
     const onVisibility = () => {
       isPageVisible = !document.hidden;
-      isPageVisible ? tryStart() : tryStop();
+      if (isPageVisible) { tryStart(); } else { tryStop(); }
     };
     document.addEventListener("visibilitychange", onVisibility);
 

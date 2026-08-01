@@ -35,7 +35,7 @@ export default function NotFound() {
           opacity: 0.7,
         }}
       >
-        This page doesn't exist.
+        This page doesn&apos;t exist.
       </p>
       <TransitionLink
         href="/"
