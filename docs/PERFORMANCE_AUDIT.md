@@ -6,6 +6,43 @@
 
 ---
 
+## RE-AUDIT STATUS — 2026-08-02 (post-fix pass)
+
+Five commits landed since this audit was written (`af9d3bd` → `18a3793`). Nearly every recommendation in §6 was implemented. **One regression was introduced in the LCP fix and needs a follow-up.** The 3D logo treatment is intentionally **not done** — deferred to a separate conversation.
+
+| Audit item | Status | Evidence |
+|---|---|---|
+| #1 Hero entry → CSS | ⚠️ **DONE BUT REGRESSED** | CSS animation exists (`page.module.css:36-71`) but delays are now **1.10s–2.50s** — LCP moved from "blocked on hydration" to "blocked on a 2.5s delay." See §2.2 below. |
+| #2 `DarkVeil` gating | ✅ Done | `DarkVeil.tsx:144` (`lowPower` dpr 0.6), `:199` (`reduce`), `:222` (`shouldRun`), `:226` (`IntersectionObserver`), `:244` (`visibilitychange`), `:257` (`loseContext`) — exactly as prescribed. |
+| #3 SVGO `mz.svg` | ⏭️ Deferred | `mz.original.svg` was archived, but `public/mz.svg` is unchanged: **948,166 B, 480 paths**. This is part of the 3D logo conversation. |
+| #4 Dynamic 3D logo / mobile skip | ⏭️ Deferred | `page.tsx:16` still statically imports `MzLogo3D`; no device gate. 3D conversation. |
+| #5 Remote `Environment` + `logarithmicDepthBuffer` | ⏭️ Deferred | `public/hdr/` still empty. 3D conversation. |
+| #6 `VariableProximity` reflow fix | ✅ Done | No framer-motion, no per-frame `textShadow`; `matchMedia` hoisted to `:80`, per-letter geometry cached (`:89-93`). Residual: `fontVariationSettings` remains in the per-frame write path and `will-change` still lists it (`module.css:15`) — see §3.3. |
+| #7 `framer-motion` removed | ✅ Done | Dropped from `package.json`; `VariableProximity` uses plain `<span>`. |
+| #8 `GradualBlur` mobile scrim | ✅ Done | `PremiumShowcase.module.css:151-161` — `.desktopBlur` hidden on mobile/reduced-motion, gradient `::after` scrim added. |
+| #9 `100vh` → `100svh` + `overscroll-behavior` | ✅ ½ | `100vh` fully gone from page/globals/Footer CSS (verified: **NONE**); `app/privacy/page.tsx:20` and `app/start/page.tsx:78` fixed too. **But `overscroll-behavior-x: contain` was never added** (grep: no matches). |
+| #10 Lenis + wipe + `Waves` reduced-motion | ✅ ½ | `Waves` got `visibilitychange` (`:391`) and passive `mousemove` (`:394`). **`SmoothScrolling.tsx` and `template.tsx` still have no `prefers-reduced-motion` branch** (verified: no matchMedia in either). |
+| §3.2 3D-logo per-frame query | ✅ Done | The `document.querySelector('.preloader-container')` per-frame DOM query was removed from `useFrame`; assembly now uses capped `delta` accumulation. |
+| §3.4 `Waves` touch guard | ✅ Done | `e.touches[0]` now guarded (`Waves.tsx:340`). |
+| §3.5 `Grainient` paused-prop bug | ✅ Done | `loop` checks `pausedRef` (`:274`), `grainient-toggle` listener wired (`:313`). |
+| §3.7 CustomCursor will-change | ✅ Done | `will-change: transform` only (`module.css:10, 31`), hidden under `(hover: none)` (`:13`). |
+| §4 images → WebP | ✅ Done | 2.2MB `green_glass.jpg` → 687KB `green_glass.webp` (1200×1800, ref updated `PremiumShowcase.tsx:21`). PNGs → WebP. One note below. |
+| §4 `mz.svg` size | ⏭️ Deferred | 948KB, unchanged. 3D conversation. |
+| §7 focus-visible | ✅ Done | `globals.css:205`. |
+| §7 link hover vocabulary | ✅ Done | `.hover-link` animated-underline system added to `globals.css`. |
+| §7 custom scrollbar | ✅ Done | `::-webkit-scrollbar` styling in `globals.css`. |
+| §7 single-product carousel | ⏭️ Not done | `{[1].map(...)}` remains. Product/design decision. |
+| §2.4 `grainient-snapshot.webp` / Preloader / FpsCounter | ✅ Done | Deleted (commit `d082969`; 448 + 53 lines removed). |
+| `app/work/[slug]/` dynamic route | ✅ Removed | Route deleted entirely (commit `d082969`). New `nested-united` static route. |
+
+**Two remaining issues to fix outside the 3D conversation** (both small, both independently shippable):
+
+1. **§2.2 — hero LCP regression.** Delays must come down from 1.10–2.50s to ~0–0.55s (the current numbers only make sense if the wipe is ~1s, and even then they double-count the delay — see the write-up).
+2. **§3.9/#10 — reduced-motion escape hatches for Lenis and the template wipe** are still missing, plus the `overscroll-behavior-x: contain` from #9 was dropped.
+
+
+---
+
 ## 1. Current Stack Assessment
 
 ### What's in the box
@@ -967,3 +1004,158 @@ Re-run the Phase 0 measurement after Phases 2, 4, and 6. Targets on a throttled 
 | Sustained scroll FPS | ~25-35 | **58-60** |
 
 For the FPS number, use Chrome DevTools' rendering FPS meter over a full scroll of the homepage on a real mid-range device — `FpsCounter.tsx` is dev-only and measures rAF cadence, which does not capture dropped compositor frames.
+
+---
+
+# APPENDIX — REMAINING WORK (post-fix pass, excluding the 3D logo)
+
+Everything below is verified against the current tree at `18a3793`. The 3D logo items (§2.3, §2.4, §3.2, and the `mz.svg` weight) are deliberately excluded — separate conversation.
+
+## A1 — The hero LCP regression (highest priority, ~30 min)
+
+**What shipped.** The entry animation was correctly moved from post-hydration GSAP to pure CSS — that part is right, and the flash-of-hidden-text is gone. But the delays were set to wait out the page wipe:
+
+`app/page.module.css:36-58`:
+```css
+.heroWord :global(.hero-word-inner) {
+  transform: translateY(110%) rotateZ(4deg);
+  animation: heroWordIn 1.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+.heroWordsRow > :nth-child(1) :global(.hero-word-inner) { animation-delay: 1.10s; }
+.heroWordsRow > :nth-child(2) :global(.hero-word-inner) { animation-delay: 1.25s; }
+.heroWordsRow > :nth-child(3) :global(.hero-word-inner) { animation-delay: 1.40s; }
+
+.heroSubtext    { opacity: 0; animation-delay: 2.00s; }
+.heroDescription,
+.heroScrollWrapper { opacity: 0; animation-delay: 2.50s; }
+```
+
+And `app/page.module.css:100` confirms the words are genuinely invisible during the delay, not merely offset:
+```css
+.heroWord { overflow: hidden; /* clips the y:110% slide-up animation */ }
+```
+
+**Why it still hurts.** Every hero element is unpaintable until its delay elapses — the words are clipped by `overflow: hidden`, the subtext and description are at `opacity: 0`. LCP cannot register before then:
+
+| Element | First paintable | Fully in |
+|---|---|---|
+| Hero words | **1.10s** | 2.80s |
+| `.heroSubtext` | **2.00s** | 3.00s |
+| `.heroDescription` | **2.50s** | 3.50s |
+
+Whichever of these is the LCP candidate, **LCP is now floored at 1.10s and plausibly 2.50s+** — measured from first paint, on any device, including a desktop on fibre. The original problem was "LCP waits for hydration." The new problem is "LCP waits for a hardcoded 2.5s timer." The second is more predictable but not much faster, and it is worse in one respect: the old version at least scaled with device speed, whereas these delays are fixed for everyone.
+
+**The insight that makes this cheap to fix.** The delays exist to hold the hero back until the page wipe (`WIPE_TOTAL_MS` = 1060ms, `template.tsx:9`) clears. That wait is unnecessary:
+
+- The wipe is a **separate fixed overlay element**, not a parent of the hero. LCP does not perform occlusion testing against unrelated overlays — it records paint of the hero text regardless of what is layered above it. So animating the hero *underneath* the wipe registers LCP ~1.4s earlier.
+- It also looks better. Right now the wipe lifts to reveal an empty hero, and only then does text slide in — the user waits through two sequential animations. If the hero animates under the wipe, the columns lift to reveal type already settling into place. One continuous motion instead of two, which is exactly the choreography note in §7.1.
+
+**The fix.** Collapse the delays so the hero animation overlaps the wipe's tail rather than queueing behind it:
+
+```css
+/* app/page.module.css — replace lines 36-58 */
+.heroWord :global(.hero-word-inner) {
+  transform-origin: left top;
+  transform: translateY(110%) rotateZ(4deg);
+  animation: heroWordIn 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: transform;
+}
+/* Start under the wipe. Columns lift at ~0.6s and reveal type mid-motion. */
+.heroWordsRow > :nth-child(1) :global(.hero-word-inner) { animation-delay: 0.30s; }
+.heroWordsRow > :nth-child(2) :global(.hero-word-inner) { animation-delay: 0.38s; }
+.heroWordsRow > :nth-child(3) :global(.hero-word-inner) { animation-delay: 0.46s; }
+
+.heroSubtext {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: heroSubtextIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: 0.60s;
+}
+
+.heroDescription,
+.heroScrollWrapper {
+  opacity: 0;
+  animation: heroDescIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: 0.70s;
+}
+```
+
+New timing: hero words paintable at **0.30s** (down from 1.10s), description at **0.70s** (down from 2.50s). Total entry ~1.3s instead of 3.5s.
+
+**One caveat to check visually.** If the wipe columns are opaque and cover the hero completely until 1060ms, a 0.30s start means the first ~0.7s of the word animation happens unseen. That is intentional — it buys the LCP — but if you want the motion itself to read fully, use `0.55s`–`0.60s` delays instead and accept LCP at ~0.6s. Anything under ~1s is fine; the current 2.50s is not.
+
+**Minor, same file:** `will-change: opacity` on `.heroDescription` / `.heroScrollWrapper` and `will-change: transform, opacity` on `.heroSubtext` are permanent — these keep compositor layers promoted for the entire session for elements that animate exactly once. Either drop them (a one-shot opacity fade does not need the hint) or clear them on `animationend`. Small, but free.
+
+## A2 — Reduced-motion escape hatches never landed (~45 min)
+
+Item #10 was implemented for `Waves` only. Verified still missing:
+
+```
+$ grep -n "matchMedia\|reduce" components/SmoothScrolling/SmoothScrolling.tsx  → no matches
+$ grep -n "matchMedia\|reduce" app/template.tsx                               → no matches
+```
+
+So with `prefers-reduced-motion: reduce` set, a user still gets **hijacked smooth scrolling** (`SmoothScrolling.tsx:67`, `lerp: 0.11`) and a **full-screen 5-column wipe on every navigation** (`template.tsx:24`). These are the two most commonly cited reduced-motion violations, and Awwwards scores accessibility.
+
+Both fixes are already written out verbatim in §3.9 and §3.8 above — apply them as given. Note the ordering constraint for the template one: it must still dispatch `mz-transition-done`, because `page.tsx:50` gates `isReadyForHeavy` on that event. If you early-return without dispatching, the 3D logo falls back to the 1500ms timer (`page.tsx:54`) — not fatal, but the event path is cleaner.
+
+Also still open from §3.9: `gsap.ticker.lagSmoothing(0)` at `SmoothScrolling.tsx:54`. Prefer `lagSmoothing(500, 33)` to avoid a single large frame delta when a backgrounded tab is restored.
+
+## A3 — `overscroll-behavior-x: contain` was dropped from #9 (~5 min)
+
+The `100svh` half of item #9 landed cleanly (verified: zero `100vh` remaining in `app/page.module.css`, `app/globals.css`, `components/Footer/Footer.module.css`, and the inline styles in `privacy`/`start` were converted too). The overscroll half did not:
+
+```
+$ grep -rn "overscroll-behavior" app components  → no matches
+```
+
+`.productScrollContainer` is still `overflow-x: auto` + `scroll-snap-type: x mandatory` with a single slide, so a horizontal swipe can still trigger browser back-navigation:
+
+```css
+/* app/page.module.css — .productScrollContainer */
+overscroll-behavior-x: contain;
+```
+
+## A4 — `green_glass.webp` is 687KB, not the ~90KB target (~10 min)
+
+The format conversion happened but the **downscale did not**:
+
+```
+$ identify public/green_glass.webp
+public/green_glass.webp WEBP 1200x1800 ... 687662B
+```
+
+1200×1800 at 687KB is a very lightly compressed WebP. It is referenced with `fill` + `sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"` (`PremiumShowcase.tsx:21`), so `next/image` will resize and re-encode it for delivery — end users are not downloading 687KB. But it still costs repo weight, deploy time, and a 2.2-megapixel decode on the first optimisation pass per size variant.
+
+Given the `sizes` attribute caps display at 33vw on desktop, the source never needs to exceed ~800px wide:
+
+```bash
+cd /home/ezzio/Desktop/Projects/mz
+npx sharp-cli -i public/green_glass.webp -o public/green_glass.webp \
+  resize 800 --fit inside -- webp --quality 76
+# expect ~687KB → ~70-90KB
+```
+
+Verify the tile still looks right at 2× DPR before committing; if it softens, use `resize 1000` and quality 74.
+
+## A5 — Residual `VariableProximity` note (optional, ~15 min)
+
+The rewrite is good — framer-motion gone, `matchMedia` hoisted to `:80`, per-letter centres cached at `:89-93`, `textShadow` out of the per-frame path. Two leftovers:
+
+1. `VariableProximity.module.css:15` still declares `will-change: font-variation-settings, color, transform`. `font-variation-settings` and `color` are not compositable, so listing them promotes a layer that must be re-rastered anyway. Reduce to `will-change: transform`.
+2. `fontVariationSettings` is still written per letter per frame. That is inherent to the effect and the reflow is now unbatched-read-free, so it is far cheaper than before — but it remains the one genuinely non-GPU property in the hover path. Worth profiling on a mid-range device; if the hero still stutters on pointer move, the fallback is to animate `scale` + `opacity` on a duplicated bold layer instead of interpolating weight.
+
+## Revised remaining effort
+
+| Item | Effort | Priority |
+|---|---|---|
+| A1 hero delays → LCP | 0.5h | **Do first** |
+| A2 reduced-motion (Lenis + wipe) | 0.75h | High (accessibility scored) |
+| A3 `overscroll-behavior-x` | 0.1h | Quick win |
+| A4 downscale `green_glass.webp` | 0.2h | Housekeeping |
+| A5 `will-change` trim | 0.25h | Optional |
+
+**~1.8 hours total**, none of it interdependent, none of it touching the 3D logo.
+
+After A1 lands, re-measure LCP before anything else — it is the only remaining change in this list that moves a Core Web Vital, and with `DarkVeil` now properly gated the measurement will finally be clean signal rather than GPU-contention noise.
+

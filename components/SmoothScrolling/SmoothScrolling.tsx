@@ -4,6 +4,7 @@ import { ReactLenis, useLenis } from "lenis/react";
 import { ReactNode, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { gsap, ScrollTrigger } from "@/lib/gsap";
+import { useReducedMotion } from "@/lib/useReducedMotion";
 
 function ScrollToTopOnRouteChange() {
   const pathname = usePathname();
@@ -63,6 +64,12 @@ function LenisGsapBridge() {
 }
 
 export function SmoothScrolling({ children }: { children: ReactNode }) {
+  const reduceMotion = useReducedMotion();
+
+  if (reduceMotion) {
+    return <>{children}</>;
+  }
+
   return (
     <ReactLenis root options={{ lerp: 0.11, smoothWheel: true, autoRaf: false }}>
       <ScrollToTopOnRouteChange />

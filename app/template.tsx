@@ -3,6 +3,8 @@
 import { useLayoutEffect, useRef } from "react";
 import { gsap } from "@/lib/gsap";
 
+import { prefersReducedMotion } from "@/lib/useReducedMotion";
+
 const COLUMNS = 5;
 const WIPE_DURATION = 0.9; // seconds — must match transition below
 const WIPE_STAGGER = 0.04; // seconds per column
@@ -18,6 +20,12 @@ export default function Template({ children }: { children: React.ReactNode }) {
   useLayoutEffect(() => {
     const exitOverlay = document.querySelector("[data-transition-exit]");
     exitOverlay?.remove();
+
+    if (prefersReducedMotion()) {
+      if (containerRef.current) containerRef.current.style.display = 'none';
+      window.dispatchEvent(new Event('mz-transition-done'));
+      return;
+    }
 
     if (containerRef.current) {
       const cols = containerRef.current.children;

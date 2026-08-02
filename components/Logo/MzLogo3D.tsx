@@ -38,7 +38,7 @@ const Z_STEP = 0.02;
 let globalMeshData: {
   items: {
     geometry: THREE.ExtrudeGeometry;
-    material: THREE.MeshStandardMaterial;
+    material: THREE.MeshStandardMaterial[];
     zOffset: number;
     scatterX: number;
     scatterY: number;
@@ -95,27 +95,45 @@ function Logo({ onLoad }: { onLoad?: () => void }) {
   const meshData = useMemo(() => {
     if (globalMeshData) return globalMeshData;
 
-    const materialCache = new Map<string, THREE.MeshStandardMaterial>();
+    
+    const capMaterialCache = new Map<string, THREE.MeshStandardMaterial>();
+    const wallMaterialCache = new Map<string, THREE.MeshStandardMaterial>();
 
-    let matIndex = 0;
-    const getMaterial = (color: string) => {
-      if (!materialCache.has(color)) {
-        materialCache.set(
+    const getCapMaterial = (color: string) => {
+      if (!capMaterialCache.has(color)) {
+        capMaterialCache.set(
           color,
           new THREE.MeshStandardMaterial({
             color,
             metalness: 0.9,
             roughness: 0.25,
-            // Push each unique material slightly further in depth so back-faces
-            // from adjacent paths don't occupy the exact same depth plane.
-            polygonOffset: true,
-            polygonOffsetFactor: matIndex,
-            polygonOffsetUnits: matIndex,
+            // Caps don't need polygonOffset because Z_STEP physically separates them
+            // and the tightened near/far planes give us plenty of depth precision.
           })
         );
-        matIndex++;
       }
-      return materialCache.get(color)!;
+      return capMaterialCache.get(color)!;
+    };
+
+    const getWallMaterial = (color: string, pathIdx: number) => {
+      const key = `${color}|${pathIdx}`;
+      if (!wallMaterialCache.has(key)) {
+        wallMaterialCache.set(
+          key,
+          new THREE.MeshStandardMaterial({
+            color,
+            metalness: 0.9,
+            roughness: 0.25,
+            // Walls need polygonOffset because they run parallel to Z and intersect physically.
+            // POSITIVE factor pushes the wall AWAY from the camera so it doesn't bleed through the front cap.
+            // Larger pathIdx = closer to camera = smaller offset, so closer walls win against further walls.
+            polygonOffset: true,
+            polygonOffsetFactor: (500 - pathIdx) * 0.1,
+            polygonOffsetUnits: 1,
+          })
+        );
+      }
+      return wallMaterialCache.get(key)!;
     };
 
     let pathIndex = 0;
@@ -148,12 +166,13 @@ function Logo({ onLoad }: { onLoad?: () => void }) {
     svg.paths.forEach((path) => {
       const color = `#${path.color.getHexString()}`;
       const zOffset = pathIndex * Z_STEP;
+      const thisPathIndex = pathIndex;
       pathIndex++;
 
       path.toShapes().forEach((shape) => {
         items.push({
           geometry: new THREE.ExtrudeGeometry(shape, extrudeSettings),
-          material: getMaterial(color),
+          material: [getCapMaterial(color), getWallMaterial(color, thisPathIndex)],
           zOffset,
           scatterX: (Math.random() - 0.5) * 3000,
           scatterY: (Math.random() - 0.5) * 3000,
@@ -181,11 +200,11 @@ function Logo({ onLoad }: { onLoad?: () => void }) {
   // Hover & Mouse Drag tracking on the WebGL canvas element
   useEffect(() => {
     const el = gl.domElement;
-    
+
     const onEnter = () => { hovered.current = true; el.style.cursor = 'grab'; };
-    const onLeave = () => { 
-      hovered.current = false; 
-      isDragging.current = false; 
+    const onLeave = () => {
+      hovered.current = false;
+      isDragging.current = false;
       el.style.cursor = 'auto';
     };
 
@@ -199,7 +218,7 @@ function Logo({ onLoad }: { onLoad?: () => void }) {
       if (!isDragging.current) return;
       const dx = e.clientX - prevPointerPos.current.x;
       const dy = e.clientY - prevPointerPos.current.y;
-      
+
       dragRotation.current.y += dx * 0.008;
       dragRotation.current.x += dy * 0.008;
 
@@ -259,19 +278,19 @@ function Logo({ onLoad }: { onLoad?: () => void }) {
     if (!logoRef.current) return;
 
     const t = state.clock.elapsedTime;
-    
+
     // --- Assembly Animation ---
     if (!assemblyDone.current) {
       // Accumulate time manually. Cap delta at 0.05 (50ms) so shader compilation freezes 
       // don't cause the animation to skip instantly to the end.
       const dt = Math.min(delta, 0.05);
-      
+
       // Initialize animTime if not set
       if (animStartTime.current === -1) {
         animStartTime.current = 0;
       }
       animStartTime.current += dt;
-      
+
       const progress = Math.min(1, animStartTime.current / 1.5); // 1.5s assembly time
       // Fast, smooth ease-out curve
       const easeOut = 1 - Math.pow(1 - progress, 3);
@@ -434,7 +453,7 @@ export default function MzLogo3D({
   className?: string;
   onLoad?: () => void;
 }) {
-  const [dpr, setDpr] = useState(1.0);
+  const [dpr, setDpr] = useState(1.5);
 
   return (
     <div
@@ -445,22 +464,24 @@ export default function MzLogo3D({
         minHeight: "500px"
       }}
     >
-      <Canvas
-        dpr={dpr}
-        camera={{
-          position: [0, 0, 12],
-          fov: 38
-        }}
-        gl={{
-          antialias: true,
-          alpha: true,
-          powerPreference: "high-performance",
-          // Higher depth-buffer precision near the camera eliminates
-          // back-face z-fighting when the logo rotates to show its rear.
-          logarithmicDepthBuffer: true,
-        }}
-      >
-        <PerformanceMonitor onIncline={() => setDpr(1.0)} onDecline={() => setDpr(0.75)} />
+        <Canvas
+          dpr={dpr}
+          camera={{
+            position: [0, 0, 12],
+            fov: 38,
+            near: 5,
+            far: 40,
+          }}
+          gl={{
+            antialias: true,
+            alpha: true,
+            powerPreference: "high-performance",
+          }}
+        >
+        <PerformanceMonitor
+          onIncline={() => setDpr(Math.min(2, dpr + 0.25))}
+          onDecline={() => setDpr(Math.max(1, dpr - 0.25))}
+        />
         <Suspense fallback={null}>
           <Logo onLoad={onLoad} />
         </Suspense>
