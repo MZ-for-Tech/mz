@@ -255,22 +255,24 @@ function Logo({ onLoad }: { onLoad?: () => void }) {
     typeof window !== 'undefined' && sessionStorage.getItem('mz_logo_animated') === 'true'
   );
 
-  useFrame((state) => {
+  useFrame((state, delta) => {
     if (!logoRef.current) return;
-    if (typeof document !== 'undefined' && document.querySelector('.preloader-container') !== null) {
-      return; // Suspend 3D logo loop while preloader is active
-    }
 
     const t = state.clock.elapsedTime;
     
     // --- Assembly Animation ---
-    if (animStartTime.current === -1) {
-      animStartTime.current = t;
-    }
-    
     if (!assemblyDone.current) {
-      const elapsed = t - animStartTime.current;
-      const progress = Math.min(1, elapsed / 1.5); // 1.5s assembly time
+      // Accumulate time manually. Cap delta at 0.05 (50ms) so shader compilation freezes 
+      // don't cause the animation to skip instantly to the end.
+      const dt = Math.min(delta, 0.05);
+      
+      // Initialize animTime if not set
+      if (animStartTime.current === -1) {
+        animStartTime.current = 0;
+      }
+      animStartTime.current += dt;
+      
+      const progress = Math.min(1, animStartTime.current / 1.5); // 1.5s assembly time
       // Fast, smooth ease-out curve
       const easeOut = 1 - Math.pow(1 - progress, 3);
       const invEase = 1 - easeOut;

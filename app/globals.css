@@ -173,4 +173,70 @@ button {
 /* Link Typography */
 a {
   font-family: var(--font-base);
+  position: relative;
+  transition: color 0.2s ease-out;
+}
+
+/* Base Link Hover Style - Animated Underline */
+.hover-link {
+  position: relative;
+  display: inline-block;
+}
+
+.hover-link::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  transform: scaleX(0);
+  height: 1px;
+  bottom: -2px;
+  left: 0;
+  background-color: currentColor;
+  transform-origin: bottom right;
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.hover-link:hover::after {
+  transform: scaleX(1);
+  transform-origin: bottom left;
+}
+
+/* Accessibility: Focus Visible */
+:where(a, button, [tabindex]):focus-visible {
+  outline: 2px solid var(--color-brand-yellow);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* Custom Scrollbar for non-Lenis native scrolling areas */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(245, 245, 240, 0.2);
+  border-radius: 5px;
+  border: 2px solid var(--color-bg);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(245, 245, 240, 0.4);
+}
+
+:root[data-theme="light"] ::-webkit-scrollbar-track {
+  background: var(--color-bg);
+}
+
+:root[data-theme="light"] ::-webkit-scrollbar-thumb {
+  background: rgba(13, 15, 8, 0.2);
+  border: 2px solid var(--color-bg);
+}
+
+:root[data-theme="light"] ::-webkit-scrollbar-thumb:hover {
+  background: rgba(13, 15, 8, 0.4);
 }

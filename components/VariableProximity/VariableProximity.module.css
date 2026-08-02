@@ -8,10 +8,21 @@
 }
 
 .letterSpan {
+  position: relative;
   display: inline-block;
   /* We use JS for immediate style updates, but a tiny transition smooths it out */
   transition: color 0.1s ease-out, text-shadow 0.1s ease-out, transform 0.1s ease-out;
-  will-change: font-variation-settings, color, text-shadow, transform;
+  will-change: font-variation-settings, color, transform;
+}
+
+.letterSpan::after {
+  content: attr(data-char);
+  position: absolute;
+  inset: 0;
+  color: var(--color-brand-yellow);
+  text-shadow: 0 0 20px var(--color-brand-yellow), 0 0 40px var(--color-brand-yellow);
+  opacity: var(--glow, 0);
+  pointer-events: none;
 }
 
 .spaceSpan {

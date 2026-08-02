@@ -141,8 +141,9 @@ export default function DarkVeil({
     const initFrame = requestAnimationFrame(() => {
       let renderer: Renderer | null = null;
       try {
+        const lowPower = (navigator.hardwareConcurrency ?? 8) <= 4 || window.matchMedia('(max-width: 768px)').matches;
         renderer = new Renderer({
-          dpr: Math.min(window.devicePixelRatio || 1, 1.5),
+          dpr: lowPower ? 0.6 : Math.min(window.devicePixelRatio || 1, 1.5),
           canvas
         });
       } catch (_err) {
@@ -193,35 +194,67 @@ export default function DarkVeil({
 
       const start = performance.now();
       let frame = 0;
+      let isVisible = true;
+      let isPageVisible = !document.hidden;
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      const renderOnce = () => {
+        program.uniforms.uTime.value = ((performance.now() - start) / 1000) * speed;
+        try { renderer!.render({ scene: mesh }); } catch { /* context lost */ }
+      };
 
       const loop = () => {
         mouse.x += (targetMouse.x - mouse.x) * 0.05;
         mouse.y += (targetMouse.y - mouse.y) * 0.05;
         program.uniforms.uMouse.value.copy(mouse);
 
-        program.uniforms.uTime.value = ((performance.now() - start) / 1000) * speed;
         program.uniforms.uVariant.value = variant === 'wave' ? 1.0 : 0.0;
         program.uniforms.uHueShift.value = hueShift;
         program.uniforms.uNoise.value = noiseIntensity;
         program.uniforms.uScan.value = scanlineIntensity;
         program.uniforms.uScanFreq.value = scanlineFrequency;
         program.uniforms.uWarp.value = warpAmount;
-        try {
-          renderer!.render({ scene: mesh });
-        } catch {
-          return; // GL context lost mid-frame
-        }
+        
+        renderOnce();
         frame = requestAnimationFrame(loop);
       };
 
-      loop();
+      const shouldRun = () => isVisible && isPageVisible && !reduce;
+      const startLoop = () => { if (shouldRun() && !frame) frame = requestAnimationFrame(loop); };
+      const stopLoop  = () => { if (frame) { cancelAnimationFrame(frame); frame = 0; } };
+
+      const io = new IntersectionObserver(([e]) => {
+        isVisible = e.isIntersecting;
+        if (isVisible) {
+          startLoop();
+        } else {
+          stopLoop();
+        }
+      }, { threshold: 0 });
+      io.observe(parent);
+
+      const onVis = () => {
+        isPageVisible = !document.hidden;
+        if (isPageVisible) {
+          startLoop();
+        } else {
+          stopLoop();
+        }
+      };
+      document.addEventListener('visibilitychange', onVis);
+
+      if (reduce) renderOnce(); else startLoop();
 
       disposeGl = () => {
-        cancelAnimationFrame(frame);
+        stopLoop();
+        io.disconnect();
+        document.removeEventListener('visibilitychange', onVis);
         window.removeEventListener('resize', resize);
         window.removeEventListener('mousemove', onMouseMove);
         geometry.remove();
         program.remove();
+        const ext = gl.getExtension('WEBGL_lose_context');
+        if (ext) ext.loseContext();
       };
     });
 

@@ -1,7 +1,7 @@
 'use client';
 
-import { forwardRef, useMemo, useRef, useEffect, RefObject, HTMLAttributes } from 'react';
-import { motion } from 'framer-motion';
+import { forwardRef, useMemo, useRef, useEffect, useCallback, RefObject, HTMLAttributes } from 'react';
+
 import styles from './VariableProximity.module.css';
 
 type Callback = () => void;
@@ -75,6 +75,33 @@ const VariableProximity = forwardRef<HTMLSpanElement, VariableProximityProps>((p
   const mousePositionRef = useMousePositionRef(containerRef);
   const lastPositionRef = useRef<{ x: number | null; y: number | null }>({ x: null, y: null });
 
+  const isCoarse = useRef(false);
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 768px), (hover: none)');
+    isCoarse.current = mq.matches;
+    const on = () => { isCoarse.current = mq.matches; };
+    mq.addEventListener('change', on);
+    return () => mq.removeEventListener('change', on);
+  }, []);
+
+  const centres = useRef<{x:number;y:number}[]>([]);
+  const measure = useCallback(() => {
+    const c = containerRef.current?.getBoundingClientRect();
+    if (!c) return;
+    centres.current = letterRefs.current.map(el => {
+      if (!el) return { x: -9999, y: -9999 };
+      const r = el.getBoundingClientRect();
+      return { x: r.left + r.width / 2 - c.left, y: r.top + r.height / 2 - c.top };
+    });
+  }, [containerRef]);
+
+  useEffect(() => {
+    measure();
+    window.addEventListener('resize', measure, { passive: true });
+    document.fonts?.ready.then(measure);
+    return () => window.removeEventListener('resize', measure);
+  }, [measure]);
+
   const parsedSettings = useMemo(() => {
     const parseSettings = (settingsStr: string) =>
       new Map(
@@ -115,35 +142,25 @@ const VariableProximity = forwardRef<HTMLSpanElement, VariableProximityProps>((p
 
   useAnimationFrame(() => {
     if (!containerRef?.current) return;
+    if (isCoarse.current) return;
     const { x, y } = mousePositionRef.current;
     if (lastPositionRef.current.x === x && lastPositionRef.current.y === y) {
       return;
     }
     lastPositionRef.current = { x, y };
-    const containerRect = containerRef.current.getBoundingClientRect();
 
     letterRefs.current.forEach((letterRef, index) => {
       if (!letterRef) return;
+      
+      const c = centres.current[index];
+      if (!c) return;
 
-      const rect = letterRef.getBoundingClientRect();
-      const letterCenterX = rect.left + rect.width / 2 - containerRect.left;
-      const letterCenterY = rect.top + rect.height / 2 - containerRect.top;
-
-      let distance = calculateDistance(
-        mousePositionRef.current.x,
-        mousePositionRef.current.y,
-        letterCenterX,
-        letterCenterY
-      );
-
-      if (typeof window !== 'undefined' && window.matchMedia('(max-width: 768px)').matches) {
-        distance = Infinity;
-      }
+      const distance = calculateDistance(x, y, c.x, c.y);
 
       if (distance >= radius) {
         letterRef.style.fontVariationSettings = fromFontVariationSettings;
         letterRef.style.color = '';
-        letterRef.style.textShadow = '';
+        letterRef.style.setProperty('--glow', '0');
         letterRef.style.transform = '';
         return;
       }
@@ -159,18 +176,10 @@ const VariableProximity = forwardRef<HTMLSpanElement, VariableProximityProps>((p
       interpolatedSettingsRef.current[index] = newSettings;
       letterRef.style.fontVariationSettings = newSettings;
       
-      // Premium Negative Space Effect Additions
-      const intensity = falloffValue; // 0 to 1
+      const intensity = falloffValue; 
       
-      // Interpolate color from normal text color to brand yellow using color-mix
       letterRef.style.color = `color-mix(in srgb, var(--color-brand-yellow) ${intensity * 100}%, var(--color-text))`;
-      
-      // Create a glowing halo of the yellow color behind the letter
-      letterRef.style.textShadow = `
-        0 0 ${intensity * 20}px color-mix(in srgb, var(--color-brand-yellow) ${intensity * 80}%, transparent),
-        0 0 ${intensity * 40}px color-mix(in srgb, var(--color-brand-yellow) ${intensity * 40}%, transparent)
-      `;
-      // slight pop out
+      letterRef.style.setProperty('--glow', String(intensity));
       letterRef.style.transform = `translateY(${-intensity * 5}px) scale(${1 + (intensity * 0.05)})`;
     });
   });
@@ -191,7 +200,7 @@ const VariableProximity = forwardRef<HTMLSpanElement, VariableProximityProps>((p
           {word.split('').map((letter) => {
             const currentLetterIndex = letterIndex++;
             return (
-              <motion.span
+              <span
                 key={currentLetterIndex}
                 ref={(el) => {
                   if (el) {
@@ -203,9 +212,10 @@ const VariableProximity = forwardRef<HTMLSpanElement, VariableProximityProps>((p
                   fontVariationSettings: fromFontVariationSettings
                 }}
                 aria-hidden="true"
+                data-char={letter}
               >
                 {letter}
-              </motion.span>
+              </span>
             );
           })}
           {wordIndex < words.length - 1 && <span className={styles.spaceSpan}>&nbsp;</span>}

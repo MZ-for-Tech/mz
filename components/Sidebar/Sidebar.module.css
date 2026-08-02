@@ -3,7 +3,7 @@
   top: 0;
   left: 0;
   width: 80px;
-  height: 100vh;
+  height: 100svh;
   background-color: var(--color-bg, var(--color-bg));
   border-right: 1px solid rgba(var(--color-text-rgb), 0.08);
   z-index: 1000;

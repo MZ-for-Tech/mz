@@ -338,6 +338,7 @@ const Waves: FC<WavesProps> = ({
     function onMouseMove(e: MouseEvent) { updateMouse(e.clientX, e.clientY); }
     function onTouchMove(e: TouchEvent) {
       const touch = e.touches[0];
+      if (!touch) return;
       updateMouse(touch.clientX, touch.clientY);
     }
     function updateMouse(x: number, y: number) {
@@ -380,12 +381,22 @@ const Waves: FC<WavesProps> = ({
     } else {
       frameIdRef.current = requestAnimationFrame(tick);
     }
+    const onVis = () => {
+      if (document.hidden) {
+        if (frameIdRef.current !== null) { cancelAnimationFrame(frameIdRef.current); frameIdRef.current = null; }
+      } else if (isVisible && frameIdRef.current === null && !prefersReducedMotion()) {
+        frameIdRef.current = requestAnimationFrame(tick);
+      }
+    };
+    document.addEventListener('visibilitychange', onVis);
+
     window.addEventListener('resize', onResize);
-    window.addEventListener('mousemove', onMouseMove);
+    window.addEventListener('mousemove', onMouseMove, { passive: true });
     window.addEventListener('touchmove', onTouchMove, { passive: true });
 
     return () => {
       visibilityObserver.disconnect();
+      document.removeEventListener('visibilitychange', onVis);
       window.removeEventListener('resize', onResize);
       window.removeEventListener('mousemove', onMouseMove);
       window.removeEventListener('touchmove', onTouchMove);

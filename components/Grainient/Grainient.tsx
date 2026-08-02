@@ -271,6 +271,7 @@ const Grainient: React.FC<GrainientProps> = ({
     const t0 = performance.now();
 
     const loop = (t: number) => {
+      if (pausedRef.current) { raf = 0; return; }
       (program.uniforms.iTime as { value: number }).value = (t - t0) * 0.001;
       renderer.render({ scene: mesh });
       raf = requestAnimationFrame(loop);
@@ -305,9 +306,16 @@ const Grainient: React.FC<GrainientProps> = ({
     };
     document.addEventListener('visibilitychange', onVisibility);
 
+    const onToggle = () => {
+      if (pausedRef.current) tryStop();
+      else tryStart();
+    };
+    window.addEventListener('grainient-toggle', onToggle);
+
     tryStart();
 
     return () => {
+      window.removeEventListener('grainient-toggle', onToggle);
       canvas.removeEventListener("webglcontextlost", onLost, false);
       tryStop();
       ro.disconnect();

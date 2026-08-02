@@ -59,74 +59,16 @@ export default function Home() {
   }, []);
 
   useGSAP(() => {
-    let playWhenReady: (() => void) | undefined;
-
     // Respect prefers-reduced-motion
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     if (prefersReducedMotion) {
-      gsap.set(".hero-word, .hero-subtext, .scroll-indicator-line, .case-item", {
-        opacity: 1,
-        filter: "blur(0px)",
-        y: 0
-      });
+      gsap.set(".case-item", { opacity: 1, y: 0 }); // Ensure case items are visible without scroll trigger
       return;
     }
 
-    if (!prefersReducedMotion) {
-      // Hero Entry Animation
-      const playHeroAnimation = () => {
-        const tl = gsap.timeline();
-
-        tl.fromTo(".hero-word-inner", {
-          y: 30,
-          opacity: 0
-        }, {
-          y: 0,
-          opacity: 1,
-          duration: 1.4,
-          stagger: 0.2,
-          ease: "power3.out"
-        });
-
-        tl.fromTo(".hero-subtext", {
-          opacity: 0,
-          y: 15
-        }, {
-          opacity: 1,
-          y: 0,
-          duration: 1,
-          ease: "power2.out"
-        }, "-=0.8");
-
-        tl.fromTo(".hero-desc, .hero-scroll-wrapper", {
-          opacity: 0,
-          y: 10
-        }, {
-          opacity: 1,
-          y: 0,
-          duration: 1,
-          stagger: 0.1,
-          ease: "power2.out"
-        }, "-=0.6");
-      };
-
-      // eslint-disable-next-line prefer-const
-      let timer: NodeJS.Timeout;
-
-      playWhenReady = () => {
-        window.removeEventListener('mz-transition-done', playWhenReady!);
-        clearTimeout(timer);
-        playHeroAnimation();
-      };
-
-      // Set initial states to hide elements before animation
-      gsap.set(".hero-word-inner", { y: 30, opacity: 0 });
-      gsap.set(".hero-subtext, .hero-desc, .hero-scroll-wrapper", { opacity: 0, y: 10 });
-
-      window.addEventListener('mz-transition-done', playWhenReady, { once: true });
-      timer = setTimeout(playWhenReady, 100);
-    }
+    // Entry animation is now fully handled by CSS in page.module.css
+    // Only scroll-triggered animations remain here
 
     // Hero Parallax on Scroll
     gsap.to(".hero-word", {
@@ -142,20 +84,6 @@ export default function Home() {
       }
     });
 
-    // Partners Animation
-    /*
-    gsap.to("[data-partner-logo]", {
-      opacity: 0.6,
-      x: 0,
-      duration: 1,
-      stagger: 0.2,
-      ease: "power3.out",
-      scrollTrigger: {
-        trigger: ".partners-section",
-        start: "top 85%",
-      }
-    });
-    */
 
     // Case studies scroll animation
     const caseItems = gsap.utils.toArray(".case-item") as HTMLElement[];
@@ -175,11 +103,6 @@ export default function Home() {
       });
     });
 
-    return () => {
-      if (playWhenReady) {
-        window.removeEventListener('mz-transition-done', playWhenReady);
-      }
-    };
   }, { scope: mainRef });
 
   return (
@@ -361,23 +284,6 @@ export default function Home() {
             <WorkGrid />
 
 
-            {/* 06 — Partners */}
-            {/* 
-            <section className={`${styles.partnersSection} partners-section`}>
-              <div className={styles.sectionHeader}>Our Partners</div>
-              <div className={styles.partnersGrid}>
-                <div className={styles.partnerLogo} data-partner-logo>
-                  <Image src="/nested-logo.png" alt="Nested" width={300} height={140} style={{ height: "40px", width: "auto" }} />
-                </div>
-                <div className={styles.partnerLogo} data-partner-logo>
-                  <Image src="/feps-logo.png" alt="FEPS" width={300} height={140} style={{ width: "auto", height: "auto" }} />
-                </div>
-                <div className={styles.partnerLogo} data-partner-logo>
-                  <Image src="/ef-logo.png" alt="EF" width={300} height={140} style={{ height: "60px", width: "auto" }} />
-                </div>
-              </div>
-            </section>
-            */}
 
 
 

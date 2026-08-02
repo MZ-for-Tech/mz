@@ -9,7 +9,6 @@ import DarkVeil from "@/components/DarkVeil/DarkVeil";
 export function Footer() {
   const footerRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
-  const [hasScrolledToFooter, setHasScrolledToFooter] = useState(false);
   const [cairoTime, setCairoTime] = useState("");
   const [copied, setCopied] = useState(false);
 
@@ -41,16 +40,10 @@ export function Footer() {
       setIsVisible(entry.isIntersecting);
     }, { threshold: 0 });
 
-    const preloadObserver = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) setHasScrolledToFooter(true);
-    }, { threshold: 0, rootMargin: '200px' });
-
     observer.observe(footerRef.current);
-    preloadObserver.observe(footerRef.current);
 
     return () => {
       observer.disconnect();
-      preloadObserver.disconnect();
     };
   }, []);
 
@@ -66,9 +59,9 @@ export function Footer() {
       <footer className={styles.footerContent}>
         {/* Animated Background */}
         <div style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", zIndex: -1, overflow: "hidden" }}>
-          {hasScrolledToFooter && (
+          {isVisible && (
             <DarkVeil
-              hueShift={180}
+              hueShift={-170}
               noiseIntensity={0.08}
               scanlineIntensity={0.05}
               scanlineFrequency={0.01}
@@ -108,12 +101,13 @@ export function Footer() {
             <div className={styles.colContent}>
               <p className={styles.mainVal}>CAIRO, EG</p>
               <p className={styles.subVal}>30.0444° N, 31.2357° E</p>
-              {cairoTime && (
-                <div className={styles.timeVal}>
-                  <span>{cairoTime}</span>
-                  <span className={styles.tz}>UTC+3</span>
-                </div>
-              )}
+              <div
+                className={styles.timeVal}
+                style={{ opacity: cairoTime ? 1 : 0, transition: 'opacity 0.5s ease' }}
+              >
+                <span>{cairoTime || "00:00:00 AM"}</span>
+                <span className={styles.tz}>UTC+3</span>
+              </div>
             </div>
           </div>
 
@@ -121,9 +115,9 @@ export function Footer() {
           <div className={styles.gridCol}>
             <span className={styles.colLabel}>SERVICES</span>
             <ul className={styles.linkList}>
-              <li><a href="#services" className={styles.linkItem}>Custom Websites & Systems</a></li>
-              <li><a href="#services" className={styles.linkItem}>Artificial Intelligence & ML</a></li>
-              <li><a href="#services" className={styles.linkItem}>Knowledge Transfer</a></li>
+              <li><a href="#services" className={`${styles.linkItem} hover-link`}>Custom Websites & Systems</a></li>
+              <li><a href="#services" className={`${styles.linkItem} hover-link`}>Artificial Intelligence & ML</a></li>
+              <li><a href="#services" className={`${styles.linkItem} hover-link`}>Knowledge Transfer</a></li>
             </ul>
           </div>
 
@@ -132,7 +126,7 @@ export function Footer() {
             <span className={styles.colLabel}>CONNECT</span>
             <ul className={styles.linkList}>
               <li>
-                <a href="https://www.facebook.com/mzfortech/" target="_blank" rel="noopener noreferrer" className={styles.linkItem}>
+                <a href="https://www.facebook.com/mzfortech/" target="_blank" rel="noopener noreferrer" className={`${styles.linkItem} hover-link`}>
                   Facebook <span className={styles.arr}>↗</span>
                 </a>
               </li>

@@ -2,40 +2,38 @@
   position: fixed;
   top: 0;
   left: 0;
-  width: 12px;
-  height: 12px;
-  background-color: var(--color-acid-green);
-  border: 1px solid transparent;
-  transform: translate(-50%, -50%);
-  rotate: 45deg; /* Precision diamond shape */
+  width: 0;
+  height: 0;
   pointer-events: none;
   z-index: 99999;
   mix-blend-mode: difference;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
-              height 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
-              background-color 0.3s ease,
-              border-radius 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-              rotate 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-              border-color 0.3s ease;
-  will-change: width, height, transform, rotate, border-radius;
+  will-change: transform;
+}
+
+@media (hover: none), (prefers-reduced-motion: reduce) {
+  .cursor { display: none !important; }
 }
 
 .cursorDot {
-  display: none;
-}
-
-.hovering {
+  position: absolute;
+  top: -40px;
+  left: -40px;
   width: 80px;
   height: 80px;
+  background-color: var(--color-acid-green);
+  border: 1px solid transparent;
+  border-radius: 0;
+  transform: scale(0.15) rotate(45deg); /* 12px / 80px */
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              background-color 0.3s ease,
+              border-radius 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.3s ease;
+  will-change: transform;
+}
+
+.hovering .cursorDot {
+  transform: scale(1) rotate(0deg);
   border-radius: 50%;
-  rotate: 0deg;
-  background-color: rgba(var(--color-text-rgb), 0.05); /* very faint glass tint */
-  border-color: rgba(var(--color-text-rgb), 0.2);
-  /* The magic: an X-Ray inversion lens */
-  backdrop-filter: invert(1) hue-rotate(180deg);
-  -webkit-backdrop-filter: invert(1) hue-rotate(180deg);
-  mix-blend-mode: normal;
+  background-color: var(--color-text); /* mix-blend-mode: difference inverts text */
+  border-color: transparent;
 }
