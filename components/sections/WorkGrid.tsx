@@ -37,9 +37,8 @@ export function WorkGrid() {
     const rotateTo = gsap.quickTo(cursor, "rotation", { duration: 0.5, ease: "power2.out" });
 
     const onMouseMove = (e: MouseEvent) => {
-      const rect = container.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
+      const x = e.clientX;
+      const y = e.clientY;
       
       const speed = x - lastX;
       lastX = x;
