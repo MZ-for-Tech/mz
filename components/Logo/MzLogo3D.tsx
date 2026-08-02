@@ -139,7 +139,7 @@ function Logo({ onLoad }: { onLoad?: () => void }) {
     let pathIndex = 0;
     const items: {
       geometry: THREE.ExtrudeGeometry;
-      material: THREE.MeshStandardMaterial;
+      material: THREE.MeshStandardMaterial[];
       zOffset: number;
       scatterX: number;
       scatterY: number;

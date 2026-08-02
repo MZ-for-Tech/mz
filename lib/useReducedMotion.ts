@@ -1,4 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useSyncExternalStore } from 'react';
+
+const emptySubscribe = () => () => {};
 
 export function prefersReducedMotion() {
   return typeof window !== 'undefined'
@@ -6,13 +8,16 @@ export function prefersReducedMotion() {
 }
 
 export function useReducedMotion() {
-  const [reduced, setReduced] = useState(false);
-  useEffect(() => {
-    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
-    setReduced(mq.matches);
-    const on = () => setReduced(mq.matches);
-    mq.addEventListener('change', on);
-    return () => mq.removeEventListener('change', on);
-  }, []);
-  return reduced;
+  const subscribe = typeof window !== 'undefined'
+    ? (callback: () => void) => {
+        const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+        mq.addEventListener('change', callback);
+        return () => mq.removeEventListener('change', callback);
+      }
+    : emptySubscribe;
+
+  const getSnapshot = () => prefersReducedMotion();
+  const getServerSnapshot = () => false;
+
+  return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 }
