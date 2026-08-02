@@ -18,7 +18,7 @@ export default function PremiumShowcase() {
 
           {/* The abstract 3D shape image (Updated to green theme) */}
           <Image
-            src="/green_glass.jpg"
+            src="/green_glass.webp"
             alt="Abstract Green Glass 3D Shape"
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"

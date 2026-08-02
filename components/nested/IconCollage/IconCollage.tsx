@@ -16,13 +16,13 @@ interface IconCollageProps {
 export default function IconCollage({ className = "" }: IconCollageProps) {
   return (
     <div className={`${styles.collageContainer} ${className}`}>
-      <div className={`${styles.icon} ${styles.icon1}`}><Image src="/nested/icons/1.png" alt="" fill sizes="150px" className={styles.image} /></div>
+      <div className={`${styles.icon} ${styles.icon1}`}><Image src="/nested/icons/1.webp" alt="" fill sizes="150px" className={styles.image} /></div>
       <div className={`${styles.icon} ${styles.icon2}`}>
         <ClaudeIcon />
       </div>
-      <div className={`${styles.icon} ${styles.icon3}`}><Image src="/nested/icons/3.png" alt="" fill sizes="150px" className={styles.image} /></div>
+      <div className={`${styles.icon} ${styles.icon3}`}><Image src="/nested/icons/3.webp" alt="" fill sizes="150px" className={styles.image} /></div>
       
-      <div className={`${styles.icon} ${styles.icon4}`}><Image src="/nested/icons/4.png" alt="" fill sizes="150px" className={styles.image} /></div>
+      <div className={`${styles.icon} ${styles.icon4}`}><Image src="/nested/icons/4.webp" alt="" fill sizes="150px" className={styles.image} /></div>
       <div className={`${styles.icon} ${styles.icon8}`}>
         <GeminiIcon />
       </div>
@@ -37,7 +37,7 @@ export default function IconCollage({ className = "" }: IconCollageProps) {
         <EyeIcon />
       </div>
 
-      <div className={`${styles.icon} ${styles.icon9}`}><Image src="/nested/icons/9.png" alt="" fill sizes="150px" className={styles.image} /></div>
+      <div className={`${styles.icon} ${styles.icon9}`}><Image src="/nested/icons/9.webp" alt="" fill sizes="150px" className={styles.image} /></div>
       <div className={`${styles.icon} ${styles.icon10}`}>
         <TiktokIcon />
       </div>
@@ -50,7 +50,7 @@ export default function IconCollage({ className = "" }: IconCollageProps) {
       <div className={`${styles.icon} ${styles.icon13}`}>
         <DotsIcon />
       </div>
-      <div className={`${styles.icon} ${styles.icon14}`}><Image src="/nested/icons/14.png" alt="" fill sizes="150px" className={styles.image} /></div>
+      <div className={`${styles.icon} ${styles.icon14}`}><Image src="/nested/icons/14.webp" alt="" fill sizes="150px" className={styles.image} /></div>
     </div>
   );
 }

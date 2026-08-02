@@ -47,7 +47,7 @@ export const PROJECTS: Record<string, ProjectData> = {
     isPrivate: false,
     link: "https://nestedunited.com",
     screenshots: [],
-    coverImage: "/nested/screenshots/desktop.png",
+    coverImage: "/nested/screenshots/desktop.webp",
     process: [
       {
         phase: "01 / DISCOVERY",
