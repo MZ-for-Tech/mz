@@ -193,14 +193,22 @@ const Grainient: React.FC<GrainientProps> = ({
     const container = containerRef.current;
     if (!container) return;
 
-    const renderer = new Renderer({
-      webgl: 2,
-      alpha: true,
-      antialias: false,
-      dpr: Math.min(window.devicePixelRatio || 1, 1)
-    });
+    let renderer;
+    try {
+      renderer = new Renderer({
+        webgl: 2,
+        alpha: true,
+        antialias: false,
+        dpr: Math.min(window.devicePixelRatio || 1, 1)
+      });
+    } catch (e) {
+      console.warn("Grainient WebGL init failed:", e);
+      return;
+    }
 
     const gl = renderer.gl;
+    if (!gl) return;
+    
     const canvas = gl.canvas as HTMLCanvasElement;
     canvas.className = 'grainient-canvas';
     canvas.style.width = '100%';

@@ -1,0 +1,46 @@
+.container {
+  width: 100%;
+  height: 100%;
+  background-color: #fff9e9;
+  position: relative;
+  overflow: hidden;
+}
+
+.dvdBouncerX {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 40%;
+  height: 40%;
+  animation: bounceX 13s linear infinite alternate;
+}
+
+.dvdBouncerY {
+  width: 100%;
+  height: 100%;
+  animation: bounceY 11s linear infinite alternate;
+}
+
+.squareSvg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+@keyframes bounceX {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(150%);
+  }
+}
+
+@keyframes bounceY {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(150%);
+  }
+}

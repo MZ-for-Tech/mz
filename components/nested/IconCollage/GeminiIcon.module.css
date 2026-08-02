@@ -1,0 +1,23 @@
+.geminiSvg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.geminiGroup {
+  transform-origin: 540px 540px;
+  animation: spark 3s ease-in-out infinite;
+}
+
+@keyframes spark {
+  0%, 100% {
+    transform: scale(0.8) rotate(0deg);
+    opacity: 0.8;
+    color: #000000;
+  }
+  50% {
+    transform: scale(1.15) rotate(15deg);
+    opacity: 1;
+    color: #ffffff;
+  }
+}

@@ -1,0 +1,77 @@
+.container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  /* Diagonal split background: bottom half #ff4d39, top half #5170ff */
+  background: linear-gradient(to top right, #ff4d39 50%, #5170ff 50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.svg {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform-origin: center;
+  animation: spinStep 4s ease-in-out infinite;
+}
+
+.path1 {
+  animation: colorSwap1 4s ease-in-out infinite;
+}
+
+.path2 {
+  animation: colorSwap2 4s ease-in-out infinite;
+}
+
+@keyframes spinStep {
+  0% {
+    transform: rotate(0deg);
+  }
+  35% {
+    transform: rotate(180deg);
+  }
+  50% {
+    transform: rotate(180deg);
+  }
+  85% {
+    transform: rotate(360deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes colorSwap1 {
+  0%, 40% {
+    fill: #ffffff;
+    stroke: #ffffff;
+  }
+  45%, 90% {
+    fill: #22c55e;
+    stroke: #22c55e;
+  }
+  95%, 100% {
+    fill: #ffffff;
+    stroke: #ffffff;
+  }
+}
+
+@keyframes colorSwap2 {
+  0%, 40% {
+    fill: #22c55e;
+    stroke: #22c55e;
+  }
+  45%, 90% {
+    fill: #ffffff;
+    stroke: #ffffff;
+  }
+  95%, 100% {
+    fill: #22c55e;
+    stroke: #22c55e;
+  }
+}

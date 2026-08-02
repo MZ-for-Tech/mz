@@ -10,8 +10,8 @@ const Waves = dynamic(() => import("@/components/Waves/Waves"), { ssr: false });
 const OcrScanner = dynamic(() => import("@/components/OcrScanner/OcrScanner").then(m => m.OcrScanner), { ssr: false });
 import DarkVeil from "@/components/DarkVeil/DarkVeil";
 import { gsap } from "@/lib/gsap";
-import { MzLogo } from "@/components/Logo/MzLogo";
 import dynamic from "next/dynamic";
+import Image from "next/image";
 
 import MzLogo3D from "@/components/Logo/MzLogo3D";
 import { useGSAP } from "@gsap/react";
@@ -99,7 +99,7 @@ export default function Home() {
           ease: "power2.out"
         }, "-=0.8");
 
-        tl.fromTo(".hero-desc, .hero-scroll-wrapper, .hero-action-wrapper", {
+        tl.fromTo(".hero-desc, .hero-scroll-wrapper", {
           opacity: 0,
           y: 10
         }, {
@@ -122,7 +122,7 @@ export default function Home() {
 
       // Set initial states to hide elements before animation
       gsap.set(".hero-word-inner", { y: 30, opacity: 0 });
-      gsap.set(".hero-subtext, .hero-desc, .hero-scroll-wrapper, .hero-action-wrapper", { opacity: 0, y: 10 });
+      gsap.set(".hero-subtext, .hero-desc, .hero-scroll-wrapper", { opacity: 0, y: 10 });
 
       window.addEventListener('mz-transition-done', playWhenReady, { once: true });
       timer = setTimeout(playWhenReady, 100);
@@ -324,10 +324,13 @@ export default function Home() {
                 {[1].map((num) => (
                   <div key={num} className={styles.productSnapItem}>
                     <div className={styles.showcaseCard}>
-                      <MzLogo
+                      <Image
+                        src="/mz-logo.min.svg"
+                        alt="MZ Watermark"
                         width={600}
                         height={600}
                         className={styles.productWatermark}
+                        style={{ opacity: 0.05, filter: "brightness(0) invert(1)" }}
                       />
                       <div className={styles.proprietaryStamp}>
                         MZ © PROPRIETARY TECHNOLOGY

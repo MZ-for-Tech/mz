@@ -67,6 +67,49 @@
   text-align: center;
 }
 
+.floatingCursor.hasMedia {
+  width: 320px;
+  height: 400px;
+  border-radius: 8px;
+  background-color: transparent !important;
+  background-image: none !important;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+  transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1), height 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-radius 0.4s ease;
+}
+
+.cursorMediaWrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.cursorMedia {
+  object-fit: cover;
+}
+
+.cursorMediaOverlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.cursorMediaOverlay span {
+  background: #fff;
+  color: #000;
+  padding: 10px 20px;
+  border-radius: 100px;
+  font-family: var(--font-code);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
 /* 
  * -----------------------------
  * Project Rows
@@ -135,14 +178,6 @@
   gap: 0.5rem;
 }
 
-.projectNum {
-  font-family: var(--font-code);
-  font-size: 1.2rem;
-  letter-spacing: 0.1em;
-  color: var(--color-text-muted);
-  transition: color 0.4s ease, transform 0.4s ease;
-}
-
 .projectClient {
   font-family: var(--font-code);
   font-size: 0.85rem;
@@ -152,7 +187,6 @@
   transition: color 0.4s ease, transform 0.4s ease;
 }
 
-.projectRowWrapper:hover .projectNum,
 .projectRowWrapper:hover .projectClient {
   color: var(--accent-color);
   transform: translateX(10px);
@@ -206,6 +240,71 @@
   /* Reveal fully */
   clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
 }
+
+/* Custom Hover State for Nested United Row Inversion */
+.nestedUnitedRow {
+  transition: background-color 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.nestedUnitedRow:hover {
+  background-color: #fffbf3;
+}
+
+.nestedUnitedRow:hover .hoverGlow {
+  opacity: 0 !important;
+}
+
+.nestedUnitedRow:hover .projectClient,
+.nestedUnitedRow:hover .projectCategory {
+  color: #000000;
+}
+
+.nestedUnitedRow:hover .titleOutline {
+  -webkit-text-stroke: 1px rgba(0, 0, 0, 0.2);
+}
+
+.nestedUnitedRow:hover .titleOutline::before {
+  color: #000000 !important;
+}
+
+.nestedBgPattern {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 0;
+  transition: opacity 0.8s ease;
+  overflow: hidden;
+}
+
+.nestedUnitedRow:hover .nestedBgPattern {
+  opacity: 1;
+}
+
+.scatterIcon {
+  position: absolute;
+  width: 60px;
+  height: auto;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  filter: grayscale(30%) opacity(0.35);
+}
+
+.nestedUnitedRow:hover .scatterIcon {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Give them slightly different transition delays for a staggered reveal */
+.scatter1 { top: 5%; left: 0%; transition-delay: 0.05s; width: 100px; }
+.scatter2 { bottom: 5%; left: 10%; transition-delay: 0.1s; width: 120px; }
+.scatter3 { top: 5%; right: 0%; transition-delay: 0.15s; width: 110px; }
+.scatter4 { bottom: 5%; right: 10%; transition-delay: 0.2s; width: 130px; }
+.scatter5 { top: 40%; left: -5%; transition-delay: 0.25s; width: 80px; }
 
 .serifTitle {
   font-family: var(--font-serif);

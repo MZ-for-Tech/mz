@@ -152,6 +152,7 @@ export default function DarkVeil({
 
       if (!renderer) return;
       const gl = renderer.gl;
+      if (!gl) return;
       const geometry = new Triangle(gl);
 
     const program = new Program(gl, {

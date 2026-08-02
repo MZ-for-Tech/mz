@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, JetBrains_Mono, Cormorant_Garamond } from "next/font/google";
+import { Geist, JetBrains_Mono, Cormorant_Garamond, Red_Hat_Display } from "next/font/google";
 import "./globals.css";
 import { SmoothScrolling } from "@/components/SmoothScrolling/SmoothScrolling";
 
@@ -22,6 +22,13 @@ const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
   display: "swap",
   preload: false,
+});
+
+const redHatDisplay = Red_Hat_Display({
+  variable: "--font-red-hat",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800", "900"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -59,7 +66,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${jetbrainsMono.variable} ${cormorant.variable}`}
+      className={`${geistSans.variable} ${jetbrainsMono.variable} ${cormorant.variable} ${redHatDisplay.variable}`}
       data-theme="dark"
     >
       <head>

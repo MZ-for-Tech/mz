@@ -1,0 +1,62 @@
+.container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  background-color: #fafafa;
+}
+
+.svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.line1 {
+  transform-origin: left;
+  transform-box: fill-box;
+  animation: drawLine1 8s linear infinite;
+}
+
+.line2 {
+  transform-origin: right;
+  transform-box: fill-box;
+  animation: drawLine2 8s linear infinite;
+}
+
+.line3 {
+  transform-origin: left;
+  transform-box: fill-box;
+  animation: drawLine3 8s linear infinite;
+}
+
+.line4 {
+  transform-origin: right;
+  transform-box: fill-box;
+  animation: drawLine4 8s linear infinite;
+}
+
+@keyframes drawLine1 {
+  0% { transform: scaleX(0); }
+  10% { transform: scaleX(1); }
+  90% { transform: scaleX(1); }
+  100% { transform: scaleX(0); }
+}
+
+@keyframes drawLine2 {
+  0%, 10% { transform: scaleX(0); }
+  20%, 80% { transform: scaleX(1); }
+  90%, 100% { transform: scaleX(0); }
+}
+
+@keyframes drawLine3 {
+  0%, 20% { transform: scaleX(0); }
+  30%, 70% { transform: scaleX(1); }
+  80%, 100% { transform: scaleX(0); }
+}
+
+@keyframes drawLine4 {
+  0%, 30% { transform: scaleX(0); }
+  40%, 60% { transform: scaleX(1); }
+  70%, 100% { transform: scaleX(0); }
+}

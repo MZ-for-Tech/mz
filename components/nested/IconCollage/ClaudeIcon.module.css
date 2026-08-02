@@ -1,0 +1,19 @@
+.claudeSvg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.claudeGroup {
+  transform-origin: 540px 540px;
+  animation: cartwheel 6s linear infinite;
+}
+
+@keyframes cartwheel {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import styles from "./DesktopServiceCard.module.css";
-import { MzLogo } from "@/components/Logo/MzLogo";
+import Image from "next/image";
 import Grainient from "@/components/Grainient/Grainient";
 
 interface DesktopServiceCardProps {
@@ -27,7 +27,7 @@ export default function DesktopServiceCard({ pillar, title, tagline, capabilitie
           paused={paused}
         />
       </div>
-      <MzLogo width={400} height={400} className={styles.productWatermark} />
+      <Image src="/mz-logo.min.svg" alt="MZ Watermark" width={400} height={400} className={styles.productWatermark} style={{ opacity: 0.05, filter: "brightness(0) invert(1)" }} />
 
 
       <div className={styles.topRightPillar}>{pillar}</div>

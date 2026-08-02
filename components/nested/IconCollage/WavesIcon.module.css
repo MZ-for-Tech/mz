@@ -1,0 +1,38 @@
+.container {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+  border-radius: inherit;
+}
+
+.svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.scrollingGroup {
+  animation: scrollWaves 4s linear infinite;
+}
+
+@keyframes scrollWaves {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-874px); /* Tile exactly one wave height */
+  }
+}
+
+.redWave {
+  fill: #FF5656;
+}
+
+.blueWave {
+  fill: #3D57C9;
+}
+
+.yellowWave {
+  fill: #FFD833;
+}

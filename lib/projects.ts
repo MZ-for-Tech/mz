@@ -22,6 +22,7 @@ export interface ProjectData {
   isPrivate: boolean;
   link?: string;
   screenshots: string[];
+  coverImage?: string;
   process: ProjectProcessStep[];
   highlights: { label: string; value: string }[];
 }
@@ -46,6 +47,7 @@ export const PROJECTS: Record<string, ProjectData> = {
     isPrivate: false,
     link: "https://nestedunited.com",
     screenshots: [],
+    coverImage: "/nested/screenshots/desktop.png",
     process: [
       {
         phase: "01 / DISCOVERY",

@@ -1,0 +1,144 @@
+.container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.bowlTop {
+  animation: topBowlMove 4s ease-in-out infinite;
+}
+
+.bowlMiddle {
+  animation: middleBowlMove 4s ease-in-out infinite;
+}
+
+.bowlBottom {
+  animation: bottomBowlMove 4s ease-in-out infinite;
+}
+
+.topPath {
+  animation: topPathColor 4s ease-in-out infinite;
+}
+
+.middlePath {
+  animation: middlePathColor 4s ease-in-out infinite;
+}
+
+.bottomPath {
+  animation: bottomPathColor 4s ease-in-out infinite;
+}
+
+@keyframes topBowlMove {
+
+  0%,
+  15% {
+    transform: translateY(279.744px);
+  }
+
+  35%,
+  65% {
+    transform: translateY(0px);
+  }
+
+  85%,
+  100% {
+    transform: translateY(279.744px);
+  }
+}
+
+@keyframes middleBowlMove {
+
+  0%,
+  15% {
+    transform: translateY(279.744px);
+  }
+
+  35%,
+  65% {
+    transform: translateY(279.744px);
+  }
+
+  85%,
+  100% {
+    transform: translateY(279.744px);
+  }
+}
+
+@keyframes bottomBowlMove {
+
+  0%,
+  15% {
+    transform: translateY(279.744px);
+  }
+
+  35%,
+  65% {
+    transform: translateY(559.488px);
+  }
+
+  85%,
+  100% {
+    transform: translateY(279.744px);
+  }
+}
+
+@keyframes topPathColor {
+
+  0%,
+  15% {
+    fill: #4a5d23;
+  }
+
+  35%,
+  65% {
+    fill: var(--original-color);
+  }
+
+  85%,
+  100% {
+    fill: #4a5d23;
+  }
+}
+
+@keyframes middlePathColor {
+
+  0%,
+  15% {
+    fill: #4a5d23;
+  }
+
+  35%,
+  65% {
+    fill: #ffd834;
+  }
+
+  85%,
+  100% {
+    fill: #4a5d23;
+  }
+}
+
+@keyframes bottomPathColor {
+
+  0%,
+  15% {
+    fill: #4a5d23;
+  }
+
+  35%,
+  65% {
+    fill: #000000;
+  }
+
+  85%,
+  100% {
+    fill: #4a5d23;
+  }
+}

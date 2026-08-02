@@ -1,5 +1,5 @@
 
-import { MzLogo } from '@/components/Logo/MzLogo';
+import Image from 'next/image';
 import { TransitionLink as Link } from '@/components/TransitionLink/TransitionLink';
 import styles from './Sidebar.module.css';
 
@@ -8,7 +8,9 @@ export function Sidebar() {
     <aside className={styles.sidebar}>
       {/* Top: Logo */}
       <Link href="/" className={styles.logoWrapper}>
-        <MzLogo 
+        <Image 
+          src="/mz-logo.min.svg"
+          alt="MZ"
           width={40} 
           height={40} 
           className={styles.logoImage} 
