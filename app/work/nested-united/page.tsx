@@ -257,7 +257,7 @@ export default function NestedUnitedWorld() {
 
           <div className={styles.desktopPlane}>
             <Image
-              src="/nested/screenshots/desktop.png"
+              src="/nested/screenshots/desktop.webp"
               alt="Nested United Desktop View"
               fill
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 75vw, 50vw"
@@ -267,7 +267,7 @@ export default function NestedUnitedWorld() {
 
           <div className={styles.mobilePlane}>
             <Image
-              src="/nested/screenshots/mobile.png"
+              src="/nested/screenshots/mobile.webp"
               alt="Nested United Mobile View"
               fill
               sizes="(max-width: 768px) 50vw, 25vw"
@@ -277,7 +277,7 @@ export default function NestedUnitedWorld() {
 
           <div className={styles.detailPlane}>
             <Image
-              src="/nested/screenshots/detail.png"
+              src="/nested/screenshots/detail.webp"
               alt="Nested United Detail View"
               fill
               sizes="(max-width: 768px) 50vw, 25vw"

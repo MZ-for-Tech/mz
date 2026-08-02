@@ -17,9 +17,9 @@ export default function PrivacyPolicyPage() {
   return (
     <>
       <div className={styles.container}>
-        <div style={{ position: "fixed", top: 0, left: 0, width: "100%", height: "100vh", zIndex: -1 }}>
+        <div style={{ position: "fixed", top: 0, left: 0, width: "100%", height: "100svh", zIndex: -1 }}>
           <DarkVeil
-            hueShift={180}
+            hueShift={-170}
             noiseIntensity={0.05}
             scanlineIntensity={0.05}
             scanlineFrequency={0.01}
