@@ -27,7 +27,7 @@ const cormorant = Cormorant_Garamond({
 const redHatDisplay = Red_Hat_Display({
   variable: "--font-red-hat",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800", "900"],
+  weight: "variable",
   display: "swap",
 });
 
@@ -40,7 +40,7 @@ export const metadata: Metadata = {
     description: "Research-driven technology company. Cairo, Egypt.",
     url: "https://mzfortech.com",
     siteName: "MZ",
-    images: [{ url: "/og.jpg", width: 1200, height: 630 }],
+    images: [{ url: "/og.webp", width: 1200, height: 630 }],
     locale: "en_US",
     type: "website",
   },
@@ -54,7 +54,6 @@ export const viewport: Viewport = {
 
 import { TransitionLink } from "@/components/TransitionLink/TransitionLink";
 import Image from "next/image";
-import FpsCounter from "@/components/FpsCounter";
 import { CustomCursor } from "@/components/CustomCursor/CustomCursor";
 import WebMCP from "@/components/WebMCP/WebMCP";
 
@@ -74,7 +73,6 @@ export default function RootLayout({
       <body>
         <WebMCP />
         <CustomCursor />
-        <FpsCounter />
         <TransitionLink href="/" className="layout-logo-link" style={{
           position: 'fixed',
           top: '10px',
@@ -86,7 +84,6 @@ export default function RootLayout({
             alt="MZ"
             width={100}
             height={100}
-            priority
             className="layout-logo-img"
           />
         </TransitionLink>
