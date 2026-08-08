@@ -24,6 +24,14 @@ const nextConfig: NextConfig = {
         ],
       },
       {
+        // Static artwork (icons, nested-united assets) — content never
+        // changes in place; new versions get new filenames.
+        source: "/(icons|nested)/:path*",
+        headers: [
+          { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
+        ],
+      },
+      {
         // ── Global headers (security + AI discoverability Link headers)
         source: "/(.*)",
         headers: [
@@ -93,3 +101,4 @@ const nextConfig: NextConfig = {
 };
 
 export default nextConfig;
+

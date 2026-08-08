@@ -1,0 +1,404 @@
+Graphics Feature Status
+=======================
+*   Canvas: Software only. Hardware acceleration disabled
+*   Direct Rendering Display Compositor: Disabled
+*   Compositing: Software only. Hardware acceleration disabled
+*   Multiple Raster Threads: Disabled
+*   OpenGL: Disabled
+*   Rasterization: Software only. Hardware acceleration disabled
+*   Raw Draw: Disabled
+*   Skia Graphite: Disabled
+*   TreesInViz: Disabled
+*   Video Decode: Software only. Hardware acceleration disabled
+*   Video Encode: Software only. Hardware acceleration disabled
+*   Vulkan: Disabled
+*   WebGL: Disabled
+*   WebGPU: Disabled
+*   WebGPU interop: Disabled
+*   WebNN: Disabled
+
+Version Information
+===================
+Data exported              : 2026-08-07T16:56:57.892Z
+Chrome version             : Chrome/151.0.7922.75
+Operating system           : Linux 7.0.0-28-generic
+Software rendering list URL: https://chromium.googlesource.com/chromium/src/+/1ddc0a2003eb30c3990568d74ed0437451e9c374/gpu/config/software_rendering_list.json
+Driver bug list URL        : https://chromium.googlesource.com/chromium/src/+/1ddc0a2003eb30c3990568d74ed0437451e9c374/gpu/config/gpu_driver_bug_list.json
+ANGLE commit id            : 392ccfac4cdb
+2D graphics backend        : Skia/151 f4eee5c6735d33a829ab2cfbf3fe23d0376e7992
+Command Line               : /usr/bin/google-chrome-stable --ozone-platform=x11 --flag-switches-begin --disable-accelerated-video-decode --enable-webgl-developer-extensions --ignore-gpu-blocklist --enable-features=VerticalTabs --flag-switches-end
+
+Driver Information
+==================
+Initialization time             : 0
+In-process GPU                  : false
+Skia Backend                    : None
+Passthrough Command Decoder     : true
+Sandboxed                       : true
+GPU0                            : VENDOR= 0x0000, DEVICE=0x0000
+Optimus                         : false
+AMD switchable                  : false
+Pixel shader version            : 
+Vertex shader version           : 
+Max. MSAA samples               : 
+Machine model name              : 
+Machine model version           : 
+GL implementation parts         : (gl=disabled,angle=none)
+Display type                    : 
+GL_VENDOR                       : Disabled
+GL_RENDERER                     : Disabled
+GL_VERSION                      : Disabled
+GL_EXTENSIONS                   : 
+Disabled Extensions             : 
+Disabled WebGL Extensions       : 
+Window system binding vendor    : 
+Window system binding version   : 
+Window system binding extensions: 
+XDG_CURRENT_DESKTOP             : ubuntu:GNOME
+XDG_SESSION_TYPE                : x11
+GDMSESSION                      : ubuntu
+Ozone platform                  : x11
+Direct rendering version        : unknown
+Reset notification strategy     : 0x0000
+GPU process crash count         : 3
+
+Problems Detected
+=================
+*   WebGPU has been disabled via blocklist or the command line.
+    Disabled Features: webgpu
+
+*   Accelerated rasterization has been disabled, either via blocklist, about:flags or the command line.
+    Disabled Features: rasterization
+
+*   Accelerated video encode has been disabled, either via blocklist, about:flags or the command line.
+    Disabled Features: video_encode
+
+*   Accelerated video decode has been disabled, either via blocklist, about:flags or the command line.
+    Disabled Features: video_decode
+
+*   WebGL has been disabled via blocklist or the command line.
+    Disabled Features: webgl
+
+*   Gpu compositing has been disabled, either via blocklist, about:flags or the command line. The browser will fall back to software compositing and hardware acceleration will be unavailable.
+    Disabled Features: gpu_compositing
+
+*   Accelerated 2D canvas is unavailable: either disabled via blocklist or the command line.
+    Disabled Features: 2d_canvas
+
+*   GPU process was unable to boot: GPU access is disabled due to frequent crashes.
+    Disabled Features: all
+
+Dawn Info
+=========
+
+<CPU>  Vulkan backend - SwiftShader Device (Subzero)
+----------------------------------------------------
+
+[WebGPU Status]
+---------------
+*   Blocklisted - crbug.com/40057808: CPU adapters not fully tested or conformant. |
+
+[Adapter Supported Features]
+----------------------------
+*   core-features-and-limits
+*   depth-clip-control
+*   depth32float-stencil8
+*   texture-compression-bc
+*   texture-compression-bc-sliced-3d
+*   texture-compression-etc2
+*   texture-compression-astc
+*   texture-compression-astc-sliced-3d
+*   timestamp-query
+*   indirect-first-instance
+*   rg11b10ufloat-renderable
+*   bgra8unorm-storage
+*   float32filterable
+*   float32blendable
+*   clip-distances
+*   subgroups
+*   texture-component-swizzle
+*   dawn-internal-usages
+*   dawn-multi-planar-formats
+*   dawn-native
+*   implicit-device-synchronization
+*   transient-attachments
+*   unorm16texture-formats
+*   adapter-properties-memory-heaps
+*   adapter-properties-vk
+*   dawn-format-capabilities
+*   shared-texture-memory-opaque-fd
+*   shared-fence-vk-semaphore-opaque-fd
+*   dawn-load-resolve-texture
+*   flexible-texture-views
+*   unorm16formats-for-external-texture
+
+[Enabled Toggle Names]
+----------------------
+*   lazy_clear_resource_on_first_use: 
+    (https://crbug.com/dawn/145):
+    Clears resource to zero on first usage. This initializes the resource so
+    that no dirty bits from recycled memory is present in the new resource.
+
+*   use_temporary_buffer_in_texture_to_texture_copy: 
+    (https://crbug.com/dawn/42):
+    Split texture-to-texture copy into two copies: copy from source texture
+    into a temporary buffer, and copy from the temporary buffer into the
+    destination texture when copying between compressed textures that don't
+    have block-aligned sizes. This workaround is enabled by default on all
+    Vulkan drivers to solve an issue in the Vulkan SPEC about the
+    texture-to-texture copies with compressed formats. See #1005
+    (https://github.com/KhronosGroup/Vulkan-Docs/issues/1005) for more
+    details.
+
+*   vulkan_use_d32s8: 
+    (https://crbug.com/dawn/286):
+    Vulkan mandates support of either D32_FLOAT_S8 or D24_UNORM_S8. When
+    available the backend will use D32S8 (toggle to on) but setting the toggle
+    to off will make it use the D24S8 format when possible.
+
+*   vulkan_use_s8: 
+    (https://crbug.com/dawn/666):
+    Vulkan has a pure stencil8 format but it is not universally available.
+    When this toggle is on, the backend will use S8 for the stencil8 format,
+    otherwise it will fallback to D32S8 or D24S8.
+
+*   disallow_spirv: 
+    (https://crbug.com/1214923):
+    Disallow usage of SPIR-V completely so that only WGSL is used for shader
+    modules. This is useful to prevent a Chromium renderer process from
+    successfully sending SPIR-V code to be compiled in the GPU process.
+
+*   vulkan_use_demote_to_helper_invocation_extension: 
+    (https://crbug.com/42250787):
+    Sets the use of the vulkan demote to helper extension
+
+*   use_placeholder_fragment_in_vertex_only_pipeline: 
+    (https://crbug.com/dawn/136):
+    Use a placeholder empty fragment shader in vertex only render pipeline.
+    This toggle must be enabled for OpenGL ES backend, the Vulkan Backend, and
+    serves as a workaround by default enabled on some Metal devices with Intel
+    GPU to ensure the depth result is correct.
+
+*   timestamp_quantization: 
+    (https://crbug.com/dawn/1800):
+    Enable timestamp queries quantization to reduce the precision of timers
+    that can be created with timestamp queries.
+
+*   use_vulkan_zero_initialize_workgroup_memory_extension: 
+    (https://crbug.com/dawn/1302):
+    Initialize workgroup memory with OpConstantNull on Vulkan when the Vulkan
+    extension VK_KHR_zero_initialize_workgroup_memory is supported.
+
+*   use_vulkan_memory_model: 
+    (https://crbug.com/392606604):
+    Use the Vulkan Memory Model if available.
+
+*   vulkan_direct_variable_access_transform_handle: 
+    (https://crbug.com/387000529):
+    Transform handles using direct variable access.
+
+*   enable_integer_range_analysis_in_robustness: 
+    (https://crbug.com/348701956):
+    Compute the range of the index with Integer Range Analysis in the
+    robustness transform and skip doing index clamping when the out of bound
+    access cannot happen.
+
+*   use_spirv_1_4: 
+    (https://crbug.com/422421915):
+    Use SPIR-V 1.4 if available
+
+*   blob_cache_hash_validation: 
+    (https://crbug.com/429938352):
+    Enable hash validation when loading/storing from/to the blob cache
+
+*   decompose_uniform_buffers: 
+    (https://crbug.com/448452698):
+    Decompose uniform buffers into arrays of vec4<u32> on backends for Vulkan
+    and OpenGL.
+
+*   vulkan_use_dynamic_rendering: 
+    (https://crbug.com/dawn/463893794):
+    Makes use of VK_KHR_dynamic_rendering to implement WebGPU RenderPass.
+
+*   enable_spirv_validation: 
+    (https://crbug.com/473526415):
+    Enable validation of SPIR-V generated by Tint.
+
+*   vulkan_use_create_render_pass_2: 
+    (https://crbug.com/chromium/463893793):
+    Makes use of VK_KHR_create_renderpass2 when creating VkRenderPass objects.
+    Ignored when vulkan_use_dynamic_rendering is enabled.
+
+*   wait_is_thread_safe: 
+    (https://crbug.com/412761228):
+    WaitFor* functions are thread-safe and can be called without the
+    device-lock if implicit synchronization is enabled.
+
+[WebGPU Required Toggles - enabled]
+-----------------------------------
+*   disallow_spirv: 
+    (https://crbug.com/1214923):
+    Disallow usage of SPIR-V completely so that only WGSL is used for shader
+    modules. This is useful to prevent a Chromium renderer process from
+    successfully sending SPIR-V code to be compiled in the GPU process.
+
+*   timestamp_quantization: 
+    (https://crbug.com/dawn/1800):
+    Enable timestamp queries quantization to reduce the precision of timers
+    that can be created with timestamp queries.
+
+Compositor Information
+======================
+Tile Update Mode: One-copy
+Partial Raster  : Enabled
+
+Display(s) Information
+======================
+Info                          : Display[0] bounds=[0,0 1536x864], workarea=[0,32 1536x832], scale=1.25, rotation=0, panel_rotation=0 internal detected
+Color space (all)             : {primaries:BT709, transfer:SRGB, matrix:RGB, range:FULL}
+Buffer format (all)           : BGRA_8888
+Color volume                  : {name:'srgb', r:[0.6400, 0.3300], g:[0.3000, 0.6000], b:[0.1500, 0.0600], w:[0.3127, 0.3290]}
+SDR white level in nits       : 203
+HDR relative maximum luminance: 1
+Bits per color component      : 8
+Bits per pixel                : 24
+Refresh Rate in Hz            : 60.00103759765625
+
+Video Acceleration Information
+==============================
+Decoding: 
+Encoding:
+
+Vulkan Information
+==================
+
+Device Performance Information
+==============================
+
+Driver Information for Hardware GPU
+===================================
+Initialization time             : 0
+In-process GPU                  : false
+Skia Backend                    : None
+Passthrough Command Decoder     : true
+Sandboxed                       : true
+GPU0                            : VENDOR= 0x0000, DEVICE=0x0000
+Optimus                         : false
+AMD switchable                  : false
+Pixel shader version            : 
+Vertex shader version           : 
+Max. MSAA samples               : 
+Machine model name              : 
+Machine model version           : 
+GL implementation parts         : (gl=disabled,angle=none)
+Display type                    : 
+GL_VENDOR                       : Disabled
+GL_RENDERER                     : Disabled
+GL_VERSION                      : Disabled
+GL_EXTENSIONS                   : 
+Disabled Extensions             : GL_KHR_blend_equation_advanced GL_KHR_blend_equation_advanced_coherent GL_MESA_framebuffer_flip_y
+Disabled WebGL Extensions       : 
+Window system binding vendor    : 
+Window system binding version   : 
+Window system binding extensions: 
+XDG_CURRENT_DESKTOP             : ubuntu:GNOME
+XDG_SESSION_TYPE                : x11
+GDMSESSION                      : ubuntu
+Ozone platform                  : x11
+Direct rendering version        : unknown
+Reset notification strategy     : 0x0000
+GPU process crash count         : 3
+
+Graphics Feature Status for Hardware GPU
+========================================
+*   Canvas: Hardware accelerated
+*   Direct Rendering Display Compositor: Disabled
+*   Compositing: Hardware accelerated
+*   Multiple Raster Threads: Enabled
+*   OpenGL: Enabled
+*   Rasterization: Hardware accelerated
+*   Raw Draw: Disabled
+*   Skia Graphite: Disabled
+*   TreesInViz: Disabled
+*   Video Decode: Software only. Hardware acceleration disabled
+*   Video Encode: Software only. Hardware acceleration disabled
+*   Vulkan: Disabled
+*   WebGL: Hardware accelerated
+*   WebGPU: Hardware accelerated
+*   WebGPU interop: Hardware accelerated
+*   WebNN: Disabled
+
+Driver Bug Workarounds for Hardware GPU
+=======================================
+*   disable_discard_framebuffer
+*   disable_rgb_to_yuv_conversion
+*   enable_webgl_timer_query_extensions
+*   exit_on_context_lost
+*   force_cube_complete
+*   init_gl_position_in_vertex_shader
+*   unpack_overlapping_rows_separately_unpack_buffer
+*   disabled_extension_GL_KHR_blend_equation_advanced
+*   disabled_extension_GL_KHR_blend_equation_advanced_coherent
+*   disabled_extension_GL_MESA_framebuffer_flip_y
+
+Problems Detected for Hardware GPU
+==================================
+*   Accelerated video encode has been disabled, either via blocklist, about:flags or the command line.
+    Disabled Features: video_encode
+
+*   Accelerated video decode has been disabled, either via blocklist, about:flags or the command line.
+    Disabled Features: video_decode
+
+*   Program link fails in NVIDIA Linux if gl_Position is not set:
+    (http://crbug.com/286468)
+    Applied Workarounds: init_gl_position_in_vertex_shader
+
+*   NVIDIA fails glReadPixels from incomplete cube map texture:
+    (http://crbug.com/518889)
+    Applied Workarounds: force_cube_complete
+
+*   Framebuffer discarding can hurt performance on non-tilers:
+    (http://crbug.com/570897)
+    Applied Workarounds: disable_discard_framebuffer
+
+*   Unpacking overlapping rows from unpack buffers is unstable on NVIDIA GL driver:
+    (http://crbug.com/596774)
+    Applied Workarounds: unpack_overlapping_rows_separately_unpack_buffer
+
+*   Disable KHR_blend_equation_advanced until cc shaders are updated:
+    (http://crbug.com/661715)
+    Applied Workarounds: disable(GL_KHR_blend_equation_advanced),
+        disable(GL_KHR_blend_equation_advanced_coherent)
+
+*   Expose WebGL's disjoint_timer_query extensions on platforms with site isolation:
+    (http://crbug.com/808744), (http://crbug.com/870491)
+    Applied Workarounds: enable_webgl_timer_query_extensions
+
+*   Some drivers can't recover after OUT_OF_MEM and context lost:
+    (http://crbug.com/893177)
+    Applied Workarounds: exit_on_context_lost
+
+*   Disable GL_MESA_framebuffer_flip_y for desktop GL:
+    (http://crbug.com/964010)
+    Applied Workarounds: disable(GL_MESA_framebuffer_flip_y)
+
+*   Disable RGB to YUV hardware conversion on NVIDIA Linux:
+    (http://crbug.com/447709687)
+    Applied Workarounds: disable_rgb_to_yuv_conversion
+
+Log Messages
+============
+[314076:314076:0807/194614.609483:ERROR:gpu/command_buffer/service/gl_utils.cc:426] : [.WebGL-0x122c01616600] GL_CONTEXT_LOST_KHR: glDebugMessageCallbackKHR: Context has been lost.
+[314076:314076:0807/194614.610500:ERROR:gpu/command_buffer/service/gles2_cmd_decoder_passthrough.cc:1387] :   GLES2DecoderPassthroughImpl: Context reset detected after MakeCurrent.
+[314076:314076:0807/194614.618784:ERROR:components/viz/service/gl/exit_code.cc:13] : Restarting GPU process due to unrecoverable error. Context was lost.
+GpuProcessHost: The GPU process exited with code 8704.
+[382505:382505:0807/194958.069660:ERROR:gpu/command_buffer/service/shared_context_state.cc:1317] : SharedContextState context lost via EXT_robustness. Reset status = GL_GUILTY_CONTEXT_RESET_KHR
+[382505:382505:0807/194958.069848:ERROR:components/viz/service/gl/exit_code.cc:13] : Restarting GPU process due to unrecoverable error. Context was lost.
+GpuProcessHost: The GPU process exited with code 8704.
+[384544:384544:0807/194958.622250:ERROR:gpu/command_buffer/service/shared_image/shared_image_manager.cc:254] : SharedImageManager::ProduceSkia: Trying to Produce a Skia representation from a non-existent mailbox.
+[384544:384544:0807/194958.629517:ERROR:gpu/command_buffer/service/shared_image/shared_image_manager.cc:254] : SharedImageManager::ProduceSkia: Trying to Produce a Skia representation from a non-existent mailbox.
+[384544:384544:0807/194958.797188:ERROR:gpu/command_buffer/service/shared_image/shared_image_manager.cc:254] : SharedImageManager::ProduceSkia: Trying to Produce a Skia representation from a non-existent mailbox.
+[384544:384544:0807/194958.962362:ERROR:gpu/command_buffer/service/shared_image/shared_image_manager.cc:254] : SharedImageManager::ProduceSkia: Trying to Produce a Skia representation from a non-existent mailbox.
+[384544:384544:0807/195018.731196:ERROR:gpu/command_buffer/service/shared_context_state.cc:1317] : SharedContextState context lost via EXT_robustness. Reset status = GL_GUILTY_CONTEXT_RESET_KHR
+[384544:384544:0807/195018.731397:ERROR:components/viz/service/gl/exit_code.cc:13] : Restarting GPU process due to unrecoverable error. Context was lost.
+GpuProcessHost: The GPU process exited with code 8704.
