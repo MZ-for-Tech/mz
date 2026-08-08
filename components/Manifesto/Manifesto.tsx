@@ -5,6 +5,7 @@ import styles from './Manifesto.module.css';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
+import { prefersReducedMotion } from '@/lib/useReducedMotion';
 import VariableProximity from '../VariableProximity/VariableProximity';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -17,6 +18,12 @@ export default function Manifesto() {
 
   useGSAP(() => {
     if (!textRef.current) return;
+
+    // Reduced motion: show the words fully, no scrub.
+    if (prefersReducedMotion()) {
+      gsap.set(`.${styles.word}`, { opacity: 1, y: 0 });
+      return;
+    }
 
     gsap.fromTo(
       `.${styles.word}`,

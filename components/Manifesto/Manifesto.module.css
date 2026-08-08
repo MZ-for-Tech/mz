@@ -28,7 +28,9 @@
 
 .word {
   display: inline-block;
-  will-change: opacity, transform;
+  /* No permanent will-change: 13 giant text layers with will-change are
+     always-composited GPU layers — a scroll-jank source on mobile. GSAP
+     applies will-change transiently during the scrub itself. */
 }
 
 .word:last-child {

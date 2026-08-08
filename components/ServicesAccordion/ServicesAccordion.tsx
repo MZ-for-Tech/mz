@@ -76,14 +76,15 @@ export default function ServicesAccordion() {
     return () => observer.disconnect();
   }, []);
 
-  // Section reveal on scroll
+  // Section reveal on scroll — opacity only: a y-transform on the whole
+  // section (sticky cards + WebGL canvases) forces a giant layer to composite
+  // on every scroll frame, a real jank source on mobile.
   useGSAP(() => {
     gsap.fromTo(
       sectionRef.current,
-      { opacity: 0, y: 50 },
+      { opacity: 0 },
       {
         opacity: 1,
-        y: 0,
         duration: 1,
         ease: "power3.out",
         scrollTrigger: {

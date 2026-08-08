@@ -174,7 +174,7 @@ const Waves: FC<WavesProps> = ({
       // Ensure we don't blow up memory on 4K/Ultrawide screens by aggressively capping the total points
       // We reduce the target points significantly on mobile devices to maintain 60fps on lower-end CPUs (like MediaTek G99)
       const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
-      const TARGET_POINTS = isMobile ? 600 : 2000;
+      const TARGET_POINTS = isMobile ? 400 : 2000;
       const currentPointsEstimate = Math.ceil(oWidth / xGap) * Math.ceil(oHeight / yGap);
       if (currentPointsEstimate > TARGET_POINTS) {
         const scale = Math.sqrt(currentPointsEstimate / TARGET_POINTS);
@@ -298,6 +298,12 @@ const Waves: FC<WavesProps> = ({
 
     let lastWaveX0 = 0;
     let drawFrameCount = 0;
+    // Touch devices: this is a full-viewport canvas behind scrolling content —
+    // render at a steady 30fps and never spike to 60fps on touch-drag (the
+    // grid is ~15% alpha; the throttle is invisible). Desktop keeps the
+    // 60fps-on-pointer-move responsiveness.
+    const isCoarse =
+      typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches;
 
     function tick(t: number) {
       if (!container) return;
@@ -319,13 +325,15 @@ const Waves: FC<WavesProps> = ({
       movePoints(t);
 
       // Throttle draws: when mouse is idle, render at ~30fps (every other frame).
-      // When mouse is moving (vs > 1), render every frame for responsive feel.
+      // When mouse is moving (vs > 1), render every frame for responsive feel —
+      // except on coarse pointers, which stay at 30fps always.
       drawFrameCount++;
       const curWaveX0 = pWaveX[0];
       const waveChange = Math.abs(curWaveX0 - lastWaveX0);
       lastWaveX0 = curWaveX0;
       const isIdle = mouse.v < 1 && waveChange < 0.5;
-      if (!isIdle || drawFrameCount % 2 === 0) {
+      const shouldDraw = isCoarse ? drawFrameCount % 2 === 0 : (!isIdle || drawFrameCount % 2 === 0);
+      if (shouldDraw) {
         drawLines();
       }
 
