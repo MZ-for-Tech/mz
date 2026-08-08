@@ -51,8 +51,9 @@
   align-items: center;
   pointer-events: none;
   z-index: 100;
-  transform: scale(0);
-  opacity: 0;
+  /* transform + opacity are owned entirely by GSAP (initialized via
+     gsap.set in WorkGrid.tsx) — declaring them here as well would let GSAP
+     parse a degenerate `scale(0)` matrix and freeze the cursor at 0,0 */
   will-change: transform;
   mix-blend-mode: normal;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);

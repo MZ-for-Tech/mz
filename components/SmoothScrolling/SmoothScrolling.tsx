@@ -54,9 +54,17 @@ function LenisGsapBridge() {
     gsap.ticker.add(raf);
     gsap.ticker.lagSmoothing(0);
 
+    // 3. Pause the loop entirely while the tab is hidden (battery/CPU)
+    const onVisibility = () => {
+      if (document.hidden) lenis.stop();
+      else lenis.start();
+    };
+    document.addEventListener("visibilitychange", onVisibility);
+
     return () => {
       lenis.off("scroll", ScrollTrigger.update);
       gsap.ticker.remove(raf);
+      document.removeEventListener("visibilitychange", onVisibility);
     };
   }, [lenis]);
 

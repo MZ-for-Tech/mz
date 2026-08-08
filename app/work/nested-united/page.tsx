@@ -1,4 +1,5 @@
 import styles from "./page.module.css";
+import { Red_Hat_Display } from "next/font/google";
 import { TransitionLink } from "@/components/TransitionLink/TransitionLink";
 import PillNav from "@/components/PillNav/PillNav";
 import { Footer } from "@/components/Footer/Footer";
@@ -11,6 +12,15 @@ import IconSprite from "@/components/nested/IconCollage/IconSprite";
 import LinesIcon from "@/components/nested/IconCollage/LinesIcon";
 import ClaudeIcon from "@/components/nested/IconCollage/ClaudeIcon";
 import TiktokIcon from "@/components/nested/IconCollage/TiktokIcon";
+
+// Scoped to this page: it is the only route using --font-red-hat. Loading it
+// here (instead of the global layout) keeps its bytes off the other four.
+const redHatDisplay = Red_Hat_Display({
+  variable: "--font-red-hat",
+  subsets: ["latin"],
+  weight: "variable",
+  display: "swap",
+});
 
 const NAV_ITEMS = [
   { label: "Work", href: "/#work" },
@@ -27,7 +37,7 @@ export const metadata = {
 export default function NestedUnitedWorld() {
 
   return (
-    <div className={styles.worldContainer}>
+    <div className={`${styles.worldContainer} ${redHatDisplay.variable}`}>
       <IconSprite />
       <PillNav items={NAV_ITEMS} />
 

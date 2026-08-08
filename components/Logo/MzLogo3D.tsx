@@ -489,12 +489,15 @@ export default function MzLogo3D({
         </Suspense>
 
         {/* Environment map for realistic metallic reflections. Self-hosted
-            (public/hdr/forest_slope_1k.hdr — same file the drei "forest"
-            preset loads, but from our own origin). Wrapped in Suspense so the
-            logo renders immediately and the reflections pop in when the HDR
-            arrives, instead of blocking first paint on a CDN fetch. */}
+            (public/hdr/forest_slope_512_v2.hdr — a 512×256 box-downsampled
+            copy of the drei "forest" preset, 472 KB vs the original 1.9 MB;
+            env reflections are low-frequency so the loss is imperceptible.
+            Filename is versioned because /hdr/* is cached immutable — a
+            broken early build of the 512 file would otherwise be served
+            forever. Wrapped in Suspense so the logo renders immediately and
+            the reflections pop in when the HDR arrives. */}
         <Suspense fallback={null}>
-          <Environment files="/hdr/forest_slope_1k.hdr" environmentIntensity={0.6} />
+          <Environment files="/hdr/forest_slope_512_v2.hdr" environmentIntensity={0.6} />
         </Suspense>
 
         {/* Darkness / Base ambient */}

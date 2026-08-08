@@ -59,6 +59,13 @@ export default function Home() {
     };
   }, []);
 
+  // Warm the lazy three.js chunk while the entry wipe is still covering the
+  // screen, so the logo mounts as soon as the curtain lifts instead of after
+  // a ~150 KB gz chunk fetch on first visit.
+  useEffect(() => {
+    void import("@/components/Logo/MzLogo3D");
+  }, []);
+
   useGSAP(() => {
     // Respect prefers-reduced-motion
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;

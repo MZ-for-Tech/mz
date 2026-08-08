@@ -28,22 +28,44 @@ export function WorkGrid() {
     const cursor = cursorRef.current;
     if (!container || !cursor) return;
 
-    gsap.set(cursor, { xPercent: -50, yPercent: -50 });
-    
+    // GSAP owns the cursor's transform/opacity entirely. Initializing every
+    // component here (instead of letting GSAP parse the CSS `transform:
+    // scale(0)` — a degenerate zero-matrix that can leave the cursor frozen
+    // at left:0/top:0) guarantees clean tracking from the first frame.
+    gsap.set(cursor, {
+      x: 0,
+      y: 0,
+      xPercent: -50,
+      yPercent: -50,
+      scale: 0,
+      opacity: 0,
+    });
+
     let lastX = 0;
+    let lastPointerX = 0;
+    let lastPointerY = 0;
     // Use quickTo for buttery smooth cursor tracking
     const xTo = gsap.quickTo(cursor, "x", { duration: 0.6, ease: "power3.out" });
     const yTo = gsap.quickTo(cursor, "y", { duration: 0.6, ease: "power3.out" });
     const rotateTo = gsap.quickTo(cursor, "rotation", { duration: 0.5, ease: "power2.out" });
 
+    const showCursor = () => {
+      gsap.to(cursor, { scale: 1, opacity: 1, duration: 0.4, ease: "back.out(1.5)", overwrite: true });
+    };
+    const hideCursor = () => {
+      gsap.to(cursor, { scale: 0, opacity: 0, duration: 0.3, ease: "power2.in", overwrite: true });
+    };
+
     const onMouseMove = (e: MouseEvent) => {
       const x = e.clientX;
       const y = e.clientY;
-      
+      lastPointerX = x;
+      lastPointerY = y;
+
       const speed = x - lastX;
       lastX = x;
-      
-      // Track position
+
+      // Track position (viewport coords — cursor is position: fixed)
       xTo(x);
       yTo(y);
       // Tilt based on velocity (clamped)
@@ -51,21 +73,45 @@ export function WorkGrid() {
     };
 
     const onMouseEnter = () => {
-      gsap.to(cursor, { scale: 1, opacity: 1, duration: 0.4, ease: "back.out(1.5)" });
+      lastX = 0;
+      showCursor();
     };
 
     const onMouseLeave = () => {
-      gsap.to(cursor, { scale: 0, opacity: 0, duration: 0.3, ease: "power2.in" });
+      hideCursor();
     };
 
-    container.addEventListener("mousemove", onMouseMove);
+    // Scrolling the section out from under a stationary pointer fires no
+    // mouseleave — hide via IntersectionObserver instead. When it scrolls
+    // back, only re-show if the pointer is actually over it.
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) {
+          hideCursor();
+          return;
+        }
+        const rect = container.getBoundingClientRect();
+        const pointerOver =
+          lastPointerX >= rect.left && lastPointerX <= rect.right &&
+          lastPointerY >= rect.top && lastPointerY <= rect.bottom;
+        if (pointerOver) showCursor();
+      },
+      { threshold: 0 }
+    );
+    io.observe(container);
+
+    // window-level mousemove: guaranteed delivery regardless of what sits
+    // under the pointer inside the container; visibility still gated by the
+    // container's enter/leave + the observer above.
+    window.addEventListener("mousemove", onMouseMove);
     container.addEventListener("mouseenter", onMouseEnter);
     container.addEventListener("mouseleave", onMouseLeave);
 
     return () => {
-      container.removeEventListener("mousemove", onMouseMove);
+      window.removeEventListener("mousemove", onMouseMove);
       container.removeEventListener("mouseenter", onMouseEnter);
       container.removeEventListener("mouseleave", onMouseLeave);
+      io.disconnect();
     };
   }, []);
 
