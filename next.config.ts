@@ -4,6 +4,10 @@ const SITE = "https://mzfortech.com";
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  // Only ship the drei modules the page actually imports (it exports hundreds).
+  experimental: {
+    optimizePackageImports: ["@react-three/drei"],
+  },
   images: {
     formats: ["image/avif", "image/webp"],
     minimumCacheTTL: 31536000,
@@ -12,6 +16,13 @@ const nextConfig: NextConfig = {
   // mz-specific config if any
   async headers() {
     return [
+      {
+        // ── Immutable static assets — never revalidate
+        source: "/hdr/:path*",
+        headers: [
+          { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
+        ],
+      },
       {
         // ── Global headers (security + AI discoverability Link headers)
         source: "/(.*)",

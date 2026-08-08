@@ -4,7 +4,6 @@ import { useState } from "react";
 import styles from "./page.module.css";
 import PillNav from "@/components/PillNav/PillNav";
 import { Footer } from "@/components/Footer/Footer";
-import { ArrowRight, Paperclip } from "lucide-react";
 import DarkVeil from "@/components/DarkVeil/DarkVeil";
 import ObfuscatedEmail from "@/components/ObfuscatedEmail/ObfuscatedEmail";
 
@@ -206,7 +205,10 @@ export default function StartProjectPage() {
                   </div>
 
                   <div className={`${styles.inputGroup} ${styles.fileGroup}`}>
-                    <label className={styles.label}><Paperclip size={16} style={{ marginRight: '8px' }} /> Attachments</label>
+                    <label className={styles.label}>
+                      {/* lucide paperclip (inlined; see PERFORMANCE_REAUDIT §7) */}
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '8px' }} aria-hidden="true"><path d="m16 6-8.414 8.586a2 2 0 0 0 2.829 2.829l8.414-8.586a4 4 0 1 0-5.657-5.657l-8.379 8.551a6 6 0 1 0 8.485 8.485l8.379-8.551" /></svg> Attachments
+                    </label>
                     <input type="file" id="file-upload" className={styles.fileInput} onChange={handleFileChange} />
                     <label htmlFor="file-upload" className={styles.fileLabel}>
                       {fileName ? fileName : 'Upload files...'}
@@ -217,7 +219,9 @@ export default function StartProjectPage() {
 
               <div className={`${styles.formSection} ${styles.submitSection}`}>
                 <button type="submit" className={styles.submitButton}>
-                  SEND BRIEF <ArrowRight size={20} className={styles.submitIcon} />
+                  SEND BRIEF{' '}
+                  {/* lucide arrow-right (inlined; see PERFORMANCE_REAUDIT §7) */}
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={styles.submitIcon} aria-hidden="true"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
                 </button>
               </div>
 

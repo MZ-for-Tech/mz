@@ -4,7 +4,11 @@
   display: block;
 }
 
-.claudeGroup {
+/* The whole artwork (public/icons/claude.svg) rotates about the viewBox
+   centre — same transform-origin the internal <g> used before the artwork
+   moved to an external file. transform-box defaults to view-box, so 540px
+   540px is the centre of the 1080x1080 viewBox. */
+.claudeImage {
   transform-origin: 540px 540px;
   animation: cartwheel 6s linear infinite;
 }

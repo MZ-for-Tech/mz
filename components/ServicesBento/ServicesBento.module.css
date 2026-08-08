@@ -1,7 +1,7 @@
 .bentoGrid {
   display: grid;
   grid-template-columns: 1.3fr 1fr 1fr;
-  grid-template-rows: 240px 200px 280px 300px;
+  grid-template-rows: 240px 200px 320px 340px;
   grid-template-areas:
     "build-text build-text build-visual"
     "build-text build-text accent"
@@ -17,6 +17,11 @@
   overflow: hidden;
   will-change: transform, opacity;
   transition: opacity 0.5s ease, filter 0.5s ease;
+}
+
+.bentoTile:focus-visible {
+  outline: 2px solid var(--color-brand-yellow);
+  outline-offset: -2px;
 }
 
 .bentoTile > *:not(.pillarLabel) {
@@ -102,34 +107,66 @@
 }
 
 .tileTitle {
-  font-size: clamp(1.8rem, 2.5vw, 2.8rem);
-  font-weight: 500;
+  font-size: clamp(2.4rem, 4.5vw, 6.5rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
   margin: 0;
-  line-height: 1.1;
+  line-height: 0.95;
   color: var(--color-text, var(--color-text));
+}
+
+/* Single-column tile: cap the title so a wrapped line still leaves room for
+   the hover-revealed details below. */
+.knowText .tileTitle {
+  font-size: clamp(2.2rem, 3.2vw, 4rem);
 }
 
 .tileTagline {
   font-family: var(--font-base);
-  font-size: 0.9rem;
-  color: rgba(var(--color-text-rgb), 0.5);
+  font-size: 1.05rem;
+  color: rgba(var(--color-text-rgb), 0.65);
   margin: 0;
 }
 
 .capabilitiesList {
   list-style: none;
   padding: 0;
-  margin: 16px 0 0 0;
+  margin: 14px 0 0 0;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
+}
+
+/* Details reveal on hover. The bento only renders on desktop (>=769px), but
+   touch-screen laptops have no hover, so the hidden state is scoped to
+   (hover: hover) — anywhere hover doesn't exist the details stay visible. */
+@media (hover: hover) {
+  .capabilitiesList {
+    opacity: 0;
+    transform: translateY(10px);
+    pointer-events: none;
+    transition: opacity 0.45s ease, transform 0.45s ease;
+  }
+
+  .bentoTile:hover .capabilitiesList,
+  .bentoTile:focus-within .capabilitiesList {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .capabilitiesList {
+    transform: none;
+  }
 }
 
 .capabilitiesList li {
   display: flex;
   align-items: flex-start;
   gap: 12px;
-  font-size: 1rem;
+  font-size: 0.9rem;
   color: rgba(var(--color-text-rgb), 0.8);
   line-height: 1.4;
 }

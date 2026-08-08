@@ -2,7 +2,6 @@
 
 import {
   Suspense,
-  useMemo,
   useRef,
   useEffect,
   useState
@@ -10,7 +9,6 @@ import {
 
 import {
   Canvas,
-  useLoader,
   useFrame,
   useThree
 } from "@react-three/fiber";
@@ -18,43 +16,23 @@ import {
 import { PerformanceMonitor, Environment } from "@react-three/drei";
 
 import * as THREE from "three";
-import { SVGLoader } from "three/examples/jsm/loaders/SVGLoader.js";
 
-/*
- * Z-offset per painter's layer (in SVG coordinate units).
- * The SVG has 480 paths drawn back-to-front. 75 positions have
- * multiple stacked paths (confirmed by analysis). Without a Z offset
- * those paths share the exact same depth plane → z-fighting / flickering.
- *
- * 480 * 0.02 = 9.6 SVG units total stack height.
- * At scale 0.0035 → 0.034 world units (invisible at camera z=12).
- * The extrude depth is 32 SVG units, so the stack is < 30% of depth,
- * meaning the faces never bleed through the back of the logo.
- */
-const Z_STEP = 0.02;
+import {
+  buildMeshData,
+  serializeMeshData,
+  hydrateMeshData,
+  readCachedMeshData,
+  writeCachedMeshData,
+  rememberMeshData,
+  isValidCachedMeshData,
+  globalMeshData,
+  type MeshData,
+} from "./meshBuilder";
 
-// Global cache to prevent re-building 480 geometries every time the user returns to the main page.
-// Reset to null here so HMR picks up material changes during development.
-let globalMeshData: {
-  items: {
-    geometry: THREE.ExtrudeGeometry;
-    material: THREE.MeshStandardMaterial[];
-    zOffset: number;
-    scatterX: number;
-    scatterY: number;
-    scatterZ: number;
-    rotX: number;
-    rotY: number;
-    rotZ: number;
-  }[];
-  cx: number;
-  cy: number;
-} | null = null;
+// How long the scatter→assemble intro plays (seconds). Tune here only.
+const ASSEMBLY_DURATION = 0.9;
 
-
-function Logo({ onLoad }: { onLoad?: () => void }) {
-  const svg = useLoader(SVGLoader, "/mz.svg");
-
+function Logo({ onLoad, assemblyStartDelayMs = 0 }: { onLoad?: () => void; assemblyStartDelayMs?: number }) {
   const logoRef = useRef<THREE.Group>(null);
   const sweepLightRef = useRef<THREE.PointLight>(null);
 
@@ -72,129 +50,96 @@ function Logo({ onLoad }: { onLoad?: () => void }) {
   const dragRotation = useRef({ x: 0, y: 0 });
   const dragVelocity = useRef({ x: 0, y: 0 });
 
-  const extrudeSettings = useMemo(
-    () => ({
-      depth: 32,
-      bevelEnabled: true,
-      bevelThickness: 2,
-      bevelSize: 1.5,
-      bevelSegments: 1, // Reduced from 2 for better performance on mobile GPUs
-      curveSegments: 1,
-    }),
-    []
-  );
-
   /*
-   * Build one entry per shape, preserving SVG painter's draw order.
-   * Each shape gets a unique z offset (pathIndex * Z_STEP) so no two
-   * shapes share the same depth plane → z-fighting eliminated.
-   *
-   * Material cache: identical hex colors reuse the same material object,
-   * so we never create more materials than there are unique colors.
+   * Mesh data comes from meshBuilder: in-memory cache → IndexedDB cache →
+   * build-from-SVG (first visit ever). This keeps the ~300 ms SVG parse +
+   * extrude off the critical path on cold loads.
    */
-  const meshData = useMemo(() => {
-    if (globalMeshData) return globalMeshData;
-
-    
-    const capMaterialCache = new Map<string, THREE.MeshStandardMaterial>();
-    const wallMaterialCache = new Map<string, THREE.MeshStandardMaterial>();
-
-    const getCapMaterial = (color: string) => {
-      if (!capMaterialCache.has(color)) {
-        capMaterialCache.set(
-          color,
-          new THREE.MeshStandardMaterial({
-            color,
-            metalness: 0.9,
-            roughness: 0.25,
-            // Caps don't need polygonOffset because Z_STEP physically separates them
-            // and the tightened near/far planes give us plenty of depth precision.
-          })
-        );
-      }
-      return capMaterialCache.get(color)!;
-    };
-
-    const getWallMaterial = (color: string, pathIdx: number) => {
-      const key = `${color}|${pathIdx}`;
-      if (!wallMaterialCache.has(key)) {
-        wallMaterialCache.set(
-          key,
-          new THREE.MeshStandardMaterial({
-            color,
-            metalness: 0.9,
-            roughness: 0.25,
-            // Walls need polygonOffset because they run parallel to Z and intersect physically.
-            // POSITIVE factor pushes the wall AWAY from the camera so it doesn't bleed through the front cap.
-            // Larger pathIdx = closer to camera = smaller offset, so closer walls win against further walls.
-            polygonOffset: true,
-            polygonOffsetFactor: (500 - pathIdx) * 0.1,
-            polygonOffsetUnits: 1,
-          })
-        );
-      }
-      return wallMaterialCache.get(key)!;
-    };
-
-    let pathIndex = 0;
-    const items: {
-      geometry: THREE.ExtrudeGeometry;
-      material: THREE.MeshStandardMaterial[];
-      zOffset: number;
-      scatterX: number;
-      scatterY: number;
-      scatterZ: number;
-      rotX: number;
-      rotY: number;
-      rotZ: number;
-    }[] = [];
-
-    // Parse viewBox to find exact mathematical center
-    let cx = 0;
-    let cy = 0;
-    if (svg.xml) {
-      const vb = (svg.xml as unknown as Element).getAttribute('viewBox');
-      if (vb) {
-        const parts = vb.split(/\s+/).map(parseFloat);
-        if (parts.length === 4) {
-          cx = parts[0] + parts[2] / 2;
-          cy = parts[1] + parts[3] / 2;
-        }
-      }
-    }
-
-    svg.paths.forEach((path) => {
-      const color = `#${path.color.getHexString()}`;
-      const zOffset = pathIndex * Z_STEP;
-      const thisPathIndex = pathIndex;
-      pathIndex++;
-
-      path.toShapes().forEach((shape) => {
-        items.push({
-          geometry: new THREE.ExtrudeGeometry(shape, extrudeSettings),
-          material: [getCapMaterial(color), getWallMaterial(color, thisPathIndex)],
-          zOffset,
-          scatterX: (Math.random() - 0.5) * 3000,
-          scatterY: (Math.random() - 0.5) * 3000,
-          scatterZ: 500 + Math.random() * 2000,
-          rotX: (Math.random() - 0.5) * Math.PI * 2,
-          rotY: (Math.random() - 0.5) * Math.PI * 2,
-          rotZ: (Math.random() - 0.5) * Math.PI * 2,
-        });
-      });
-    });
-
-    return { items, cx, cy };
-  }, [svg, extrudeSettings]);
+  const [meshData, setMeshData] = useState<MeshData | null>(null);
 
   useEffect(() => {
-    if (!globalMeshData) {
-      globalMeshData = meshData;
+    let cancelled = false;
+
+    (async () => {
+      // 1. Session cache (client-side navigation)
+      if (globalMeshData) {
+        setMeshData(globalMeshData);
+        return;
+      }
+      // 2. IndexedDB cache (survives hard reloads) — skips parse + extrude.
+      //    Guarded: a corrupt/stale cache must never silently brick the logo —
+      //    on any failure we fall through to the build path and warn instead.
+      try {
+        const cached = await readCachedMeshData();
+        if (cancelled) return;
+        if (cached && isValidCachedMeshData(cached)) {
+          const data = hydrateMeshData(cached);
+          rememberMeshData(data);
+          setMeshData(data);
+          return;
+        }
+        if (cached) {
+          console.warn(
+            "Logo mesh cache failed validation, rebuilding:",
+            (cached as { items?: unknown[] }).items?.length ?? "?",
+            "items"
+          );
+        }
+      } catch (err) {
+        console.warn("Logo mesh cache read failed, rebuilding:", err);
+      }
+      // 3. First-ever build (also the fallback when storage is unavailable)
+      try {
+        const res = await fetch("/mz.svg");
+        const text = await res.text();
+        if (cancelled) return;
+        const data = buildMeshData(text);
+        rememberMeshData(data);
+        setMeshData(data);
+        // Persist for the next cold load (fire-and-forget, non-fatal)
+        void writeCachedMeshData(serializeMeshData(data));
+      } catch (err) {
+        console.error("Failed to build logo mesh data:", err);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  // Choreography: mesh data marks "ready" (the fade-in starts here); the
+  // assembly then waits one beat (`assemblyStartDelayMs`) so the pieces
+  // converge as the hero words land instead of before them.
+  const dataReadyAtRef = useRef<number>(0);
+
+  useEffect(() => {
+    if (!meshData) return;
+    // Anchor the choreography once — re-runs (the parent re-renders when
+    // onLoad fires, changing its identity) must not shift this or the
+    // assembly gate would stall mid-flight.
+    if (dataReadyAtRef.current === 0) {
+      dataReadyAtRef.current = performance.now();
     }
-    // Geometries are ready, signal load complete after a tiny frame delay to ensure paint
-    if (onLoad) {
-      requestAnimationFrame(() => requestAnimationFrame(() => onLoad()));
-    }
+    let raf = 0;
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const fire = () => {
+      raf = requestAnimationFrame(() => requestAnimationFrame(() => onLoad?.()));
+    };
+    // When the assembly will play, the hero fade-in waits for it to START so
+    // the pre-assembly hold (pieces frozen at scatter positions) is never
+    // visible — the logo appears already mid-flight. Return visitors
+    // (sessionStorage / reduced-motion) skip the assembly and get the
+    // assembled logo immediately.
+    const wait = assemblyDone.current
+      ? 0
+      : Math.max(0, dataReadyAtRef.current + assemblyStartDelayMs - performance.now());
+    if (wait <= 0) fire();
+    else timer = setTimeout(fire, wait);
+    return () => {
+      if (timer) clearTimeout(timer);
+      cancelAnimationFrame(raf);
+    };
   }, [meshData, onLoad]);
 
   // Hover & Mouse Drag tracking on the WebGL canvas element
@@ -271,27 +216,59 @@ function Logo({ onLoad }: { onLoad?: () => void }) {
   const meshRefs = useRef<(THREE.Mesh | null)[]>([]);
   const animStartTime = useRef<number>(-1);
   const assemblyDone = useRef(
-    typeof window !== 'undefined' && sessionStorage.getItem('mz_logo_animated') === 'true'
+    typeof window !== 'undefined' && sessionStorage.getItem('mz_logo_animated_v2') === 'true'
   );
+  const reduceMotionRef = useRef(false);
 
-  useFrame((state, delta) => {
-    if (!logoRef.current) return;
+  // Reduced motion: skip the scatter→assemble intro entirely (pieces just
+  // start assembled, which is also what sessionStorage users get).
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      reduceMotionRef.current = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (reduceMotionRef.current) assemblyDone.current = true;
+    }
+  }, []);
+
+  // Hold the pieces at their scattered start positions until the reveal
+  // moment — otherwise the first revealed frame would show the logo already
+  // assembled, then scatter it back out to reassemble.
+  useEffect(() => {
+    if (!meshData || assemblyDone.current) return;
+    meshData.items.forEach((item, i) => {
+      const mesh = meshRefs.current[i];
+      if (!mesh) return;
+      mesh.position.set(item.scatterX, item.scatterY, item.scatterZ + item.zOffset);
+      mesh.rotation.set(item.rotX, item.rotY, item.rotZ);
+    });
+  }, [meshData]);
+
+  useFrame((state, _delta) => {
+    if (!logoRef.current || !meshData) return;
 
     const t = state.clock.elapsedTime;
 
     // --- Assembly Animation ---
-    if (!assemblyDone.current) {
-      // Accumulate time manually. Cap delta at 0.05 (50ms) so shader compilation freezes 
-      // don't cause the animation to skip instantly to the end.
-      const dt = Math.min(delta, 0.05);
-
-      // Initialize animTime if not set
+    // Gated until one beat after the data is ready (see dataReadyAtRef), so
+    // the pieces converge as the hero words land. Before the gate opens,
+    // pieces are held at their scattered positions by the effect above.
+    if (
+      !assemblyDone.current &&
+      dataReadyAtRef.current > 0 &&
+      performance.now() >= dataReadyAtRef.current + assemblyStartDelayMs
+    ) {
+      // Wall-clock progress: the assembly always completes in exactly
+      // ASSEMBLY_DURATION of real time, regardless of frame rate. (Per-frame
+      // accumulation with a cap made the intro crawl on slow renderers — e.g.
+      // ~30 frames minimum on software rendering — which reads as "the logo
+      // never appears". A multi-second freeze now jumps the animation instead
+      // of stretching it, which is the right behaviour for a fast site.)
       if (animStartTime.current === -1) {
-        animStartTime.current = 0;
+        animStartTime.current = performance.now();
       }
-      animStartTime.current += dt;
-
-      const progress = Math.min(1, animStartTime.current / 1.5); // 1.5s assembly time
+      const progress = Math.min(
+        1,
+        (performance.now() - animStartTime.current) / (ASSEMBLY_DURATION * 1000)
+      );
       // Fast, smooth ease-out curve
       const easeOut = 1 - Math.pow(1 - progress, 3);
       const invEase = 1 - easeOut;
@@ -315,7 +292,9 @@ function Logo({ onLoad }: { onLoad?: () => void }) {
       if (progress >= 1) {
         assemblyDone.current = true;
         if (typeof window !== 'undefined') {
-          sessionStorage.setItem('mz_logo_animated', 'true');
+          // Versioned so a marker from an older build can't suppress the
+          // current animation — bump when the intro changes.
+          sessionStorage.setItem('mz_logo_animated_v2', 'true');
         }
       }
     }
@@ -414,6 +393,8 @@ function Logo({ onLoad }: { onLoad?: () => void }) {
     }
   });
 
+  if (!meshData) return null;
+
   return (
     <>
       <group ref={logoRef}>
@@ -448,15 +429,35 @@ function Logo({ onLoad }: { onLoad?: () => void }) {
 
 export default function MzLogo3D({
   className,
-  onLoad
+  onLoad,
+  assemblyStartDelayMs = 0,
 }: {
   className?: string;
   onLoad?: () => void;
+  assemblyStartDelayMs?: number;
 }) {
   const [dpr, setDpr] = useState(1.5);
+  // Render only while the logo is on screen. The Canvas defaults to
+  // frameloop="always" (a render every animation frame, forever, even when
+  // scrolled out of view). Toggling to "never" off-screen stops the
+  // permanent GPU/main-thread burn; flipping back resumes the loop.
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const [inView, setInView] = useState(true);
+
+  useEffect(() => {
+    const el = wrapRef.current;
+    if (!el || typeof IntersectionObserver === "undefined") return;
+    const io = new IntersectionObserver(
+      ([entry]) => setInView(entry.isIntersecting),
+      { threshold: 0 }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
 
   return (
     <div
+      ref={wrapRef}
       className={className}
       style={{
         width: "100%",
@@ -465,6 +466,7 @@ export default function MzLogo3D({
       }}
     >
         <Canvas
+          frameloop={inView ? "always" : "never"}
           dpr={dpr}
           camera={{
             position: [0, 0, 12],
@@ -483,11 +485,17 @@ export default function MzLogo3D({
           onDecline={() => setDpr(Math.max(1, dpr - 0.25))}
         />
         <Suspense fallback={null}>
-          <Logo onLoad={onLoad} />
+          <Logo onLoad={onLoad} assemblyStartDelayMs={assemblyStartDelayMs} />
         </Suspense>
 
-        {/* Environment map for realistic metallic reflections */}
-        <Environment preset="forest" environmentIntensity={0.6} />
+        {/* Environment map for realistic metallic reflections. Self-hosted
+            (public/hdr/forest_slope_1k.hdr — same file the drei "forest"
+            preset loads, but from our own origin). Wrapped in Suspense so the
+            logo renders immediately and the reflections pop in when the HDR
+            arrives, instead of blocking first paint on a CDN fetch. */}
+        <Suspense fallback={null}>
+          <Environment files="/hdr/forest_slope_1k.hdr" environmentIntensity={0.6} />
+        </Suspense>
 
         {/* Darkness / Base ambient */}
         <ambientLight intensity={0.4} />

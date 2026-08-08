@@ -3,11 +3,11 @@ import { TransitionLink } from "@/components/TransitionLink/TransitionLink";
 import PillNav from "@/components/PillNav/PillNav";
 import { Footer } from "@/components/Footer/Footer";
 import ObfuscatedEmail from "@/components/ObfuscatedEmail/ObfuscatedEmail";
-import { ArrowLeft } from "lucide-react";
 import Image from "next/image";
 import { PROJECTS } from "@/lib/projects";
 
 import IconCollage from "@/components/nested/IconCollage/IconCollage";
+import IconSprite from "@/components/nested/IconCollage/IconSprite";
 import LinesIcon from "@/components/nested/IconCollage/LinesIcon";
 import ClaudeIcon from "@/components/nested/IconCollage/ClaudeIcon";
 import TiktokIcon from "@/components/nested/IconCollage/TiktokIcon";
@@ -28,6 +28,7 @@ export default function NestedUnitedWorld() {
 
   return (
     <div className={styles.worldContainer}>
+      <IconSprite />
       <PillNav items={NAV_ITEMS} />
 
       {/* Hero Strip */}
@@ -35,7 +36,8 @@ export default function NestedUnitedWorld() {
         <div className={styles.heroContent}>
           <div className={styles.backNav}>
             <TransitionLink href="/#work" className={styles.backLink}>
-              <ArrowLeft size={16} /> BACK TO WORK
+              {/* lucide arrow-left (inlined; see PERFORMANCE_REAUDIT §7) */}
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m12 19-7-7 7-7" /><path d="M19 12H5" /></svg> BACK TO WORK
             </TransitionLink>
           </div>
 

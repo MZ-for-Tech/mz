@@ -85,6 +85,7 @@ export default function RootLayout({
             width={100}
             height={100}
             className="layout-logo-img"
+            priority
           />
         </TransitionLink>
         <SmoothScrolling>{children}</SmoothScrolling>

@@ -13,7 +13,7 @@ import { gsap } from "@/lib/gsap";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 
-import MzLogo3D from "@/components/Logo/MzLogo3D";
+const MzLogo3D = dynamic(() => import("@/components/Logo/MzLogo3D"), { ssr: false });
 import { useGSAP } from "@gsap/react";
 const ServicesAccordion = dynamic(() => import("@/components/ServicesAccordion/ServicesAccordion"), { ssr: false });
 import PremiumShowcase from "@/components/PremiumShowcase/PremiumShowcase";
@@ -23,6 +23,7 @@ import ObfuscatedEmail from "@/components/ObfuscatedEmail/ObfuscatedEmail";
 import { TransitionLink } from "@/components/TransitionLink/TransitionLink";
 import { WorkGrid } from "@/components/sections/WorkGrid";
 import VariableProximity from "@/components/VariableProximity/VariableProximity";
+import IconSprite from "@/components/nested/IconCollage/IconSprite";
 
 
 
@@ -107,6 +108,7 @@ export default function Home() {
 
   return (
     <>
+      <IconSprite />
       <div style={{ position: "relative", zIndex: 10 }}>
         <main ref={mainRef} className={styles.main}>
           <PillNav
@@ -140,7 +142,18 @@ export default function Home() {
                   transition: 'opacity 0.3s ease-out'
                 }}
               >
-                {isReadyForHeavy && <MzLogo3D onLoad={() => setIsLogoLoaded(true)} />}
+                {isReadyForHeavy && (
+                  <MzLogo3D
+                    onLoad={() => setIsLogoLoaded(true)}
+                    // Data is usually ready ~1.1–1.5s after load (wipe ends at
+                    // 1.02s). The fade-in waits for the assembly to start (one
+                    // short beat later) so the pre-assembly hold is never
+                    // visible — the logo appears mid-flight and converges as
+                    // the hero words land (~2.8s). 400ms keeps that window
+                    // tight enough that there's no "empty hero" feel.
+                    assemblyStartDelayMs={400}
+                  />
+                )}
               </div>
 
               <div className={styles.heroContent}>

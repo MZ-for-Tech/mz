@@ -58,18 +58,21 @@ export function Footer() {
     <div className={styles.footerWrapper} ref={footerRef}>
       <footer className={styles.footerContent}>
         {/* Animated Background */}
+        {/* DarkVeil is mounted unconditionally: it pauses its own rAF loop via
+            its internal IntersectionObserver + visibilitychange (DarkVeil.tsx),
+            so unmounting/remounting here would destroy and recreate the WebGL
+            context and recompile the CPPN shader on every scroll past the
+            footer. One context, alive for the whole session. */}
         <div style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", zIndex: -1, overflow: "hidden" }}>
-          {isVisible && (
-            <DarkVeil
-              hueShift={-170}
-              noiseIntensity={0.08}
-              scanlineIntensity={0.05}
-              scanlineFrequency={0.01}
-              speed={0.2}
-              warpAmount={0.5}
-              variant="wave"
-            />
-          )}
+          <DarkVeil
+            hueShift={-170}
+            noiseIntensity={0.08}
+            scanlineIntensity={0.05}
+            scanlineFrequency={0.01}
+            speed={0.2}
+            warpAmount={0.5}
+            variant="wave"
+          />
         </div>
 
         {/* Open Statement CTA (No Heavy Boxes) */}
