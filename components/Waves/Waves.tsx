@@ -75,20 +75,10 @@ class Noise {
   }
 }
 
-interface Mouse {
-  x: number; y: number;
-  lx: number; ly: number;
-  sx: number; sy: number;
-  v: number; vs: number;
-  a: number; set: boolean;
-}
-
 interface Config {
   lineColor: string;
   waveSpeedX: number; waveSpeedY: number;
   waveAmpX: number; waveAmpY: number;
-  friction: number; tension: number;
-  maxCursorMove: number;
   xGap: number; yGap: number;
 }
 
@@ -98,8 +88,6 @@ interface WavesProps {
   waveSpeedX?: number; waveSpeedY?: number;
   waveAmpX?: number; waveAmpY?: number;
   xGap?: number; yGap?: number;
-  friction?: number; tension?: number;
-  maxCursorMove?: number;
   style?: CSSProperties;
   className?: string;
 }
@@ -113,9 +101,6 @@ const Waves: FC<WavesProps> = ({
   waveAmpY = 16,
   xGap = 10,
   yGap = 32,
-  friction = 0.925,
-  tension = 0.005,
-  maxCursorMove = 100,
   style = {},
   className = ''
 }) => {
@@ -124,17 +109,14 @@ const Waves: FC<WavesProps> = ({
   const ctxRef = useRef<CanvasRenderingContext2D | null>(null);
   const boundingRef = useRef({ width: 0, height: 0, left: 0, top: 0 });
   const noiseRef = useRef<Noise | null>(null);
-  const mouseRef = useRef<Mouse>({
-    x: -10, y: 0, lx: 0, ly: 0, sx: 0, sy: 0, v: 0, vs: 0, a: 0, set: false
-  });
   const configRef = useRef<Config>({
-    lineColor, waveSpeedX, waveSpeedY, waveAmpX, waveAmpY, friction, tension, maxCursorMove, xGap, yGap
+    lineColor, waveSpeedX, waveSpeedY, waveAmpX, waveAmpY, xGap, yGap
   });
   const frameIdRef = useRef<number | null>(null);
 
   useEffect(() => {
-    configRef.current = { lineColor, waveSpeedX, waveSpeedY, waveAmpX, waveAmpY, friction, tension, maxCursorMove, xGap, yGap };
-  }, [lineColor, waveSpeedX, waveSpeedY, waveAmpX, waveAmpY, friction, tension, maxCursorMove, xGap, yGap]);
+    configRef.current = { lineColor, waveSpeedX, waveSpeedY, waveAmpX, waveAmpY, xGap, yGap };
+  }, [lineColor, waveSpeedX, waveSpeedY, waveAmpX, waveAmpY, xGap, yGap]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -153,10 +135,6 @@ const Waves: FC<WavesProps> = ({
     let pY: Float32Array;
     let pWaveX: Float32Array;
     let pWaveY: Float32Array;
-    let pCurX: Float32Array;
-    let pCurY: Float32Array;
-    let pCurVX: Float32Array;
-    let pCurVY: Float32Array;
 
     function setSize() {
       if (!container || !canvas) return;
@@ -190,10 +168,6 @@ const Waves: FC<WavesProps> = ({
       pY = new Float32Array(count);
       pWaveX = new Float32Array(count);
       pWaveY = new Float32Array(count);
-      pCurX = new Float32Array(count);
-      pCurY = new Float32Array(count);
-      pCurVX = new Float32Array(count);
-      pCurVY = new Float32Array(count);
 
       const xStart = (width - xGap * totalLines) / 2;
       const yStart = (height - yGap * totalPoints) / 2;
@@ -209,9 +183,8 @@ const Waves: FC<WavesProps> = ({
     }
 
     function movePoints(time: number) {
-      const mouse = mouseRef.current;
       const noise = noiseRef.current!;
-      const { waveSpeedX, waveSpeedY, waveAmpX, waveAmpY, friction, tension, maxCursorMove } = configRef.current;
+      const { waveSpeedX, waveSpeedY, waveAmpX, waveAmpY } = configRef.current;
       
       const count = (totalLines + 1) * (totalPoints + 1);
       for (let i = 0; i < count; i++) {
@@ -221,48 +194,15 @@ const Waves: FC<WavesProps> = ({
         const move = noise.perlin2((px + time * waveSpeedX) * 0.002, (py + time * waveSpeedY) * 0.0015) * 12;
         pWaveX[i] = Math.cos(move) * waveAmpX;
         pWaveY[i] = Math.sin(move) * waveAmpY;
-
-        const dx = px - mouse.sx;
-        const dy = py - mouse.sy;
-        const dist = Math.hypot(dx, dy);
-        const l = Math.max(175, mouse.vs);
-        
-        let vx = pCurVX[i];
-        let vy = pCurVY[i];
-        
-        if (dist < l) {
-          const s = 1 - dist / l;
-          const f = Math.cos(dist * 0.001) * s;
-          vx += Math.cos(mouse.a) * f * l * mouse.vs * 0.00065;
-          vy += Math.sin(mouse.a) * f * l * mouse.vs * 0.00065;
-        }
-
-        let cx = pCurX[i];
-        let cy = pCurY[i];
-
-        vx += (0 - cx) * tension;
-        vy += (0 - cy) * tension;
-        vx *= friction;
-        vy *= friction;
-        cx += vx * 2;
-        cy += vy * 2;
-        
-        cx = Math.min(maxCursorMove, Math.max(-maxCursorMove, cx));
-        cy = Math.min(maxCursorMove, Math.max(-maxCursorMove, cy));
-        
-        pCurX[i] = cx;
-        pCurY[i] = cy;
-        pCurVX[i] = vx;
-        pCurVY[i] = vy;
       }
     }
 
-    function movedX(idx: number, withCursor: boolean) {
-      return pX[idx] + pWaveX[idx] + (withCursor ? pCurX[idx] : 0);
+    function movedX(idx: number) {
+      return pX[idx] + pWaveX[idx];
     }
     
-    function movedY(idx: number, withCursor: boolean) {
-      return pY[idx] + pWaveY[idx] + (withCursor ? pCurY[idx] : 0);
+    function movedY(idx: number) {
+      return pY[idx] + pWaveY[idx];
     }
 
     function drawLines() {
@@ -275,22 +215,10 @@ const Waves: FC<WavesProps> = ({
       
       for (let i = 0; i <= totalLines; i++) {
         const startIdx = i * (totalPoints + 1);
-        let px = movedX(startIdx, false);
-        let py = movedY(startIdx, false);
-        ctx.moveTo(px, py);
-        
-        for (let j = 0; j <= totalPoints; j++) {
+        ctx.moveTo(movedX(startIdx), movedY(startIdx));
+        for (let j = 1; j <= totalPoints; j++) {
           const idx = startIdx + j;
-          const isLast = j === totalPoints;
-          px = movedX(idx, !isLast);
-          py = movedY(idx, !isLast);
-          
-          const nextIdx = startIdx + (isLast ? j : j + 1);
-          const p2x = movedX(nextIdx, !isLast);
-          const p2y = movedY(nextIdx, !isLast);
-          
-          ctx.lineTo(px, py);
-          if (isLast) ctx.moveTo(p2x, p2y);
+          ctx.lineTo(movedX(idx), movedY(idx));
         }
       }
       ctx.stroke();
@@ -299,39 +227,23 @@ const Waves: FC<WavesProps> = ({
     let lastWaveX0 = 0;
     let drawFrameCount = 0;
     // Touch devices: this is a full-viewport canvas behind scrolling content —
-    // render at a steady 30fps and never spike to 60fps on touch-drag (the
-    // grid is ~15% alpha; the throttle is invisible). Desktop keeps the
-    // 60fps-on-pointer-move responsiveness.
+    // render at a steady 30fps (the grid is ~15% alpha; the throttle is
+    // invisible). Desktop keeps 60fps when the wave is moving.
     const isCoarse =
       typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches;
 
     function tick(t: number) {
       if (!container) return;
-      const mouse = mouseRef.current;
-      mouse.sx += (mouse.x - mouse.sx) * 0.1;
-      mouse.sy += (mouse.y - mouse.sy) * 0.1;
-      const dx = mouse.x - mouse.lx,
-        dy = mouse.y - mouse.ly;
-      const d = Math.hypot(dx, dy);
-      mouse.v = d;
-      mouse.vs += (d - mouse.vs) * 0.1;
-      mouse.vs = Math.min(100, mouse.vs);
-      mouse.lx = mouse.x;
-      mouse.ly = mouse.y;
-      mouse.a = Math.atan2(dy, dx);
-      container.style.setProperty('--x', `${mouse.sx}px`);
-      container.style.setProperty('--y', `${mouse.sy}px`);
 
       movePoints(t);
 
-      // Throttle draws: when mouse is idle, render at ~30fps (every other frame).
-      // When mouse is moving (vs > 1), render every frame for responsive feel —
-      // except on coarse pointers, which stay at 30fps always.
+      // Throttle draws: ~30fps when the wave change is small, every frame
+      // when it's lively — except on coarse pointers, which stay at 30fps.
       drawFrameCount++;
       const curWaveX0 = pWaveX[0];
       const waveChange = Math.abs(curWaveX0 - lastWaveX0);
       lastWaveX0 = curWaveX0;
-      const isIdle = mouse.v < 1 && waveChange < 0.5;
+      const isIdle = waveChange < 0.5;
       const shouldDraw = isCoarse ? drawFrameCount % 2 === 0 : (!isIdle || drawFrameCount % 2 === 0);
       if (shouldDraw) {
         drawLines();
@@ -343,24 +255,6 @@ const Waves: FC<WavesProps> = ({
     }
 
     function onResize() { setSize(); setLines(); }
-    function onMouseMove(e: MouseEvent) { updateMouse(e.clientX, e.clientY); }
-    function onTouchMove(e: TouchEvent) {
-      const touch = e.touches[0];
-      if (!touch) return;
-      updateMouse(touch.clientX, touch.clientY);
-    }
-    function updateMouse(x: number, y: number) {
-      if (!container) return;
-      const rect = boundingRef.current;
-      const mouse = mouseRef.current;
-      mouse.x = x - rect.left;
-      mouse.y = y - rect.top;
-      if (!mouse.set) {
-        mouse.sx = mouse.x; mouse.sy = mouse.y;
-        mouse.lx = mouse.x; mouse.ly = mouse.y;
-        mouse.set = true;
-      }
-    }
 
     let isVisible = true;
     const visibilityObserver = new IntersectionObserver(([entry]) => {
@@ -399,15 +293,11 @@ const Waves: FC<WavesProps> = ({
     document.addEventListener('visibilitychange', onVis);
 
     window.addEventListener('resize', onResize);
-    window.addEventListener('mousemove', onMouseMove, { passive: true });
-    window.addEventListener('touchmove', onTouchMove, { passive: true });
 
     return () => {
       visibilityObserver.disconnect();
       document.removeEventListener('visibilitychange', onVis);
       window.removeEventListener('resize', onResize);
-      window.removeEventListener('mousemove', onMouseMove);
-      window.removeEventListener('touchmove', onTouchMove);
       if (frameIdRef.current !== null) cancelAnimationFrame(frameIdRef.current);
     };
   }, []);
