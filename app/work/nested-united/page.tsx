@@ -9,6 +9,7 @@ import { PROJECTS } from "@/lib/projects";
 
 import IconCollage from "@/components/nested/IconCollage/IconCollage";
 import IconSprite from "@/components/nested/IconCollage/IconSprite";
+import IframePreview from "@/components/IframePreview/IframePreview";
 import LinesIcon from "@/components/nested/IconCollage/LinesIcon";
 import ClaudeIcon from "@/components/nested/IconCollage/ClaudeIcon";
 import TiktokIcon from "@/components/nested/IconCollage/TiktokIcon";
@@ -317,7 +318,7 @@ export default function NestedUnitedWorld() {
             </div>
           </div>
           <div className={styles.iframeWrapper}>
-            <iframe src="https://www.nestedunited.com" width="100%" height="100%" frameBorder="0" loading="lazy" title="Nested United Live Preview" />
+            <IframePreview src="https://www.nestedunited.com" title="Nested United Live Preview" />
           </div>
         </div>
 

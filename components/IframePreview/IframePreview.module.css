@@ -1,0 +1,81 @@
+.wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+  /* Default: inert — the page scrolls freely over the preview (Lenis). */
+  pointer-events: none;
+}
+
+.entered .iframe {
+  /* Inside the preview: fully interactive, native scrolling. */
+  pointer-events: auto;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(16, 15, 13, 0.35);
+  cursor: pointer;
+  transition: opacity 0.25s ease;
+}
+
+.entered .overlay {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.hint {
+  font-family: var(--font-code);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  color: #fffbf3;
+  background: rgba(16, 15, 13, 0.75);
+  border: 1px solid rgba(255, 251, 243, 0.25);
+  padding: 14px 26px;
+  border-radius: 999px;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.exitChip {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-code);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  color: #100f0d;
+  background: #fffbf3;
+  border: none;
+  border-radius: 999px;
+  padding: 8px 16px;
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.esc {
+  font-size: 0.6rem;
+  opacity: 0.55;
+}
+
+.entered .exitChip {
+  opacity: 1;
+  pointer-events: auto;
+}
