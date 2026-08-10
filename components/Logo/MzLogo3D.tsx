@@ -216,7 +216,7 @@ function Logo({ onLoad, assemblyStartDelayMs = 0 }: { onLoad?: () => void; assem
   const meshRefs = useRef<(THREE.Mesh | null)[]>([]);
   const animStartTime = useRef<number>(-1);
   const assemblyDone = useRef(
-    typeof window !== 'undefined' && sessionStorage.getItem('mz_logo_animated_v2') === 'true'
+    typeof window !== 'undefined' && sessionStorage.getItem('mz_logo_animated_v3') === 'true'
   );
   const reduceMotionRef = useRef(false);
 
@@ -294,7 +294,7 @@ function Logo({ onLoad, assemblyStartDelayMs = 0 }: { onLoad?: () => void; assem
         if (typeof window !== 'undefined') {
           // Versioned so a marker from an older build can't suppress the
           // current animation — bump when the intro changes.
-          sessionStorage.setItem('mz_logo_animated_v2', 'true');
+          sessionStorage.setItem('mz_logo_animated_v3', 'true');
         }
       }
     }

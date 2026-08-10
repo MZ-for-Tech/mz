@@ -1,7 +1,8 @@
 /*
  * Logo mesh data: build, cache, hydrate.
  *
- * Building the logo costs an SVG fetch + SVGLoader parse + 480 ExtrudeGeometry
+ * Building the logo costs an SVG fetch + SVGLoader parse + ~163 ExtrudeGeometry
+ * constructions (MZ.svg — the previous logo had 480)
  * constructions (~300 ms of main-thread work) on every cold load. The built
  * items are cached three ways:
  *
@@ -22,11 +23,11 @@ import { SVGLoader } from "three/examples/jsm/loaders/SVGLoader.js";
 
 /*
  * Z-offset per painter's layer (in SVG coordinate units).
- * The SVG has 480 paths drawn back-to-front. 75 positions have
- * multiple stacked paths (confirmed by analysis). Without a Z offset
+ * The SVG is drawn back-to-front (MZ.svg: 165 paths / 163 shapes).
+ * Positions with multiple stacked paths share a depth plane without a Z offset
  * those paths share the exact same depth plane → z-fighting / flickering.
  *
- * 480 * 0.02 = 9.6 SVG units total stack height.
+ * ~163 * 0.02 = ~3.3 SVG units total stack height (was 9.6 for 480).
  * At scale 0.0035 → 0.034 world units (invisible at camera z=12).
  * The extrude depth is 32 SVG units, so the stack is < 30% of depth,
  * meaning the faces never bleed through the back of the logo.
@@ -61,7 +62,7 @@ export interface MeshData {
   cy: number;
 }
 
-// Global cache to prevent re-building 480 geometries every time the user returns to the main page.
+// Global cache to prevent re-building all geometries every time the user returns to the main page.
 // Reset to null here so HMR picks up material changes during development.
 export let globalMeshData: MeshData | null = null;
 
@@ -194,12 +195,15 @@ interface SerializedItem {
 export interface CachedMeshData {
   cx: number;
   cy: number;
+  /** Self-describing item count — validation checks items.length against it,
+   * so a logo change never needs a hardcoded count updated in two places. */
+  itemCount: number;
   items: SerializedItem[];
 }
 
 // Bump when mz.svg, the extrude settings, or the serialized shape change —
 // stale caches must not survive a geometry-affecting edit.
-const CACHE_KEY = "mz-logo-mesh-v2";
+const CACHE_KEY = "mz-logo-mesh-v3";
 const DB_NAME = "mz-logo-cache";
 const STORE = "mesh";
 
@@ -207,6 +211,7 @@ export function serializeMeshData(data: MeshData): CachedMeshData {
   return {
     cx: data.cx,
     cy: data.cy,
+    itemCount: data.items.length,
     items: data.items.map((item) => {
       const g = item.geometry;
       return {
@@ -294,7 +299,13 @@ export async function readCachedMeshData(): Promise<CachedMeshData | null> {
 export function isValidCachedMeshData(cached: unknown): cached is CachedMeshData {
   if (!cached || typeof cached !== "object") return false;
   const blob = cached as Partial<CachedMeshData>;
-  if (!Array.isArray(blob.items) || blob.items.length !== 480) return false;
+  if (
+    !Array.isArray(blob.items) ||
+    typeof blob.itemCount !== "number" ||
+    blob.items.length !== blob.itemCount
+  ) {
+    return false;
+  }
   return blob.items.every((it) => {
     if (!it || typeof it !== "object") return false;
     const item = it as Partial<CachedMeshData["items"][number]>;
