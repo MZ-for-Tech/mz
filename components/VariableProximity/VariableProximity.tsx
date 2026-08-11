@@ -83,6 +83,8 @@ const VariableProximity = forwardRef<HTMLSpanElement, VariableProximityProps>((p
 
   const letterRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const interpolatedSettingsRef = useRef<string[]>([]);
+  // Last written rgb string per letter — skips redundant style writes.
+  const lastColorsRef = useRef<string[]>([]);
   const mousePositionRef = useMousePositionRef(containerRef);
   const lastPositionRef = useRef<{ x: number | null; y: number | null }>({ x: null, y: null });
 
@@ -123,6 +125,62 @@ const VariableProximity = forwardRef<HTMLSpanElement, VariableProximityProps>((p
       document.removeEventListener('visibilitychange', onVisibility);
     };
   }, [updateActive]);
+
+  // Proximity tint colors, pre-resolved to RGB.
+  //
+  // The effect writes one color per letter per frame. The original code used
+  // `color-mix(in srgb, var(--color-brand-yellow) p%, var(--color-text))`,
+  // forcing the CSS engine to parse a color-mix() expression with two var()
+  // resolutions for every letter on every frame (136 spans in the Manifesto).
+  // `color-mix(in srgb, A p%, B)` is defined by spec as a linear sRGB
+  // interpolation — A·(p/100) + B·(1 − p/100) — so computing it in JS and
+  // writing a plain `rgb(r, g, b)` string is mathematically identical output
+  // at a fraction of the parse cost.
+  const tintRef = useRef<{ from: [number, number, number]; to: [number, number, number] }>({
+    from: [255, 231, 141], // --color-brand-yellow (dark) until resolved
+    to: [245, 245, 240],   // --color-text (dark) until resolved
+  });
+
+  useEffect(() => {
+    const resolveRgb = (hexVar: string, rgbVar: string): [number, number, number] => {
+      const styles = getComputedStyle(document.documentElement);
+      // Prefer the comma-separated "-rgb" twin if defined (both themes ship one).
+      const rgbRaw = styles.getPropertyValue(rgbVar).trim();
+      const nums = rgbRaw.match(/\d+(?:\.\d+)?/g);
+      if (nums && nums.length >= 3) {
+        return [Math.round(parseFloat(nums[0])), Math.round(parseFloat(nums[1])), Math.round(parseFloat(nums[2]))];
+      }
+      // Fallback: parse the hex value of the main variable.
+      const hex = styles.getPropertyValue(hexVar).trim().match(/^#([a-f\d]{6})$/i);
+      if (hex) {
+        const n = parseInt(hex[1], 16);
+        return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+      }
+      return [255, 255, 255];
+    };
+
+    const update = () => {
+      tintRef.current = {
+        from: resolveRgb("--color-brand-yellow", "--color-brand-yellow-rgb"),
+        to: resolveRgb("--color-text", "--color-text-rgb"),
+      };
+    };
+    update();
+
+    // Re-resolve if the theme flips at runtime (same pattern as Grainient /
+    // DataStreamHero; layout sets data-theme statically today, so this is
+    // cheap insurance).
+    const observer = new MutationObserver((mutations) => {
+      for (const m of mutations) {
+        if (m.attributeName === "data-theme") {
+          update();
+          break;
+        }
+      }
+    });
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+    return () => observer.disconnect();
+  }, []);
 
   // F7: when from === to there is nothing to interpolate — skip the per-frame
   // fontVariationSettings write entirely (it computes a value that never changes).
@@ -203,6 +261,7 @@ const VariableProximity = forwardRef<HTMLSpanElement, VariableProximityProps>((p
 
       if (distance >= radius) {
         if (hasFontVariation) letterRef.style.fontVariationSettings = fromFontVariationSettings;
+        lastColorsRef.current[index] = "";
         letterRef.style.color = '';
         letterRef.style.setProperty('--glow', '0');
         letterRef.style.transform = '';
@@ -222,9 +281,20 @@ const VariableProximity = forwardRef<HTMLSpanElement, VariableProximityProps>((p
         letterRef.style.fontVariationSettings = newSettings;
       }
       
-      const intensity = falloffValue; 
-      
-      letterRef.style.color = `color-mix(in srgb, var(--color-brand-yellow) ${intensity * 100}%, var(--color-text))`;
+      const intensity = falloffValue;
+
+      // sRGB lerp — identical to color-mix(in srgb, yellow p%, text).
+      const { from: yc, to: tc } = tintRef.current;
+      const r = Math.round(yc[0] + (tc[0] - yc[0]) * intensity);
+      const g = Math.round(yc[1] + (tc[1] - yc[1]) * intensity);
+      const b = Math.round(yc[2] + (tc[2] - yc[2]) * intensity);
+      const color = `rgb(${r}, ${g}, ${b})`;
+      // Skip the write when this letter's color is unchanged since last frame
+      // (letters far from the cursor shift imperceptibly per mouse-pixel).
+      if (lastColorsRef.current[index] !== color) {
+        lastColorsRef.current[index] = color;
+        letterRef.style.color = color;
+      }
       letterRef.style.setProperty('--glow', String(intensity));
       letterRef.style.transform = `translateY(${-intensity * 5}px) scale(${1 + (intensity * 0.05)})`;
     });
