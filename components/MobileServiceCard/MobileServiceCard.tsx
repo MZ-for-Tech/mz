@@ -7,17 +7,9 @@ interface MobileServiceCardProps {
   tagline: string;
   capabilities: string[];
   visual?: ReactNode;
-  /**
-   * "per-card" (default): this card owns its own Grainient WebGL context —
-   * the original rendering, pixel-perfect and independent per card.
-   * "shared": the card renders a `[data-grainient]` region that a parent
-   * SharedGrainient (one shared context) draws into. Used only as a
-   * fallback for genuinely low-end devices to save WebGL context budget.
-   */
-  grainientMode?: "per-card" | "shared";
 }
 
-export default function MobileServiceCard({ title, tagline, capabilities, visual, grainientMode = "per-card" }: MobileServiceCardProps) {
+export default function MobileServiceCard({ title, tagline, capabilities, visual }: MobileServiceCardProps) {
   const [isActive, setIsActive] = useState(false);
 
   return (
@@ -27,22 +19,17 @@ export default function MobileServiceCard({ title, tagline, capabilities, visual
       onClick={() => setIsActive(!isActive)}
       style={{ cursor: 'pointer' }}
     >
-      {grainientMode === "shared" ? (
-        // Region for the parent SharedGrainient (low-end fallback only).
-        <div data-grainient className={styles.grainientWrapper} />
-      ) : (
-        <div className={styles.grainientWrapper}>
-          <Grainient
-            color1="var(--color-bg)"
-            color2="var(--color-bg)"
-            color3="var(--color-olive)"
-            timeSpeed={0.15}
-            colorBalance={0.0}
-            blendSoftness={0.2}
-            contrast={1.1}
-          />
-        </div>
-      )}
+      <div className={styles.grainientWrapper}>
+        <Grainient
+          color1="var(--color-bg)"
+          color2="var(--color-bg)"
+          color3="var(--color-olive)"
+          timeSpeed={0.15}
+          colorBalance={0.0}
+          blendSoftness={0.2}
+          contrast={1.1}
+        />
+      </div>
       <div className={styles.lightLayer}>
         <div className={styles.slit}></div>
         <div className={styles.lumen}>

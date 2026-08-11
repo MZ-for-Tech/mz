@@ -5,7 +5,6 @@ import { gsap } from "@/lib/gsap";
 import { useGSAP } from "@gsap/react";
 import pageStyles from "@/app/page.module.css";
 import ServicesBento from "@/components/ServicesBento/ServicesBento";
-import SharedGrainient from "@/components/Grainient/SharedGrainient";
 import { BuildVisual, DeployVisual, TeachVisual } from "@/components/ServiceVisuals/ServiceVisuals";
 import MobileServiceCard from "@/components/MobileServiceCard/MobileServiceCard";
 
@@ -60,26 +59,9 @@ function useMediaQuery(query: string) {
   return matches;
 }
 
-/**
- * "Genuinely low end" — deliberately stricter than DarkVeil's lowPower:
- * a plain `(max-width: 768px)` match is NOT enough (that would push every
- * phone onto the shared atlas, which is exactly what we just reverted).
- * Only devices with a weak CPU or very low memory fall back to the single
- * SharedGrainient context to protect the WebGL context budget; everyone
- * else gets the original per-card Grainient rendering.
- */
-function isGenuinelyLowEnd(): boolean {
-  if (typeof navigator === "undefined") return false;
-  const cores = typeof navigator.hardwareConcurrency === "number" ? navigator.hardwareConcurrency : 8;
-  const mem = typeof navigator.deviceMemory === "number" ? navigator.deviceMemory : 8;
-  return cores <= 4 || mem <= 2;
-}
-
 export default function ServicesAccordion() {
   const sectionRef = useRef<HTMLElement>(null);
   const isMobile = useMediaQuery("(max-width: 768px)");
-  // Device capability is static per session — evaluate once.
-  const [useSharedGrainientFallback] = useState(() => isGenuinelyLowEnd());
 
   // Pause all ServiceVisual CSS animations and WebGL canvases when section is not on screen
   useEffect(() => {
@@ -122,52 +104,9 @@ export default function ServicesAccordion() {
         <div className={pageStyles.desktopOnly} style={{ width: '100%', marginTop: '4rem' }}>
           <ServicesBento />
         </div>
-      ) : useSharedGrainientFallback ? (
-        // LOW-END FALLBACK: one SharedGrainient context for all three mobile
-        // cards instead of three per-instance WebGL contexts, protecting the
-        // context budget on genuinely weak devices. Cards render as
-        // `[data-grainient]` regions; rects are scroll-aware inside
-        // SharedGrainient to track the cards' sticky motion.
-        <SharedGrainient
-          regionSelector="[data-grainient]"
-          color1="var(--color-bg)"
-          color2="var(--color-bg)"
-          color3="var(--color-olive)"
-          timeSpeed={0.15}
-          colorBalance={0.0}
-          blendSoftness={0.2}
-          contrast={1.1}
-        >
-          <div className={`${pageStyles.mobileOnly} ${pageStyles.mobileServicesWrapper}`}>
-            {SERVICES.map((service, index) => (
-              <div
-                key={service.id}
-                style={{
-                  position: 'sticky',
-                  top: `calc(12vh + ${index * 1.5}rem)`,
-                  width: '100%',
-                  display: 'flex',
-                  justifyContent: 'center'
-                }}
-              >
-                <MobileServiceCard
-                  title={service.title}
-                  tagline={service.tagline}
-                  capabilities={service.capabilities}
-                  grainientMode="shared"
-                  visual={
-                    service.pillar === "BUILD" ? <BuildVisual /> :
-                      service.pillar === "DEPLOY" ? <DeployVisual /> :
-                        service.pillar === "TEACH" ? <TeachVisual /> : undefined
-                  }
-                />
-              </div>
-            ))}
-          </div>
-        </SharedGrainient>
       ) : (
-        // DEFAULT: each card renders its own Grainient (original per-card
-        // logic — independent context per card, original look).
+        // Each card renders its own Grainient — the original per-card
+        // rendering (independent context per card, original look).
         <div className={`${pageStyles.mobileOnly} ${pageStyles.mobileServicesWrapper}`}>
           {SERVICES.map((service, index) => (
             <div

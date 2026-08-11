@@ -5,7 +5,7 @@ import { gsap } from "@/lib/gsap";
 import { useGSAP } from "@gsap/react";
 import styles from "./ServicesBento.module.css";
 import { BuildVisual, DeployVisual, TeachVisual } from "@/components/ServiceVisuals/ServiceVisuals";
-import SharedGrainient from "@/components/Grainient/SharedGrainient";
+import Grainient from "@/components/Grainient/Grainient";
 
 export default function ServicesBento() {
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -44,21 +44,21 @@ export default function ServicesBento() {
   }, { scope: sectionRef });
 
   return (
-    <SharedGrainient
-      regionSelector="[data-grainient]"
-      color1="var(--color-bg)"
-      color2="var(--color-bg)"
-      color3="var(--color-olive)"
-      timeSpeed={0.15}
-      colorBalance={0.0}
-      blendSoftness={0.2}
-      contrast={1.1}
-      grainAmount={0.035}
-    >
-      <div className={styles.bentoGrid} ref={sectionRef}>
+    <div className={styles.bentoGrid} ref={sectionRef}>
       {/* Build Text */}
       <div className={`${styles.bentoTile} ${styles.buildText} ${styles.textTile}`} tabIndex={0}>
-        <div data-grainient className={styles.grainientWrapper} />
+        <div className={styles.grainientWrapper}>
+          <Grainient
+            color1="var(--color-bg)"
+            color2="var(--color-bg)"
+            color3="var(--color-olive)"
+            timeSpeed={0.15}
+            colorBalance={0.0}
+            blendSoftness={0.2}
+            contrast={1.1}
+            grainAmount={0.035}
+          />
+        </div>
         <div className={styles.pillarLabel}>BUILD</div>
         <div className={styles.tileContent}>
           <div className={styles.tileTitle}>Software</div>
@@ -78,7 +78,18 @@ export default function ServicesBento() {
 
       {/* AI Text */}
       <div className={`${styles.bentoTile} ${styles.aiText} ${styles.textTile}`} tabIndex={0}>
-        <div data-grainient className={styles.grainientWrapper} />
+        <div className={styles.grainientWrapper}>
+          <Grainient
+            color1="var(--color-bg)"
+            color2="var(--color-bg)"
+            color3="var(--color-olive)"
+            timeSpeed={0.15}
+            colorBalance={0.0}
+            blendSoftness={0.2}
+            contrast={1.1}
+            grainAmount={0.035}
+          />
+        </div>
         <div className={styles.pillarLabel}>DEPLOY</div>
         <div className={styles.tileContent}>
           <div className={styles.tileTitle}>Artificial Intelligence</div>
@@ -107,7 +118,18 @@ export default function ServicesBento() {
 
       {/* Knowledge Text */}
       <div className={`${styles.bentoTile} ${styles.knowText} ${styles.textTile}`} tabIndex={0}>
-        <div data-grainient className={styles.grainientWrapper} />
+        <div className={styles.grainientWrapper}>
+          <Grainient
+            color1="var(--color-bg)"
+            color2="var(--color-bg)"
+            color3="var(--color-olive)"
+            timeSpeed={0.15}
+            colorBalance={0.0}
+            blendSoftness={0.2}
+            contrast={1.1}
+            grainAmount={0.035}
+          />
+        </div>
         <div className={styles.pillarLabel}>TEACH</div>
         <div className={styles.tileContent}>
           <div className={styles.tileTitle}>Knowledge Transfer</div>
@@ -124,7 +146,6 @@ export default function ServicesBento() {
       <div className={`${styles.bentoTile} ${styles.knowVisual} ${styles.visualTile}`} style={{ '--anim-duration': '7.1s' } as React.CSSProperties}>
         <TeachVisual />
       </div>
-      </div>
-    </SharedGrainient>
+    </div>
   );
 }

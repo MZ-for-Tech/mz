@@ -108,7 +108,9 @@ const PillNav: FC<PillNavProps> = ({
                 )}
               </li>
             ))}
-            <li className="mobile-only-hire" style={{ opacity: 0 }}>
+            {/* Hire us lives inside the menu on every viewport — it's a menu
+                item, not a standalone pill next to the toggle. */}
+            <li className="nav-hire" style={{ opacity: 0 }}>
               <Link 
                 href="/start" 
                 className="premium-hire-btn"
@@ -120,14 +122,6 @@ const PillNav: FC<PillNavProps> = ({
           </ul>
         </div>
         
-        <Link 
-          href="/start" 
-          className="premium-hire-btn desktop-only-hire"
-          onClick={() => setIsOpen(false)}
-        >
-          Hire us
-        </Link>
-
         <button 
           className={`premium-menu-toggle ${isOpen ? 'is-open' : ''}`}
           onClick={toggleMenu}

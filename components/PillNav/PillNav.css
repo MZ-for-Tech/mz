@@ -131,24 +131,19 @@
   transform: translateY(-3.25px) rotate(-45deg);
 }
 
-.mobile-only-hire {
-  display: none;
+/* Hire us is a menu item on every viewport — sits flush in the nav list. */
+.nav-hire .premium-hire-btn {
+  margin: 0;
 }
 
 /* --- MOBILE STYLES --- */
 @media (max-width: 768px) {
-  .desktop-only-hire {
-    display: none;
-  }
-
-  .mobile-only-hire {
-    display: block;
+  .nav-hire {
     margin-top: 1rem;
     width: 100%;
   }
 
-  .mobile-only-hire .premium-hire-btn {
-    margin: 0;
+  .nav-hire .premium-hire-btn {
     width: 100%;
   }
 
