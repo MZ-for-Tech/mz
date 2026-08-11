@@ -141,7 +141,14 @@ export default function DarkVeil({
     const initFrame = requestAnimationFrame(() => {
       let renderer: Renderer | null = null;
       try {
-        const lowPower = (navigator.hardwareConcurrency ?? 8) <= 4 || window.matchMedia('(max-width: 768px)').matches;
+        // Low-power detection. `hardwareConcurrency <= 4` alone misses modern
+        // mid-range hardware (8 cores is standard on 2022+ phones); combine it
+        // with deviceMemory and pointer type so tablets, foldables and low-end
+        // laptops with integrated GPUs land on the 0.6 dpr path too.
+        const lowPower =
+          (navigator.hardwareConcurrency ?? 8) <= 4 ||
+          (typeof navigator.deviceMemory === 'number' && navigator.deviceMemory <= 4) ||
+          window.matchMedia('(max-width: 768px), (pointer: coarse)').matches;
         renderer = new Renderer({
           dpr: lowPower ? 0.6 : Math.min(window.devicePixelRatio || 1, 1.5),
           canvas

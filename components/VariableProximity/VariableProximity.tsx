@@ -1,21 +1,32 @@
 'use client';
 
-import { forwardRef, useMemo, useRef, useEffect, useCallback, RefObject, HTMLAttributes } from 'react';
+import { forwardRef, useMemo, useRef, useEffect, useCallback, useState, RefObject, HTMLAttributes } from 'react';
 
 import styles from './VariableProximity.module.css';
 
 type Callback = () => void;
 
-function useAnimationFrame(callback: Callback) {
+/**
+ * rAF loop that only runs while `active` is true. The callback is held in a
+ * ref so re-renders never tear down and restart the loop (the original
+ * implementation re-subscribed on every callback identity change).
+ */
+function useAnimationFrame(callback: Callback, active: boolean) {
+  const callbackRef = useRef(callback);
   useEffect(() => {
+    callbackRef.current = callback;
+  }, [callback]);
+
+  useEffect(() => {
+    if (!active) return;
     let frameId: number;
     const loop = () => {
-      callback();
+      callbackRef.current();
       frameId = requestAnimationFrame(loop);
     };
     frameId = requestAnimationFrame(loop);
     return () => cancelAnimationFrame(frameId);
-  }, [callback]);
+  }, [active]);
 }
 
 function useMousePositionRef(containerRef: RefObject<HTMLElement | null>) {
@@ -83,6 +94,39 @@ const VariableProximity = forwardRef<HTMLSpanElement, VariableProximityProps>((p
     mq.addEventListener('change', on);
     return () => mq.removeEventListener('change', on);
   }, []);
+
+  // Gating: the rAF loop only runs while the element is on screen AND the
+  // page is visible. Off-screen / hidden-tab → no per-frame work at all.
+  const rootRef = useRef<HTMLSpanElement | null>(null);
+  const inViewRef = useRef(true);
+  const hiddenRef = useRef(false);
+  const [active, setActive] = useState(true);
+  const updateActive = useCallback(() => {
+    setActive(inViewRef.current && !hiddenRef.current);
+  }, []);
+
+  useEffect(() => {
+    const el = rootRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(([entry]) => {
+      inViewRef.current = entry.isIntersecting;
+      updateActive();
+    }, { threshold: 0 });
+    io.observe(el);
+    const onVisibility = () => {
+      hiddenRef.current = document.hidden;
+      updateActive();
+    };
+    document.addEventListener('visibilitychange', onVisibility);
+    return () => {
+      io.disconnect();
+      document.removeEventListener('visibilitychange', onVisibility);
+    };
+  }, [updateActive]);
+
+  // F7: when from === to there is nothing to interpolate — skip the per-frame
+  // fontVariationSettings write entirely (it computes a value that never changes).
+  const hasFontVariation = fromFontVariationSettings !== toFontVariationSettings;
 
   const centres = useRef<{x:number;y:number}[]>([]);
   const measure = useCallback(() => {
@@ -158,7 +202,7 @@ const VariableProximity = forwardRef<HTMLSpanElement, VariableProximityProps>((p
       const distance = calculateDistance(x, y, c.x, c.y);
 
       if (distance >= radius) {
-        letterRef.style.fontVariationSettings = fromFontVariationSettings;
+        if (hasFontVariation) letterRef.style.fontVariationSettings = fromFontVariationSettings;
         letterRef.style.color = '';
         letterRef.style.setProperty('--glow', '0');
         letterRef.style.transform = '';
@@ -166,15 +210,17 @@ const VariableProximity = forwardRef<HTMLSpanElement, VariableProximityProps>((p
       }
 
       const falloffValue = calculateFalloff(distance);
-      const newSettings = parsedSettings
-        .map(({ axis, fromValue, toValue }) => {
-          const interpolatedValue = fromValue + (toValue - fromValue) * falloffValue;
-          return `'${axis}' ${interpolatedValue}`;
-        })
-        .join(', ');
+      if (hasFontVariation) {
+        const newSettings = parsedSettings
+          .map(({ axis, fromValue, toValue }) => {
+            const interpolatedValue = fromValue + (toValue - fromValue) * falloffValue;
+            return `'${axis}' ${interpolatedValue}`;
+          })
+          .join(', ');
 
-      interpolatedSettingsRef.current[index] = newSettings;
-      letterRef.style.fontVariationSettings = newSettings;
+        interpolatedSettingsRef.current[index] = newSettings;
+        letterRef.style.fontVariationSettings = newSettings;
+      }
       
       const intensity = falloffValue; 
       
@@ -182,14 +228,21 @@ const VariableProximity = forwardRef<HTMLSpanElement, VariableProximityProps>((p
       letterRef.style.setProperty('--glow', String(intensity));
       letterRef.style.transform = `translateY(${-intensity * 5}px) scale(${1 + (intensity * 0.05)})`;
     });
-  });
+  }, active);
 
   const words = label.split(' ');
   let letterIndex = 0;
 
   return (
     <span
-      ref={ref}
+      ref={(node) => {
+        rootRef.current = node;
+        if (typeof ref === 'function') {
+          ref(node);
+        } else if (ref) {
+          ref.current = node;
+        }
+      }}
       className={`${className} ${styles.variableProximity}`}
       onClick={onClick}
       style={{ display: 'inline', ...style }}

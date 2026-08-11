@@ -15,12 +15,24 @@ export default function DataStreamHero({ className = "" }: { className?: string 
         if (!ctx) return;
 
         let animationFrameId: number;
-        let particleColor = 'rgba(26, 18, 8, 0.15)'; 
+        let particleColor = 'rgba(26, 18, 8, 0.15)';
+
+        // Glyph cache: pre-render each (symbol, size) pair to an offscreen
+        // canvas once, then blit with drawImage. Canvas text rasterisation
+        // (glyph lookup, shaping, raster) is dramatically more expensive than
+        // a blit — and there are only 17 symbols across 12 integer sizes, so
+        // the cache is tiny and pixel-identical (drawImage of a pre-rendered
+        // glyph reproduces the exact fillText output at the same position).
+        const glyphCache = new Map<string, HTMLCanvasElement>();
+        let cachedGlyphColor = "";
 
         const updateParticleColor = () => {
             const rootStyles = getComputedStyle(document.documentElement);
             const rgbStr = rootStyles.getPropertyValue('--color-tnh-text-rgb').trim() || '26, 18, 8';
             particleColor = `rgba(${rgbStr}, 0.15)`;
+            // Color is baked into the cached glyphs — invalidate on theme change.
+            cachedGlyphColor = "";
+            glyphCache.clear();
         };
 
         updateParticleColor();
@@ -148,6 +160,29 @@ export default function DataStreamHero({ className = "" }: { className?: string 
         
         const serif = getComputedStyle(document.documentElement).getPropertyValue('--font-serif').trim() || 'serif';
 
+        const getGlyph = (symbol: string, size: number): HTMLCanvasElement | null => {
+            const key = `${size}-${symbol}`;
+            let glyph = glyphCache.get(key);
+            if (!glyph) {
+                if (cachedGlyphColor !== particleColor) {
+                    cachedGlyphColor = particleColor;
+                    glyphCache.clear();
+                }
+                const dim = Math.ceil(size * 1.6); // headroom for wide glyphs (≈, ∑) and descenders (∫, β)
+                glyph = document.createElement("canvas");
+                glyph.width = dim;
+                glyph.height = dim;
+                const gctx = glyph.getContext("2d");
+                if (!gctx) return null;
+                gctx.font = `${size}px ${serif}`;
+                gctx.textBaseline = "alphabetic";
+                gctx.fillStyle = particleColor;
+                gctx.fillText(symbol, 0, size); // baseline at `size` inside the tile
+                glyphCache.set(key, glyph);
+            }
+            return glyph;
+        };
+
         const onVisibility = () => {
             isPageVisible = !document.hidden;
             if (prefersReducedMotion()) return;
@@ -208,11 +243,19 @@ export default function DataStreamHero({ className = "" }: { className?: string 
                 pY[i] = py;
 
                 const size = pSize[i];
-                if (size !== currentSize) {
-                    currentSize = size;
-                    ctx.font = `${currentSize}px ${serif}`;
+                const glyph = getGlyph(SYMBOLS[pSymbolIndex[i]], size);
+                if (glyph) {
+                    // Blit the pre-rendered glyph; tile origin == fillText pen
+                    // position, so pixels are identical to ctx.fillText(px, py).
+                    ctx.drawImage(glyph, px, py - size);
+                } else {
+                    // Fallback (context creation failed): the original path.
+                    if (size !== currentSize) {
+                        currentSize = size;
+                        ctx.font = `${currentSize}px ${serif}`;
+                    }
+                    ctx.fillText(SYMBOLS[pSymbolIndex[i]], px, py);
                 }
-                ctx.fillText(SYMBOLS[pSymbolIndex[i]], px, py);
             }
             
             if (!prefersReducedMotion()) {

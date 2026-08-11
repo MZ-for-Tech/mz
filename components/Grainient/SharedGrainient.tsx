@@ -202,7 +202,17 @@ export default function SharedGrainient({
     let isPageVisible = !document.hidden;
     const t0 = performance.now();
 
+    // Region rects can change without a resize — e.g. the sticky service cards
+    // on mobile shift against the wrap while the page scrolls. ResizeObserver
+    // alone would leave the atlas regions stale for the whole sticky run, so
+    // a passive scroll listener flags a recompute for the next drawn frame.
+    let rectsDirty = false;
+
     const draw = () => {
+      if (rectsDirty) {
+        rectsDirty = false;
+        updateRects();
+      }
       (u.iTime as { value: number }).value = (performance.now() - t0) * 0.001;
       gl.clear(gl.COLOR_BUFFER_BIT);
       for (const r of regions) {
@@ -266,10 +276,23 @@ export default function SharedGrainient({
     };
     document.addEventListener("visibilitychange", onVisibility);
 
+    const onScroll = () => {
+      if (raf === 0 && isVisible && isPageVisible) {
+        // Static mode (reduced motion / paused): the rAF loop isn't running,
+        // so re-measure and re-blit once — keeps sticky-shifted regions correct.
+        updateRects();
+        draw();
+      } else {
+        rectsDirty = true;
+      }
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+
     tryStart();
 
     return () => {
       document.removeEventListener("visibilitychange", onVisibility);
+      window.removeEventListener("scroll", onScroll);
       atlas.removeEventListener("webglcontextlost", onLost, false);
       tryStop();
       ro.disconnect();

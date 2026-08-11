@@ -35,6 +35,26 @@ const NAV_ITEMS = [
   { label: 'Contact', href: '/start' }
 ];
 
+/**
+ * Weak-device check for the eager three.js warm-up.
+ * saveData, low memory, few cores, or a coarse pointer means the 269 KB gz
+ * three.js chunk should NOT be pulled during hydration — it is fetched later,
+ * when the logo actually mounts. Desktop with fine pointer keeps today's
+ * exactly-on-curtain-lift behaviour.
+ */
+function shouldSkipHeavyWarmup(): boolean {
+  if (typeof navigator === "undefined") return false;
+  try {
+    if (navigator.connection?.saveData) return true;
+    if (typeof navigator.deviceMemory === "number" && navigator.deviceMemory <= 4) return true;
+    if (typeof navigator.hardwareConcurrency === "number" && navigator.hardwareConcurrency <= 4) return true;
+    if (window.matchMedia("(pointer: coarse)").matches) return true;
+  } catch {
+    // Any failure to read capability signals falls back to today's behaviour.
+  }
+  return false;
+}
+
 export default function Home() {
   const mainRef = useRef<HTMLElement>(null);
   const [isReadyForHeavy, setIsReadyForHeavy] = useState(false);
@@ -61,8 +81,13 @@ export default function Home() {
 
   // Warm the lazy three.js chunk while the entry wipe is still covering the
   // screen, so the logo mounts as soon as the curtain lifts instead of after
-  // a ~150 KB gz chunk fetch on first visit.
+  // a ~269 KB gz chunk fetch on first visit.
+  // Skipped on weak devices (saveData / low memory / few cores / touch):
+  // there the 269 KB gz download would land exactly during hydration, on the
+  // busiest main thread. Those devices fetch the chunk when the logo actually
+  // mounts instead.
   useEffect(() => {
+    if (shouldSkipHeavyWarmup()) return;
     void import("@/components/Logo/MzLogo3D");
   }, []);
 

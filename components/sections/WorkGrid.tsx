@@ -3,26 +3,37 @@
 import styles from "./WorkGrid.module.css";
 import { PROJECTS } from "@/lib/projects";
 import { TransitionLink } from "@/components/TransitionLink/TransitionLink";
-import Image from "next/image";
+// TEMP-DISABLED (hovering card effect): next/image is only used by the
+// floating preview cursor.
+// import Image from "next/image";
 import EyeIcon from "@/components/nested/IconCollage/EyeIcon";
 import ClaudeIcon from "@/components/nested/IconCollage/ClaudeIcon";
 import TiktokIcon from "@/components/nested/IconCollage/TiktokIcon";
 import DotsIcon from "@/components/nested/IconCollage/DotsIcon";
 import BowlsIcon from "@/components/nested/IconCollage/BowlsIcon";
-import React, { useRef, useState } from "react";
-import { gsap } from "@/lib/gsap";
-import { useGSAP } from "@gsap/react";
+import React, { useRef /* , useState — hover card */ } from "react";
+// TEMP-DISABLED (hovering card effect): gsap is only used by the cursor
+// tracking block.
+// import { gsap } from "@/lib/gsap";
+// import { useGSAP } from "@gsap/react";
 
 export function WorkGrid() {
   const projectList = Object.values(PROJECTS);
 
   const containerRef = useRef<HTMLDivElement>(null);
+  /* TEMP-DISABLED: hovering card effect (see restore notes below)
   const cursorRef = useRef<HTMLDivElement>(null);
   const [activeColor, setActiveColor] = useState<string>("#FFFFFF");
   const [activeStatus, setActiveStatus] = useState<string>("VIEW");
   const [activeSlug, setActiveSlug] = useState<string>("");
   const [activeImage, setActiveImage] = useState<string | null>(null);
+  */
 
+  /* TEMP-DISABLED: hovering card effect — GSAP cursor tracking (window
+     mousemove + quickTo) and the IntersectionObserver visibility gate.
+     Restore by un-commenting this block, the refs/states above, the
+     floating-cursor JSX inside <div className={styles.massiveList}>, and the
+     onMouseEnter/onMouseLeave handlers on each project row.
   useGSAP(() => {
     const container = containerRef.current;
     const cursor = cursorRef.current;
@@ -114,13 +125,17 @@ export function WorkGrid() {
       io.disconnect();
     };
   }, []);
+  */
 
   return (
     <section id="work" className={styles.workSection}>
       <div className={styles.sectionHeader}>Selected Work</div>
 
       <div className={styles.massiveList} ref={containerRef}>
-        {/* Floating View Cursor */}
+        {/* TEMP-DISABLED: hovering card effect — floating preview cursor.
+            Restore by un-commenting this block (plus the refs/states and
+            useGSAP block above and the onMouseEnter/onMouseLeave handlers
+            on each project row below).
         <div
           ref={cursorRef}
           className={`${styles.floatingCursor} ${activeSlug === "nested-united" ? styles.nestedCursor : ""} ${activeImage ? styles.hasMedia : ""}`}
@@ -137,6 +152,7 @@ export function WorkGrid() {
             <span>{activeStatus}</span>
           )}
         </div>
+        */}
 
         {projectList.map((project) => {
           const customStyle = {
@@ -147,20 +163,15 @@ export function WorkGrid() {
           const isSerif = project.fontFamily === "serif";
 
           return (
+            // TEMP-DISABLED: hovering card effect — these rows previously
+            // carried onMouseEnter/onMouseLeave handlers that set the
+            // floating-cursor state (setActiveColor/Status/Slug/Image).
+            // Restore them together with the refs/states and useGSAP block
+            // at the top of the component and the cursor JSX above.
             <div
               key={project.id}
               className={`${styles.projectRowWrapper} ${project.slug === "nested-united" ? styles.nestedUnitedRow : ""}`}
               style={customStyle}
-              onMouseEnter={() => {
-                setActiveColor(project.accentColor);
-                setActiveStatus(project.isPrivate ? "RESTRICTED" : "VIEW");
-                setActiveSlug(project.slug);
-                setActiveImage(project.coverImage || null);
-              }}
-              onMouseLeave={() => {
-                setActiveSlug("");
-                setActiveImage(null);
-              }}
             >
               <TransitionLink
                 href={`/work/${project.slug}`}

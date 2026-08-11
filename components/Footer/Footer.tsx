@@ -6,13 +6,12 @@ import ObfuscatedEmail from "../ObfuscatedEmail/ObfuscatedEmail";
 import { TransitionLink } from "@/components/TransitionLink/TransitionLink";
 import DarkVeil from "@/components/DarkVeil/DarkVeil";
 
-export function Footer() {
-  const footerRef = useRef<HTMLDivElement>(null);
-  const [isVisible, setIsVisible] = useState(false);
+// Live Cairo Clock — isolated in its own leaf component so the 1 Hz setState
+// only re-renders the clock subtree. Previously it lived in Footer, re-rendering
+// the entire footer (including the DarkVeil wrapper) 60 times per minute.
+function CairoClock() {
   const [cairoTime, setCairoTime] = useState("");
-  const [copied, setCopied] = useState(false);
 
-  // Live Cairo Clock
   useEffect(() => {
     const updateTime = () => {
       try {
@@ -32,6 +31,22 @@ export function Footer() {
     const interval = setInterval(updateTime, 1000);
     return () => clearInterval(interval);
   }, []);
+
+  return (
+    <div
+      className={styles.timeVal}
+      style={{ opacity: cairoTime ? 1 : 0, transition: 'opacity 0.5s ease' }}
+    >
+      <span>{cairoTime || "00:00:00 AM"}</span>
+      <span className={styles.tz}>UTC+3</span>
+    </div>
+  );
+}
+
+export function Footer() {
+  const footerRef = useRef<HTMLDivElement>(null);
+  const [isVisible, setIsVisible] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   // Visibility tracking for marquee and background
   useEffect(() => {
@@ -104,13 +119,7 @@ export function Footer() {
             <div className={styles.colContent}>
               <p className={styles.mainVal}>CAIRO, EG</p>
               <p className={styles.subVal}>30.0444° N, 31.2357° E</p>
-              <div
-                className={styles.timeVal}
-                style={{ opacity: cairoTime ? 1 : 0, transition: 'opacity 0.5s ease' }}
-              >
-                <span>{cairoTime || "00:00:00 AM"}</span>
-                <span className={styles.tz}>UTC+3</span>
-              </div>
+              <CairoClock />
             </div>
           </div>
 

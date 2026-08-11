@@ -5,6 +5,7 @@ import { gsap } from "@/lib/gsap";
 import { useGSAP } from "@gsap/react";
 import pageStyles from "@/app/page.module.css";
 import ServicesBento from "@/components/ServicesBento/ServicesBento";
+import SharedGrainient from "@/components/Grainient/SharedGrainient";
 import { BuildVisual, DeployVisual, TeachVisual } from "@/components/ServiceVisuals/ServiceVisuals";
 import MobileServiceCard from "@/components/MobileServiceCard/MobileServiceCard";
 
@@ -49,12 +50,13 @@ function useMediaQuery(query: string) {
   const [matches, setMatches] = useState(false);
   useEffect(() => {
     const media = window.matchMedia(query);
+    // Initial sync: intentional (one-time, matches state bails out on no-op).
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    if (media.matches !== matches) setMatches(media.matches);
+    setMatches(media.matches);
     const listener = () => setMatches(media.matches);
     media.addEventListener("change", listener);
     return () => media.removeEventListener("change", listener);
-  }, [matches, query]);
+  }, [query]);
   return matches;
 }
 
@@ -104,31 +106,47 @@ export default function ServicesAccordion() {
           <ServicesBento />
         </div>
       ) : (
-        <div className={`${pageStyles.mobileOnly} ${pageStyles.mobileServicesWrapper}`}>
-          {SERVICES.map((service, index) => (
-            <div
-              key={service.id}
-              style={{
-                position: 'sticky',
-                top: `calc(12vh + ${index * 1.5}rem)`,
-                width: '100%',
-                display: 'flex',
-                justifyContent: 'center'
-              }}
-            >
-              <MobileServiceCard
-                title={service.title}
-                tagline={service.tagline}
-                capabilities={service.capabilities}
-                visual={
-                  service.pillar === "BUILD" ? <BuildVisual /> :
-                    service.pillar === "DEPLOY" ? <DeployVisual /> :
-                      service.pillar === "TEACH" ? <TeachVisual /> : undefined
-                }
-              />
-            </div>
-          ))}
-        </div>
+        // One SharedGrainient context for all three mobile cards, instead of
+        // three per-instance WebGL contexts. Uniform values match what the
+        // per-card Grainient used (defaults — no grainAmount override), so the
+        // render is pixel-identical. Region rects are scroll-aware inside
+        // SharedGrainient to track the cards' sticky motion.
+        <SharedGrainient
+          regionSelector="[data-grainient]"
+          color1="var(--color-bg)"
+          color2="var(--color-bg)"
+          color3="var(--color-olive)"
+          timeSpeed={0.15}
+          colorBalance={0.0}
+          blendSoftness={0.2}
+          contrast={1.1}
+        >
+          <div className={`${pageStyles.mobileOnly} ${pageStyles.mobileServicesWrapper}`}>
+            {SERVICES.map((service, index) => (
+              <div
+                key={service.id}
+                style={{
+                  position: 'sticky',
+                  top: `calc(12vh + ${index * 1.5}rem)`,
+                  width: '100%',
+                  display: 'flex',
+                  justifyContent: 'center'
+                }}
+              >
+                <MobileServiceCard
+                  title={service.title}
+                  tagline={service.tagline}
+                  capabilities={service.capabilities}
+                  visual={
+                    service.pillar === "BUILD" ? <BuildVisual /> :
+                      service.pillar === "DEPLOY" ? <DeployVisual /> :
+                        service.pillar === "TEACH" ? <TeachVisual /> : undefined
+                  }
+                />
+              </div>
+            ))}
+          </div>
+        </SharedGrainient>
       )}
     </section>
   );

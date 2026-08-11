@@ -57,7 +57,6 @@ export default function WebMCP() {
             }
           ]
         });
-        console.log("WebMCP tools registered successfully.");
       } catch (error) {
         console.error("Failed to register WebMCP tools:", error);
       }

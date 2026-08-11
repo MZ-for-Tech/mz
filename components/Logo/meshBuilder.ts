@@ -18,7 +18,12 @@
  * and material caching are the result of the flicker/gold-slab fixes.
  */
 
-import * as THREE from "three";
+import {
+  BufferAttribute,
+  BufferGeometry,
+  ExtrudeGeometry,
+  MeshStandardMaterial,
+} from "three";
 import { SVGLoader } from "three/examples/jsm/loaders/SVGLoader.js";
 
 /*
@@ -44,8 +49,8 @@ const extrudeSettings = {
 };
 
 export interface MeshItem {
-  geometry: THREE.BufferGeometry;
-  material: THREE.MeshStandardMaterial[];
+  geometry: BufferGeometry;
+  material: MeshStandardMaterial[];
   pathIdx: number;
   zOffset: number;
   scatterX: number;
@@ -76,14 +81,14 @@ export function rememberMeshData(data: MeshData): void {
  * so we never create more materials than there are unique colors.
  * Walls additionally key on path index (see polygonOffset below).
  */
-const capMaterialCache = new Map<string, THREE.MeshStandardMaterial>();
-const wallMaterialCache = new Map<string, THREE.MeshStandardMaterial>();
+const capMaterialCache = new Map<string, MeshStandardMaterial>();
+const wallMaterialCache = new Map<string, MeshStandardMaterial>();
 
 function getCapMaterial(color: string) {
   if (!capMaterialCache.has(color)) {
     capMaterialCache.set(
       color,
-      new THREE.MeshStandardMaterial({
+      new MeshStandardMaterial({
         color,
         metalness: 0.9,
         roughness: 0.25,
@@ -100,7 +105,7 @@ function getWallMaterial(color: string, pathIdx: number) {
   if (!wallMaterialCache.has(key)) {
     wallMaterialCache.set(
       key,
-      new THREE.MeshStandardMaterial({
+      new MeshStandardMaterial({
         color,
         metalness: 0.9,
         roughness: 0.25,
@@ -148,7 +153,7 @@ export function buildMeshData(svgText: string): MeshData {
 
     path.toShapes().forEach((shape) => {
       items.push({
-        geometry: new THREE.ExtrudeGeometry(shape, extrudeSettings),
+        geometry: new ExtrudeGeometry(shape, extrudeSettings),
         material: [getCapMaterial(color), getWallMaterial(color, thisPathIndex)],
         pathIdx: thisPathIndex,
         zOffset,
@@ -218,7 +223,7 @@ export function serializeMeshData(data: MeshData): CachedMeshData {
         position: g.getAttribute("position")!.array as Float32Array,
         normal: g.getAttribute("normal")!.array as Float32Array,
         uv: g.getAttribute("uv")!.array as Float32Array,
-        color: (item.material[0] as THREE.MeshStandardMaterial).color.getStyle(),
+        color: (item.material[0] as MeshStandardMaterial).color.getStyle(),
         pathIdx: item.pathIdx,
         zOffset: item.zOffset,
         scatterX: item.scatterX,
@@ -242,10 +247,10 @@ export function hydrateMeshData(cached: CachedMeshData): MeshData {
     cx: cached.cx,
     cy: cached.cy,
     items: cached.items.map((item) => {
-      const geometry = new THREE.BufferGeometry();
-      geometry.setAttribute("position", new THREE.BufferAttribute(item.position, 3));
-      geometry.setAttribute("normal", new THREE.BufferAttribute(item.normal, 3));
-      geometry.setAttribute("uv", new THREE.BufferAttribute(item.uv, 2));
+      const geometry = new BufferGeometry();
+      geometry.setAttribute("position", new BufferAttribute(item.position, 3));
+      geometry.setAttribute("normal", new BufferAttribute(item.normal, 3));
+      geometry.setAttribute("uv", new BufferAttribute(item.uv, 2));
       // Restore the cap/wall groups — see SerializedItem.groups.
       for (const gr of item.groups) {
         geometry.addGroup(gr.start, gr.count, gr.materialIndex);

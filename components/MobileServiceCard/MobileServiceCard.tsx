@@ -1,6 +1,5 @@
 import { useState, ReactNode } from "react";
 import styles from "./MobileServiceCard.module.css";
-import Grainient from "@/components/Grainient/Grainient";
 
 interface MobileServiceCardProps {
   title: string;
@@ -19,17 +18,11 @@ export default function MobileServiceCard({ title, tagline, capabilities, visual
       onClick={() => setIsActive(!isActive)}
       style={{ cursor: 'pointer' }}
     >
-      <div className={styles.grainientWrapper}>
-        <Grainient
-          color1="var(--color-bg)"
-          color2="var(--color-bg)"
-          color3="var(--color-olive)"
-          timeSpeed={0.15}
-          colorBalance={0.0}
-          blendSoftness={0.2}
-          contrast={1.1}
-        />
-      </div>
+      {/* Grainient region: the parent ServicesAccordion mounts a single
+          SharedGrainient (one WebGL context) that renders into this element
+          via `[data-grainient]` — pixel-identical to the per-card canvas it
+          replaces, at 1/3rd the WebGL context budget. */}
+      <div data-grainient className={styles.grainientWrapper} />
       <div className={styles.lightLayer}>
         <div className={styles.slit}></div>
         <div className={styles.lumen}>

@@ -15,7 +15,7 @@ import {
 
 import { PerformanceMonitor, Environment } from "@react-three/drei";
 
-import * as THREE from "three";
+import { Group, MathUtils, Mesh, PointLight } from "three";
 
 import {
   buildMeshData,
@@ -33,8 +33,8 @@ import {
 const ASSEMBLY_DURATION = 0.9;
 
 function Logo({ onLoad, assemblyStartDelayMs = 0 }: { onLoad?: () => void; assemblyStartDelayMs?: number }) {
-  const logoRef = useRef<THREE.Group>(null);
-  const sweepLightRef = useRef<THREE.PointLight>(null);
+  const logoRef = useRef<Group>(null);
+  const sweepLightRef = useRef<PointLight>(null);
 
   const { gl, size } = useThree();
 
@@ -213,7 +213,7 @@ function Logo({ onLoad, assemblyStartDelayMs = 0 }: { onLoad?: () => void; assem
     };
   }, []);
 
-  const meshRefs = useRef<(THREE.Mesh | null)[]>([]);
+  const meshRefs = useRef<(Mesh | null)[]>([]);
   const animStartTime = useRef<number>(-1);
   const assemblyDone = useRef(
     typeof window !== 'undefined' && sessionStorage.getItem('mz_logo_animated_v3') === 'true'
@@ -309,8 +309,8 @@ function Logo({ onLoad, assemblyStartDelayMs = 0 }: { onLoad?: () => void; assem
       dragVelocity.current.y *= 0.92;
 
       // Slowly pull back to default orientation over time
-      dragRotation.current.x = THREE.MathUtils.lerp(dragRotation.current.x, 0, 0.003);
-      dragRotation.current.y = THREE.MathUtils.lerp(dragRotation.current.y, 0, 0.003);
+      dragRotation.current.x = MathUtils.lerp(dragRotation.current.x, 0, 0.003);
+      dragRotation.current.y = MathUtils.lerp(dragRotation.current.y, 0, 0.003);
     }
 
     // --- Scroll tilt: logo tilts back as user scrolls down ---
@@ -327,7 +327,7 @@ function Logo({ onLoad, assemblyStartDelayMs = 0 }: { onLoad?: () => void; assem
     const floatY = Math.sin(t * 1.2) * 0.1;
 
     // Apply floating
-    logoRef.current.position.y = THREE.MathUtils.lerp(
+    logoRef.current.position.y = MathUtils.lerp(
       logoRef.current.position.y,
       floatY,
       0.04
@@ -338,17 +338,17 @@ function Logo({ onLoad, assemblyStartDelayMs = 0 }: { onLoad?: () => void; assem
     const targetY = state.pointer.x * (isHovered ? 0.25 : 0.15) + swayY + dragRotation.current.y;
     const targetZ = -state.pointer.x * (isHovered ? 0.10 : 0.05);
 
-    logoRef.current.rotation.x = THREE.MathUtils.lerp(
+    logoRef.current.rotation.x = MathUtils.lerp(
       logoRef.current.rotation.x,
       targetX,
       0.08
     );
-    logoRef.current.rotation.y = THREE.MathUtils.lerp(
+    logoRef.current.rotation.y = MathUtils.lerp(
       logoRef.current.rotation.y,
       targetY + scrollVel.current,
       0.08
     );
-    logoRef.current.rotation.z = THREE.MathUtils.lerp(
+    logoRef.current.rotation.z = MathUtils.lerp(
       logoRef.current.rotation.z,
       targetZ,
       0.08
@@ -361,16 +361,16 @@ function Logo({ onLoad, assemblyStartDelayMs = 0 }: { onLoad?: () => void; assem
     const targetScale = isHovered ? 1.045 : 1.0;
     const curScale = logoRef.current.scale.x;
     logoRef.current.scale.setScalar(
-      THREE.MathUtils.lerp(curScale, targetScale, 0.06)
+      MathUtils.lerp(curScale, targetScale, 0.06)
     );
 
     // --- Camera parallax ---
     // Camera pulls back slightly on scroll (cinematic recede)
     const baseZ = 12;
     const targetZ_cam = baseZ + scrollProgress * 2.5;
-    state.camera.position.x = THREE.MathUtils.lerp(state.camera.position.x, state.pointer.x * 0.6, 0.03);
-    state.camera.position.y = THREE.MathUtils.lerp(state.camera.position.y, state.pointer.y * 0.35, 0.03);
-    state.camera.position.z = THREE.MathUtils.lerp(state.camera.position.z, targetZ_cam, 0.04);
+    state.camera.position.x = MathUtils.lerp(state.camera.position.x, state.pointer.x * 0.6, 0.03);
+    state.camera.position.y = MathUtils.lerp(state.camera.position.y, state.pointer.y * 0.35, 0.03);
+    state.camera.position.z = MathUtils.lerp(state.camera.position.z, targetZ_cam, 0.04);
     state.camera.lookAt(0, 0, 0);
 
     // --- Sweep light / Interactive Spotlight ---
@@ -380,12 +380,12 @@ function Logo({ onLoad, assemblyStartDelayMs = 0 }: { onLoad?: () => void; assem
       const targetLightY = isHovered ? state.pointer.y * 15 : 2 + Math.cos(t * 0.45) * 3;
       const targetLightZ = isHovered ? 4 : 6;
 
-      sweepLightRef.current.position.x = THREE.MathUtils.lerp(sweepLightRef.current.position.x, targetLightX, 0.08);
-      sweepLightRef.current.position.y = THREE.MathUtils.lerp(sweepLightRef.current.position.y, targetLightY, 0.08);
-      sweepLightRef.current.position.z = THREE.MathUtils.lerp(sweepLightRef.current.position.z, targetLightZ, 0.08);
+      sweepLightRef.current.position.x = MathUtils.lerp(sweepLightRef.current.position.x, targetLightX, 0.08);
+      sweepLightRef.current.position.y = MathUtils.lerp(sweepLightRef.current.position.y, targetLightY, 0.08);
+      sweepLightRef.current.position.z = MathUtils.lerp(sweepLightRef.current.position.z, targetLightZ, 0.08);
 
       const baseIntensity = isHovered ? 8.5 : 3.5;
-      sweepLightRef.current.intensity = THREE.MathUtils.lerp(
+      sweepLightRef.current.intensity = MathUtils.lerp(
         sweepLightRef.current.intensity,
         baseIntensity + (isHovered ? 0 : Math.sin(t * 0.6) * 0.5),
         0.08

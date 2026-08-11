@@ -1,8 +1,30 @@
+"use client";
+
+import { useEffect, useRef } from "react";
+
 import styles from './OcrScanner.module.css';
 
 export function OcrScanner() {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // Pause all 7 infinite CSS animations when the scanner is off-screen.
+  // Without this the compositor keeps them running forever, even scrolled
+  // far away — a direct battery/thermal cost on mobile.
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        el.dataset.paused = entry.isIntersecting ? 'false' : 'true';
+      },
+      { threshold: 0, rootMargin: '200px' }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <div className={styles.scannerContainer}>
+    <div ref={containerRef} className={styles.scannerContainer}>
       <div className={styles.scannerScaleWrapper}>
         {/* Stage 1: Document Scanning */}
         <div className={styles.document}>

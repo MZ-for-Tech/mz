@@ -991,7 +991,7 @@
   filter: brightness(0) invert(1);
   opacity: 0.6;
   transform: none;
-  will-change: opacity, transform, filter;
+  will-change: opacity, transform;
   flex: 1 1 0;
   min-width: 0;
   display: flex;

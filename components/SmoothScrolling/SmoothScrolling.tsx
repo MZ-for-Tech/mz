@@ -61,10 +61,43 @@ function LenisGsapBridge() {
     };
     document.addEventListener("visibilitychange", onVisibility);
 
+    // 4. SELF-HEAL GUARDS — a stopped Lenis swallows wheel events
+    //    (preventDefault + no scroll), which freezes the page until refresh.
+    //    `stop()` is normally paired with `start()` (route change / tab
+    //    visibility), but a missed `visibilitychange` on wake or alt-tab
+    //    return can strand it. These guards make any stranded stop heal on
+    //    the user's very next scroll attempt (or window focus) instead of
+    //    freezing the page:
+    //
+    //    - wheel (capture): runs BEFORE Lenis' own wheel handler, so the
+    //      event that heals the stop is also processed normally by Lenis.
+    const onWheelCapture = () => {
+      if (lenis.isStopped && !document.hidden) {
+        lenis.start();
+        // Diagnostic: if this ever fires, an A-type scroll freeze was just
+        // prevented. Remove once the stranding source is confirmed fixed.
+        console.warn("[lenis] self-healed a stranded stop (scroll freeze prevented)");
+      }
+    };
+    //    - focus: covers the sleep/wake + alt-tab missed-visibilitychange race.
+    const onFocus = () => {
+      if (!document.hidden && lenis.isStopped) lenis.start();
+    };
+    //    - pageshow: covers bfcache restores (back/forward with a frozen page).
+    const onPageShow = () => {
+      if (!document.hidden && lenis.isStopped) lenis.start();
+    };
+    window.addEventListener("wheel", onWheelCapture, { capture: true, passive: true });
+    window.addEventListener("focus", onFocus);
+    window.addEventListener("pageshow", onPageShow);
+
     return () => {
       lenis.off("scroll", ScrollTrigger.update);
       gsap.ticker.remove(raf);
       document.removeEventListener("visibilitychange", onVisibility);
+      window.removeEventListener("wheel", onWheelCapture, { capture: true } as EventListenerOptions);
+      window.removeEventListener("focus", onFocus);
+      window.removeEventListener("pageshow", onPageShow);
     };
   }, [lenis]);
 
