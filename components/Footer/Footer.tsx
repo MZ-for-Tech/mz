@@ -4,7 +4,7 @@ import styles from "./Footer.module.css";
 import { useRef, useEffect, useState } from "react";
 import ObfuscatedEmail from "../ObfuscatedEmail/ObfuscatedEmail";
 import { TransitionLink } from "@/components/TransitionLink/TransitionLink";
-import DarkVeil from "@/components/DarkVeil/DarkVeil";
+import DarkVeil, { DARKVEIL_THEME } from "@/components/DarkVeil/DarkVeil";
 
 // Live Cairo Clock — isolated in its own leaf component so the 1 Hz setState
 // only re-renders the clock subtree. Previously it lived in Footer, re-rendering
@@ -79,15 +79,7 @@ export function Footer() {
             context and recompile the CPPN shader on every scroll past the
             footer. One context, alive for the whole session. */}
         <div style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", zIndex: -1, overflow: "hidden" }}>
-          <DarkVeil
-            hueShift={-170}
-            noiseIntensity={0.08}
-            scanlineIntensity={0.05}
-            scanlineFrequency={0.01}
-            speed={0.2}
-            warpAmount={0.5}
-            variant="wave"
-          />
+          <DarkVeil {...DARKVEIL_THEME} />
         </div>
 
         {/* Open Statement CTA (No Heavy Boxes) */}

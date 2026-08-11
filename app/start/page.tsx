@@ -4,7 +4,7 @@ import { useState } from "react";
 import styles from "./page.module.css";
 import PillNav from "@/components/PillNav/PillNav";
 import { Footer } from "@/components/Footer/Footer";
-import DarkVeil from "@/components/DarkVeil/DarkVeil";
+import DarkVeil, { DARKVEIL_THEME } from "@/components/DarkVeil/DarkVeil";
 import ObfuscatedEmail from "@/components/ObfuscatedEmail/ObfuscatedEmail";
 
 const NAV_ITEMS = [
@@ -75,14 +75,9 @@ export default function StartProjectPage() {
     <>
       <div className={styles.container}>
         <div style={{ position: "fixed", top: 0, left: 0, width: "100%", height: "100svh", zIndex: -1 }}>
-          <DarkVeil
-            hueShift={-170}
-            noiseIntensity={0.05}
-            scanlineIntensity={0.05}
-            scanlineFrequency={0.01}
-            speed={0.2}
-            warpAmount={0.5}
-          />
+          {/* Colors unified with the hero, but the static default variant —
+              these pages should not carry the hero's wave motion. */}
+          <DarkVeil {...DARKVEIL_THEME} variant="default" />
         </div>
 
         <PillNav

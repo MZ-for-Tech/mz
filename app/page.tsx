@@ -8,7 +8,7 @@ import { StatusDot } from "@/components/StatusDot/StatusDot";
 import DataStreamHero from "@/components/DataStreamHero/DataStreamHero";
 const Waves = dynamic(() => import("@/components/Waves/Waves"), { ssr: false });
 const OcrScanner = dynamic(() => import("@/components/OcrScanner/OcrScanner").then(m => m.OcrScanner), { ssr: false });
-import DarkVeil from "@/components/DarkVeil/DarkVeil";
+import DarkVeil, { DARKVEIL_THEME } from "@/components/DarkVeil/DarkVeil";
 import { gsap } from "@/lib/gsap";
 import dynamic from "next/dynamic";
 import Image from "next/image";
@@ -155,15 +155,7 @@ export default function Home() {
               {/* DarkVeil background — must be INSIDE the hero section so mobile
                   compositors don't skip painting it behind a separate stacking context */}
               <div style={{ position: "absolute", inset: 0, zIndex: 0 }}>
-                <DarkVeil
-                  hueShift={198}
-                  noiseIntensity={0.05}
-                  scanlineIntensity={0.05}
-                  scanlineFrequency={0.01}
-                  speed={0.2}
-                  warpAmount={0.5}
-                  variant="wave"
-                />
+                <DarkVeil {...DARKVEIL_THEME} />
               </div>
 
               {/* 3D Logo Background - Deferred until wipe finishes to prevent lag */}

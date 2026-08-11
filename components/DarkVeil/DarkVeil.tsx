@@ -22,6 +22,7 @@ uniform float uNoise;
 uniform float uScan;
 uniform float uScanFreq;
 uniform float uWarp;
+uniform float uBrightness;
 #define iTime uTime
 #define iResolution uResolution
 
@@ -105,7 +106,9 @@ void main(){
     float scanline_val=sin(gl_FragCoord.y*uScanFreq)*0.5+0.5;
     col.rgb*=1.-(scanline_val*scanline_val)*uScan;
     col.rgb+=(rand(gl_FragCoord.xy+uTime)-0.5)*uNoise;
-    gl_FragColor=vec4(clamp(col.rgb,0.0,1.0),1.0);
+    // Brightness lift: the CPPN's learned palette sits near-black; multiply
+    // before the clamp so the wave bands gain presence without clipping.
+    gl_FragColor=vec4(clamp(col.rgb*uBrightness,0.0,1.0),1.0);
 }
 `;
 
@@ -118,7 +121,26 @@ type Props = {
   warpAmount?: number;
   resolutionScale?: number;
   variant?: 'default' | 'wave';
+  /** Luminance lift for the CPPN output (the learned palette sits near-black). */
+  brightness?: number;
 };
+
+/**
+ * The site-wide DarkVeil look — hero colors + wave motion. Shared by all
+ * four mount sites (hero, footer, /start, /privacy) so the glow reads as
+ * one consistent identity instead of per-page variants (the others used a
+ * greener hueShift −170 and /start + /privacy also ran the static default
+ * variant).
+ */
+export const DARKVEIL_THEME = {
+  hueShift: 198,
+  noiseIntensity: 0.05,
+  scanlineIntensity: 0.05,
+  scanlineFrequency: 0.01,
+  speed: 0.2,
+  warpAmount: 0.5,
+  variant: 'wave',
+} as const;
 
 export default function DarkVeil({
                                    hueShift = 0,
@@ -128,7 +150,8 @@ export default function DarkVeil({
                                    scanlineFrequency = 0,
                                    warpAmount = 0,
                                    resolutionScale = 1,
-                                   variant = 'default'
+                                   variant = 'default',
+                                   brightness = 1.7
                                  }: Props) {
   const ref = useRef<HTMLCanvasElement>(null);
   useEffect(() => {
@@ -181,7 +204,8 @@ export default function DarkVeil({
         uNoise: { value: noiseIntensity },
         uScan: { value: scanlineIntensity },
         uScanFreq: { value: scanlineFrequency },
-        uWarp: { value: warpAmount }
+        uWarp: { value: warpAmount },
+        uBrightness: { value: brightness }
       }
     });
 
@@ -275,6 +299,6 @@ export default function DarkVeil({
       cancelAnimationFrame(initFrame);
       if (disposeGl) disposeGl();
     };
-  }, [hueShift, noiseIntensity, scanlineIntensity, speed, scanlineFrequency, warpAmount, resolutionScale, variant]);
+  }, [hueShift, noiseIntensity, scanlineIntensity, speed, scanlineFrequency, warpAmount, resolutionScale, variant, brightness]);
   return <canvas ref={ref} className="darkveil-canvas" />;
 }
