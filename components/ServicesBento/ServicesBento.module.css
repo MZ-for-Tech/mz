@@ -62,10 +62,15 @@
 }
 
 .textTile {
-  background: linear-gradient(145deg, rgba(var(--color-text-rgb), 0.03) 0%, rgba(var(--color-text-rgb), 0.01) 100%);
-  border: 1px solid rgba(var(--color-text-rgb), 0.1);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  /* Fake glass (F9): the real backdrop-filter re-blurred every frame the
+     animated grainient beneath changed. A stronger tint + soft-blended film
+     grain keeps the frosted read at zero per-frame cost. */
+  background:
+    var(--glass-noise-soft),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0) 45%),
+    linear-gradient(145deg, rgba(var(--color-text-rgb), 0.10) 0%, rgba(var(--color-text-rgb), 0.04) 100%);
+  background-blend-mode: soft-light, normal, normal;
+  border: 1px solid rgba(var(--color-text-rgb), 0.14);
   padding: 32px;
   display: flex;
   flex-direction: column;

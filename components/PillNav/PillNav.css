@@ -10,12 +10,20 @@
   display: flex;
   align-items: center;
   padding: 0.35rem;
-  background: rgba(15, 15, 15, 0.4);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  /* Fake glass (F9): a real backdrop-filter forces the compositor to
+     re-sample and re-blur everything beneath this fixed nav on every scroll
+     frame. A translucent panel + radial highlight + film grain reads as
+     frosted glass at zero per-frame cost. The grain is the top layer,
+     soft-light blended so it sits IN the glass instead of on top of it. */
+  background-color: rgba(15, 15, 15, 0.5);
+  background-image:
+    var(--glass-noise),
+    radial-gradient(circle at 22% 0%, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0) 55%),
+    linear-gradient(160deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0) 40%);
+  background-blend-mode: soft-light, normal, normal;
+  border: 1px solid rgba(255, 255, 255, 0.09);
   border-radius: 100px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.07), inset 0 0 24px rgba(255, 255, 255, 0.02);
   transition: border-radius 0.4s ease;
 }
 
