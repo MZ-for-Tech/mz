@@ -140,15 +140,21 @@ export default function DarkVeil({
     // Defer context creation by one frame to prevent mobile GPU crash on load burst
     const initFrame = requestAnimationFrame(() => {
       let renderer: Renderer | null = null;
+      // Low-power detection. `hardwareConcurrency <= 4` alone misses modern
+      // mid-range hardware (8 cores is standard on 2022+ phones); combine it
+      // with deviceMemory and pointer type so tablets, foldables and low-end
+      // laptops with integrated GPUs land on the 0.6 dpr path too.
+      let lowPower = false;
+      // F5: the low-power path also renders at 75% resolution scale — with
+      // the 0.6 dpr that's ~20% of the pixels of the full path. The glow is
+      // a soft low-frequency gradient, so it degrades gracefully.
+      let effectiveResolutionScale = resolutionScale;
       try {
-        // Low-power detection. `hardwareConcurrency <= 4` alone misses modern
-        // mid-range hardware (8 cores is standard on 2022+ phones); combine it
-        // with deviceMemory and pointer type so tablets, foldables and low-end
-        // laptops with integrated GPUs land on the 0.6 dpr path too.
-        const lowPower =
+        lowPower =
           (navigator.hardwareConcurrency ?? 8) <= 4 ||
           (typeof navigator.deviceMemory === 'number' && navigator.deviceMemory <= 4) ||
           window.matchMedia('(max-width: 768px), (pointer: coarse)').matches;
+        if (lowPower) effectiveResolutionScale = Math.min(resolutionScale, 0.75);
         renderer = new Renderer({
           dpr: lowPower ? 0.6 : Math.min(window.devicePixelRatio || 1, 1.5),
           canvas
@@ -184,7 +190,7 @@ export default function DarkVeil({
       const resize = () => {
         const w = parent.clientWidth || window.innerWidth,
           h = parent.clientHeight || window.innerHeight;
-        renderer!.setSize(w * resolutionScale, h * resolutionScale);
+        renderer!.setSize(w * effectiveResolutionScale, h * effectiveResolutionScale);
         program.uniforms.uResolution.value.set(w, h);
       };
 

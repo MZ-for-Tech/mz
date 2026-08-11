@@ -150,7 +150,7 @@
   bottom: 10em;
   margin: auto;
   transform: rotateX(-42deg);
-  filter: blur(1em);
+  filter: blur(0.5em); /* F8: halved (was 1em) */
   opacity: 0.8;
   border-radius: 100% 100% 0 0;
 }
@@ -166,7 +166,7 @@
   bottom: 12em;
   margin: auto;
   transform: rotateX(22deg);
-  filter: blur(1em);
+  filter: blur(0.5em); /* F8: halved (was 1em) */
   opacity: 0.6;
   border-radius: 100% 100% 0 0;
 }
@@ -216,7 +216,7 @@
   top: 11em;
   bottom: 0;
   margin: auto;
-  filter: blur(0.8em);
+  filter: blur(0.4em); /* F8: halved (was 0.8em) */
   opacity: 0.6;
   border-radius: 0 0 100% 100%;
   transform: rotateX(22deg);

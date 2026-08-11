@@ -436,7 +436,14 @@ export default function MzLogo3D({
   onLoad?: () => void;
   assemblyStartDelayMs?: number;
 }) {
-  const [dpr, setDpr] = useState(1.5);
+  // F3: cap resolution on coarse-pointer devices (phones/tablets) — dpr
+  // starts at 1.0 and the PerformanceMonitor ceiling is 1.25 (vs 2 on
+  // desktop), plus antialias off. Saves ~50–75% of the fragment work on the
+  // devices that need it most; only visible as marginally softer edges.
+  const [isCoarse] = useState(
+    () => typeof window !== "undefined" && window.matchMedia("(pointer: coarse)").matches
+  );
+  const [dpr, setDpr] = useState(isCoarse ? 1 : 1.5);
   // Render only while the logo is on screen. The Canvas defaults to
   // frameloop="always" (a render every animation frame, forever, even when
   // scrolled out of view). Toggling to "never" off-screen stops the
@@ -475,13 +482,13 @@ export default function MzLogo3D({
             far: 40,
           }}
           gl={{
-            antialias: true,
+            antialias: !isCoarse,
             alpha: true,
             powerPreference: "high-performance",
           }}
         >
         <PerformanceMonitor
-          onIncline={() => setDpr(Math.min(2, dpr + 0.25))}
+          onIncline={() => setDpr(Math.min(isCoarse ? 1.25 : 2, dpr + 0.25))}
           onDecline={() => setDpr(Math.max(1, dpr - 0.25))}
         />
         <Suspense fallback={null}>
@@ -489,15 +496,16 @@ export default function MzLogo3D({
         </Suspense>
 
         {/* Environment map for realistic metallic reflections. Self-hosted
-            (public/hdr/forest_slope_512_v2.hdr — a 512×256 box-downsampled
-            copy of the drei "forest" preset, 472 KB vs the original 1.9 MB;
-            env reflections are low-frequency so the loss is imperceptible.
+            (public/hdr/forest_slope_256_v2.hdr — a 256×128 box-downsampled
+            copy of the drei "forest" preset, ~118 KB vs the 483 KB 512×256
+            it replaces; env reflections for rough metal are low-frequency,
+            so the loss is subtle (10.8% RMSE on a 2× box downscale).
             Filename is versioned because /hdr/* is cached immutable — a
-            broken early build of the 512 file would otherwise be served
-            forever. Wrapped in Suspense so the logo renders immediately and
-            the reflections pop in when the HDR arrives. */}
+            broken early build would otherwise be served forever. Wrapped in
+            Suspense so the logo renders immediately and the reflections pop
+            in when the HDR arrives. */}
         <Suspense fallback={null}>
-          <Environment files="/hdr/forest_slope_512_v2.hdr" environmentIntensity={0.6} />
+          <Environment files="/hdr/forest_slope_256_v2.hdr" environmentIntensity={0.6} />
         </Suspense>
 
         {/* Darkness / Base ambient */}

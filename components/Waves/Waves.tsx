@@ -152,7 +152,9 @@ const Waves: FC<WavesProps> = ({
       // Ensure we don't blow up memory on 4K/Ultrawide screens by aggressively capping the total points
       // We reduce the target points significantly on mobile devices to maintain 60fps on lower-end CPUs (like MediaTek G99)
       const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
-      const TARGET_POINTS = isMobile ? 400 : 2000;
+      // F10: desktop capped at 1200 (was 2000) — ~40% less per-frame Perlin
+      // work at 15% opacity the sparser field is imperceptible.
+      const TARGET_POINTS = isMobile ? 400 : 1200;
       const currentPointsEstimate = Math.ceil(oWidth / xGap) * Math.ceil(oHeight / yGap);
       if (currentPointsEstimate > TARGET_POINTS) {
         const scale = Math.sqrt(currentPointsEstimate / TARGET_POINTS);
