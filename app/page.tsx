@@ -58,17 +58,32 @@ function shouldSkipHeavyWarmup(): boolean {
 export default function Home() {
   const mainRef = useRef<HTMLElement>(null);
   const [isReadyForHeavy, setIsReadyForHeavy] = useState(false);
+  const [darkVeilVisible, setDarkVeilVisible] = useState(false);
   const [isLogoLoaded, setIsLogoLoaded] = useState(false);
   const [reduceMotion, setReduceMotion] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setReduceMotion(window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+
+    const mql = window.matchMedia("(pointer: coarse), (max-width: 768px)");
+    setIsMobile(mql.matches);
+    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    mql.addEventListener("change", handler);
+    return () => mql.removeEventListener("change", handler);
   }, []);
 
 
   useEffect(() => {
-    const onReady = () => setIsReadyForHeavy(true);
+    let r1: number;
+    let r2: number;
+    const onReady = () => {
+      setIsReadyForHeavy(true);
+      r1 = requestAnimationFrame(() => {
+        r2 = requestAnimationFrame(() => setDarkVeilVisible(true));
+      });
+    };
     window.addEventListener('mz-transition-done', onReady, { once: true });
 
     // Fallback just in case event fired before mount
@@ -76,20 +91,21 @@ export default function Home() {
     return () => {
       window.removeEventListener('mz-transition-done', onReady);
       clearTimeout(timer);
+      cancelAnimationFrame(r1);
+      cancelAnimationFrame(r2);
     };
   }, []);
 
   // Warm the lazy three.js chunk while the entry wipe is still covering the
   // screen, so the logo mounts as soon as the curtain lifts instead of after
   // a ~269 KB gz chunk fetch on first visit.
-  // Skipped on weak devices (saveData / low memory / few cores / touch):
+  // Skipped on weak devices / mobile (saveData / low memory / few cores / touch / <=768px):
   // there the 269 KB gz download would land exactly during hydration, on the
-  // busiest main thread. Those devices fetch the chunk when the logo actually
-  // mounts instead.
+  // busiest main thread.
   useEffect(() => {
-    if (shouldSkipHeavyWarmup()) return;
+    if (isMobile || shouldSkipHeavyWarmup()) return;
     void import("@/components/Logo/MzLogo3D");
-  }, []);
+  }, [isMobile]);
 
   useGSAP(() => {
     // Respect prefers-reduced-motion
@@ -152,21 +168,28 @@ export default function Home() {
 
             {/* 01 — Hero */}
             <section className={`${styles.hero} hero-section`}>
-              {/* DarkVeil background — must be INSIDE the hero section so mobile
-                  compositors don't skip painting it behind a separate stacking context */}
-              <div style={{ position: "absolute", inset: 0, zIndex: 0 }}>
-                <DarkVeil {...DARKVEIL_THEME} />
-              </div>
-
-              {/* 3D Logo Background - Deferred until wipe finishes to prevent lag */}
+              {/* DarkVeil background — deferred until wipe finishes with smooth fade-in */}
               <div
-                className={styles.heroLogo3D}
                 style={{
-                  opacity: isLogoLoaded ? 1 : 0,
-                  transition: 'opacity 0.3s ease-out'
+                  position: "absolute",
+                  inset: 0,
+                  zIndex: 0,
+                  opacity: darkVeilVisible ? 1 : 0,
+                  transition: 'opacity 1.2s ease-out'
                 }}
               >
-                {isReadyForHeavy && (
+                {isReadyForHeavy && <DarkVeil {...DARKVEIL_THEME} resolutionScale={0.75} />}
+              </div>
+
+              {/* 3D Logo Background - Deferred until wipe finishes and desktop only */}
+              {isReadyForHeavy && !isMobile && (
+                <div
+                  className={styles.heroLogo3D}
+                  style={{
+                    opacity: isLogoLoaded ? 1 : 0,
+                    transition: 'opacity 0.3s ease-out'
+                  }}
+                >
                   <MzLogo3D
                     onLoad={() => setIsLogoLoaded(true)}
                     // Data is usually ready ~1.1–1.5s after load (wipe ends at
@@ -177,8 +200,8 @@ export default function Home() {
                     // tight enough that there's no "empty hero" feel.
                     assemblyStartDelayMs={400}
                   />
-                )}
-              </div>
+                </div>
+              )}
 
               <div className={styles.heroContent}>
                 <div className={styles.heroWordsRow}>
@@ -355,9 +378,7 @@ export default function Home() {
         </main>
       </div>
 
-      <div style={{ position: "relative", height: "100svh", zIndex: 0 }}>
-        <Footer />
-      </div>
+      <Footer />
     </>
   );
 }

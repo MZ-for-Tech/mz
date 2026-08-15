@@ -27,27 +27,37 @@ export default function Template({ children }: { children: React.ReactNode }) {
       return;
     }
 
-    if (containerRef.current) {
-      const cols = containerRef.current.children;
-      gsap.fromTo(
-        cols,
-        { y: "-15vh" },
-        {
-          y: "-130vh",
-          duration: WIPE_DURATION,
-          ease: "power4.inOut",
-          stagger: WIPE_STAGGER,
-        }
-      );
-    }
+    let timer: ReturnType<typeof setTimeout>;
+    let raf2: number;
 
-    // Fire event when the entry wipe fully completes, so hero animations
-    // can sync precisely instead of using a blind delay.
-    const timer = setTimeout(() => {
-      window.dispatchEvent(new Event('mz-transition-done'));
-    }, WIPE_TOTAL_MS);
+    const raf1 = requestAnimationFrame(() => {
+      raf2 = requestAnimationFrame(() => {
+        if (!containerRef.current) return;
+        const cols = containerRef.current.children;
+        gsap.fromTo(
+          cols,
+          { y: "-15vh" },
+          {
+            y: "-130vh",
+            duration: WIPE_DURATION,
+            ease: "power4.inOut",
+            stagger: WIPE_STAGGER,
+          }
+        );
 
-    return () => clearTimeout(timer);
+        // Fire event when the entry wipe fully completes, so hero animations
+        // can sync precisely instead of using a blind delay.
+        timer = setTimeout(() => {
+          window.dispatchEvent(new Event('mz-transition-done'));
+        }, WIPE_TOTAL_MS);
+      });
+    });
+
+    return () => {
+      cancelAnimationFrame(raf1);
+      cancelAnimationFrame(raf2);
+      clearTimeout(timer);
+    };
   }, []);
 
   return (

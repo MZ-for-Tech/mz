@@ -140,7 +140,7 @@ function Logo({ onLoad, assemblyStartDelayMs = 0 }: { onLoad?: () => void; assem
       if (timer) clearTimeout(timer);
       cancelAnimationFrame(raf);
     };
-  }, [meshData, onLoad]);
+  }, [meshData, onLoad, assemblyStartDelayMs]);
 
   // Hover & Mouse Drag tracking on the WebGL canvas element
   useEffect(() => {
@@ -225,6 +225,7 @@ function Logo({ onLoad, assemblyStartDelayMs = 0 }: { onLoad?: () => void; assem
   useEffect(() => {
     if (typeof window !== "undefined") {
       reduceMotionRef.current = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      // eslint-disable-next-line react-hooks/immutability
       if (reduceMotionRef.current) assemblyDone.current = true;
     }
   }, []);
@@ -242,7 +243,7 @@ function Logo({ onLoad, assemblyStartDelayMs = 0 }: { onLoad?: () => void; assem
     });
   }, [meshData]);
 
-  useFrame((state, _delta) => {
+  useFrame((state) => {
     if (!logoRef.current || !meshData) return;
 
     const t = state.clock.elapsedTime;
@@ -290,6 +291,7 @@ function Logo({ onLoad, assemblyStartDelayMs = 0 }: { onLoad?: () => void; assem
       });
 
       if (progress >= 1) {
+        // eslint-disable-next-line react-hooks/immutability
         assemblyDone.current = true;
         if (typeof window !== 'undefined') {
           // Versioned so a marker from an older build can't suppress the

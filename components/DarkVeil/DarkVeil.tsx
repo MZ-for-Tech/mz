@@ -134,12 +134,13 @@ type Props = {
  */
 export const DARKVEIL_THEME = {
   hueShift: 198,
-  noiseIntensity: 0.05,
+  noiseIntensity: 0,
   scanlineIntensity: 0.05,
   scanlineFrequency: 0.01,
   speed: 0.2,
   warpAmount: 0.5,
   variant: 'wave',
+  resolutionScale: 0.75,
 } as const;
 
 export default function DarkVeil({
@@ -169,17 +170,13 @@ export default function DarkVeil({
       // laptops with integrated GPUs land on the 0.6 dpr path too.
       let lowPower = false;
       // F5: the low-power path also renders at 75% resolution scale — with
-      // the 0.6 dpr that's ~20% of the pixels of the full path. The glow is
-      // a soft low-frequency gradient, so it degrades gracefully.
-      let effectiveResolutionScale = resolutionScale;
       try {
         lowPower =
           (navigator.hardwareConcurrency ?? 8) <= 4 ||
           (typeof navigator.deviceMemory === 'number' && navigator.deviceMemory <= 4) ||
           window.matchMedia('(max-width: 768px), (pointer: coarse)').matches;
-        if (lowPower) effectiveResolutionScale = Math.min(resolutionScale, 0.75);
         renderer = new Renderer({
-          dpr: lowPower ? 0.6 : Math.min(window.devicePixelRatio || 1, 1.5),
+          dpr: lowPower ? (resolutionScale * 0.6) : Math.min(window.devicePixelRatio || 1, 1.5) * resolutionScale,
           canvas
         });
       } catch (_err) {
@@ -214,18 +211,19 @@ export default function DarkVeil({
       const resize = () => {
         const w = parent.clientWidth || window.innerWidth,
           h = parent.clientHeight || window.innerHeight;
-        renderer!.setSize(w * effectiveResolutionScale, h * effectiveResolutionScale);
-        program.uniforms.uResolution.value.set(w, h);
+        renderer!.setSize(w, h);
+        program.uniforms.uResolution.value.set(gl.canvas.width, gl.canvas.height);
       };
 
       window.addEventListener('resize', resize);
       resize();
 
-      const mouse = new Vec2(window.innerWidth / 2, window.innerHeight / 2);
-      const targetMouse = new Vec2(window.innerWidth / 2, window.innerHeight / 2);
+      const mouse = new Vec2(gl.canvas.width / 2, gl.canvas.height / 2);
+      const targetMouse = new Vec2(gl.canvas.width / 2, gl.canvas.height / 2);
 
       const onMouseMove = (e: MouseEvent) => {
-        targetMouse.set(e.clientX, window.innerHeight - e.clientY);
+        const currentDpr = renderer?.dpr || 1;
+        targetMouse.set(e.clientX * currentDpr, (window.innerHeight - e.clientY) * currentDpr);
       };
       window.addEventListener('mousemove', onMouseMove);
 

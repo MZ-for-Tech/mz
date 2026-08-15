@@ -89,7 +89,7 @@ export function Footer() {
           </h2>
 
           <div className={styles.statementAction}>
-            <span>Drop us a line at</span>
+            <span>Get in touch at</span>
             <div className={styles.emailPill}>
               <ObfuscatedEmail user="hello" domain="mzfortech.com" className={styles.emailText} />
               <button onClick={handleCopyEmail} className={styles.copyBtn}>
@@ -116,7 +116,7 @@ export function Footer() {
           </div>
 
           {/* Col 2: Services */}
-          <div className={styles.gridCol}>
+          <div className={`${styles.gridCol} ${styles.servicesCol}`}>
             <span className={styles.colLabel}>SERVICES</span>
             <ul className={styles.linkList}>
               <li><a href="#services" className={`${styles.linkItem} hover-link`}>Custom Websites & Systems</a></li>
