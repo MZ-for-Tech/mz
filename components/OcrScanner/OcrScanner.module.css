@@ -287,8 +287,8 @@
 
 /* Pause all decorative animations while off-screen (data-paused is set by
    the IntersectionObserver in OcrScanner.tsx). */
-:global([data-paused='true']) *,
-:global([data-paused='true']) {
+.scannerContainer[data-paused='true'] *,
+.scannerContainer[data-paused='true'] {
   animation-play-state: paused !important;
 }
 

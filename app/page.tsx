@@ -12,8 +12,6 @@ import DarkVeil, { DARKVEIL_THEME } from "@/components/DarkVeil/DarkVeil";
 import { gsap } from "@/lib/gsap";
 import dynamic from "next/dynamic";
 import Image from "next/image";
-
-const MzLogo3D = dynamic(() => import("@/components/Logo/MzLogo3D"), { ssr: false });
 import { useGSAP } from "@gsap/react";
 const ServicesAccordion = dynamic(() => import("@/components/ServicesAccordion/ServicesAccordion"), { ssr: false });
 import PremiumShowcase from "@/components/PremiumShowcase/PremiumShowcase";
@@ -35,26 +33,6 @@ const NAV_ITEMS = [
   { label: 'Contact', href: '/start' }
 ];
 
-/**
- * Weak-device check for the eager three.js warm-up.
- * saveData, low memory, few cores, or a coarse pointer means the 269 KB gz
- * three.js chunk should NOT be pulled during hydration — it is fetched later,
- * when the logo actually mounts. Desktop with fine pointer keeps today's
- * exactly-on-curtain-lift behaviour.
- */
-function shouldSkipHeavyWarmup(): boolean {
-  if (typeof navigator === "undefined") return false;
-  try {
-    if (navigator.connection?.saveData) return true;
-    if (typeof navigator.deviceMemory === "number" && navigator.deviceMemory <= 4) return true;
-    if (typeof navigator.hardwareConcurrency === "number" && navigator.hardwareConcurrency <= 4) return true;
-    if (window.matchMedia("(pointer: coarse)").matches) return true;
-  } catch {
-    // Any failure to read capability signals falls back to today's behaviour.
-  }
-  return false;
-}
-
 export default function Home() {
   const mainRef = useRef<HTMLElement>(null);
   const [isReadyForHeavy, setIsReadyForHeavy] = useState(false);
@@ -62,6 +40,11 @@ export default function Home() {
   const [isLogoLoaded, setIsLogoLoaded] = useState(false);
   const [reduceMotion, setReduceMotion] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [MzLogo3DComponent, setMzLogo3DComponent] = useState<React.ComponentType<{
+    className?: string;
+    onLoad?: () => void;
+    assemblyStartDelayMs?: number;
+  }> | null>(null);
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -74,6 +57,12 @@ export default function Home() {
     return () => mql.removeEventListener("change", handler);
   }, []);
 
+  useEffect(() => {
+    if (isMobile) return;
+    import('@/components/Logo/MzLogo3D').then(m => {
+      setMzLogo3DComponent(() => m.default);
+    });
+  }, [isMobile]);
 
   useEffect(() => {
     let r1: number;
@@ -95,17 +84,6 @@ export default function Home() {
       cancelAnimationFrame(r2);
     };
   }, []);
-
-  // Warm the lazy three.js chunk while the entry wipe is still covering the
-  // screen, so the logo mounts as soon as the curtain lifts instead of after
-  // a ~269 KB gz chunk fetch on first visit.
-  // Skipped on weak devices / mobile (saveData / low memory / few cores / touch / <=768px):
-  // there the 269 KB gz download would land exactly during hydration, on the
-  // busiest main thread.
-  useEffect(() => {
-    if (isMobile || shouldSkipHeavyWarmup()) return;
-    void import("@/components/Logo/MzLogo3D");
-  }, [isMobile]);
 
   useGSAP(() => {
     // Respect prefers-reduced-motion
@@ -182,7 +160,7 @@ export default function Home() {
               </div>
 
               {/* 3D Logo Background - Deferred until wipe finishes and desktop only */}
-              {isReadyForHeavy && !isMobile && (
+              {isReadyForHeavy && !isMobile && MzLogo3DComponent && (
                 <div
                   className={styles.heroLogo3D}
                   style={{
@@ -190,7 +168,7 @@ export default function Home() {
                     transition: 'opacity 0.3s ease-out'
                   }}
                 >
-                  <MzLogo3D
+                  <MzLogo3DComponent
                     onLoad={() => setIsLogoLoaded(true)}
                     // Data is usually ready ~1.1–1.5s after load (wipe ends at
                     // 1.02s). The fade-in waits for the assembly to start (one

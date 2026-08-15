@@ -1,9 +1,15 @@
 import type { NextConfig } from "next";
+import withBundleAnalyzer from "@next/bundle-analyzer";
+
+const bundleAnalyzer = withBundleAnalyzer({
+  enabled: process.env.ANALYZE === "true",
+});
 
 const SITE = "https://mzfortech.com";
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  allowedDevOrigins: ["192.168.1.18", "192.168.1.*", "localhost"],
   // Only ship the drei modules the page actually imports (it exports hundreds).
   experimental: {
     optimizePackageImports: ["@react-three/drei"],
@@ -100,5 +106,5 @@ const nextConfig: NextConfig = {
   }
 };
 
-export default nextConfig;
+export default bundleAnalyzer(nextConfig);
 

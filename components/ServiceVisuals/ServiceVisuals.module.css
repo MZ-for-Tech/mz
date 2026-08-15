@@ -484,8 +484,8 @@
 }
 
 /* Pause all animations when the section is not visible */
-:global([data-paused='true']) *,
-:global([data-paused='true']) {
+.container[data-paused='true'] *,
+.container[data-paused='true'] {
   animation-play-state: paused !important;
 }
 
