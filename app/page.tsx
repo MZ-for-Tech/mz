@@ -3,9 +3,9 @@ import { useRef, useState, useEffect } from "react";
 import styles from "./page.module.css";
 import PillNav from "../components/PillNav/PillNav";
 import { Footer } from "../components/Footer/Footer";
-import { ScaleReveal } from "../components/ScaleReveal/ScaleReveal";
-import { StatusDot } from "@/components/StatusDot/StatusDot";
+import ScrollExpand from "@/components/ScrollExpand/ScrollExpand";
 import DataStreamHero from "@/components/DataStreamHero/DataStreamHero";
+import { StatusDot } from "@/components/StatusDot/StatusDot";
 const Waves = dynamic(() => import("@/components/Waves/Waves"), { ssr: false });
 const OcrScanner = dynamic(() => import("@/components/OcrScanner/OcrScanner").then(m => m.OcrScanner), { ssr: false });
 import DarkVeil, { DARKVEIL_THEME } from "@/components/DarkVeil/DarkVeil";
@@ -322,17 +322,39 @@ export default function Home() {
 
 
 
-            {/* 07 — TNH Portal */}
+            {/* 07 — TNH Portal / ScrollExpand */}
             <section className={styles.tnhPortalWrapper}>
-              <ScaleReveal intensity={1.1} hasBackground={false} className={styles.tnhPortal}>
-                <DataStreamHero />
-                <div className={styles.tnhText}>
-                  Our research doesn&apos;t stay internal.
+              <ScrollExpand
+                customMedia={
+                  <div className={styles.tnhMediaBg}>
+                    <DataStreamHero />
+                  </div>
+                }
+                title="Our research doesn't stay internal."
+                useWindowScroll
+                startWidth={50}
+                startHeight={60}
+                startRadius={28}
+                endRadius={0}
+                mediaZoom={1.0}
+                scrollDistance={1.0}
+                holdDistance={0.35}
+                overlayScrim={0}
+              >
+                <div className={styles.tnhOverlayContent}>
+                  <div className={styles.tnhText}>
+                    Our research doesn&apos;t stay internal.
+                  </div>
+                  <a
+                    href="https://nullhypothesis.dev"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={styles.tnhLink}
+                  >
+                    ↗ nullhypothesis.dev
+                  </a>
                 </div>
-                <a href="https://nullhypothesis.dev" target="_blank" rel="noopener noreferrer" className={styles.tnhLink}>
-                  ↗ nullhypothesis.dev
-                </a>
-              </ScaleReveal>
+              </ScrollExpand>
             </section>
 
             {/* 08 — CTA */}
