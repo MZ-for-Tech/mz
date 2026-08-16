@@ -178,7 +178,6 @@ export default function ScrollExpand({
     let target = 0;
     let stageH = 0;
     let running = false;
-
     const measure = () => {
       const c = propsRef.current;
       stageH = c.useWindowScroll ? window.innerHeight : root.clientHeight;
