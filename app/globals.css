@@ -187,23 +187,33 @@ body {
   height: auto;
 }
 
-/* Suppressed ONLY where the shell's own centred mark replaces it — a phone.
-   On desktop this link is the site's mark, it sits top-left clear of the tab
-   row, and it is the only wordmark on the page, so it stays.
+/* Suppressed wherever the page draws its own mark.
 
-   The rule is inside the mobile query for that reason: an unscoped version of
-   it removed the desktop logo as well, which was not a fix for anything.
+   There are three of those places, and this rule is the one that keeps a
+   single wordmark on screen at a time:
 
-   `:has()` is required rather than a class. The logo lives in the root layout
-   and the shell is rendered *by* that layout as a descendant, so the shell can
-   never be an ancestor of the thing it needs to hide — no attribute on the
-   shell can reach it. `body:has()` is the one selector that sees both, and it
-   scopes to the document rather than to a route list, so a new launcher route
-   inherits the behaviour without being added to a list somewhere. */
-@media (max-width: 768px) {
-  body:has([data-shell="launcher"]) .layout-logo-link {
-    display: none;
-  }
+     - The launcher, via `[data-shell="launcher"]`. Its header carries the mark
+       in the bar's left flank, so the layout copy would be a second mark in
+       the same corner.
+     - The start screen, via `.hero-section`. Its hero mark is the largest
+       object on the screen and is the first thing drawn; a 100px silhouette
+       of the same geometry beside it reads as a smudge rather than as a
+       second logo, which is worse than having no corner mark at all.
+
+   What is left is the two pages that genuinely have no mark of their own:
+   `/privacy` and the case study. There it is the only wordmark on the screen
+   AND a real link back to `/`, which is a job the shell's header mark cannot
+   do — that one is deliberately inert, and Esc is the only other way back.
+
+   `:has()` is required rather than a class on the logo. The logo lives in the
+   root layout and both the shell and the start screen are rendered *by* that
+   layout as descendants, so neither can ever be an ancestor of the thing it
+   needs to hide — no attribute they set can reach it. `body:has()` is the one
+   selector that sees both, and it keys off the page's own landmark rather than
+   a route list, so a route is never added to two places to stay in sync. */
+body:has([data-shell="launcher"]) .layout-logo-link,
+body:has(.hero-section) .layout-logo-link {
+  display: none;
 }
 
 @media (prefers-reduced-motion: reduce) {

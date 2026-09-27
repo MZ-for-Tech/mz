@@ -186,101 +186,49 @@ export default function MenuShell({ children }: { children: React.ReactNode }) {
           place where neither applies. */}
       {!isWorkPanel && <div className={styles.scrim} aria-hidden="true" />}
 
+      {/* ── Top bar ───────────────────────────────────────────────────
+          ONE row, in the console order: identity, destinations, utilities.
+          Steam's Big Picture, the PS3 XMB and both Xbox dashboards all put
+          those three on a single line at the top of the screen, and every one
+          of them keeps them there.
+
+          This was a stack of three — a utilities row, a gap, then the tabs —
+          and the gap was the problem. `.headerTop` is a full-width row whose
+          only content is right-aligned, so it paid for the clock and the
+          privacy glyph with an empty band the entire width of the display. The
+          logo, meanwhile, hung from the root layout OUTSIDE this bar (fixed,
+          top-left, 100px), which is why the nav read as floating under
+          something rather than as part of a header. Nothing occupied the
+          middle of that row and nothing could: the logo was not in it.
+
+          Flattening to one line removes the hole by deleting the element that
+          made it, rather than by filling it with something invented. The nav
+          gains a row's worth of height back for the panel beneath it, and the
+          mark becomes chrome in the same bar as the rest of the chrome instead
+          of a separate object hovering over it. */}
       <header className={`${styles.header} ${isWorkPanel ? styles.headerBare : ""}`}>
-        {/* The MZ mark, and it is the top of the stack: mark, then nav, then
-            the content underneath. It used to be painted into the background
-            layer instead, which meant nothing could position it — it landed
-            wherever the background art put it and sat half-under the first
-            tab, because it had no way of knowing the tab row existed. As
-            chrome it is in normal flow, centred, and the header is finally
-            allowed to be a layout rather than a bag of absolutely-positioned
-            pieces.
+        {/* The mark, on the left of the bar — the identity slot a console
+            top bar reserves for exactly this.
 
-            Decorative, and inert in both senses: `aria-hidden` because the
-            name it spells is already in the document title, the wordmark at
-            the foot of the page and the favicon; and a plain `<img>` rather
-            than a `<Link>`, because a logo you cannot click still has to
-            LOOK like something you cannot click. That is the opposite rule to
-            the trust band's, where the marks are also inert and still take a
-            hover — the difference is that those are a roster of third
-            parties being acknowledged, and this is the studio's own
-            wordmark sitting in a header that already navigates. */}
-        <div className={styles.headerTop} data-converge>
-          <LocalClock className={styles.clockSlot} />
+            It is NOT a link, and that is the point. A logo you cannot click
+            still has to look like something you cannot click; giving it an
+            href would advertise a destination the rest of the bar does not.
+            The Escape key is the way back to the start screen, and the wordmark
+            is a signature rather than a control. `aria-hidden` for the same
+            reason it was before: the name it spells is already the document
+            title, the brand line at the foot of the page and the favicon.
 
-          <div className={styles.headerMeta}>
-            {/* An icon, not the word "Privacy". At this size and at this
-                contrast a word is a second headline competing with the tabs,
-                and it repeats the site chrome twice; a glyph reads as the
-                system control it is. Labelled for assistive tech, and the
-                title gives the same to a pointer. */}
-            {/* A `TransitionLink`, not a plain one. `/privacy` is a legacy-world
-                page, so leaving the launcher for it is exactly the navigation
-                that earns the column wipe — and this control was the only way
-                into it, so a plain `next/link` here meant the one route out of
-                the shell that loaded abruptly while every tab beside it
-                crossfaded. Same component, same `wantsWipe` decision, no
-                per-call-site judgement about which transition is correct. */}
-            <TransitionLink
-              href="/privacy"
-              data-tile
-              className={styles.privacy}
-              aria-label="Privacy"
-              title="Privacy"
-            >
-              <svg
-                viewBox="0 0 24 24"
-                width="18"
-                height="18"
-                fill="none"
-                stroke="currentColor"
-                /* Back down toward the original 1.6, for the same reason the
-                   glyph is bigger: the 1.9 was compensating for a 14px icon
-                   resolving to sub-pixel ink, and at 18px that compensation
-                   overcorrects into something heavy.
-
-                   The three sizes this control has been through, and why each
-                   was wrong:
-
-                     - 20px in a bordered box: too loud. The frame made it the
-                       only hard-edged object in the header.
-                     - 14px bare: too small. The frame had been doing half the
-                       work of making the glyph read, and removing it without
-                       raising the glyph left the control genuinely hard to
-                       find — a worse failure than being too loud, because a
-                       loud privacy link is an aesthetic problem and an
-                       invisible one is a usability problem.
-                     - 18px bare: the glyph carries itself.
-
-                   The box and the glyph have to move separately, which is the
-                   whole reason this control has a transparent 40px box rather
-                   than no box at all. 40px is a touch target, not a size; the
-                   glyph is what the eye reads, and it had been carrying a size
-                   chosen for a frame that no longer exists. */
-                strokeWidth="1.6"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                aria-hidden="true"
-              >
-                <circle cx="12" cy="12" r="8.6" />
-                {/* Stem and dot, the "i" itself. The dot is a zero-length
-                    dash rather than a filled circle so it picks up the same
-                    stroke weight as the ring instead of sitting on it as a
-                    heavier blob. */}
-                <path d="M12 11.2v5" />
-                <path d="M12 7.7v.1" />
-              </svg>
-            </TransitionLink>
-          </div>
-        </div>
-
+            The root layout still renders its own copy of this mark, top-left,
+            for the pages with no launcher chrome. This one is inside the shell,
+            so the two can be switched off independently — see the
+            `data-shell` note below. */}
         <div className={styles.markSlot} data-converge>
           {/* `mz-logo.min.svg`, NOT `mz.svg`. They look like the same studio's
               mark and are not: `mz-logo.min.svg` is 165 flat `#020202` paths —
               a pure silhouette with no colour of its own, which is what makes
               it adaptable. `mz.svg` is the same geometry filled with a
               165-stop green-to-yellow gradient, and putting that in the header
-              put a lime gradient in the top band on every launcher page.
+              put a lime gradient in the top bar on every launcher page.
 
               The adaptation is the two lines below, and both are load-bearing:
               `brightness(0) invert(1)` collapses the black to pure white, and
@@ -333,6 +281,83 @@ export default function MenuShell({ children }: { children: React.ReactNode }) {
             })}
           </ul>
         </nav>
+
+        {/* The utilities, on the right of the bar. The clock and the privacy
+            glyph are the two things a console puts in this slot — a clock is a
+            launcher convention (the PS3 shows the time in the top bar, and it
+            exists to prove the system is live), and privacy is the one system
+            control the site has.
+
+            They are on the row rather than above it, which is the whole change.
+            The empty band was never a slot waiting to be filled; it was the
+            width of a row with nothing on the left of it. */}
+        <div className={styles.headerMeta} data-converge>
+          <LocalClock className={styles.clockSlot} />
+
+          {/* An icon, not the word "Privacy". At this size and at this contrast
+              a word is a second headline competing with the tabs, and it
+              repeats the site chrome twice; a glyph reads as the system
+              control it is. Labelled for assistive tech, and the title gives
+              the same to a pointer.
+
+              A `TransitionLink`, not a plain one. `/privacy` is a legacy-world
+              page, so leaving the launcher for it is exactly the navigation
+              that earns the column wipe — and this control was the only way
+              into it, so a plain `next/link` here meant the one route out of
+              the shell that loaded abruptly while every tab beside it
+              crossfaded. Same component, same `wantsWipe` decision, no
+              per-call-site judgement about which transition is correct. */}
+          <TransitionLink
+            href="/privacy"
+            data-tile
+            className={styles.privacy}
+            aria-label="Privacy"
+            title="Privacy"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              width="18"
+              height="18"
+              fill="none"
+              stroke="currentColor"
+              /* Back down toward the original 1.6, for the same reason the
+                 glyph is bigger: the 1.9 was compensating for a 14px icon
+                 resolving to sub-pixel ink, and at 18px that compensation
+                 overcorrects into something heavy.
+
+                 The three sizes this control has been through, and why each
+                 was wrong:
+
+                   - 20px in a bordered box: too loud. The frame made it the
+                     only hard-edged object in the header.
+                   - 14px bare: too small. The frame had been doing half the
+                     work of making the glyph read, and removing it without
+                     raising the glyph left the control genuinely hard to
+                     find — a worse failure than being too loud, because a
+                     loud privacy link is an aesthetic problem and an
+                     invisible one is a usability problem.
+                   - 18px bare: the glyph carries itself.
+
+                 The box and the glyph have to move separately, which is the
+                 whole reason this control has a transparent 40px box rather
+                 than no box at all. 40px is a touch target, not a size; the
+                 glyph is what the eye reads, and it had been carrying a size
+                 chosen for a frame that no longer exists. */
+              strokeWidth="1.6"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <circle cx="12" cy="12" r="8.6" />
+              {/* Stem and dot, the "i" itself. The dot is a zero-length dash
+                  rather than a filled circle so it picks up the same stroke
+                  weight as the ring instead of sitting on it as a heavier
+                  blob. */}
+              <path d="M12 11.2v5" />
+              <path d="M12 7.7v0.1" />
+            </svg>
+          </TransitionLink>
+        </div>
       </header>
 
       <main

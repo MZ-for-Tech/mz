@@ -17,6 +17,8 @@ import { PerformanceMonitor, Environment } from "@react-three/drei";
 
 import { Group, MathUtils, Mesh, PointLight } from "three";
 
+import { useDeviceTilt } from "./useDeviceTilt";
+
 import {
   buildMeshData,
   serializeMeshData,
@@ -39,7 +41,13 @@ function Logo({ onLoad, assemblyStartDelayMs = 0 }: { onLoad?: () => void; assem
   const { gl, size } = useThree();
 
   const isMobile = size.width < 768;
-  const logoScale = isMobile ? 0.0022 : 0.0035;
+  // Was 0.0022 on mobile. The mark is drawn at the centre of the canvas, which
+  // on a phone is the band between the stacked words above it and the
+  // description below — and at 0.0022 it overlapped both, because the words
+  // stack into three lines on a narrow screen and take far more vertical room
+  // than the single row they occupy on desktop. 0.0016 keeps it the largest
+  // object on the screen while leaving that band clear.
+  const logoScale = isMobile ? 0.0016 : 0.0035;
 
   // Mouse tracking & drag interaction refs
   const hovered = useRef(false);
@@ -49,6 +57,13 @@ function Logo({ onLoad, assemblyStartDelayMs = 0 }: { onLoad?: () => void; assem
   const prevPointerPos = useRef({ x: 0, y: 0 });
   const dragRotation = useRef({ x: 0, y: 0 });
   const dragVelocity = useRef({ x: 0, y: 0 });
+
+  // Ambient lean from the device itself, where there is no cursor to track.
+  // Feeds the parallax term below rather than `dragRotation`, so it is a
+  // different axis from the drag and cannot interfere with the start
+  // screen's swipe-to-launch. Reads zero until a sensor reading arrives,
+  // which is always on a desktop and never on a device that denies it.
+  const deviceTilt = useDeviceTilt();
 
   /*
    * Mesh data comes from meshBuilder: in-memory cache → IndexedDB cache →
@@ -157,10 +172,51 @@ function Logo({ onLoad, assemblyStartDelayMs = 0 }: { onLoad?: () => void; assem
       isDragging.current = true;
       prevPointerPos.current = { x: e.clientX, y: e.clientY };
       el.style.cursor = 'grabbing';
+
+      // Deliberately does NOT claim the gesture here, and that is the whole
+      // subtlety of this handler.
+      //
+      // The logo and the start screen's swipe-to-launch are the same movement
+      // — a pointer travelling up across the middle of the hero — and only
+      // one of them can own it. MzLogo3D claims it by setting
+      // `data-mz-dragging` on this canvas, which the start screen checks
+      // before launching. The claim belongs in `onPointerMove`, not here, for
+      // two reasons:
+      //
+      //   1. THE CANVAS IS THE WHOLE VIEWPORT. The wrapper is `inset: 0` and
+      //      the mark is drawn at its centre, so this canvas is what a pointer
+      //      lands on almost anywhere on the screen — it is not a small target
+      //      around the logo. Flagging on pointerdown would hand the drag every
+      //      pointer-down on the page, and the launch would die everywhere
+      //      rather than only on the mark.
+      //   2. TOUCH MUST KEEP THE LAUNCH. Phones have no hover, no `grab`
+      //      cursor and no fine pointer, so nothing tells a visitor the mark
+      //      is draggable — and an upward flick is the only way a phone has to
+      //      open the menu. If touch claimed it, a phone would lose its only
+      //      way in, in exchange for a gesture nobody was offered.
+      //
+      // So the claim is mouse-and-pen only, and it waits for real movement
+      // (see `onPointerMove`). A click never claims it, so clicking the mark
+      // still launches, which is what a click anywhere else on this screen
+      // already did.
     };
 
     const onPointerMove = (e: PointerEvent) => {
       if (!isDragging.current) return;
+
+      // Wait for the gesture to be unambiguously a drag before claiming it.
+      // 8px is roughly where a press-and-move stops reading as a click that
+      // wandered. Until then the flag is unset and a touch keeps its launch.
+      if (!el.dataset.mzDragging) {
+        if (e.pointerType !== "mouse" && e.pointerType !== "pen") return;
+        const moved = Math.hypot(
+          e.clientX - prevPointerPos.current.x,
+          e.clientY - prevPointerPos.current.y
+        );
+        if (moved < 8) return;
+        el.dataset.mzDragging = "true";
+      }
+
       const dx = e.clientX - prevPointerPos.current.x;
       const dy = e.clientY - prevPointerPos.current.y;
 
@@ -175,6 +231,7 @@ function Logo({ onLoad, assemblyStartDelayMs = 0 }: { onLoad?: () => void; assem
 
     const onPointerUp = () => {
       isDragging.current = false;
+      delete el.dataset.mzDragging;
       if (hovered.current) el.style.cursor = 'grab';
     };
 
@@ -335,10 +392,26 @@ function Logo({ onLoad, assemblyStartDelayMs = 0 }: { onLoad?: () => void; assem
       0.04
     );
 
-    // Combine scroll tilt, mouse tracking, drag rotation, and organic sway
-    const targetX = scrollTiltX + state.pointer.y * tiltStrength + swayX + dragRotation.current.x;
-    const targetY = state.pointer.x * (isHovered ? 0.25 : 0.15) + swayY + dragRotation.current.y;
-    const targetZ = -state.pointer.x * (isHovered ? 0.10 : 0.05);
+    // Ambient lean. `state.pointer` is the mouse position normalised to -1..1
+    // and is exactly what the mark follows on desktop. A touch device leaves
+    // it pinned at its resting value, so on a phone the device's own tilt
+    // stands in for it — the same gesture (lean toward me) with the body
+    // instead of a hand.
+    //
+    // The two are ADDED rather than swapped, because R3F keeps `pointer`
+    // meaningful on a hybrid device: a visitor with a phone and a Bluetooth
+    // mouse, or a touchscreen laptop, moves the mouse and expects the mark to
+    // follow. Whichever signal actually moves wins, and where both are still
+    // the mark is neutral because both are zero.
+    const tiltX = deviceTilt.current.x;
+    const tiltY = deviceTilt.current.y;
+    const aimX = state.pointer.x + tiltX;
+    const aimY = state.pointer.y + tiltY;
+
+    // Combine scroll tilt, aim, drag rotation, and organic sway
+    const targetX = scrollTiltX + aimY * tiltStrength + swayX + dragRotation.current.x;
+    const targetY = aimX * (isHovered ? 0.25 : 0.15) + swayY + dragRotation.current.y;
+    const targetZ = -aimX * (isHovered ? 0.10 : 0.05);
 
     logoRef.current.rotation.x = MathUtils.lerp(
       logoRef.current.rotation.x,
@@ -370,8 +443,8 @@ function Logo({ onLoad, assemblyStartDelayMs = 0 }: { onLoad?: () => void; assem
     // Camera pulls back slightly on scroll (cinematic recede)
     const baseZ = 12;
     const targetZ_cam = baseZ + scrollProgress * 2.5;
-    state.camera.position.x = MathUtils.lerp(state.camera.position.x, state.pointer.x * 0.6, 0.03);
-    state.camera.position.y = MathUtils.lerp(state.camera.position.y, state.pointer.y * 0.35, 0.03);
+    state.camera.position.x = MathUtils.lerp(state.camera.position.x, aimX * 0.6, 0.03);
+    state.camera.position.y = MathUtils.lerp(state.camera.position.y, aimY * 0.35, 0.03);
     state.camera.position.z = MathUtils.lerp(state.camera.position.z, targetZ_cam, 0.04);
     state.camera.lookAt(0, 0, 0);
 
@@ -471,12 +544,22 @@ export default function MzLogo3D({
       style={{
         width: "100%",
         height: "100%",
-        minHeight: "500px"
+        // Was `minHeight: 500px`. That floor is a leftover from when this
+        // component was mounted inline in normal document flow and had to
+        // reserve a block of its own; the hero wrapper is `inset: 0`, so the
+        // canvas already gets the full viewport and the floor only ever
+        // overrode it. On a 648px phone it forced the canvas taller than the
+        // screen and pushed the mark off-centre.
       }}
     >
         <Canvas
           frameloop={inView ? "always" : "never"}
           dpr={dpr}
+          // `touch-action: none` is set in CSS, not here. R3F owns the
+          // canvas's inline `style` and overwrites this prop with its own
+          // display/size defaults, so a value passed here is silently lost.
+          // See the `touch-action` rule on the wrapper in
+          // app/page.module.css, which is the one that actually applies.
           camera={{
             position: [0, 0, 12],
             fov: 38,

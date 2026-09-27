@@ -6,6 +6,11 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { isStartScreenFirstRender } from "@/lib/mzNav";
 import VariableProximity from "@/components/VariableProximity/VariableProximity";
+// Only the permission helper, not the hook: the hook is imported by MzLogo3D
+// and is only useful once the sensor is mounted. The grant has to be made
+// from here because it must happen inside the visitor's first gesture, and
+// MzLogo3D is code-split behind the entry wipe.
+import { requestDeviceTilt } from "@/components/Logo/useDeviceTilt";
 
 /**
  * The start screen.
@@ -21,15 +26,46 @@ import VariableProximity from "@/components/VariableProximity/VariableProximity"
  * unified background stays, and the launcher converges in on /menu. See
  * lib/mzNav for why no wipe plays.
  */
+
+/**
+ * Is the 3D logo's canvas currently claiming a drag?
+ *
+ * MzLogo3D sets `data-mz-dragging` on its canvas once a drag is
+ * unambiguous, because its drag and this screen's swipe-to-launch are the
+ * same pointer movement and only one of them can own it. The flag is cleared
+ * on pointerup, so it reads true only while a drag is genuinely in progress.
+ *
+ * Two accessors, because the two launch gestures carry different amounts of
+ * information. A `wheel` or `touch` event has a target, so the touch path can
+ * check what was actually touched. A `wheel` event does not — there is no
+ * pointer to read — so it has to ask the document. `closest` is the accurate
+ * test; the attribute query is the blunt one, and it is only safe here because
+ * the flag is scoped to a single element that exists only while a drag runs.
+ *
+ * Both return false when the logo is not mounted, so the launch costs nothing
+ * on the pages without it.
+ */
+function isDraggingLogo(target: EventTarget | null): boolean {
+  return (
+    target instanceof Element &&
+    target.closest("canvas[data-mz-dragging]") !== null
+  );
+}
+
+function isLogoDragging(): boolean {
+  return document.querySelector("canvas[data-mz-dragging]") !== null;
+}
+
 export default function Home() {
   const mainRef = useRef<HTMLElement>(null);
   const launchingRef = useRef(false);
+  // Whether the motion-sensor grant has already been requested this session.
+  const tiltAskedRef = useRef(false);
   const router = useRouter();
 
   const [isReadyForHeavy, setIsReadyForHeavy] = useState(false);
   const [isLogoLoaded, setIsLogoLoaded] = useState(false);
   const [reduceMotion, setReduceMotion] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
   const [MzLogo3DComponent, setMzLogo3DComponent] = useState<React.ComponentType<{
     className?: string;
     onLoad?: () => void;
@@ -39,20 +75,25 @@ export default function Home() {
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setReduceMotion(window.matchMedia("(prefers-reduced-motion: reduce)").matches);
-
-    const mql = window.matchMedia("(pointer: coarse), (max-width: 768px)");
-    setIsMobile(mql.matches);
-    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
-    mql.addEventListener("change", handler);
-    return () => mql.removeEventListener("change", handler);
   }, []);
 
+  // Loaded on every device. This used to be skipped on coarse pointers, on
+  // the reasoning that a 480-mesh WebGL scene on a phone was too much — a
+  // judgement made when the start screen was still a long scroll carrying two
+  // `DarkVeil` layers and three `Grainient` cards alongside it. It is a splash
+  // screen now, with nothing else on the page, so the scene is competing with
+  // nothing and the mark is the whole reason to look at the screen.
+  //
+  // MzLogo3D already scales its own cost down on coarse pointers (dpr 1 rather
+  // than 1.5, ceiling 1.25 rather than 2, antialias off) and only renders
+  // while it is on screen. The gesture that used to conflict with it — an
+  // upward swipe launching the menu — is resolved in favour of the launch, so
+  // a phone keeps the only way it has in.
   useEffect(() => {
-    if (isMobile) return;
     import('@/components/Logo/MzLogo3D').then(m => {
       setMzLogo3DComponent(() => m.default);
     });
-  }, [isMobile]);
+  }, []);
 
   useEffect(() => {
     // The 3D logo (and its WebGL context) is not created until the entry wipe
@@ -120,10 +161,6 @@ export default function Home() {
       .to(".hero-subtext", { opacity: 0, y: -30, duration: 0.4, ease: "power2.in" }, 0.08)
       .to(".hero-desc", { opacity: 0, y: -20, duration: 0.4, ease: "power2.in" }, 0.14)
       .to(".hero-enter", { opacity: 0, y: 14, duration: 0.3, ease: "power2.in" }, 0)
-      /* The scroll cue leaves with the Enter line it sits beside — the screen
-         is committing to a destination, and a "keep going" prompt surviving
-         the decision would contradict it. */
-      .to(".hero-scroll", { opacity: 0, y: 14, duration: 0.3, ease: "power2.in" }, 0)
       .to(".hero-logo-3d", { opacity: 0, duration: 0.45, ease: "power2.in" }, 0.1);
   }, [router]);
 
@@ -208,6 +245,14 @@ export default function Home() {
       }
       if (delta <= 0) return reset();
 
+      // A trackpad drag across the logo is the same conflict as the touch
+      // swipe, and it needs the same gate — except a `wheel` event carries no
+      // target, so there is nothing to test the pointer against. It asks the
+      // document instead: MzLogo3D sets the flag on real mouse movement and
+      // clears it on pointerup, so this reads true only while a drag is
+      // genuinely in progress.
+      if (isLogoDragging()) return;
+
       accumulated += delta;
       if (accumulated < 90) return;
 
@@ -220,12 +265,27 @@ export default function Home() {
     // phone browser is where the expectation of a scrolling page is
     // strongest. Measured in px rather than in events, for the same reason
     // the wheel path is.
+    //
+    // ONE EXCEPTION, and it is the 3D logo. A drag on the mark and a swipe to
+    // launch are both a movement across the middle of the hero, and the logo
+    // binds its own pointer handlers — so the two were competing. MzLogo3D
+    // marks its canvas with `data-mz-dragging` once a drag is unambiguous, and
+    // the drag wins that case.
+    //
+    // Which case is only a mouse or a pen, deliberately. A phone has no
+    // hover, no `grab` cursor, and no fine pointer, so there is nothing to
+    // tell the visitor the mark is draggable — and the upward flick is the
+    // only launch gesture a phone has. If touch were gated out too, a phone
+    // would lose its only way in, and the drag would win a gesture nobody
+    // asked for. So touch always launches; the mouse gets the drag.
     let touchStartY: number | null = null;
     const onTouchStart = (e: TouchEvent) => {
+      if (isDraggingLogo(e.target)) return;
       touchStartY = e.touches[0]?.clientY ?? null;
     };
     const onTouchMove = (e: TouchEvent) => {
       if (touchStartY === null || launchingRef.current) return;
+      if (isDraggingLogo(e.target)) return;
       const y = e.touches[0]?.clientY;
       if (y === undefined) return;
       // Finger moving UP the screen is content scrolling away, which is the
@@ -238,8 +298,33 @@ export default function Home() {
       touchStartY = null;
     };
 
+    // Ask for the motion sensor on the visitor's first touch, and never again.
+    //
+    // iOS 13+ will not deliver `deviceorientation` without an explicit grant
+    // made inside a user gesture, which is the only reason this is here at all
+    // — Android and desktop need no prompt and get the tilt for free. The
+    // request is fire-and-forget: the mark sways on its own until a grant
+    // lands, and works exactly the same if it never does.
+    //
+    // Two deliberate exclusions:
+    //
+    //   - ENTER. A tap there is a decision to leave. Putting a modal system
+    //     dialog in front of someone who has already chosen to go would be the
+    //     worst possible moment to ask for anything, and the page they land
+    //     on does not use the sensor anyway.
+    //   - Once per session. A second prompt for the same permission, after a
+    //     denial, is nagging rather than asking.
+    const onFirstTouch = (e: Event) => {
+      if (tiltAskedRef.current) return;
+      const target = e.target;
+      if (target instanceof Element && target.closest("button")) return;
+      tiltAskedRef.current = true;
+      void requestDeviceTilt();
+    };
+
     window.addEventListener("wheel", onWheel, { passive: true });
     window.addEventListener("touchstart", onTouchStart, { passive: true });
+    window.addEventListener("touchstart", onFirstTouch, { passive: true });
     window.addEventListener("touchmove", onTouchMove, { passive: true });
     window.addEventListener("touchend", onTouchEnd, { passive: true });
     window.addEventListener("touchcancel", onTouchEnd, { passive: true });
@@ -254,6 +339,7 @@ export default function Home() {
       window.clearInterval(idle);
       window.removeEventListener("wheel", onWheel);
       window.removeEventListener("touchstart", onTouchStart);
+      window.removeEventListener("touchstart", onFirstTouch);
       window.removeEventListener("touchmove", onTouchMove);
       window.removeEventListener("touchend", onTouchEnd);
       window.removeEventListener("touchcancel", onTouchEnd);
@@ -281,8 +367,8 @@ export default function Home() {
               does nothing, which is the correct result: there is no target
               there, and the affordance is stated rather than implied. */}
 
-          {/* 3D Logo — desktop only, deferred until the entry wipe finishes */}
-          {isReadyForHeavy && !isMobile && MzLogo3DComponent && (
+          {/* 3D Logo — every device, deferred until the entry wipe finishes */}
+          {isReadyForHeavy && MzLogo3DComponent && (
             <div
               className={`${styles.heroLogo3D} hero-logo-3d`}
               style={{
@@ -365,13 +451,13 @@ export default function Home() {
               is still comfortably larger than the word, because a target does
               not have to be visible to be real.
 
-              The scroll cue is centred under the hero, in the space the 3D
-              logo leaves. They are kept apart on purpose: the corner is for
-              the one thing that looks clickable, and the centre is for the
-              one thing that is not. A framed chevron in the corner would read
-              as a scroll-to-top control and teach the wrong gesture; a bare
-              mark drifting under the hero is the oldest scroll affordance
-              there is.
+              The scroll cue that used to sit in the centre is gone. It taught
+              the swipe that opens the menu, but on a touch device it was
+              teaching a gesture the 3D logo also wants, and a 1px line was a
+              poor enough bargain for that conflict. The gesture is still
+              live — it is the launch handler above — and now that the mark
+              takes the middle of the screen, the drag owns that space and the
+              swipe owns everything around it.
 
               Nothing here says "click anywhere" — that handler was removed so
               it could not swallow the 3D logo's drag. These two are the whole
@@ -385,11 +471,6 @@ export default function Home() {
             <span className={styles.enterLabel}>Enter</span>
           </button>
 
-          <div className={`${styles.heroScrollWrapper} hero-scroll`} aria-hidden="true">
-            <span className={styles.scrollIndicator}>
-              <span className={styles.scrollLine} />
-            </span>
-          </div>
         </section>
       </main>
     </div>

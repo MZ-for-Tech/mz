@@ -106,6 +106,42 @@ const TIMELINES = [
 ];
 
 /**
+ * The studio's social presence.
+ *
+ * Glyphs are inlined rather than pulled from lucide, which has no brand marks
+ * — and this panel inlines its other two icons (paperclip, arrow) for the same
+ * reason, so the socials follow that. Three SVGs is cheaper than a package for
+ * three static paths.
+ */
+const SOCIALS = [
+  {
+    name: "Facebook",
+    href: "https://facebook.com/mzfortech",
+    glyph: (
+      <path d="M22 12.06C22 6.5 17.52 2 12 2S2 6.5 2 12.06c0 5.02 3.66 9.18 8.44 9.94v-7.03H7.9v-2.91h2.54V9.85c0-2.51 1.49-3.9 3.77-3.9 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.78-1.63 1.57v1.89h2.78l-.45 2.91h-2.33V22c4.78-.76 8.44-4.92 8.44-9.94Z" />
+    ),
+  },
+  {
+    name: "X",
+    href: "https://x.com/mzfortech",
+    glyph: (
+      <path d="M17.53 3h3.02l-6.6 7.55L21.75 21h-6.1l-4.78-6.25L5.4 21H2.38l7.06-8.07L2.25 3h6.26l4.32 5.7L17.53 3Zm-1.06 16.17h1.67L7.6 4.74H5.8l10.67 14.43Z" />
+    ),
+  },
+  {
+    name: "Instagram",
+    href: "https://instagram.com/mzfortech",
+    glyph: (
+      <>
+        <rect x="2" y="2" width="20" height="20" rx="5.5" />
+        <circle cx="12" cy="12" r="4.2" />
+        <circle cx="17.6" cy="6.4" r="1.1" fill="currentColor" stroke="none" />
+      </>
+    ),
+  },
+] as const;
+
+/**
  * Where the brief came from.
  *
  * The list this replaces was six options, all of them from a channel that
@@ -240,9 +276,75 @@ export default function ContactPanel() {
             />
           </div>
 
-          {/* The process line the original carried under the address. It was
-              pointing at `href="#"`, so it never went anywhere; the answer
-              to that question is the Intel panel, which is one tab across. */}
+          {/* The social row, directly under the address.
+
+              ORDER MATTERS IN THIS COLUMN, and the order is a claim about
+              what the visitor came here to do. The address is first because it
+              is the only thing here that reaches the studio directly, and the
+              brief itself is the reason to want that. The socials sit
+              immediately after it because they are the same kind of thing by
+              another route — another way to find the studio — so they belong
+              with the contact details rather than at the far end of the
+              column.
+
+              The divider then separates the ways to REACH the studio from the
+              one link that stays on the site. Everything above the rule is a
+              way out; the methodology link below it is a way further in. That
+              is the distinction the rule is drawing, and it is why the divider
+              goes here and not above the socials.
+
+              ICONS, AND A LABEL. The icons are the point — three glyphs a
+              visitor recognises without being told what they are — but the
+              word "Elsewhere" stays beside them for the visitor who cannot
+              place an unlabelled mark. That is the same argument the home
+              panel's trust band is built on: the marks carry it, and someone
+              who cannot read them still has the caption. Dropping the label
+              would save 12px and cost the block its only description.
+
+              `data-tile` puts each glyph in the shell's spatial key
+              navigation, so the arrow keys reach them the way they reach the
+              tabs and the form controls. Each one is its own stop rather than
+              the row being one, because they go to three different places. */}
+          <div className={styles.socials}>
+            <span className={styles.socialsLabel}>Elsewhere</span>
+            <ul className={styles.socialList}>
+              {SOCIALS.map((social) => (
+                <li key={social.name}>
+                  <a
+                    href={social.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    data-tile
+                    className={styles.socialLink}
+                    aria-label={social.name}
+                    title={`${social.name} — @mzfortech`}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      stroke="currentColor"
+                      strokeWidth="1.6"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      aria-hidden="true"
+                    >
+                      {social.glyph}
+                    </svg>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* The process line the original carried under the address, now
+              last in the column and behind the rule the socials used to sit
+              above. It was pointing at `href="#"`, so it never went anywhere;
+              the answer to that question is the Intel panel, which is one tab
+              across — an internal destination, which is why it sits below the
+              divider rather than among the ways to leave. */}
           <p className={styles.process}>
             Want to learn about our process?
             <br />

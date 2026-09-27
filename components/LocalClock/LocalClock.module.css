@@ -26,21 +26,17 @@
   color: rgba(245, 245, 240, 0.35);
 }
 
-/* The Work stage is full-bleed and light, and the clock is fixed chrome that
-   never leaves — so it has to invert there or it disappears into the page. A
-   `data-stage` attribute on the shell answers it for this module without a
-   prop threaded through the shell just to move a colour, and it means the
-   rule follows the stage rather than being restated for every panel that
-   happens to be light. */
-:global([data-stage="light"]) .clock {
-  color: rgba(13, 15, 8, 0.55);
-  text-shadow: 0 1px 10px rgba(245, 245, 240, 0.85);
-}
+/* The clock is off-white on every launcher route, and does not invert on
+   `[data-stage="light"]`.
 
-:global([data-stage="light"]) .time {
-  color: rgba(13, 15, 8, 0.85);
-}
+   The old rule that did invert is worth remembering, because removing it is a
+   real decision rather than a deletion. `data-stage="light"` describes the
+   HEADER's palette — Work drops the header's dark plate — and the old rule read
+   it as "the page behind is light" and recoloured the clock dark to match.
+   But what the clock sits on there is the stage, not the plate, and the stage
+   is a dark shader. So the inversion put dark ink on a dark surface.
 
-:global([data-stage="light"]) .zone {
-  color: rgba(13, 15, 8, 0.45);
-}
+   The lesson generalises past this module: that flag is not a statement about
+   the background behind the chrome. Branch on the surface the text is actually
+   over. */
+

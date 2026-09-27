@@ -49,8 +49,7 @@
   will-change: transform, opacity;
 }
 
-.heroDescription,
-.heroScrollWrapper {
+.heroDescription {
   opacity: 0;
   animation: heroDescIn 1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
   animation-delay: 2.50s;
@@ -72,8 +71,7 @@
 @media (prefers-reduced-motion: reduce) {
   .heroWord :global(.hero-word-inner),
   .heroSubtext,
-  .heroDescription,
-  .heroScrollWrapper {
+  .heroDescription {
     animation: none !important;
     opacity: 1 !important;
     transform: none !important;
@@ -134,6 +132,26 @@
   justify-content: center;
 }
 
+/* The logo's drag owns the gesture, so the browser must not claim it first.
+ * Without this, a drag across the canvas on a touch device is treated as a
+ * scroll attempt and the mark turns inconsistently or not at all — the
+ * gesture is the whole point of the mark.
+ *
+ * It does not, on its own, stop the start screen's swipe-to-launch: that
+ * handler is touch-only and runs on its own listeners, and the logo only
+ * claims the gesture for a fine pointer. `touch-action` stops the BROWSER
+ * from turning a drag into a scroll, which is a different problem from two
+ * scripts both listening for the same movement.
+ *
+ * Applied to the canvas itself rather than the wrapper: `touch-action` is not
+ * an inherited property, so setting it on the parent does nothing for the
+ * element being touched. And it cannot be passed as `<Canvas style>` either,
+ * because R3F owns that element's inline style and overwrites the prop with
+ * its own display/size defaults. A CSS rule is the only place it sticks. */
+.heroLogo3D canvas {
+  touch-action: none;
+}
+
 .heroDescription {
   position: absolute;
   bottom: 4rem;
@@ -147,73 +165,23 @@
   z-index: 3;
 }
 
-/* The scroll cue — centred under the hero, not in the corner.
- *
- * This is the indicator the start screen had before it became a launch
- * screen, brought back for the opposite reason. The screen still cannot
- * scroll, but scrolling is now a supported gesture that opens the menu, and
- * it is the one most visitors arriving from an ordinary website will try
- * first. So it needs teaching, and the teaching has to be unmistakable.
- *
- * CENTRED, and glyph-only, are both load-bearing:
- *
- *   - The corner was occupied by the Enter prompt, and two framed objects in
- *     one corner is a control cluster. Centring the cue puts the two
- *     affordances on different axes, so they read as two different things
- *     rather than as one toolbar.
- *   - No text, no border, no fill. A labelled, framed chevron in the corner
- *     is a scroll-to-top button; a bare mark drifting under the hero is the
- *     oldest scroll affordance there is, and it cannot be mistaken for
- *     anything because there is nothing in it but the gesture itself.
- *
- * The line keeps the original travel animation, unchanged, and it runs
- * forever because the gesture it advertises is never "scrolled to the end" —
- * it is "there is a next screen". */
-.heroScrollWrapper {
-  position: absolute;
-  bottom: 3.25rem;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.85rem;
-  opacity: 0;
-  z-index: 3;
-  /* Decorative, and must never intercept the tap that opens the menu. */
-  pointer-events: none;
-}
-
-.scrollIndicator {
-  position: relative;
-  width: 1px;
-  height: 60px;
-  background-color: rgba(255, 255, 255, 0.1);
-  overflow: hidden;
-}
-
 @media (max-width: 768px) {
   .heroDescription {
     display: block;
-    bottom: 11rem;
+    /* 11rem lifted to 9.5rem's worth of clearance from the mark: with the
+     * 3D logo now rendering on phones, the copy has to sit clear of the
+     * centre band the mark occupies rather than overlapping it. The mark is
+     * scaled down on coarse viewports (see logoScale in MzLogo3D), so this
+     * is the copy moving up to meet it, not the mark being pushed aside. */
+    bottom: 9.5rem;
     left: 1.5rem;
     right: 1.5rem;
     font-size: 0.8rem;
     max-width: none;
   }
 
-  /* The cue stays. It used to be hidden here because the screen genuinely
-     could not scroll and the line was lying; now scrolling is the gesture
-     that opens the menu, and a phone is where the expectation of a scrolling
-     page is strongest. Dropping the copy to 11rem clears the centred cue
-     below it, since the description spans the full width and would
-     otherwise sit on top of the line. */
-  .heroScrollWrapper {
-    bottom: 4.5rem;
-  }
-
   /* The description spans edge to edge, so the corner is free on mobile and
-     the Enter line can drop below the cue rather than competing for the
+     the Enter line can drop to the bottom edge rather than sitting on the
      centre line. */
   .enterPrompt {
     bottom: 1.25rem;
@@ -221,7 +189,12 @@
   }
 
   .heroContent {
-    top: 12vh;
+    /* 12vh → 8vh. The 3D logo renders on phones now, and it draws at the
+     * centre of the screen — which on a narrow viewport is the band the
+     * stacked words run into. Lifting them opens that band up rather than
+     * shrinking the mark further, so the mark keeps the emphasis the mark
+     * has everywhere else. */
+    top: 8vh;
   }
 
   .heroWordsRow {
@@ -264,23 +237,6 @@
   50% {
     opacity: 0.3;
     box-shadow: none;
-  }
-}
-
-.scrollLine {
-  width: 100%;
-  height: 50%;
-  background-color: var(--color-brand-yellow);
-  animation: scrollAnim 2s infinite ease-in-out;
-}
-
-@keyframes scrollAnim {
-  0% {
-    transform: translateY(-100%);
-  }
-
-  100% {
-    transform: translateY(200%);
   }
 }
 
@@ -1113,20 +1069,6 @@
     font-size: 1rem;
   }
 
-  .heroScrollWrapper {
-    position: relative;
-    bottom: auto;
-    right: auto;
-    justify-content: flex-start;
-    margin-top: 3rem;
-    text-align: left;
-    width: 100%;
-  }
-
-  .scrollIndicator {
-    display: none;
-  }
-
   .heroDescription {
     font-size: 1rem;
     max-width: 100%;
@@ -1286,8 +1228,10 @@
 /* `.enterKey` — the keycap chip that used to sit beside the label — is gone
    with the shortcut list it belonged to. A framed keycap is a control, and
    two controls in the corner of a splash screen outranked the one thing the
-   screen actually wants you to do. The gesture is taught by the centred cue
-   instead, and SPACE/ENTER still work without being advertised. */
+   screen actually wants you to do. So is the centred scroll cue that used to
+   teach the gesture underneath it: the screen is a launch screen, it has one
+   destination, and the button at the bottom-right says which. SPACE/ENTER
+   still work without being advertised. */
 
 /* The exit is driven by GSAP, but CSS animations outrank inline styles —
    without detaching them first the tween would be invisible. Both the class
@@ -1295,7 +1239,6 @@
 :global(html.mz-launching) .heroWord :global(.hero-word-inner),
 :global(html.mz-launching) .heroSubtext,
 :global(html.mz-launching) .heroDescription,
-:global(html.mz-launching) .heroScrollWrapper,
 :global(html.mz-launching) .enterPrompt {
   animation: none !important;
 }

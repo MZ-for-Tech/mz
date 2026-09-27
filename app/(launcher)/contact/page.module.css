@@ -162,9 +162,17 @@
 
 /* The process line the original carried under the address. It is a real
    question a visitor arrives with, and the answer is the Intel panel, so
-   that is where it points — the original's `href="#"` went nowhere. */
+   that is where it points — the original's `href="#"` went nowhere.
+
+   It sits last, below the socials and behind this rule, because it is the one
+   destination in the column that goes back INTO the site rather than out of
+   it. Everything above the divider is a way to reach the studio; the one link
+   below it is a way further in. That distinction is what the rule is drawing,
+   and it is the reason the rule is here rather than above the socials. */
 .process {
-  margin: clamp(1.5rem, 2.5vw, 2rem) 0 0;
+  margin: clamp(2rem, 3.5vw, 3rem) 0 0;
+  padding-top: clamp(1.5rem, 2.5vw, 2rem);
+  border-top: 1px solid rgba(245, 245, 240, 0.12);
   font-size: 0.95rem;
   line-height: 1.6;
   color: rgba(245, 245, 240, 0.5);
@@ -181,6 +189,83 @@
 .processLink:hover {
   color: var(--color-brand-yellow);
   border-bottom-color: var(--color-brand-yellow);
+}
+
+/* ── Socials ───────────────────────────────────────────────────────────
+   Directly under the address, with no rule of its own.
+
+   The hairline that used to sit above this block now sits above `.process`
+   instead, because the block that divides the column is the one below it: the
+   rule separates the ways to REACH the studio — address, socials — from the
+   one link that goes back into the site. Putting the rule here would have put
+   the internal link in the same group as the external ones, which is the
+   opposite of what the rule is for.
+
+   The label is `.inquiryLabel`'s exact values, because it is the same kind of
+   object: a quiet name over a group of things. Copied rather than referenced
+   on purpose — these are the only two such labels on the panel, and a shared
+   token would be one more indirection for no gain. It also earns its place,
+   since a visitor who cannot place an unlabelled mark still has it. */
+.socials {
+  margin-top: clamp(1.5rem, 2.5vw, 2rem);
+  display: flex;
+  flex-direction: column;
+  /* 0.9rem, not the 1rem the inquiry block uses: this gap is between a
+     1.8rem address and a row of 20px glyphs, and the address's own trailing
+     space already supplies the rest. */
+  gap: 0.9rem;
+}
+
+.socialsLabel {
+  font-family: var(--font-code);
+  font-size: 0.62rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(245, 245, 240, 0.4);
+}
+
+.socialList {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* 40px, not the 20px glyph.
+
+   The glyph is what the eye reads and the box is what the finger has to hit,
+   and those are separate numbers — the same split the privacy control in the
+   shell's header makes. A 20px target is under half the 44px touch floor and
+   this row sits in the far left margin on a laptop, where it is the least
+   reachable thing on the page.
+
+   The box is transparent at rest, like the header's privacy glyph: three
+   framed squares would be the only hard-edged objects in a column made of
+   type and hairlines, and they would out-shout the email address above. The
+   background comes back on hover, which acknowledges the pointer and gives
+   the row a hit area you can see. */
+.socialLink {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+  color: rgba(245, 245, 240, 0.5);
+  text-decoration: none;
+  transition:
+    color 0.3s ease,
+    background 0.3s ease,
+    border-color 0.3s ease;
+}
+
+.socialLink:hover {
+  color: var(--color-brand-yellow);
+  border-color: rgba(255, 231, 141, 0.35);
+  background: rgba(13, 15, 8, 0.5);
 }
 
 /* ── Form ──────────────────────────────────────────────────────────────
@@ -462,7 +547,8 @@
   .option,
   .fileLabel,
   .submit,
-  .submitArrow {
+  .submitArrow,
+  .socialLink {
     transition: none;
   }
 }
