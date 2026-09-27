@@ -10,11 +10,14 @@ export function CustomCursor() {
   const [isHovering, setIsHovering] = useState(false);
   const [isHidden, setIsHidden] = useState(true);
   const pathname = usePathname();
+  const isResearchRoute = pathname === "/research" || pathname.startsWith("/research/");
   // Track current state in refs so event handlers don't trigger re-renders on every event
   const isHiddenRef = useRef(true);
   const isHoveringRef = useRef(false);
 
   useEffect(() => {
+    if (isResearchRoute) return;
+
     // Disable on touch devices
     if (window.matchMedia("(hover: none)").matches) {
       setTimeout(() => setIsHidden(true), 0); // Will just hide via CSS
@@ -80,6 +83,8 @@ export function CustomCursor() {
       document.removeEventListener("mouseover", handleMouseOver);
     };
   }, [pathname]);
+
+  if (isResearchRoute) return null;
 
   return (
     <div

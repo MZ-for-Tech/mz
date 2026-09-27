@@ -3,6 +3,7 @@ import { useRef, useState, useEffect, useCallback } from "react";
 import styles from "./page.module.css";
 import { gsap } from "@/lib/gsap";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { isStartScreenFirstRender } from "@/lib/mzNav";
 import VariableProximity from "@/components/VariableProximity/VariableProximity";
 
@@ -306,7 +307,7 @@ export default function Home() {
             <div className={styles.heroWordsRow}>
               <div className={`${styles.heroWord} hero-word ${styles.heroWordHover}`}>
                 <div className="hero-word-inner">
-                  <a href="https://nullhypothesis.dev" target="_blank" rel="noopener noreferrer">
+                  <Link href="/research">
                     {reduceMotion ? "RESEARCH." : (
                       <VariableProximity
                         label="RESEARCH."
@@ -317,7 +318,7 @@ export default function Home() {
                         falloff="exponential"
                       />
                     )}
-                  </a>
+                  </Link>
                 </div>
               </div>
               <div className={`${styles.heroWord} hero-word`}>

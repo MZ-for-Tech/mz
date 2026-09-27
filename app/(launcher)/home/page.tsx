@@ -121,21 +121,6 @@ const FEATURED: {
 }));
 
 /**
- * One mark per claim, keyed by the slot's id.
- *
- * Same idea as the band labels above, and the same reason: a row of three
- * same-size tiles is a list, and a list of three positions in an argument
- * needs its positions marked. A filled square, a hollow square and a diamond
- * — all at the same optical weight, so no claim reads as louder than another.
- * The distinction carries the meaning; the shapes do not need to.
- */
-const CLAIM_GLYPHS: Record<FeaturedSlot, string> = {
-  research: "■",
-  work: "□",
-  product: "◆",
-};
-
-/**
  * What a hero tile is carrying, resolved once.
  *
  * Four states, in priority order, and two of them are temporary:
@@ -184,12 +169,8 @@ function resolveHero(project: ProjectData) {
  *  there isn't, captioned with the claim it is making. */
 function HeroCard({
   project,
-  claim,
-  slot,
 }: {
   project: ProjectData;
-  claim: string;
-  slot: FeaturedSlot;
 }) {
   const { kind, field } = resolveHero(project);
 
@@ -230,22 +211,6 @@ function HeroCard({
 
       <span className={styles.heroScrim} aria-hidden="true" />
 
-      {/* The claim, set across the top of the tile. This is the label the
-          Featured band exists to carry, and it is deliberately NOT the
-          project's name — the name is what the artwork says, while this is
-          what the tile is being used to argue. Putting both on the tile
-          would state the same thing twice at two sizes.
-
-          The glyph beside it marks which of the three claims this is, the
-          same vocabulary as the band labels above: three same-size tiles are
-          a list, and a list of positions in an argument needs its positions
-          marked. Filled, hollow and diamond at one optical weight, so no
-          claim reads louder than another. */}
-      <span className={styles.heroClaim} aria-hidden="true">
-        <span className={styles.heroClaimGlyph}>{CLAIM_GLYPHS[slot]}</span>
-        {claim}
-      </span>
-
       {/* The name, over whatever the card is carrying. Artwork states the
           project and a mark already names it, so both are silent. A tile on
           the paper says its own name, in the paper's ink — with or without
@@ -258,7 +223,7 @@ function HeroCard({
 
       <span className={styles.heroAction}>
         <span className={styles.heroActionGlyph} aria-hidden="true">
-          {project.link ? "↗" : "▶"}
+          {project.link?.startsWith("http") ? "↗" : "▶"}
         </span>
         {project.hasCaseStudy
           ? "View case study"
@@ -281,7 +246,7 @@ function HeroCard({
   };
   const className = `${styles.hero} ${SURFACE[kind] ?? ""}`;
 
-  return project.link ? (
+  return project.link?.startsWith("http") ? (
     <a
       href={project.link}
       target="_blank"
@@ -295,7 +260,7 @@ function HeroCard({
     </a>
   ) : (
     <Link
-      href={project.hasCaseStudy ? `/work/${project.slug}` : "/work"}
+      href={project.link || (project.hasCaseStudy ? `/work/${project.slug}` : "/work")}
       data-tile
       className={className}
       title={project.name}
@@ -395,7 +360,7 @@ const BASE = FEATURED.filter((s) => s.id !== APEX_SLOT);
  *  drift is invisible until a claim actually goes empty. */
 function renderSlotBody(slot: FeaturedClaim) {
   return slot.project ? (
-    <HeroCard project={slot.project} claim={slot.label} slot={slot.id} />
+    <HeroCard project={slot.project} />
   ) : (
     /* A claim with nothing behind it yet. The slot keeps its place and its
        caption, so the band stays three wide and the gap is visible — which is

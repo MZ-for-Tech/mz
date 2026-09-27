@@ -6,7 +6,7 @@ MZ is a technology engineering firm based in Cairo, Egypt. We build proprietary 
 - **Location:** Cairo, Egypt
 - **Email:** hello@mzfortech.com
 - **Website:** https://mzfortech.com
-- **Research Portal:** https://nullhypothesis.dev
+- **Research Portal:** https://mzfortech.com/research
 
 ## Core Philosophy
 Research, Software, Knowledge. In that order.
@@ -19,7 +19,7 @@ Most document processing tools were built for Latin scripts and extended to Arab
 
 ## Selected Work / Case Studies
 - **Nested United:** A unified ecosystem of specialized brands delivering smart project operations, hospitality management, and sustainable business growth. (https://nestedunited.com)
-- **The Null Hypothesis:** Our research portal. Research doesn't stay internal. (https://nullhypothesis.dev)
+- **The Null Hypothesis:** MZ research, made explorable. (https://mzfortech.com/research)
 - **SSC League:** Internal proprietary system. (Access Restricted)
 - **ERP System:** Internal proprietary system. (Access Restricted)
 

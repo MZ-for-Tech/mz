@@ -7,6 +7,18 @@ export function proxy(request: NextRequest) {
   
   // If the agent is requesting markdown and hitting the root or a page, rewrite to content.md
   if (acceptHeader && acceptHeader.includes('text/markdown')) {
+    if ((request.nextUrl.pathname === '/research' || request.nextUrl.pathname.startsWith('/research/'))
+      && request.nextUrl.pathname !== '/research/markdown') {
+      const researchMarkdownUrl = new URL('/research/markdown', request.url);
+      researchMarkdownUrl.searchParams.set('path', request.nextUrl.pathname);
+      return NextResponse.rewrite(researchMarkdownUrl, {
+        headers: {
+          'Content-Type': 'text/markdown; charset=utf-8',
+          'x-markdown-tokens': 'true',
+        },
+      });
+    }
+
     // Rewrite to our static markdown file
     return NextResponse.rewrite(new URL('/content.md', request.url), {
       headers: {

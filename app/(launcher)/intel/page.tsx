@@ -10,9 +10,7 @@ export const metadata: Metadata = {
 /**
  * Intel: who we are, how we think, and where the research goes.
  *
- * The expanding research portal (ScrollExpand + DataStream canvas) from the
- * old homepage is not ported yet — for now the research lives as a direct
- * link out to nullhypothesis.dev.
+ * The research publication lives at /research.
  */
 export default function IntelPage() {
   return <IntelPanel />;

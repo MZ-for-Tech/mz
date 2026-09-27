@@ -1,0 +1,237 @@
+@layer theme, base, components, utilities;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities) source(none) important;
+@import "katex/dist/katex.min.css";
+@source "../../research";
+@source "./";
+
+@theme inline {
+  --color-paper: var(--paper-val);
+  --color-ink: var(--ink-val);
+  --color-pencil: var(--pencil-val);
+  --color-accent: var(--accent-val);
+  --color-tertiary: var(--tertiary-val);
+  --color-secondary: var(--secondary-val);
+  --color-card: var(--card-val);
+  --color-border-dim: var(--border-val);
+  --color-semantic-error: #8b2323;
+  --font-latex: "CMU Serif", "Cormorant Garamond", serif;
+  --font-mono: var(--font-code), monospace;
+  --font-serif: var(--font-tnh), serif;
+  --text-xxs: 0.625rem;
+  --text-tiny: 0.75rem;
+}
+
+@font-face {
+  font-family: "CMU Serif";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/fonts/cmu/cmu-serif-500-roman.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "CMU Serif";
+  font-style: italic;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/fonts/cmu/cmu-serif-500-italic.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "CMU Serif";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/fonts/cmu/cmu-serif-700-roman.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "CMU Serif";
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/fonts/cmu/cmu-serif-700-italic.woff2") format("woff2");
+}
+
+.tnh-site {
+  --paper-val: #f5f2ed;
+  --ink-val: #111111;
+  --pencil-val: #756b5e;
+  --accent-val: #8b3a2b;
+  --tertiary-val: #756b5e;
+  --secondary-val: #484039;
+  --card-val: rgb(255 255 255 / 50%);
+  --border-val: rgb(17 17 17 / 12%);
+  --color-paper: var(--paper-val);
+  --color-ink: var(--ink-val);
+  --color-accent: var(--accent-val);
+  --color-tertiary: var(--tertiary-val);
+  --font-latex: "CMU Serif", "Cormorant Garamond", serif;
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  overflow-x: clip;
+  background: var(--paper-val);
+  color: var(--ink-val);
+  font-family: "CMU Serif", "Cormorant Garamond", serif;
+  -webkit-font-smoothing: antialiased;
+  isolation: isolate;
+}
+
+.tnh-site::before {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  content: "";
+  background-image:
+    linear-gradient(var(--ink-val) 1px, transparent 1px),
+    linear-gradient(90deg, var(--ink-val) 1px, transparent 1px);
+  background-size: 40px 40px;
+  opacity: 0.025;
+}
+
+.tnh-site *,
+.tnh-site *::before,
+.tnh-site *::after { box-sizing: border-box; }
+
+.research-navbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  min-height: 68px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  border-top: 3px solid var(--ink-val);
+  border-bottom: 1px solid var(--border-val);
+  padding: 0.5rem max(1.5rem, calc((100vw - 80rem) / 2));
+  padding-left: max(7.5rem, calc((100vw - 80rem) / 2));
+  background: rgb(245 242 237 / 94%);
+  backdrop-filter: blur(10px);
+}
+
+.research-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--ink-val);
+  text-decoration: none;
+}
+
+.research-wordmark {
+  color: var(--ink-val);
+  font-family: var(--font-mono), monospace;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.research-navlinks { display: flex; align-items: center; gap: 1.1rem; }
+.research-navlinks a,
+.research-footer a {
+  color: var(--pencil-val);
+  font-family: var(--font-mono), monospace;
+  font-size: 0.625rem;
+  letter-spacing: 0.12em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+.research-navlinks a:hover,
+.research-footer a:hover { color: var(--accent-val); }
+
+.research-main {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  padding: 3rem 1.5rem 5rem;
+  font-family: "CMU Serif", "Cormorant Garamond", serif;
+}
+
+.research-home { max-width: 72rem; margin: 0 auto; padding: 5rem 0; }
+.research-content { min-height: 70vh; }
+.research-content h1,
+.research-content h2,
+.research-content h3 { font-family: "CMU Serif", "Cormorant Garamond", serif; }
+.research-content .latex-prose { font-family: "CMU Serif", "Cormorant Garamond", serif; font-feature-settings: "kern" 1, "liga" 1; line-height: 1.75; }
+.research-content .latex-prose p { margin: 0 0 1rem; }
+.research-content .breakout { position: absolute; right: -10rem; width: 9rem; }
+.research-content .breakout-left { right: auto; left: -10rem; }
+.research-content .latex-container { direction: ltr; }
+.research-content .research-section-heading { margin-bottom: 1rem; }
+
+.research-footer {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-top: 5rem;
+  border-top: 1px solid var(--border-val);
+  padding: 1.5rem max(1.5rem, calc((100vw - 80rem) / 2));
+  color: var(--pencil-val);
+  font-family: var(--font-mono), monospace;
+  font-size: 0.625rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.bookshelf-section { --shelf-top-0: #b88b5c; --shelf-top-1: #996f42; --shelf-top-2: #ab7f52; --shelf-top-3: #80562e; --shelf-bottom-0: #54361b; --shelf-bottom-1: #3b220c; --shelf-bottom-2: #241203; --shelf-front-0: #996f42; --shelf-front-1: #80562e; --shelf-front-2: #4f3115; --shelf-stroke-top: #54361b; --shelf-stroke-bottom: #241203; --shelf-stroke-front: #3b220c; }
+[data-theme="dark"] .tnh-site .bookshelf-section { --shelf-top-0: #b88b5c; --shelf-top-1: #996f42; --shelf-top-2: #ab7f52; --shelf-top-3: #80562e; --shelf-bottom-0: #54361b; --shelf-bottom-1: #3b220c; --shelf-bottom-2: #241203; --shelf-front-0: #996f42; --shelf-front-1: #80562e; --shelf-front-2: #4f3115; --shelf-stroke-top: #54361b; --shelf-stroke-bottom: #241203; --shelf-stroke-front: #3b220c; }
+.research-cover { background: linear-gradient(145deg, rgb(255 255 255 / 12%), rgb(0 0 0 / 6%)), var(--paper-val); color: var(--ink-val); }
+
+.research-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 1000000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  background: var(--paper-val, #f5f2ed);
+  transition: opacity 300ms ease;
+}
+
+.research-loader-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+  width: 100%;
+  max-width: 28rem;
+  padding: 0 2rem;
+}
+
+.research-loader-line {
+  height: 5px;
+  border-radius: 9999px;
+  background: var(--ink-val, #111);
+  opacity: 0.06;
+  animation: research-loader-pulse 1.8s ease-in-out infinite;
+}
+
+.research-loader-line:nth-child(2) { animation-delay: 0.1s; }
+.research-loader-line:nth-child(3) { animation-delay: 0.2s; }
+.research-loader-line:nth-child(4) { animation-delay: 0.3s; }
+
+@keyframes research-loader-pulse {
+  0%, 100% { opacity: 0.04; }
+  50% { opacity: 0.1; }
+}
+
+body:has(.tnh-site) .layout-logo-link { display: none; }
+
+@media (max-width: 768px) {
+  .research-navbar { padding: 0.6rem 1rem 0.6rem 6rem; }
+  .research-navlinks { gap: 0.75rem; }
+  .research-wordmark { font-size: 0.625rem; }
+  .research-main { padding: 3rem 1rem 4rem; }
+  .research-home { padding: 4rem 0; }
+  .research-content .breakout { display: none; }
+  .research-footer { padding-inline: 1rem; }
+}

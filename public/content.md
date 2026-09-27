@@ -12,7 +12,7 @@ Most document processing tools were built for Latin scripts and extended to Arab
 ## Work
 
 1. **Nested United** - A unified ecosystem of specialized brands delivering smart project operations, hospitality management, technology solutions, marketing, and sustainable business growth. (https://nestedunited.com)
-2. **The Null Hypothesis** - Our research doesn't stay internal. (https://nullhypothesis.dev)
+2. **The Null Hypothesis** - MZ research, made explorable. (https://mzfortech.com/research)
 3. **SSC League** - Internal System (Access Restricted)
 4. **ERP System** - Internal System (Access Restricted)
 

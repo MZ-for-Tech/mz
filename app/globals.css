@@ -349,6 +349,7 @@ a {
      ringing. A ring that is the wrong shape is worse than no ring: it still
      passes a contrast check while drawing attention to an edge that is not
      there. */
+}
 
 /* Custom Scrollbar for non-Lenis native scrolling areas */
 ::-webkit-scrollbar {

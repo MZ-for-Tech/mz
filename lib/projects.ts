@@ -380,14 +380,14 @@ export const PROJECTS: ProjectData[] = [
     client: "MZ",
     category: "Research",
     year: "2025",
-    tagline: "Research that doesn't stay internal.",
+    tagline: "Theory comes first.",
     description:
-      "An open research portal. The work behind the work — the statistics, the systems thinking, the reading — published rather than filed away.",
+      "MZ research, made explorable: ideas and methods traced from the question to the products they inform.",
     tags: ["Research", "Publishing"],
     accentColor: "#88b600",
     accentColorRgb: "136, 182, 0",
     isPrivate: false,
-    link: "https://nullhypothesis.dev",
+    link: "/research",
     // The research claim, and the left-hand slot. It is the only thing on the
     // site that is both a product and a publication, which is why it leads
     // the argument rather than appearing somewhere in the middle of it.

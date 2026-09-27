@@ -15,28 +15,23 @@ import styles from "./SiteBackground.module.css";
  * It is held back until the entry wipe finishes (same gating the hero used to
  * do) so the shader is never seen mid-reveal.
  *
- * IT IS SWITCHED OFF ON /privacy
+ * IT IS SWITCHED OFF ON /privacy AND /research
  *
  * The shader is the studio's signature, and a policy page is the one place
- * on the site that should not have it. Everything else here — the launcher,
- * the panels, the start screen — is an argument, and the background is part
- * of the argument. A privacy policy is a document: it has to be read, and
- * the moving gold is a live, high-contrast element directly behind body copy
- * the whole way down.
+ * on the site that should not have it. The research publication also has its
+ * own paper surface, so the shared shader is disabled there too.
  *
- * So on that route the canvas is never mounted at all — not faded out, not
+ * So on those routes the canvas is never mounted at all — not faded out, not
  * paused, unmounted. That is a real saving rather than a cosmetic one: it
  * is the site's single WebGL context, so a visitor reading the policy
  * spends that time with no GL context, no shader program and no RAF loop
- * alive at all. The page falls back to the `body` background
- * (`--color-bg`, #0D0F08), which is the same near-black the shader sits on,
- * so the only visible difference is that the type stops moving.
+ * alive at all. Privacy uses the body background; /research paints its own
+ * paper background inside the route.
  *
- * The check is a path prefix rather than an equality so a future
- * `/privacy/cookies` or similar inherits the decision without a second
- * branch.
+ * The check is a path prefix rather than an equality so nested routes inherit
+ * the same treatment.
  */
-const PLAIN_ROUTES = ["/privacy"];
+const PLAIN_ROUTES = ["/privacy", "/research"];
 
 export default function SiteBackground() {
   const [mounted, setMounted] = useState(false);

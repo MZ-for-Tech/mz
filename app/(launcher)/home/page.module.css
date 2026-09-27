@@ -592,17 +592,8 @@
   display: none;
 }
 
-/* The claim caption, across the TOP of the tile.
- *
- * A deliberate mirror of `.heroAction` at the other end: the action says what
- * happens if you press, this says what the tile is arguing. Same scrim, same
- * type, same tracking, so the two read as one tile's furniture rather than
- * as two different components that happen to sit in the same box.
- *
- * One notch quieter than the action bar (0.82 → 0.62) and it does not turn
- * yellow on hover. The action is a response to the visitor; the claim is a
- * statement by the studio, and it should not light up because someone
- * pointed at the tile. */
+/* An empty slot keeps its category label so the missing position stays clear.
+   Filled cards use the artwork and bottom action bar without a top caption. */
 .heroClaim {
   position: absolute;
   left: 0;
@@ -619,18 +610,7 @@
   letter-spacing: 0.22em;
   text-transform: uppercase;
   color: rgba(245, 245, 240, 0.62);
-  background: linear-gradient(
-    to bottom,
-    rgba(8, 9, 6, 0.9) 0%,
-    rgba(8, 9, 6, 0.5) 70%,
-    rgba(8, 9, 6, 0) 100%
-  );
   pointer-events: none;
-}
-
-.heroClaimGlyph {
-  font-size: 0.5rem;
-  line-height: 1;
 }
 
 /* The action bar, bounded to the tile's bottom edge on its own surface, so
