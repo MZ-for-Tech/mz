@@ -131,7 +131,7 @@ const VariableProximity = forwardRef<HTMLSpanElement, VariableProximityProps>((p
   // The effect writes one color per letter per frame. The original code used
   // `color-mix(in srgb, var(--color-brand-yellow) p%, var(--color-text))`,
   // forcing the CSS engine to parse a color-mix() expression with two var()
-  // resolutions for every letter on every frame (136 spans in the Manifesto).
+  // resolutions for every letter on every frame.
   // `color-mix(in srgb, A p%, B)` is defined by spec as a linear sRGB
   // interpolation — A·(p/100) + B·(1 − p/100) — so computing it in JS and
   // writing a plain `rgb(r, g, b)` string is mathematically identical output

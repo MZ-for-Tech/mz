@@ -1,0 +1,468 @@
+/* ═══════════════════════════════════════════════════════════════════════
+   Contact panel
+
+   The brief, at the scale and restraint of the original /start page.
+
+   WHAT CHANGED WHEN THIS MOVED INTO THE LAUNCHER
+
+   The form's fields were carried over verbatim, so the regression was never
+   content — it was scale and framing. The original was a 1600px page with
+   80px between its columns and 80px between its sections, pills at 16px/32px
+   padding and 1.1rem type, inputs at 1.1rem, a submit plate at 20px/48px. The
+   in-shell version arrived at 1200px with the column gap down to 16–80px,
+   section gaps around 30px, pills at 0.6rem/1rem padding and 0.82rem type,
+   and a submit plate at 1rem/2rem — everything reduced by roughly 40% at
+   once, all of it inside the same 7.5rem-tall shell chrome.
+
+   Two things had to change to live in the shell, and everything else did
+   not. See the notes on `.contact` and `.submitSection` below.
+
+   THE SIX CARDS ARE GONE
+
+   The in-shell version also wrapped each of the six sections in its own
+   rounded, gradient-filled, bordered box. The original had no such boxes:
+   the form was one continuous column of type, separated by the hairline
+   under each section title and by the 80px of space between sections.
+
+   Six boxes is not a subtle difference. A brief is one continuous act of
+   filling something in, and the boxes broke it into six separate widgets,
+   each of which had to be read as its own object before you could answer
+   it. The space did that job better — and space is what the original was
+   using, at four times the size.
+
+   WHAT THE SHELL STILL OWNS
+
+   The original mounted its own fixed DarkVeil, its own PillNav and its own
+   Footer, because it was a separate world. The shell supplies all three now
+   — a background (SiteBackground), a tab row and a brand line — so this
+   panel brings none of them. In particular it does NOT mount a second
+   WebGL backdrop: the brief is the one page that should feel like a quiet
+   room, and adding a full-screen shader over the launcher's own would be
+   the same mistake the services panel just had removed.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.contact {
+  /* 1600px, the original's measure. The launcher's home panel uses the same
+     cap, so the brief and the shelf share a width and the eye reads one
+     product rather than a wide page and a narrow one.
+
+     A FIXED gutter, not `var(--spacing-container)`. The token is 8vw, which
+     is 115px on each side of a 1440px screen — that left the grid 1200px
+     wide, the same as the version this replaces, and it forced the title
+     onto four lines ("wanna talk" / "about?") where the original held it to
+     three. The brief has the longest headline in the launcher and the
+     narrowest column, so it is the one panel that cannot afford a
+     percentage gutter. The original used a fixed 40px; the launcher's own
+     home panel uses `var(--spacing-container)` because its content is a
+     grid of images that reflows, which this is not.
+
+     `clamp()` rather than a flat 40px so a wide monitor still gets some
+     margin at the very edge of the page. */
+  max-width: 1600px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 3rem clamp(1.5rem, 4vw, 5rem) 2rem;
+}
+
+.grid {
+  display: grid;
+  /* 1fr / 1.2fr, the original's ratio — the form wants the extra width more
+     than the intro does, and it is the side that has to hold eight category
+     pills on two comfortable lines. `minmax(0, …)` rather than a bare `1fr`
+     so a long pill can wrap instead of forcing the track wider than the
+     viewport. */
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+  gap: clamp(3rem, 5vw, 5rem);
+  align-items: start;
+}
+
+/* ── Intro column ──────────────────────────────────────────────────────
+   Sticky, and this is the effect the original /start page was built around:
+   the title and the address hold still in the left margin while a visitor
+   works down a brief that is ~1900px tall, so the question they are
+   answering never scrolls out of reach.
+
+   `top: 10.5rem` is the shell's 7.5rem content padding plus this panel's own
+   3rem, and it is measured, not guessed. The fixed header ends at y=131 and
+   the form's first section starts at y=168, so pinning at 168 leaves the
+   column exactly where it starts and moves nowhere until the page scrolls —
+   which is the correct behaviour for a column that already begins below the
+   header.
+
+   THE WINDOW IS THE SCROLLPORT HERE, NOT `.content`
+
+   The shell's content box is `overflow-y: auto`, and because this panel is
+   taller than the viewport that box gets stretched to the panel's own
+   height. An `auto` box as tall as its contents never scrolls, and a sticky
+   element resolves against its nearest scrolling ancestor — so it found a
+   scrollport with no range and travelled with the form instead of pinning.
+   Measured at 800px of scroll: intro at y=-560, tracking the form 1:1.
+   The shell now drops that box out of the scrollport role on this route
+   (see `.contentWindowScroll` in MenuShell), which hands the job to the
+   viewport and makes the column hold still. */
+.intro {
+  position: sticky;
+  top: 10.5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.title {
+  /* clamp(2.5rem, 4.5vw, 4.5rem) — the original, and the single biggest
+     reason this page used to feel like a page. The in-shell version capped
+     at 4rem and tracked tighter, which is a small difference at 4rem and
+     a large one at the 2.5rem a laptop actually gets. */
+  margin: 0 0 clamp(2.5rem, 4vw, 3.75rem);
+  font-size: clamp(2.5rem, 4.5vw, 4.5rem);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--color-text);
+  /* The shell's own scale, kept: this is a display heading on the launcher,
+     so it takes the launcher's heading face rather than the old page's. */
+  font-family: var(--font-heading);
+}
+
+/* No lede paragraph. "Tell us what you're building. We'll tell you what's
+   missing." sat under the title for the whole life of the panel, and the
+   title immediately above it asks the same question — so it was one idea
+   said twice, at two different weights, in the one place the eye lands
+   first. The title is the ask; the address is the alternative. */
+
+.inquiry {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* No plate. The original set the address straight on the page with nothing
+   behind it, and a bordered card around a single email address turns a
+   piece of information into a component. The address is 1.8rem of type —
+   it does not need a frame to be found. */
+.inquiryLabel {
+  font-family: var(--font-code);
+  font-size: 0.62rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(245, 245, 240, 0.4);
+}
+
+.inquiryEmail {
+  font-family: var(--font-base);
+  font-size: clamp(1.2rem, 2vw, 1.8rem);
+  font-weight: 400;
+  color: var(--color-text);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.inquiryEmail:hover {
+  color: var(--color-brand-yellow);
+}
+
+/* The process line the original carried under the address. It is a real
+   question a visitor arrives with, and the answer is the Intel panel, so
+   that is where it points — the original's `href="#"` went nowhere. */
+.process {
+  margin: clamp(1.5rem, 2.5vw, 2rem) 0 0;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: rgba(245, 245, 240, 0.5);
+}
+
+.processLink {
+  color: var(--color-text);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(245, 245, 240, 0.3);
+  padding-bottom: 2px;
+  transition: color 0.3s ease, border-color 0.3s ease;
+}
+
+.processLink:hover {
+  color: var(--color-brand-yellow);
+  border-bottom-color: var(--color-brand-yellow);
+}
+
+/* ── Form ──────────────────────────────────────────────────────────────
+   One continuous column. The 80px between sections is doing the work that
+   six bordered cards used to do, and it is doing it better: it separates
+   without fragmenting. */
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(3rem, 5vw, 5rem);
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.5rem, 2.5vw, 2.5rem);
+}
+
+/* The title is a label and a rule, exactly as the original had it: quiet
+   uppercase, a hairline underneath running the full width. The numbered
+   `01` keeps the launcher's yellow so the sequence still reads, but it
+   stays inside the label rather than becoming a heading of its own. */
+.sectionTitle {
+  display: flex;
+  align-items: baseline;
+  gap: 0.9rem;
+  margin: 0;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid rgba(245, 245, 240, 0.12);
+  font-family: var(--font-code);
+  font-size: 0.78rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(245, 245, 240, 0.55);
+}
+
+.sectionTitle span {
+  color: var(--color-brand-yellow);
+}
+
+.options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+/* 16px/32px at 1.1rem — the original, verbatim. These are the targets a
+   visitor taps or clicks to answer four of the six questions, and at 0.82rem
+   in a 0.6rem/1rem pill they were both too small to read comfortably and
+   too small to hit. */
+.option {
+  padding: 16px 32px;
+  /* Was 100px, which the browser was silently clamping to ~26px anyway (the
+     chip is ~53px tall, and a radius past half the box is halved). It is
+     gone because it was not carrying the state — selection is the fill
+     inversion below, the same treatment the shell uses for a selected tab.
+     The shape was decoration on a control that had already announced itself.
+
+     A chip is a control you press, so it sits at the crisp end of the scale,
+     level with the inputs it sits beside. 3px is ~1% of the chip's height,
+     which is the same proportion the reference's own controls sit at — a
+     catch-light on the corner, not a pill. A 100px chip next to a 12px field
+     was the mismatch that made this form look assembled from two different
+     sources. */
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(245, 245, 240, 0.2);
+  background: transparent;
+  color: var(--color-text);
+  font-family: var(--font-base);
+  font-size: 1.1rem;
+  line-height: 1.2;
+  cursor: pointer;
+  transition:
+    border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    color 0.3s ease,
+    background 0.3s ease,
+    transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.option:hover {
+  border-color: rgba(245, 245, 240, 0.6);
+  transform: translateY(-2px);
+}
+
+/* Selected reads as a filled plate with the ground as its ink, which is
+   the original's treatment and the shell's own selected-tab treatment —
+   the same inversion, so "chosen" looks the same everywhere on the site. */
+.option[aria-pressed="true"] {
+  background: var(--color-text);
+  border-color: var(--color-text);
+  color: var(--color-bg);
+}
+
+.label {
+  display: block;
+  font-family: var(--font-code);
+  font-size: 0.62rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(245, 245, 240, 0.55);
+  margin-bottom: 0.9rem;
+}
+
+.input,
+.textarea {
+  width: 100%;
+  padding: 16px 20px;
+  /* Was 12px, and the chips were at ~26px. One value for every field and
+     toggle on the form, at the reference's own proportion for a control this
+     size — so the form reads as a single object built one way. */
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(245, 245, 240, 0.12);
+  background: rgba(13, 15, 8, 0.35);
+  color: var(--color-text);
+  font-family: var(--font-base);
+  font-size: 1.1rem;
+  transition: border-color 0.3s ease, background 0.3s ease;
+}
+
+.textarea {
+  resize: vertical;
+  min-height: 130px;
+  line-height: 1.6;
+}
+
+.input::placeholder,
+.textarea::placeholder {
+  color: rgba(245, 245, 240, 0.28);
+}
+
+.input:focus,
+.textarea:focus {
+  outline: none;
+  border-color: var(--color-brand-yellow);
+  background: rgba(255, 231, 141, 0.05);
+}
+
+.inputRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(1.5rem, 2.5vw, 2.5rem);
+}
+
+/* Attachments. The input stays in the DOM and stays focusable — it is
+   1px and transparent rather than `display: none`, because a hidden file
+   input cannot be reached by keyboard and its label then announces as
+   unlabelled. */
+.fileInput {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.fileLabel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 16px 20px;
+  /* Was 12px — level with the fields above, and it should be: it is a drop
+     target shaped like a field, and the dashed border is the only thing that
+     should distinguish them. */
+  border-radius: var(--radius-sm);
+  border: 1px dashed rgba(245, 245, 240, 0.3);
+  color: rgba(245, 245, 240, 0.6);
+  font-size: 1.05rem;
+  cursor: pointer;
+  transition: border-color 0.3s ease, color 0.3s ease, background 0.3s ease;
+}
+
+.fileLabel:hover {
+  border-color: var(--color-brand-yellow);
+  color: var(--color-text);
+  background: rgba(255, 231, 141, 0.05);
+}
+
+/* ── Submit ─────────────────────────────────────────────────────────────
+   20px/48px at 1.2rem — the original. The in-shell version's 1rem/2rem at
+   0.82rem made the one button on the page read as a small control rather
+   than as the end of the form, which is the only thing on this panel that
+   is actually a call to action.
+
+   The rule above it is the original's, and it is doing real work: it is
+   what makes the button read as the end of something rather than as one
+   more control in a list. */
+.submitSection {
+  padding-top: clamp(2rem, 3.5vw, 2.5rem);
+  border-top: 1px solid rgba(245, 245, 240, 0.12);
+}
+
+.submit {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 20px 48px;
+  border: none;
+  /* Was 100px, clamping to ~31px on a 63px-tall button — so the most
+     important object on the form was rounded the most, and part of why it
+     read as a soft suggestion rather than as the end of the form.
+
+     Kept one step above the fields rather than dropped to `--radius-sm` with
+     them. Everything else on this panel is a hairline outline; this is the
+     only filled, oversized, 1.2rem object, and one step of corner is one of
+     the few signals left saying "this is the end of it". 6px is barely
+     perceptible as a shape — which is the point at this scale, and the same
+     4% the reference uses on a card of comparable height. */
+  border-radius: var(--radius-md);
+  background: var(--color-brand-yellow);
+  color: var(--color-bg);
+  font-family: var(--font-base);
+  font-size: 1.2rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.3s ease;
+}
+
+.submit:hover {
+  background: var(--color-text);
+  transform: translateY(-4px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.submitArrow {
+  transition: transform 0.3s ease;
+}
+
+.submit:hover .submitArrow {
+  transform: translateX(6px) scale(1.1);
+}
+
+/* ── Responsive ──────────────────────────────────────────────────────────
+   The original's breakpoints, unchanged. Below 1024 the two columns stack
+   and the sticky column releases; below 768 the input row goes to one
+   column, the pills step down a size and the submit plate goes full width
+   — which is the point at which a 48px side padding would leave a very
+   short button on a 390px screen. */
+
+@media (max-width: 1024px) {
+  .grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 3.75rem;
+  }
+
+  .intro {
+    position: static;
+  }
+}
+
+@media (max-width: 768px) {
+  .option {
+    padding: 12px 24px;
+    font-size: 1rem;
+  }
+
+  .inputRow {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.5rem;
+  }
+
+  .submit {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .inquiryEmail,
+  .processLink,
+  .option,
+  .fileLabel,
+  .submit,
+  .submitArrow {
+    transition: none;
+  }
+}

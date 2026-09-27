@@ -26,23 +26,65 @@ export default function DataStreamHero({ className = "" }: { className?: string 
         const glyphCache = new Map<string, HTMLCanvasElement>();
         let cachedGlyphColor = "";
 
+        /* The ink the glyphs are drawn in, and the surface they sit on.
+         *
+         * This component has two surfaces now, and they need opposite inks:
+         * it was a field of translucent marks over the dark shell, and it is
+         * also the cream ground of the Null Hypothesis card on the launcher.
+         * Reading the colour off the element's own computed background rather
+         * than off the document root is what makes one component correct in
+         * both — and it means a card that recolours itself needs no change
+         * here at all.
+         *
+         * Luminance picks the ink, not the theme: the rule is whether what is
+         * behind these glyphs is darker or lighter than mid-grey, which is the
+         * only question that matters when deciding if near-black or near-white
+         * marks will be visible. A theme attribute would answer the wrong
+         * question — a light theme on this site is a cream page, and a dark
+         * theme can still host a cream card. */
+        const resolveInk = (): { rgb: string; alpha: number } => {
+          // Walk up for the first non-transparent background: the canvas
+          // itself is transparent, and its parent is the tile surface.
+          let node: HTMLElement | null = canvas;
+          let surface = "rgba(0, 0, 0, 0)";
+          while (node && surface === "rgba(0, 0, 0, 0)") {
+            surface = getComputedStyle(node).backgroundColor;
+            node = node.parentElement;
+          }
+
+          const nums = surface.match(/[\d.]+/g);
+          if (!nums) return { rgb: "245, 245, 240", alpha: 0.15 };
+
+          const [r, g, b] = nums.map(Number);
+          // Rec. 709 relative luminance, the same weighting the eye uses.
+          const luminance = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
+
+          if (luminance > 0.5) {
+            // Light surface: the product's own ink. Alpha is higher here
+            // because dark marks on cream are read as printed ink, while pale
+            // marks on dark are read as glow — the same value reads as much
+            // fainter in the second case.
+            return { rgb: "26, 18, 8", alpha: 0.22 };
+          }
+          return { rgb: "245, 245, 240", alpha: 0.15 };
+        };
+
         const updateParticleColor = () => {
-            const rootStyles = getComputedStyle(document.documentElement);
-            const rgbStr = rootStyles.getPropertyValue('--color-tnh-text-rgb').trim() || '26, 18, 8';
-            particleColor = `rgba(${rgbStr}, 0.15)`;
-            // Color is baked into the cached glyphs — invalidate on theme change.
-            cachedGlyphColor = "";
-            glyphCache.clear();
+          const { rgb, alpha } = resolveInk();
+          particleColor = `rgba(${rgb}, ${alpha})`;
+          // Color is baked into the cached glyphs — invalidate on theme change.
+          cachedGlyphColor = "";
+          glyphCache.clear();
         };
 
         updateParticleColor();
 
         const themeObserver = new MutationObserver((mutations) => {
-            mutations.forEach((mutation) => {
-                if (mutation.attributeName === 'data-theme') {
-                    updateParticleColor();
-                }
-            });
+          mutations.forEach((mutation) => {
+            if (mutation.attributeName === 'data-theme') {
+              updateParticleColor();
+            }
+          });
         });
         themeObserver.observe(document.documentElement, { attributes: true });
 

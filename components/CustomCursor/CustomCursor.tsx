@@ -62,10 +62,7 @@ export function CustomCursor() {
         target.tagName.toLowerCase() === "a" ||
         target.tagName.toLowerCase() === "button" ||
         target.closest("a") ||
-        target.closest("button") ||
-        target.closest("[data-magnetic]") ||
-        target.closest("[data-partner-logo]") ||
-        target.closest("[data-cursor-lens]")
+        target.closest("button")
       );
       // Only trigger a re-render when the hover state actually changes
       if (shouldHover !== isHoveringRef.current) {

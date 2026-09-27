@@ -1,0 +1,848 @@
+/* ═══════════════════════════════════════════════════════════════════════
+   Launcher home
+
+   Two independent bands, stacked:
+
+     1. FEATURED — the work grid. The page's lead. One track per prominent
+                   project, plus a trailing column for the rest.
+     2. TRUSTED  — a centred "Trusted by" strip. The quietest thing here.
+
+   Both are the same object — a quiet label over the thing it names — so both
+   are built from `.band` and `.bandTitle`. The shelf used to be unlabelled,
+   which left the page presenting two grids of pictures and a visitor to
+   guess which was the work they came for.
+
+   Neither band sizes the other. That is the entire reason the layout
+   survives being edited: the roster gained logos and the grid did not move,
+   the grid gained a project and the roster did not resize. An earlier
+   version stacked the clients in a column beside the hero, which made the
+   client count the driver of the whole page — three fitted, five collapsed
+   the hero to a sliver.
+
+   The order is a decision, not a stacking convenience. The shelf leads
+   because the work IS the page and a client mark is supporting evidence;
+   leading with a row of logos made the supporting evidence the first read.
+   It also paid for the grid directly: the strip's old 21:6 tiles spent
+   vertical space the heroes could have used, and spending it underneath
+   instead is what let the grid grow taller without a new breakpoint.
+
+   The console reference is a *spatial* layout: a cursor moving over tiles
+   that stay put. That is the only thing being copied. Every caption,
+   heading, rule and section label the previous version had is gone, because
+   a dashboard with a column of text beside each mark is a directory, and a
+   directory cannot be navigated with a cursor. The two band titles are the
+   single exception — see `.bandTitle`.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  width: min(1600px, 100%);
+  flex: 1;
+  min-height: 0;
+  /* The board is a bounded block centred in the leftover space, not
+     stretched to fill it. Both references inset their content with dark
+     space above and below.
+
+     The gap is the section break, not a tile gutter: 1.5–2.5rem between the
+     shelf and the trust band against the 6px inside the grid is a ~4× step,
+     which is what tells the eye the strip below is a different kind of thing
+     and not a fourth row of tiles. */
+  justify-content: center;
+  gap: clamp(1.5rem, 3.2vw, 2.5rem);
+  margin: 0 auto;
+  padding: 0 var(--spacing-container) 1.5rem;
+  animation: riseIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* ── Bands ──────────────────────────────────────────────────────────────
+   Both labelled bands on this page — the shelf above the roster, and the
+   roster itself — are the same object: a centred stack of a quiet label and
+   the thing the label names.
+
+   `.band` is that stack and `.bandTitle` is that label, and both bands use
+   them. They are not two separate rules describing the same thing, because
+   two rules are free to drift: the labels would end up at different sizes or
+   different colours and the page would quietly stop reading as one design. A
+   third band added later is a new `<section>`, not a new rule. */
+
+.band {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(0.9rem, 1.8vw, 1.4rem);
+  flex: none;
+}
+
+/* The band label, used by both bands and the only heading style either has.
+ *
+   A label earns its place precisely because it is the only one. A centred
+   row of unframed work is otherwise just decoration floating above the grid;
+   naming it once, for everyone, is cheaper than a name and sector under
+   every tile — and it is what makes the band legible to a visitor who does
+   not recognise FEPS, or who cannot tell the shelf's heroes from the smaller
+   column at a glance.
+ *
+   The console's own trust band sets the rank: this is chrome, not content,
+   so it sits at a fraction of the tiles' weight and never competes with
+   them. The 0.42rem floor and the wide tracking keep it under the hint bar's
+   scale even on a phone, where the strip is most likely to crowd.
+
+   The label is a flex row so the glyph can sit beside the word. As a flex
+   item of `.band` it is shrink-to-fit, and `align-items: center` on the
+   band centres it. */
+.bandTitle {
+  display: inline-flex;
+  align-items: center;
+  margin: 0;
+  font-family: var(--font-code);
+  font-size: clamp(0.42rem, 0.62vw, 0.6rem);
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: 0.42em;
+  /* The trailing-space correction, reworked for a flex label.
+     `text-indent` was the old answer and it no longer works here: on a flex
+     container it indents the first ITEM, which would shove the glyph right
+     and open the gap between mark and word. A negative right margin is the
+     same correction done properly — the tracking leaves exactly 0.42em of
+     dead space after the final glyph, and pulling that much off the box's
+     width puts the ink back on the true centre line. */
+  margin-right: -0.42em;
+  text-transform: uppercase;
+  text-align: center;
+  color: rgba(245, 245, 240, 0.4);
+}
+
+/* The glyph that marks a band label. Sized in `em` against the label's own
+   font-size rather than in pixels, so a label that reflows to a different
+   size at a breakpoint brings its mark with it instead of leaving a mark
+   from one scale inside a label of another.
+   `flex: none` because the label is a flex row and the glyph is a fixed-size
+   mark — letting it shrink would distort a square into a rectangle. */
+.bandGlyph {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  /* The gap between the mark and the word, not a margin on the label: the
+     tracking below adds a trailing space to the last glyph, and a margin
+     here would sit inside that space instead of beside the mark. */
+  margin-right: 0.7em;
+  color: currentColor;
+  opacity: 0.9;
+}
+
+/* A band in the lower register — the tail under the lead.
+ *
+ * The two bands are the same object and deliberately share every label
+ * rule; what separates them is weight, not shape. This dims the marks
+ * further, the way a console's second rail sits desaturated toward the
+ * background until you look at it directly, so the page has a lead and a
+ * tail rather than two equal slabs.
+ *
+ * It is a one-step reduction (0.72 → 0.5) rather than a new treatment, and
+ * it is applied to the marks only. Dimming the LABEL as well would make the
+ * band harder to read, and the label is what tells a visitor what the row
+ * of logos even is. */
+.bandTail .rosterMark {
+  opacity: 0.5;
+}
+
+.bandTail .bandGlyph {
+  opacity: 0.6;
+}
+
+/* ── Roster ───────────────────────────────────────────────────────────────
+   The marks themselves.
+
+   NO FRAMES. This is the one place the reference's tile language is
+   deliberately declined: the previous version cut every logo into its own
+   21:6 panel, and with the shelf directly above it those panels read as
+   three more tiles — the strip stopped being a footnote and started
+   competing with the argument. The reference's trust band is a bare row of
+   marks on the background, and matching it is also what lets contrast be
+   carried by the artwork itself rather than by a card behind it.
+
+   The slot is sized by the mark, not the other way round. Marks have wildly
+   different intrinsic ratios (FEPS 1:1, Lux 3.6:1, Nested United 2.3:1), so
+   a fixed slot aspect would either letterbox them or crop them; capping
+   height and letting width follow resolves each one at its own natural
+   proportion.
+
+   `auto-fit` with a floor rather than a column count is the whole
+   sustainability story: a fourth logo takes the next slot and a fifth
+   wraps, each slot staying the same width, and nothing here is edited to
+   accommodate it. `auto-fit` rather than `auto-fill` so the row is always
+   exactly as wide as the marks in it — a two-logo roster doesn't leave a
+   gap-sized hole sitting under the grid, and the group stays centred. */
+.roster {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(1.75rem, 4.4vw, 3.5rem);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.rosterSlot {
+  display: flex;
+  min-width: 0;
+}
+
+/* Not a hit area — the marks are inert, so nothing here is clickable. The
+   padding still exists to give each mark breathing room from its neighbours'
+   optical edges (a logo is a shape with corners and varied side bearings, so a
+   box pressed flat against it looks off-centre), and `cursor` is left at the
+   default because a hover here reacts rather than navigates.
+
+   Nothing here is visible either — no background, no border, and the radius
+   only shapes the box. It is kept as `--radius-md` rather than dropped so
+   that if the band ever grows a real hit target again, the box it grows into
+   is already the right shape. */
+.rosterTile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 0.35rem;
+  position: relative;
+  border-radius: var(--radius-md);
+}
+
+.rosterMark {
+  width: auto;
+  /* A trust band reads as a band of marks, not a row of captions, so the
+     marks carry real presence here — roughly the cap-height of the section
+     title times three. The previous 20–34px range was sized as if these were
+     metadata, and three logos at that weight read as a footnote that had
+     lost its way. */
+  /* Up from clamp(30px, 3.4vw, 48px), which measured 44px on the two
+     wordmarks at 1280px and left the strip filling only 67% of its own
+     width — a third of the band was empty air, so the marks read as
+     undersized rather than as deliberately quiet. At 60px the two wordmarks
+     total ~234px against FEPS's ~83px, which fills the band without
+     crowding it, and the strip still clears the shelf above it. */
+  height: clamp(34px, 4.4vw, 60px);
+  /* Wide, because the marks vary from 1:1 (FEPS) to 3.6:1 (Lux). Capping
+     width is what stops a long wordmark from setting the strip's rhythm
+     while a square one still gets the same visual weight. Raised with the
+     cap: at 260px the widest wordmark was already brushing the limit, and a
+     cap that clips a logo is worse than one that lets it be long. */
+  max-width: min(320px, 46vw);
+  object-fit: contain;
+  /* Dimmed rather than hidden. The strip sits directly under a grid of bright
+     key art, so full-strength marks pull the eye back down; 0.72 still reads
+     as confident black ink rather than a disabled control, which is what a
+     lower value started to look like. */
+  opacity: 0.72;
+  transition: opacity 0.3s ease, transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Hovering a mark is acknowledgement, not navigation.
+ *
+ * Removing the links did NOT mean removing this. The two decisions are
+ * separate and only the first was asked for: a hover that brightens a logo
+ * says "this is the studio's client", which is a statement about the logo,
+ * while a link says "go here", which is a statement about the destination.
+ * A visitor who recognises FEPS and hovers it learns something true without
+ * being sent anywhere.
+ *
+ * So the mark comes up to full strength and lifts a touch — enough that a
+ * pointer crossing the band finds each one, and enough that the strip feels
+ * alive under the cursor. No `cursor: pointer` and no `data-tile`: the marks
+ * remain inert, so a hover is a reaction rather than a promise of a
+ * destination, and the arrow keys still skip the band entirely. */
+.rosterTile:hover .rosterMark {
+  opacity: 1;
+  transform: scale(1.04);
+}
+
+/* A monochrome ink mark, inverted to white.
+ *
+ * This is not a cosmetic choice: the artwork is a bare `#000` file, and black
+ * on the shell's near-black ground is invisible — the strip had a client
+ * literally missing from it. `tone: "ink"` in lib/projects is the declaration
+ * that says so, which is what keeps the next dark logo from having the same
+ * accident. Full inversion rather than a dimmed white also means the mark
+ * lands as true brand white beside the colour marks, instead of reading as
+ * another dimmed element. */
+.logoInk {
+  filter: invert(1);
+}
+
+/* An emblem, sized up to carry the weight of the wordmarks beside it.
+ *
+ * The row shares one height cap, and that cap is right for a wordmark —
+ * letterforms at a given height read as a solid block of that height. A
+ * contained mark of the same height is mostly interior: a disc of 48px
+ * encloses far less ink than 48px of lettering, so it reads as the smallest
+ * mark in the band no matter how the numbers compare. Running emblems larger
+ * equalises the optical weight, which is the thing the eye actually compares.
+ *
+ * Capped rather than free, and deliberately not `!important`-style specific
+ * to one client: the multiplier is a property of the form, so an emblem added
+ * to the roster later gets the same correction with no new rule. */
+.rosterEmblem {
+  /* Roughly 1.55× the wordmark cap, which is what it actually takes for a
+     disc to carry the same visual weight as a line of letterforms. The first
+     attempt at 1.3× still read as the smallest mark in the band — a circle
+     loses more to its own negative space than the arithmetic suggests, so the
+     correction has to overshoot the naive ratio to land on equal weight. */
+  /* Up from clamp(42px, 5.2vw, 74px) alongside the wordmark cap, keeping the
+     1.55× ratio rather than moving it — that ratio was measured, not guessed,
+     and the correction to it (a disc loses more to its negative space than
+     the arithmetic suggests) does not change when both caps scale. */
+  height: clamp(50px, 6.4vw, 90px);
+  /* The disc is as wide as it is tall, so the width cap has to rise with it
+     or `max-width` would start clipping a mark that is now taller than wide. */
+  max-width: min(400px, 56vw);
+}
+
+/* ── Shelf ────────────────────────────────────────────────────────────────
+   The page's lead, and now a labelled band like the roster below it: the
+   "Featured" title plus the board, centred on the same axis. That symmetry
+   is the point — two bands, one label style, one gap, so the page reads as
+   a stack of equal-ranked sections rather than as a hero with a footnote
+   bolted under it.
+
+   One track per prominent project, plus a trailing column for everything
+   else. The tracks are equal and share the leftover width, so promoting a
+   project adds a column and the whole grid narrows a little — which is the
+   behaviour you want, and is the opposite of the old layout where a new
+   client squeezed the hero instead of the row absorbing it. */
+
+/* The board is width-driven and content-height, never the reverse.
+   Sizing it from the available height instead (an `aspect-ratio` on the grid
+   plus a `height`) is what broke the phone layout: below the tablet there is
+   no height to derive a three-column width from, so the tracks collapsed to
+   slivers and overflowed. Letting each hero's own ratio set the row height
+   means the grid is always exactly as tall as its tiles need — three across
+   on a desktop, one across on a phone, with nothing to compute.
+
+   `max-width` scales with the column count so a fourth prominent project
+   widens the board by one tile's worth rather than shrinking every tile.
+
+   The 560px per track is what "larger" means here, and it is a width change
+   rather than a zoom: the shelf is height-driven, so a wider board at an
+   unchanged 16:10 makes each hero physically bigger in both directions. The
+   old cap was 400px, which pinned the grid to 1200px and left a band of dead
+   background down each side of a 1320px panel.
+
+   The board fills the band and the band centres it. The old `.shelf` wrapper
+   that used to do the centring is gone — `.band` is `align-items: center`, so
+   a second centring wrapper around the board was one more box saying the same
+   thing. `min-width: 0` moved onto the board, where an unshrinkable grid
+   track would otherwise push the band wider than the viewport.
+
+   The column count was a CSS variable set from JS, read off however many
+   projects were flagged prominent. It is now a literal three: the band makes
+   three claims, so the track count is a fact about the page rather than a
+   number that happened to be computed somewhere else. */
+.board {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+  width: 100%;
+  min-width: 0;
+  max-width: 1680px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* The apex and the base are `<li>`s that exist ONLY to give the pyramid a
+   shape. On desktop they are `display: contents`, which removes the box
+   entirely — the three `.claimSlot` divs inside become the three grid items
+   exactly as they were before the pyramid existed, and the wide layout is
+   untouched. The wrappers only gain a box below the tablet, where the layout
+   actually needs one.
+
+   Without `display: contents` here, the desktop board would have two grid
+   items instead of three and the row would break — which is the whole reason
+   this is stated rather than left implicit. */
+.claimApex,
+.claimBase {
+  display: contents;
+}
+
+/* One claim's cell. A plain wrapper so the `<li>` is the grid item and the
+   tile inside it can be a link or a div without the grid caring which — the
+   empty-slot branch and the filled branch have different element types, and
+   making the SLOT the grid item is what lets both share one track.
+
+   `align-items: stretch` is load-bearing. The tile is `position: relative`
+   with an `aspect-ratio` and no explicit height, so it takes its height from
+   this box — and a flex container's default `align-items: normal` lets the
+   child shrink to nothing, which collapsed every tile to 0px the moment the
+   `<li>` wrapper was introduced. Stretching gives the tile the cell's full
+   width, and the aspect ratio resolves the height from that. The empty-slot
+   branch sets `flex: 1` and needs the same stretch, so one rule covers both. */
+.claimSlot {
+  display: flex;
+  align-items: stretch;
+  min-width: 0;
+}
+
+/* A claim with no project behind it yet. Same box, same caption, no tile —
+   so the row keeps its three positions and the absence is legible as
+   "nothing here yet" rather than as a layout that quietly dropped one. */
+.claimEmpty {
+  position: relative;
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  /* Matched to `.hero` so an empty claim and a filled one are the same
+     object with different contents. At 4px against the hero's previous 4px
+     that was true, and it stopped being true the moment the hero moved. */
+  border-radius: var(--radius-lg);
+  box-shadow: inset 0 0 0 1px rgba(245, 245, 240, 0.06);
+  background: rgba(255, 255, 255, 0.015);
+}
+
+/* ── Tiles ────────────────────────────────────────────────────────────────
+   One tile surface. There was a second size once — a trailing column of
+   small tiles beside the two heroes — but the band is now three equal claims
+   with nothing in the column, so the surface has one size and one rule. */
+.hero {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  /* Was 4px. These are the largest surfaces on the site, so they take the top
+     of the scale — but the top of the scale is 10px now, because the
+     reference's largest card resolves its corner over 2–3px at 83px tall. A
+     4% radius on a 250px card is 10px, and that is what the proportions in
+     globals.css work out to. The earlier 28px was a rounded system, not this
+     one. */
+  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, 0.04);
+  box-shadow: inset 0 0 0 1px rgba(245, 245, 240, 0.1);
+  text-decoration: none;
+  transition: box-shadow 0.25s ease, transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.hero:hover {
+  box-shadow: inset 0 0 0 1px rgba(245, 245, 240, 0.24);
+}
+
+/* ── Hero ─────────────────────────────────────────────────────────────────
+   16:10 — the reference's hero proportion. An explicit ratio is what keeps
+   the key art from being cropped: the shelf is height-driven, so a hero that
+   simply filled its column turned a 16:9 screenshot into a narrow vertical
+   slice of itself.
+
+   `flex: 1` alongside the ratio: the tile is a flex child of `.claimSlot` and
+   a `width: auto` flex item is sized by its content, which for an empty-ish
+   box is nothing. Growing to the cell and letting `aspect-ratio` derive the
+   height from that width is the only way both dimensions get set here. */
+.hero {
+  flex: 1;
+  aspect-ratio: 16 / 10;
+  isolation: isolate;
+}
+
+.heroImage {
+  object-fit: cover;
+  z-index: -2;
+  transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.hero:hover .heroImage {
+  transform: scale(1.04);
+}
+
+/* The paper: a card with no artwork, and the one ground on this page that is
+   not the studio's dark shell.
+
+   It started as the Null Hypothesis's alone, because that product's own site
+   is a cream ground with near-black ink and the tile was carrying its real
+   surface colour. It is now the shared light ground for ANY tile without
+   artwork — Misura stands on it too, and a second assetless tile did not
+   make the surface more specific to one project. Cream is the shell's answer
+   to "we have no screenshot yet", not a claim about who owns the tile.
+
+   Everything downstream follows from the ground being light: the name turns
+   to near-black, the data-stream glyphs stop being derived from the page's
+   text colour and are drawn in that same ink, and the action bar becomes a
+   dark strip pinned to the bottom instead of a dark fade that relied on the
+   artwork being bright. Those rules are per-surface, so a tile on the paper
+   with no field behind it still gets the right ink.
+
+   The warm cast on the left is the yellow brand light spilling across a
+   paper surface — the same reason a real sheet of paper picks up the colour
+   of the lamp above it. It keeps the card from reading as a flat swatch. */
+.heroPaper {
+  background:
+    linear-gradient(
+      115deg,
+      rgba(255, 231, 141, 0.16) 0%,
+      rgba(255, 231, 141, 0.04) 38%,
+      transparent 70%
+    ),
+    var(--color-tnh-bg, #F5F0E8);
+}
+
+/* A project whose screenshot is being held back: the mark, centred on a light
+   field. This is the standing-in state, not the real one — the artwork is what
+   the tile is for — but it is better than a blank rectangle, and it is honest
+   about what it is: a mark, centred, with nothing pretending to be a screen.
+
+   The field is a paper white rather than the TNH cream. The cream belongs to
+   the Null Hypothesis, which is that product's own surface colour; reusing it
+   here would put two unrelated projects on the same paper and quietly claim a
+   brand connection that isn't there. */
+
+.heroMarked {
+  background:
+    radial-gradient(120% 100% at 50% 0%, rgba(255, 255, 255, 0.06), transparent 60%),
+    #f2f1ec;
+  /* A paper tile needs a dark hairline rather than the light inset ring the
+     dark tiles use: on a light surface that ring reads as a scratch, and
+     nothing about it holds the tile's edge against a light stage behind it.
+     The action bar's own dark strip does the separating at the bottom. */
+  box-shadow: inset 0 0 0 1px rgba(13, 15, 8, 0.1);
+}
+
+.heroMarked:hover {
+  box-shadow: inset 0 0 0 1px rgba(13, 15, 8, 0.2);
+}
+
+/* The mark, held at the size a logo is actually drawn to be read at. The
+   artwork's own aspect ratio does the rest — it is centred rather than
+   stretched, because a lockup forced into a square stops being a lockup. */
+.heroMarkField {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18%;
+}
+
+.heroMark {
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  object-fit: contain;
+  opacity: 0.9;
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.heroMarked:hover .heroMark {
+  transform: scale(1.04);
+}
+
+/* The stream's own layer. `isolation: isolate` on the hero keeps the canvas
+   behind the type and the action bar without either needing a z-index fight. */
+.heroStream {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  overflow: hidden;
+  opacity: 0.9;
+}
+
+.heroType {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-code);
+  font-size: clamp(1.05rem, 2.1vw, 1.9rem);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  text-align: center;
+  line-height: 1.35;
+  color: var(--color-tnh-ink, #1a1208);
+  padding: 0 1.5rem;
+  max-width: 100%;
+  transition: color 0.3s ease;
+}
+
+/* The product's own red, not the studio's yellow. On cream the yellow is
+   close to illegible — it is a pale tint on a pale ground — and the accent
+   that ships with the brand is the one the hover should be wearing. */
+.heroPaper:hover .heroType {
+  color: var(--color-tnh-accent, #8b1a1a);
+}
+
+/* A scrim only where the type sits, feathered out well before the top — the
+   artwork keeps its own brightness across most of the tile, which is what
+   makes the reference's key art look like key art and not a caption strip. */
+.heroScrim {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(
+    to top,
+    rgba(8, 9, 6, 0.92) 0%,
+    rgba(8, 9, 6, 0.45) 38%,
+    rgba(8, 9, 6, 0) 68%
+  );
+}
+
+/* A card with no artwork has no scrim to sit on, so the scrim would be a
+   dark wash over the type for nothing. The mark tile is the same case: a
+   gradient to transparent is a device for darkening bright key art, and over
+   a light field it is just a grey smear. */
+.heroPaper .heroScrim,
+.heroMarked .heroScrim {
+  display: none;
+}
+
+/* The claim caption, across the TOP of the tile.
+ *
+ * A deliberate mirror of `.heroAction` at the other end: the action says what
+ * happens if you press, this says what the tile is arguing. Same scrim, same
+ * type, same tracking, so the two read as one tile's furniture rather than
+ * as two different components that happen to sit in the same box.
+ *
+ * One notch quieter than the action bar (0.82 → 0.62) and it does not turn
+ * yellow on hover. The action is a response to the visitor; the claim is a
+ * statement by the studio, and it should not light up because someone
+ * pointed at the tile. */
+.heroClaim {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.95rem 0.75rem 1.05rem;
+  font-family: var(--font-code);
+  font-size: 0.56rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(245, 245, 240, 0.62);
+  background: linear-gradient(
+    to bottom,
+    rgba(8, 9, 6, 0.9) 0%,
+    rgba(8, 9, 6, 0.5) 70%,
+    rgba(8, 9, 6, 0) 100%
+  );
+  pointer-events: none;
+}
+
+.heroClaimGlyph {
+  font-size: 0.5rem;
+  line-height: 1;
+}
+
+/* The action bar, bounded to the tile's bottom edge on its own surface, so
+   the call to action never lands on the artwork's own type. The reference
+   pins "PLAY" the same way. */
+.heroAction {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.95rem 0.75rem 1.05rem;
+  font-family: var(--font-code);
+  font-size: 0.56rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(245, 245, 240, 0.82);
+  background: linear-gradient(
+    to top,
+    rgba(8, 9, 6, 0.95) 0%,
+    rgba(8, 9, 6, 0.6) 70%,
+    rgba(8, 9, 6, 0) 100%
+  );
+  transition: color 0.25s ease;
+}
+
+.heroActionGlyph {
+  font-size: 0.5rem;
+  line-height: 1;
+}
+
+.hero:hover .heroAction {
+  color: var(--color-brand-yellow);
+}
+
+/* On the cream card the bar cannot stay a fade. A gradient to transparent is
+   a device for darkening artwork that is already bright; over a light ground
+   it produces a grey smear that reads as dirt on the paper, and the pale
+   label on top of it loses contrast exactly where the label sits. So this
+   one is a solid ink strip with a defined edge — which is also how a printed
+   caption bar looks on a real page.
+
+   The hover keeps the studio yellow here rather than the product's red: the
+   strip is launcher chrome sitting on top of a product's surface, and the
+   yellow is what says "this responds to you" everywhere else on the page. */
+.heroPaper .heroAction,
+.heroMarked .heroAction {
+  color: rgba(245, 245, 240, 0.78);
+  background: var(--color-tnh-ink, #1a1208);
+  box-shadow: inset 0 1px 0 rgba(245, 245, 240, 0.12);
+}
+
+.heroPaper:hover .heroAction,
+.heroMarked:hover .heroAction {
+  color: var(--color-brand-yellow);
+}
+
+@keyframes riseIn {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ── Responsive ──────────────────────────────────────────────────────────
+   The shelf is a row of tracks, so below the tablet it stacks: the heroes
+   first, then the column as a row of small tiles. The trust band needs
+   nothing at all — a centred flex row that wraps is already correct on a
+   phone, which is the property the roster was rebuilt to have.
+
+   `minmax(0, 1fr)` was the bug here: a zero minimum lets auto-fit collapse
+   to a single track on a phone, and the heroes then became 350px slivers
+   beside each other with the column stranded below. A real minimum — a
+   tile's worth of width — makes the track count follow the viewport instead,
+   which is the only thing that can be right at both 1400px and 390px. */
+@media (max-width: 1000px) {
+  /* Stacked, the two bands are taller than the leftover viewport. The shell's
+     content box is what scrolls (see MenuShell), so this stops centring —
+     centring a block that overflows is what put the first row of tiles up
+     under the header on a phone. */
+  .panel {
+    justify-content: flex-start;
+  }
+
+  /* Below the tablet the three claims become a PYRAMID: one wide card on top,
+     two narrower beneath it, each row centred on the row above.
+
+     This is a composition rather than a layout, and that is the whole point.
+     Three cards in a row is a comparison; a pyramid is a hierarchy — the top
+     card is the thing you came for, and the two below are supporting it. That
+     ordering was already in the data (`featuredSlot`: research, client work,
+     product) and the equal-width row was throwing it away by making all three
+     the same size.
+
+     It also solves the two problems that produced this. One column of
+     full-width 16:10 heroes was 606px of stack on a 672px screen, and you
+     could never see two claims at once. Two columns fixed the comparison and
+     ruined the cards — 166px wide, a 2+1 orphan, names shrunk to texture. And
+     a scrolling row put the cards back to full size but spent them off-screen,
+     which is a worse version of the original problem: the third claim is
+     there, just never looked at.
+
+     `align-items: center` is what makes it a pyramid rather than a staircase.
+     Without it a flex row with descending widths produces a left-aligned
+     wedge — three cards hanging off one edge, which reads as a mistake in
+     alignment. Centring each row against the widest is what makes the
+     silhouette read as deliberate.
+
+     The widths step 100 → 78 and then hold, because the bottom two are a
+     PAIR and not a ranking. A geometric descent (100 → 78 → 61) would make
+     the third card a token and imply that Misura matters less than the
+     client's work, which is not true — it is a different KIND of thing. Equal
+     is both the honest answer and the one that makes the base read as a base. */
+  .board {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    grid-template-columns: none;
+  }
+
+  /* The wrappers become real boxes here — this is the only place they have
+     one. `width: 100%` on the apex and the base together is what makes the
+     two rows the same width, so the pair beneath is centred against the card
+     above rather than merely centred on the page. */
+  .claimApex,
+  .claimBase {
+    display: block;
+    width: 100%;
+  }
+
+  /* The base is a row of two, and the two are equal.
+     A pyramid whose base is two stacked cards is just a taller column with a
+     step in it — the base has to be a base.
+
+     Equal because they are a PAIR and not a ranking: the work built for other
+     people, and the thing MZ owns. A geometric descent would make the third
+     card a token and imply Misura matters less than the client's work, which
+     is not true — it is a different KIND of thing. */
+  .claimBase {
+    display: flex;
+    gap: 6px;
+  }
+
+  /* The base cards are SQUARE, and that is the fix rather than a style.
+
+     At 16:10 a base card is 99px tall, and the action bar is 44px of it. That
+     leaves 55px for the name, which is two lines of 0.72rem type plus its
+     leading — and it clipped "The Null Hypothesis", whose second line ran
+     under the bar. The failure was invisible in the data and obvious on
+     screen: the card whose whole job is to be legible was the one that
+     stopped being legible, and only for the project with the longest name.
+
+     Shrinking the type was tried first and is the wrong lever. It trades a
+     name you can read for a name you can just about read, and it does nothing
+     about the next project with a longer name — the clipping would come back
+     the moment one shipped. The box is the thing that was too small.
+
+     `aspect-ratio: 1` on the base only. The apex keeps 16:10, so the pyramid
+     is still a shape rather than three squares, and the hierarchy is
+     unchanged: 202px of card over 158px, now with the height to match. */
+  .claimBase .claimSlot {
+    /* Two cards and a gap inside the base's width. `flex: 1` rather than a
+       percentage because the gap is then subtracted automatically — a
+       percentage basis would overflow by exactly the gap, which is the
+       classic reason a two-up row is 4px too wide. */
+    flex: 1;
+  }
+
+  .claimBase .hero {
+    aspect-ratio: 1;
+  }
+
+  .claimBase .claimEmpty {
+    aspect-ratio: 1;
+  }
+}
+
+@media (max-width: 560px) {
+  /* The strip tightens rather than changing shape: the marks stay a centred
+     wrapping row, they just sit closer together. There is no per-breakpoint
+     frame or aspect to restore, because the roster has no frame.
+
+     The `clamp` floors (34px wordmark, 50px emblem) hold here and are not
+     overridden. A trust band is the one place a small screen has least room
+     to spare, and shrinking the marks hardest is exactly when they stop
+     being readable as logos — so the floor, not the viewport, decides the
+     minimum. Only the spacing tightens. */
+  .roster {
+    gap: 1.25rem 1.75rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .panel {
+    animation: none;
+  }
+
+  /* `.tile` and `.mark` were the trailing column's rules and went with it.
+     `.rosterTile` is not listed because it does not transition — the hover
+     it carries is on the mark inside it, which is listed below. */
+  .hero,
+  .heroImage,
+  .rosterMark {
+    transition: none;
+  }
+}

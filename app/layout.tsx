@@ -49,6 +49,7 @@ import { TransitionLink } from "@/components/TransitionLink/TransitionLink";
 import Image from "next/image";
 import { CustomCursor } from "@/components/CustomCursor/CustomCursor";
 import WebMCP from "@/components/WebMCP/WebMCP";
+import SiteBackground from "@/components/SiteBackground/SiteBackground";
 
 export default function RootLayout({
   children,
@@ -64,14 +65,21 @@ export default function RootLayout({
       <head>
       </head>
       <body>
+        <SiteBackground />
         <WebMCP />
         <CustomCursor />
-        <TransitionLink href="/" className="layout-logo-link" style={{
-          position: 'fixed',
-          top: '10px',
-          left: '20px',
-          zIndex: 9999,
-        }}>
+        {/* The studio's mark, and the only wordmark on the splash, the privacy
+            page and the case study — pages that have no launcher chrome. The
+            launcher has its own, centred above the nav.
+
+            Position and size live in CSS (`.layout-logo-link` / `-img` in
+            globals.css) rather than in inline styles. They used to be inline,
+            which meant the mobile override had to reach in with `!important`
+            from a media query to undo them — the classic outcome of a value
+            set in the one place that cannot be overridden cleanly. The
+            `width`/`height` props here are the intrinsic ratio and nothing
+            else; the rendered size is CSS's business. */}
+        <TransitionLink href="/" className="layout-logo-link">
           <Image
             src="/mz-logo.min.svg"
             alt="MZ"

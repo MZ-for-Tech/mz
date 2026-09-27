@@ -1,0 +1,361 @@
+/* ═══════════════════════════════════════════════════════════════════════
+   Work shelf
+
+   A stage that replaces the background, and a row of cards sitting on it.
+   No track, no offsets, no wrap — with four projects they all fit.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.work {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  /* Fills the panel between the fixed header and the fixed brand line, so the
+     shelf can sit at its bottom edge without colliding with either.
+
+     The brand line is one short wordmark at `bottom: 1.4rem`, so it needs
+     clearance, not the 5.5rem this used to reserve. That number was sized for
+     the key-hint row that used to sit there — four labelled key caps across
+     the bottom of the screen. With those gone the reserve was pure dead
+     space, and it pushed the whole shelf up into the middle of the stage
+     while leaving a band of nothing beneath it. */
+  min-height: calc(100svh - 6rem - 3.25rem);
+}
+
+/* ── Stage ───────────────────────────────────────────────────────────── */
+
+.stage {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  /* Transparent, not the page background: when the selected project has no
+     screenshot there is no layer to paint, and the shared DarkVeil shader
+     behind everything is what should show through. Opaque would cover it and
+     leave a flat rectangle that reads as a failed load. */
+  background: transparent;
+}
+
+.stageImage {
+  object-fit: cover;
+  transform: scale(1.02);
+}
+
+/* Every layer is absolutely stacked and faded by opacity, so a change of
+   project is a crossfade rather than a swap. */
+.stageLayer {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+}
+
+.stageLayerActive {
+  opacity: 1;
+}
+
+/* The standing-in state: the mark on a light field that DOES take the screen.
+ *
+ * A screenshot is full-bleed because it is the payoff and it fills the
+ * viewport, so the light field does the same rather than shrinking into a
+ * card. Mixed messages here are worse than either answer on its own: a
+ * bounded white panel on a full-bleed stage says "this is a preview", while
+ * the shader showing through says "nothing is loaded". Full-bleed is the
+ * honest one — the surface is the stage, and what is missing is a photograph
+ * of it, not the stage itself.
+ *
+ * So the rule does nothing but paint: `inset: 0`, the position, and the size
+ * are all inherited from `.stageLayer`. An earlier version inset this by
+ * 0.75rem "so it would not run under the tab row" — which did exactly what a
+ * full-bleed layer is not supposed to do and left a dark frame around the
+ * light. The tab row's legibility is the header's problem, not this layer's;
+ * see the light-stage rules in MenuShell.module.css.
+ */
+.stageLayerMark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* The same near-white the launcher uses for a mark on paper, so the two
+     places a bare ink mark appears agree with each other. */
+  background: #eceae3;
+  /* A hairline rather than a shadow: this is a surface flush to the screen
+     edge, and anything with depth would read as a card sitting on top of
+     one. It exists only to keep the light field's own edge from shimmering
+     against the shader where the two happen to be similarly bright. */
+  box-shadow: inset 0 0 0 1px rgba(13, 15, 8, 0.07);
+}
+
+.stageMark {
+  width: clamp(140px, 16vw, 260px);
+  height: auto;
+  max-height: 42vh;
+  object-fit: contain;
+  opacity: 0.88;
+}
+
+.stageMark {
+  width: clamp(120px, 13vw, 200px);
+  height: auto;
+  max-height: 46%;
+  object-fit: contain;
+  opacity: 0.88;
+}
+
+.stageMark {
+  width: clamp(140px, 18vw, 260px);
+  height: auto;
+  max-height: 34vh;
+  object-fit: contain;
+  opacity: 0.88;
+}
+
+/* ── Shelf ───────────────────────────────────────────────────────────── */
+
+/* Cards sit at the bottom of the stage, not floating in the middle of it.
+   `margin: auto 0 0` pushes the row to the bottom edge of the flex column,
+   and the padding is what keeps it clear of the brand line below. */
+.shelf {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: clamp(0.85rem, 2vw, 1.6rem);
+  list-style: none;
+  margin: auto 0 0;
+  padding: 0 var(--spacing-container) 1rem;
+}
+
+/* The <li> carries the bulge, not the card. Scaling the card itself would
+   scale its 1px border and blur its text; scaling the wrapper leaves the
+   card's own geometry alone and only changes how much room it takes. */
+.slot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.slot:has(.tileActive) {
+  /* Up from 1.14, to hold the same absolute step on a smaller card: the cue
+     is the ~18px the selected tile gains, not the ratio. At the old 158px
+     card 1.14 was ~23px, which on a shorter row read as the selected tile
+     crowding its neighbours. */
+  transform: scale(1.16);
+}
+
+/* Down from clamp(112px, 12vw, 158px), which measured 175px per tile at
+   1280px wide — six of them plus their gaps ran the full width of the
+   viewport, so the shelf read as a row of posters competing with the stage
+   behind it rather than as a control strip in front of it.
+
+   The stage is the payload and the shelf is the input. At this size the row
+   occupies a little over half the viewport, which leaves the background
+   visible on both sides and lets the selected tile's bulge read as a change
+   of state instead of just being a slightly wider rectangle. */
+.tile {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: clamp(88px, 9.2vw, 124px);
+  aspect-ratio: 1;
+  /* The card's type size, derived from its own width, is the unit the label
+     band and the mark below are measured in. Setting it here is what lets
+     `.tileMeta` use `em` padding and have that padding track the card at every
+     breakpoint. Roughly one tenth of the face keeps the band at the same
+     share of the card it had when the card was 158px. */
+  font-size: clamp(8.8px, 0.92vw, 12.4px);
+  /* Was 12px, then 20px, now 6px. At ~100–137px across this is the smallest
+     container on the site, and it is where the reference's proportions bite
+     hardest: a 4% radius on a 137px tile is 5–6px. The 20px it had was 15% of
+     the box, which is four times the reference's ratio — at that point the
+     corners stop being a catch-light and start eating the tile. */
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(245, 245, 240, 0.14);
+  background: rgba(13, 15, 8, 0.72);
+  overflow: hidden;
+  cursor: pointer;
+  filter: saturate(0.45) brightness(0.6);
+  opacity: 0.62;
+  transition:
+    filter 0.4s ease,
+    opacity 0.4s ease,
+    border-color 0.4s ease,
+    box-shadow 0.4s ease;
+}
+
+/* The label, INSIDE the card and across its bottom — the Xbox arrangement,
+   and the reason the card is square in the first place.
+ *
+ * It was below the card because a card carrying a mark is white while the
+   label was set in the site's light type, which would have been white on
+   white. Rather than move the type, the type now sits on its own scrim inside
+   the card, which is the same solution the launcher tiles already use for
+   their action bars — and it is the better answer anyway: the name travels
+   with the mark when the shelf is scanned, instead of appearing underneath
+   it as a separate object, and the row's height no longer changes when a
+   label appears.
+ *
+ * The mark and the label share the card as separate layers rather than as
+ * siblings, so the label can claim the bottom band outright and the mark is
+ * optically centred in what is left above it. */
+.tileLogo {
+  /* Sized against the space the label leaves, not the whole card. A mark at
+     58% of a square card would run straight into the label band. */
+  width: 52%;
+  height: 52%;
+  margin-bottom: 22%;
+  object-fit: contain;
+}
+
+/* Placeholder tiles for projects with no mark yet: initials, set in the
+   site's own type, read as intentional rather than as a missing image. */
+.tileInitials {
+  font-size: clamp(1.15rem, 1.7vw, 1.75rem);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: rgba(245, 245, 240, 0.85);
+  text-align: center;
+  padding: 0 6px;
+  line-height: 1.1;
+  word-break: break-word;
+  margin-bottom: 22%;
+}
+
+/* The label band. A scrim rather than a solid fill, so the card still reads
+   as a card with a mark on it rather than as a caption bar with a picture
+   above it. The feather is short and steep for the same reason: enough to
+   guarantee the type's contrast, not so much that it becomes a plate.
+
+   Padding is in `em` off the card's own type size, which `.tile` sets from
+   the card's own width. At the old fixed 1.5rem/0.7rem the band was a fixed
+   30px tall; against a 124px card that is a quarter of the face, and the
+   mark above it had nowhere to sit. Tying the band to the card means the
+   three parts — mark, band, radius — keep their proportions at every
+   breakpoint instead of only at the one they were measured at. */
+.tileMeta {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.1rem;
+  padding: 1.2em 0.5em 0.55em;
+  text-align: center;
+  background: linear-gradient(
+    to top,
+    rgba(8, 9, 6, 0.94) 0%,
+    rgba(8, 9, 6, 0.78) 52%,
+    rgba(8, 9, 6, 0) 100%
+  );
+  pointer-events: none;
+}
+
+.tileName {
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  line-height: 1.15;
+  color: var(--color-text);
+  /* A long project name has to wrap rather than push the card wider, and two
+     lines is the most this band can hold without crowding the mark above it. */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.tileCategory {
+  font-family: var(--font-code);
+  font-size: 0.44rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(245, 245, 240, 0.55);
+  line-height: 1.25;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* A card carrying a real mark is turned into a white field. Logos arrive as
+   dark ink on a transparent background, so on the dark surface they were
+   invisible — and putting a small light plate behind the icon was not enough,
+   because the mark's own whitespace still had to read against something. The
+   whole card becomes the substrate, so any dark-on-transparent mark survives
+   being dropped in unchanged. */
+.tileOnLight {
+  background: #f5f5f0;
+  border-color: rgba(13, 15, 8, 0.14);
+  /* White has no colour to desaturate, and dimming it reads as a grey card
+     rather than as an unselected one. */
+  filter: brightness(0.82) contrast(0.95);
+  opacity: 0.7;
+}
+
+.tileOnLight.tileActive,
+.tileOnLight.tile:focus-visible {
+  filter: none;
+  opacity: 1;
+}
+
+.tile:hover {
+  filter: saturate(0.75) brightness(0.85);
+  opacity: 0.85;
+}
+
+.tileActive {
+  filter: none;
+  opacity: 1;
+  border-color: rgba(255, 231, 141, 0.5);
+  box-shadow:
+    0 0 0 1px rgba(255, 231, 141, 0.55),
+    0 20px 50px rgba(0, 0, 0, 0.55);
+}
+
+/* Keyboard selection lands on the same state as clicking. */
+.tile:focus-visible {
+  outline: none;
+  filter: none;
+  opacity: 1;
+  border-color: var(--color-brand-yellow);
+  box-shadow:
+    0 0 0 1px var(--color-brand-yellow),
+    0 20px 50px rgba(0, 0, 0, 0.55);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tile,
+  .stageLayer,
+  .slot,
+  .tileMeta,
+  .tileInitials {
+    transition-duration: 0.01ms;
+  }
+
+  .slot:has(.tileActive) {
+    transform: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .shelf {
+    gap: 0.7rem;
+    padding-bottom: 1.5rem;
+    /* Four across will not fit a phone — wrapping to two rows keeps every
+       card the same size instead of shrinking them to nothing. */
+    flex-wrap: wrap;
+  }
+
+  .tile {
+    width: clamp(84px, 21vw, 104px);
+  }
+
+  .tileCategory {
+    display: none;
+  }
+}

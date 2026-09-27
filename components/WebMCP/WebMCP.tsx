@@ -33,26 +33,8 @@ export default function WebMCP() {
                 required: ["projectType"]
               },
               execute: async () => {
-                // In a real implementation this would navigate to the contact form or open a modal
-                window.location.href = "/start";
+                window.location.href = "/contact";
                 return { success: true, message: "Redirected user to project initiation." };
-              }
-            },
-            {
-              name: "readManifesto",
-              description: "Navigate the user to the MZ manifesto section to understand our philosophy.",
-              inputSchema: {
-                type: "object",
-                properties: {},
-                required: []
-              },
-              execute: async () => {
-                const element = document.querySelector("#manifesto");
-                if (element) {
-                  element.scrollIntoView({ behavior: "smooth" });
-                  return { success: true, message: "Scrolled to manifesto." };
-                }
-                return { success: false, message: "Manifesto section not found." };
               }
             }
           ]

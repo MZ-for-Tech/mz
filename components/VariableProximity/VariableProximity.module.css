@@ -14,7 +14,7 @@
   transition: color 0.1s ease-out, text-shadow 0.1s ease-out, transform 0.1s ease-out;
   /* No permanent will-change: the browser promotes layers while the
      transform is actively animating, and drops them when idle. A permanent
-     hint here creates 100+ composited layers (136 Manifesto letters). */
+     hint here creates 100+ composited layers on a long label. */
 }
 
 .letterSpan::after {

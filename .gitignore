@@ -39,3 +39,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# agent tooling
+# Local agent config, skills and learned taste. Machine-specific and not part
+# of the site — it records how this workspace is worked in, not what the site
+# is, and it changes on every session.
+.commandcode/

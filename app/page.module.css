@@ -147,15 +147,41 @@
   z-index: 3;
 }
 
+/* The scroll cue — centred under the hero, not in the corner.
+ *
+ * This is the indicator the start screen had before it became a launch
+ * screen, brought back for the opposite reason. The screen still cannot
+ * scroll, but scrolling is now a supported gesture that opens the menu, and
+ * it is the one most visitors arriving from an ordinary website will try
+ * first. So it needs teaching, and the teaching has to be unmistakable.
+ *
+ * CENTRED, and glyph-only, are both load-bearing:
+ *
+ *   - The corner was occupied by the Enter prompt, and two framed objects in
+ *     one corner is a control cluster. Centring the cue puts the two
+ *     affordances on different axes, so they read as two different things
+ *     rather than as one toolbar.
+ *   - No text, no border, no fill. A labelled, framed chevron in the corner
+ *     is a scroll-to-top button; a bare mark drifting under the hero is the
+ *     oldest scroll affordance there is, and it cannot be mistaken for
+ *     anything because there is nothing in it but the gesture itself.
+ *
+ * The line keeps the original travel animation, unchanged, and it runs
+ * forever because the gesture it advertises is never "scrolled to the end" —
+ * it is "there is a next screen". */
 .heroScrollWrapper {
   position: absolute;
-  bottom: 4rem;
-  right: 4rem;
+  bottom: 3.25rem;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 0.85rem;
   opacity: 0;
   z-index: 3;
+  /* Decorative, and must never intercept the tap that opens the menu. */
+  pointer-events: none;
 }
 
 .scrollIndicator {
@@ -169,18 +195,30 @@
 @media (max-width: 768px) {
   .heroDescription {
     display: block;
-    bottom: 10rem;
+    bottom: 11rem;
     left: 1.5rem;
     right: 1.5rem;
     font-size: 0.8rem;
     max-width: none;
   }
 
+  /* The cue stays. It used to be hidden here because the screen genuinely
+     could not scroll and the line was lying; now scrolling is the gesture
+     that opens the menu, and a phone is where the expectation of a scrolling
+     page is strongest. Dropping the copy to 11rem clears the centred cue
+     below it, since the description spans the full width and would
+     otherwise sit on top of the line. */
   .heroScrollWrapper {
-    display: none;
+    bottom: 4.5rem;
   }
 
-  
+  /* The description spans edge to edge, so the corner is free on mobile and
+     the Enter line can drop below the cue rather than competing for the
+     centre line. */
+  .enterPrompt {
+    bottom: 1.25rem;
+    right: 1.5rem;
+  }
 
   .heroContent {
     top: 12vh;
@@ -368,7 +406,10 @@
   height: 100%;
   position: relative;
   overflow: hidden;
-  border-radius: 24px;
+  /* Was 24px. The largest surface on the site, so it takes the top of the
+     scale — but 18px, because 24px here was the number a rounded system
+     would use and this one is not. See the measurement in globals.css. */
+  border-radius: var(--radius-xl);
   background: radial-gradient(circle at top right, rgba(var(--color-brand-yellow-rgb), 0.05), transparent 50%),
     radial-gradient(circle at bottom left, rgba(255, 255, 255, 0.02), transparent 40%);
   border: 1px solid rgba(var(--color-text-rgb), 0.1);
@@ -629,7 +670,7 @@
   inset: 0;
   width: 100%;
   height: 100%;
-  background-color: var(--color-tnh-bg, #F5F5F0);
+  background-color: var(--color-tnh-bg, #F5F0E8);
   overflow: hidden;
 }
 
@@ -748,7 +789,7 @@
   flex: none;
   height: 400px;
   position: relative;
-  border-radius: 20px;
+  border-radius: var(--radius-md);
   overflow: hidden;
   border: 1px solid rgba(var(--color-brand-yellow-rgb), 0.2);
   background-color: var(--color-bg);
@@ -789,7 +830,10 @@
   background-color: var(--color-bg);
   border: 1px dashed rgba(var(--color-brand-yellow-rgb), 0.3);
   margin: 1rem;
-  border-radius: 12px;
+  /* Was 12px. A placeholder for a withheld project, in the same slot as the
+     preview above it — so the same shape, at this size's proportion rather
+     than carried over from the other box. */
+  border-radius: var(--radius-md);
 }
 
 .workPrivateIcon {
@@ -1171,5 +1215,119 @@
 
   .mobileServicesWrapper {
     display: flex !important;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Start screen → launcher
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* The Enter prompt: chrome, not a control.
+ *
+ * This WAS a pill — a 1px ring, a dark fill, a 45px target, and a row of
+ * keycap chips reading "Space" and "Scroll". Every one of those said button,
+ * and the keycaps were the worst of it: a shortcut list answers "which keys"
+ * rather than "what can I do here", which is exactly what a control bar looks
+ * like. So it is now bare type — no border, no fill, no chips, one word.
+ *
+ * What makes something read as a button on a page like this is the frame, not
+ * the word. Remove the frame and the same text becomes the console's idle
+ * "press to start" line, which is what it is. The hit area stays comfortably
+ * above the touch floor even though nothing is drawn there — a target does not
+ * need to be visible to be real, and shrinking it to match the glyphs would
+ * only make it harder to use.
+ *
+ * It is still a real <button>: focusable, clickable, and reachable by
+ * keyboard. It just no longer looks like the page's primary action, which it
+ * never was. */
+.enterPrompt {
+  position: absolute;
+  bottom: 4rem;
+  right: 4rem;
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  /* Padding with no background: this is the hit area, and it is what keeps
+     the target honest while the drawn element is 12px of type. */
+  padding: 0.85rem 1rem;
+  background: none;
+  border: 0;
+  border-radius: var(--radius-sm);
+  color: inherit;
+  cursor: pointer;
+  opacity: 0;
+  animation: heroDescIn 1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: 2.70s;
+  will-change: opacity;
+  transition: color 0.3s ease;
+}
+
+.enterPrompt:hover {
+  color: var(--color-brand-yellow);
+}
+
+/* Keyboard focus has to be visible even though the resting state is only
+   type, so the ring is drawn on focus rather than being the default frame —
+   the browser's own focus ring is a rectangle that would look heavier than
+   the element it is on. */
+.enterPrompt:focus-visible {
+  outline: 1px solid var(--color-brand-yellow);
+  outline-offset: 2px;
+}
+
+.enterLabel {
+  font-size: 0.68rem;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+  transition: color 0.3s ease;
+}
+
+/* `.enterKey` — the keycap chip that used to sit beside the label — is gone
+   with the shortcut list it belonged to. A framed keycap is a control, and
+   two controls in the corner of a splash screen outranked the one thing the
+   screen actually wants you to do. The gesture is taught by the centred cue
+   instead, and SPACE/ENTER still work without being advertised. */
+
+/* The exit is driven by GSAP, but CSS animations outrank inline styles —
+   without detaching them first the tween would be invisible. Both the class
+   and the gsap.set() land in the same synchronous block, before paint. */
+:global(html.mz-launching) .heroWord :global(.hero-word-inner),
+:global(html.mz-launching) .heroSubtext,
+:global(html.mz-launching) .heroDescription,
+:global(html.mz-launching) .heroScrollWrapper,
+:global(html.mz-launching) .enterPrompt {
+  animation: none !important;
+}
+
+/* Returning to the start screen replays the intro, compressed — nobody should
+   sit through the 3s cold-load choreography twice. */
+:global(html.mz-returned) .heroWordsRow > :nth-child(1) :global(.hero-word-inner) {
+  animation-delay: 0.05s;
+}
+
+:global(html.mz-returned) .heroWordsRow > :nth-child(2) :global(.hero-word-inner) {
+  animation-delay: 0.15s;
+}
+
+:global(html.mz-returned) .heroWordsRow > :nth-child(3) :global(.hero-word-inner) {
+  animation-delay: 0.25s;
+}
+
+:global(html.mz-returned) .heroSubtext {
+  animation-delay: 0.35s;
+}
+
+:global(html.mz-returned) .heroDescription,
+:global(html.mz-returned) .enterPrompt {
+  animation-delay: 0.45s;
+}
+
+@media (max-width: 768px) {
+  .enterPrompt {
+    bottom: 2rem;
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
   }
 }

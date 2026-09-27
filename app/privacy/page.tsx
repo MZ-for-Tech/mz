@@ -1,36 +1,57 @@
-"use client";
-
 import styles from "./page.module.css";
-import PillNav from "@/components/PillNav/PillNav";
-import { Footer } from "@/components/Footer/Footer";
-import DarkVeil, { DARKVEIL_THEME } from "@/components/DarkVeil/DarkVeil";
+import { TransitionLink } from "@/components/TransitionLink/TransitionLink";
 import ObfuscatedEmail from "@/components/ObfuscatedEmail/ObfuscatedEmail";
 
-const NAV_ITEMS = [
-  { label: 'Work', href: '/#work' },
-  { label: 'Products', href: '/#products' },
-  { label: 'Services', href: '/#services' },
-  { label: 'Contact', href: '/start' }
-];
+/**
+ * The date the policy was last CHANGED, as a literal.
+ *
+ * This used to be `new Date()` formatted on mount, which meant the page
+ * claimed to have been updated every time anyone looked at it — the date
+ * silently rolled over to "today" on every visit, forever. That is worse
+ * than showing nothing: a "last updated" stamp that always says today
+ * tells a visitor (and a regulator) that nobody is maintaining the document,
+ * which is the exact inference a compliance date exists to prevent.
+ *
+ * A literal is also the only honest version of the claim. A build timestamp
+ * is nearly as bad as a render timestamp, for the same reason — it moves on
+ * every deploy whether the policy changed or not. This string changes when
+ * the policy below it changes, which is the only event that should touch it.
+ *
+ * `en-GB` with an explicit Cairo timezone, matching how the rest of the site
+ * writes dates. A hardcoded format rather than `toLocaleDateString` because
+ * the server's locale is not the reader's, and a policy date that renders
+ * as "9/26/2026" for some visitors and "26 September 2026" for others is
+ * noise in a legal document.
+ */
+const LAST_UPDATED = "26 September 2026";
 
+/**
+ * Privacy — a legacy-world page outside the launcher shell.
+ *
+ * A server component now, where it used to be a client one. The only reason
+ * it was a client component was the date above, and with that gone there is
+ * no state, no effect and no hook left in the file — its two interactive
+ * children (TransitionLink, ObfuscatedEmail) carry their own "use client"
+ * and work fine imported by a server parent.
+ *
+ * The Footer used to close this page. It no longer does: a footer implies the
+ * page ends, and this site has a fixed tab bar that is always present. The
+ * back control and the single email are all a policy page actually needs.
+ */
 export default function PrivacyPolicyPage() {
   return (
     <>
       <div className={styles.container}>
-        <div style={{ position: "fixed", top: 0, left: 0, width: "100%", height: "100svh", zIndex: -1 }}>
-          {/* Colors unified with the hero, but the static default variant —
-              these pages should not carry the hero's wave motion. */}
-          <DarkVeil {...DARKVEIL_THEME} variant="default" />
-        </div>
-
-        <PillNav
-          items={NAV_ITEMS}
-        />
+        {/* No background layer of its own, deliberately. The root layout's
+            SiteBackground is switched off on this route — see the note
+            there — so the page sits on the flat `--color-bg` ground with
+            white type and nothing moving. A policy document should be the
+            quietest thing on the site. */}
 
         <main className={styles.main}>
           <h1 className={styles.title}>Privacy Policy</h1>
           <div className={styles.content}>
-            <p>Last updated: {new Date().toLocaleDateString()}</p>
+            <p>Last updated: {LAST_UPDATED}</p>
 
             <h2>1. Information We Collect</h2>
             <p>We collect information you provide directly to us when you use our services, such as when you submit a project brief or contact us. This may include your name, email address, and project details.</p>
@@ -49,7 +70,11 @@ export default function PrivacyPolicyPage() {
           </div>
         </main>
 
-        <Footer />
+        <div className={styles.backRow}>
+          <TransitionLink href="/home" className={styles.backLink}>
+            ← Back to menu
+          </TransitionLink>
+        </div>
       </div>
     </>
   );

@@ -1,12 +1,9 @@
 import styles from "./page.module.css";
 import { Red_Hat_Display } from "next/font/google";
 import { TransitionLink } from "@/components/TransitionLink/TransitionLink";
-import PillNav from "@/components/PillNav/PillNav";
-import { Footer } from "@/components/Footer/Footer";
 import ObfuscatedEmail from "@/components/ObfuscatedEmail/ObfuscatedEmail";
 import Image from "next/image";
 import { PROJECTS } from "@/lib/projects";
-
 import IconCollage from "@/components/nested/IconCollage/IconCollage";
 import IconSprite from "@/components/nested/IconCollage/IconSprite";
 import IframePreview from "@/components/IframePreview/IframePreview";
@@ -23,16 +20,12 @@ const redHatDisplay = Red_Hat_Display({
   display: "swap",
 });
 
-const NAV_ITEMS = [
-  { label: "Work", href: "/#work" },
-  { label: "Products", href: "/#products" },
-  { label: "Services", href: "/#services" },
-  { label: "Contact", href: "/start" },
-];
 
 export const metadata = {
   title: "Nested United | MZ Work",
-  description: PROJECTS["nested-united"]?.tagline || "Nested United project",
+  description:
+    PROJECTS.find((p) => p.slug === "nested-united")?.tagline ||
+    "Nested United project",
 };
 
 export default function NestedUnitedWorld() {
@@ -40,13 +33,15 @@ export default function NestedUnitedWorld() {
   return (
     <div className={`${styles.worldContainer} ${redHatDisplay.variable}`}>
       <IconSprite />
-      <PillNav items={NAV_ITEMS} />
 
       {/* Hero Strip */}
       <section className={styles.hero}>
         <div className={styles.heroContent}>
           <div className={styles.backNav}>
-            <TransitionLink href="/#work" className={styles.backLink}>
+            {/* Was /#work — an in-page anchor into the old scrolling homepage
+                that no longer exists. The launcher's Work panel is the real
+                index now. */}
+            <TransitionLink href="/work" className={styles.backLink}>
               {/* lucide arrow-left (inlined; see PERFORMANCE_REAUDIT §7) */}
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m12 19-7-7 7-7" /><path d="M19 12H5" /></svg> BACK TO WORK
             </TransitionLink>
@@ -335,7 +330,7 @@ export default function NestedUnitedWorld() {
       <section className={styles.ctaSection}>
         <h2 className={styles.ctaTitle}>Building something like this?</h2>
         <div className={styles.ctaButtons}>
-          <TransitionLink href="/start" className={styles.ctaBtn}>
+          <TransitionLink href="/contact" className={styles.ctaBtn}>
             START A PROJECT →
           </TransitionLink>
           <ObfuscatedEmail
@@ -346,7 +341,16 @@ export default function NestedUnitedWorld() {
         </div>
       </section>
 
-      <Footer />
+      {/* The Footer used to close this page. It is gone site-wide — a footer
+          says "the page ends", which the launcher's persistent tab bar
+          contradicts, and it restated the email and services the panels
+          already own. This is the one thing it carried that nothing else
+          does, so it lands here at minimal weight. */}
+      <div className={styles.pageFoot}>
+        <TransitionLink href="/privacy" className={styles.privacyLink}>
+          Privacy Policy
+        </TransitionLink>
+      </div>
     </div>
   );
 }

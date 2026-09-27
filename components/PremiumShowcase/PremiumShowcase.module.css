@@ -24,7 +24,11 @@
   width: 680px;
   max-width: 100%; /* Optimized to share space with side text */
   height: 85vh;
-  border-radius: 40px;
+  /* Was 40px — an outlier well above every other container, and closer to a
+     rounded system than the reference is. This is the largest panel on the
+     site and takes the top of the scale, but the top of the scale is 18px:
+     a big panel needs more corner than a chip, not thirty times more. */
+  border-radius: var(--radius-xl);
   overflow: hidden;
   background-color: var(--color-bg); 
   border: 1px solid rgba(var(--color-text-rgb), 0.15); /* Metallic rim */
@@ -140,7 +144,10 @@
   
   .container {
     height: 50vh;
-    border-radius: 24px;
+    /* Halved with the height, for the same reason: the panel drops from 85vh
+       to 50vh on a phone, and the corner has to keep its proportion to the box
+       or the sides start reading as a lozenge. */
+    border-radius: var(--radius-lg);
   }
   
   .desktopBlur {

@@ -1,0 +1,670 @@
+/* ═══════════════════════════════════════════════════════════════════════
+   Launcher shell
+
+   The chrome sits over the unified DarkVeil background — it is deliberately
+   transparent, because the background is the one thing that survives the
+   transition from the start screen.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.shell {
+  position: relative;
+  z-index: 1;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Legibility scrim over the brightest parts of the shader. Below content,
+   above the background (same z-index, later in tree order). */
+.scrim {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(120% 80% at 50% 0%, rgba(13, 15, 8, 0.72) 0%, rgba(13, 15, 8, 0.35) 45%, transparent 75%),
+    linear-gradient(to bottom, rgba(13, 15, 8, 0.45) 0%, rgba(13, 15, 8, 0.25) 40%, rgba(13, 15, 8, 0.55) 100%);
+}
+
+/* ── Top bar ─────────────────────────────────────────────────────────── */
+
+/* The header is a full-width row, not a centred column: the tab row holds the
+   centre and the clock/privacy cluster holds the right edge, both on one line
+   of context. `justify-content: space-between` on a centred child would push
+   the tabs off-centre, so the top row is a separate block and the tabs keep
+   their own `align-items: center` below it. */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 6;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.15rem 1.5rem 1.6rem;
+  pointer-events: none;
+}
+
+/* ── The mark (mobile only) ───────────────────────────────────────────────
+   MOBILE ONLY, and the base state is `display: none` for that reason. This
+   is the shell's own centred mark, rendered on top of the nav, and it exists
+   because a phone has no room for the site-wide top-left logo — that link
+   collided with the first tab at 375px.
+
+   It is hidden on desktop ON PURPOSE. Desktop was not broken: the site-wide
+   logo in the root layout sits top-left of the viewport, clear of the centred
+   tab row, and it is a real link to `/` with `mix-blend-mode: difference`
+   doing the adaptation. Adding a second, centred copy on desktop would put
+   the studio's mark on screen twice and push the nav down by a row for no
+   reason. So the shell's mark only appears where the layout-owned one cannot
+   work.
+
+   Sizing is a `clamp` with a hard floor because a phone is where the space
+   is scarce: 1.5rem is already most of what a 375px screen can spare above
+   the tabs, and the desktop branch below never renders anyway. */
+.markSlot {
+  display: none;
+}
+
+.mark {
+  width: clamp(1.5rem, 3.2vw, 3rem);
+  height: auto;
+  /* The artwork is flat `#020202`. Collapsing it to white is half the
+     adaptation; the other half is `mix-blend-mode: difference` on the slot's
+     parent, below. Both are needed — a white mark with no blend mode vanishes
+     on the Work tab's full-bleed light stage, which is the same problem
+     `.headerBare` solves for the tab labels. */
+  filter: brightness(0) invert(1);
+  opacity: 0.92;
+}
+
+/* The top row: clock on the right, privacy icon beside it. Above the tabs, so
+   the nav keeps the horizontal centre to itself and nothing crowds it. */
+.headerTop {
+  position: relative;
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 1.1rem;
+  margin-bottom: 0.95rem;
+  pointer-events: auto;
+}
+
+.headerMeta {
+  display: flex;
+  align-items: center;
+  gap: 1.1rem;
+}
+
+/* The clock, named from here so the mobile rule below can hide it by what it
+   IS rather than by where it sits in the row. Hiding `:first-child` works
+   right up until someone puts an icon above the clock, at which point the
+   icon silently disappears instead. */
+.clockSlot {
+  display: block;
+}
+
+/* The privacy control, and the only circle-in-a-box on the site — which was
+   the problem.
+ *
+   The border existed to make the icon read at the same rank as the clock
+   beside it, and it did that. But a bordered square with a circle inside it
+   is two enclosures stacked, and the second one draws the eye to the shape
+   rather than the control. It was the only framed object in the header, so it
+   was the only thing on screen with a hard edge on it, and it pulled focus off
+   a bar that is otherwise five words and a mark.
+
+   The reference has an answer. Every utility in the PS5 top bar — search,
+   settings, the avatar — is a bare glyph sitting straight on the background,
+   with no plate, no border and no box. The chrome is the glyph; the frame was
+   never part of it. That is also the Xbox's profile picture, and it is why the
+   site reads as a console: the utility controls are quiet because they have
+   nothing to announce.
+
+   So the border and the fill are both gone, and the circle stays — a bare
+   "i" in a circle is the Lucide/LINE iconography convention, and on its own it
+   reads as a glyph rather than as a button inside a button. The 40px box
+   stays too, because that is the touch target, not a size: at 28px the
+   control was under the 44px floor and became something you had to aim at on a
+   phone. A transparent box is still a 40px target.
+
+   Hover brings the background back, so the control still acknowledges a
+   pointer and still has a focus state. What it loses is the permanent frame
+   that made it louder than a link to a page nobody visits deserves. */
+.privacy {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+  background: transparent;
+  color: rgba(245, 245, 240, 0.55);
+  text-decoration: none;
+  transition:
+    color 0.25s ease,
+    border-color 0.25s ease,
+    background 0.25s ease;
+}
+
+.privacy:hover {
+  color: var(--color-brand-yellow);
+  /* The frame comes BACK on hover. It was removed from the resting state
+     because a permanent border made this the loudest object in a header that
+     is otherwise five words and a mark — but a control with no hover state at
+     all reads as inert, and this one is a link. Restoring it on approach keeps
+     the acknowledgement without the noise. */
+  border-color: rgba(255, 231, 141, 0.5);
+  background: rgba(13, 15, 8, 0.6);
+}
+
+/* The header's own ground. Opaque, not a fade: the panel scrolls beneath it
+   once the layout stacks, and a gradient that reaches zero alpha at the
+   bottom edge let the first row of tiles show straight through the tab text.
+   A soft-to-transparent tail is kept only at the very bottom so the header
+   still has an edge rather than reading as a band cut across the page. */
+.header::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(13, 15, 8, 0.97) 0%,
+    rgba(13, 15, 8, 0.97) 72%,
+    rgba(13, 15, 8, 0) 100%
+  );
+  pointer-events: none;
+}
+
+/* No plate on the Work tab.
+ *
+ * The plate exists to stop the panel scrolling under the tab row and showing
+ * through the letters. On every other panel the content behind the header is
+ * the dark shader, so a 0.97 wash is invisible — it is only ever doing its
+ * job. On Work the content behind the header is a full-bleed stage, and a
+ * 0.97 plate stops being a safety net and starts being a smudge across the
+ * top of the work. The plate is not wrong in itself — it is the same element
+ * doing the same job on every other panel; the job simply does not exist here.
+ *
+ * THE TABS GO DARK, WITH A LIGHT HALO
+ *
+ * The stage behind Work is full-bleed, and it is either a screenshot or the
+ * light field a project without one stands in on. Dark labels are the
+ * readable answer on both: the light field can be guaranteed light, and a
+ * screenshot that goes dark underneath the tab row is a rarer case than it
+ * sounds — this is the only panel where the stage is a full-bleed image, and
+ * the images are the studio's own, all light at the top.
+ *
+ * The halo is the site's off-white rather than a dark one, so the labels keep
+ * an edge if the surface under them does go dark. The selected tab drops it
+ * entirely: its filled plate is its own contrast, and a light halo on a light
+ * chip is invisible anyway. */
+.headerBare::before {
+  display: none;
+}
+
+.headerBare .tab {
+  color: rgba(13, 15, 8, 0.72);
+  text-shadow: 0 1px 10px rgba(245, 245, 240, 0.85);
+}
+
+.headerBare .tab:hover {
+  color: rgba(13, 15, 8, 0.95);
+  text-shadow: 0 1px 12px rgba(245, 245, 240, 0.95);
+}
+
+.headerBare .tab:focus-visible {
+  color: var(--color-brand-yellow);
+  text-shadow: 0 1px 12px rgba(245, 245, 240, 0.9);
+}
+
+/* The selected tab is a filled plate, which is its own contrast and so needs
+   no halo — and a light one would be invisible on a light chip anyway. */
+.headerBare .tabActive,
+.headerBare .tabActive:hover {
+  text-shadow: none;
+}
+
+.tabs {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: clamp(0.75rem, 2vw, 1.75rem);
+  pointer-events: auto;
+  max-width: 100%;
+}
+
+.tabList {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.9rem, 2.4vw, 2.4rem);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.tab {
+  position: relative;
+  display: inline-block;
+  padding: 0.5rem 0.85rem;
+  font-size: clamp(0.66rem, 0.85vw, 0.82rem);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(245, 245, 240, 0.45);
+  white-space: nowrap;
+  /* Trailing letter-space, reclaimed.
+
+     `letter-spacing` in CSS adds a space AFTER every character, including the
+     last one, so each tab's box is one letter-space wider than the ink inside
+     it. Five tabs therefore carry five invisible gaps on their right, and the
+     row's box is perfectly centred while its visible mass sits left of it.
+
+     Measured at 1280px: the tab list's box centres at exactly 640 — the page
+     centre — but the average of the five label centres is 629. An 11px lie,
+     on a bar that is nothing but labels, which is why it read as "the nav is
+     slightly off" without anyone being able to say why. The box was never the
+     problem, and centring the box harder would have made the drift worse.
+
+     `text-indent` shifts the text right by exactly the trailing space, so the
+     ink lands where the box says it should. It is the one property that can
+     fix this: a negative right margin would move the box without moving the
+     text, and `letter-spacing` on the container has no way to remove a gap
+     that only exists on the last character.
+
+     The offset is the letter-space itself, so it tracks the font size and the
+     tracking automatically. The mobile branch below sets both, and sets the
+     indent to match, or the phone would drift by its own (smaller) amount. */
+  text-indent: 0.3em;
+  transition: color 0.25s ease, background 0.25s ease;
+}
+
+.tab:hover {
+  color: rgba(245, 245, 240, 0.9);
+}
+
+/* The selected tab carries a plate, as in both references — a light box
+   behind the label rather than an underline. The reference's home tab is a
+   filled plate with dark type, and that inversion is what makes the current
+   destination unmistakable at a glance in a bar of eight near-identical
+   words. An underline read as a link, not as a position.
+
+   Was 2px, which squared the plate off — correct for the sharp reference, but
+   a 2px radius on a filled block reads as a rendering miss rather than a
+   decision, especially against a shader background where the plate is the only
+   opaque thing on screen. 3px is a hair more corner than that, which is all
+   the reference asks for at this size (~1% of a 30px plate — see the scale in
+   globals.css) and the most a filled block can take before the corners start
+   reading as soft. */
+.tabActive {
+  color: rgba(13, 15, 8, 0.95);
+  background: rgba(245, 245, 240, 0.88);
+  border-radius: var(--radius-sm);
+}
+
+.tabActive:hover {
+  color: rgba(13, 15, 8, 0.95);
+  background: #f5f5f0;
+}
+
+/* A selected tab lights its own text too, not just the frame — at this size
+   the 1px ring alone is easy to lose against the shader. */
+.tab:focus-visible {
+  color: var(--color-brand-yellow);
+}
+
+.tabActive:focus-visible {
+  color: rgba(13, 15, 8, 0.95);
+  background: var(--color-brand-yellow);
+}
+
+/* ── Brand line ───────────────────────────────────────────────────────── */
+
+/* Fixed to the bottom of the viewport, the way a console closes with its
+   brand line. What is left here is the wordmark alone — the key hints that
+   used to share this row are gone, deliberately, and the keyboard model they
+   described still works. Pointer-events are off so it can never eat a click
+   meant for a tile sitting behind it. */
+.hints {
+  position: fixed;
+  left: 50%;
+  bottom: 1.4rem;
+  transform: translateX(-50%);
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: clamp(0.9rem, 2.2vw, 1.9rem);
+  font-family: var(--font-code);
+  font-size: 0.58rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.hintsBrand {
+  color: rgba(245, 245, 240, 0.28);
+}
+
+/* The brand line is fixed chrome over a full-bleed stage that is light on the
+   Work tab, so it inverts with everything else in the shell. */
+:global([data-stage="light"]) .hintsBrand {
+  color: rgba(13, 15, 8, 0.4);
+  text-shadow: 0 1px 10px rgba(245, 245, 240, 0.8);
+}
+
+/* Same reasoning for the privacy control: a dark plate on a light stage reads
+   as a hole, and a transparent one leaves pale ink on paper. */
+:global([data-stage="light"]) .privacy {
+  background: rgba(245, 245, 240, 0.5);
+  border-color: rgba(13, 15, 8, 0.16);
+  color: rgba(13, 15, 8, 0.6);
+}
+
+:global([data-stage="light"]) .privacy:hover {
+  color: var(--color-brand-yellow);
+  background: rgba(13, 15, 8, 0.72);
+  border-color: rgba(255, 231, 141, 0.5);
+}
+
+/* ── Selection frame ─────────────────────────────────────────────────── */
+
+/* The launcher's whole read is a selection cursor snapping around a grid, so
+   keyboard focus has to be loud. This lives here rather than in each panel's
+   module because [data-tile] is an attribute the panels opt into, which keeps
+   one definition of "selected" for the tab row, the dashboard tiles, the
+   featured card and anything added later.
+
+   The ring replaces the global outline: a bright 1px frame plus a soft bloom
+   is a far stronger signal, and the corner ticks give it the console-shelf
+   read from the reference rather than a plain browser rectangle. */
+.shell :global([data-tile]):focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 1px var(--color-brand-yellow),
+    0 0 26px rgba(255, 231, 141, 0.4);
+}
+
+/* Corner ticks, drawn as eight background gradients (two per corner) so no
+   extra DOM is needed. Opacity is the on/off switch. */
+.shell :global([data-tile])::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  --tick: 14px;
+  --bar: 2px;
+  --sel: var(--color-brand-yellow);
+  background-image:
+    linear-gradient(var(--sel), var(--sel)),
+    linear-gradient(var(--sel), var(--sel)),
+    linear-gradient(var(--sel), var(--sel)),
+    linear-gradient(var(--sel), var(--sel)),
+    linear-gradient(var(--sel), var(--sel)),
+    linear-gradient(var(--sel), var(--sel)),
+    linear-gradient(var(--sel), var(--sel)),
+    linear-gradient(var(--sel), var(--sel));
+  background-repeat: no-repeat;
+  background-size:
+    var(--tick) var(--bar),
+    var(--bar) var(--tick),
+    var(--tick) var(--bar),
+    var(--bar) var(--tick),
+    var(--tick) var(--bar),
+    var(--bar) var(--tick),
+    var(--tick) var(--bar),
+    var(--bar) var(--tick);
+  background-position:
+    left top,
+    left top,
+    right top,
+    right top,
+    left bottom,
+    left bottom,
+    right bottom,
+    right bottom;
+}
+
+.shell :global([data-tile]):focus-visible::before {
+  opacity: 1;
+}
+
+/* ── Panels ──────────────────────────────────────────────────────────── */
+
+/* Clears the fixed header, plus room for the fixed hint bar at the bottom.
+   The header is now taller than the tab row alone: a top line of padding, the
+   clock/privacy row, its gap, the tabs, then bottom padding. This has to clear
+   the lot or the first card slides under it. */
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  padding-top: 7.5rem;
+  /* Room for the brand line, which is a single short wordmark at
+     `bottom: 1.4rem`. This was 5.5rem, sized for the key-hint row that used to
+     sit there — four labelled key caps spanning the bottom of the screen. The
+     reserve outlived what it was reserving, and it is a reserve every panel
+     pays for: the gap is invisible, but it takes real height away from the
+     content above it. */
+  padding-bottom: 3.5rem;
+  /* The launcher scrolls the window, not this box, so a panel that is taller
+     than the viewport has to be able to scroll itself. Lenis drives the
+     window and never sees this element, so without this the page is simply
+     unscrollable once the layout stacks and the content exceeds the screen.
+     `auto` on the y axis only: x stays untouched so nothing sideways scrolls
+     by accident. */
+  overflow-y: auto;
+}
+
+/* A panel taller than the viewport hands scrolling back to the window.
+ *
+ * `overflow-y: auto` on a box that is as tall as its own contents never
+ * scrolls — it only becomes a real scrollport while it is SHORTER than what
+ * it holds. Every panel on this launcher fits the screen, so that has been
+ * fine and has kept Lenis driving the window.
+ *
+ * The brief does not fit: ~1900px of form in a 900px shell, which stretches
+ * this box to the panel's full height. It then presents itself as a
+ * scrollport with no range, and `position: sticky` inside it silently
+ * stops working — the brief's left column tracked the form one-for-one
+ * instead of holding still, which is the whole effect it was built around.
+ *
+ * `visible` takes the box out of the scrollport role entirely, so the
+ * viewport becomes the nearest scrolling ancestor and the column pins as
+ * intended. Nothing else changes: the window was already doing the
+ * scrolling on this panel, Lenis included.
+ */
+.contentWindowScroll {
+  overflow-y: visible;
+}
+
+/* Every panel assembles itself the same way — this is the "converge" on a
+   tab switch, where the shell stays put and only the content moves.
+
+   `backwards`, not `both`. The animation's end state is simply the default
+   (opacity 1, transform none, filter none), so there is nothing to hold — and
+   holding it is what caused a bug. `forwards`/`both` kept `filter` applied to
+   the panel permanently, and any non-`none` filter (blur(0) included) makes an
+   element a containing block for `position: fixed` descendants. The Work
+   panel's stage is fixed to inset 0 and was therefore sizing itself against
+   the panel box instead of the viewport, stopping short of the screen edges.
+   With `backwards` the properties are released the moment the animation ends
+   and `position: fixed` resolves against the viewport again. */
+.panel {
+  animation: panelIn 0.55s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+@keyframes panelIn {
+  from {
+    opacity: 0;
+    transform: translateY(26px) scale(0.985);
+    filter: blur(6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .panel {
+    animation: none;
+  }
+}
+
+@media (max-width: 900px) {
+  /* Keyboard hints are meaningless on a touch device. */
+  .hints {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .header {
+    /* Was 4.5rem (72px) of top padding, which on a 672px phone was 11% of
+       the viewport spent on nothing before the clock row even started. The
+       number was a guess made when the header was a different shape; with
+       the clock gone there is no top row left to separate, so the header
+       starts breathing immediately. 1.1rem is the same top inset the desktop
+       header uses, and it is enough to clear the notch on a phone in
+       landscape without eating the panel. */
+    padding: 1.1rem 1rem 0.9rem;
+  }
+
+  /* The clock is gone on a phone; the privacy control stays and floats.
+
+     The clock was 40px of row, 15px of gap and 17px of clock — 72px of the
+     175px header, and the only part of it that was a decoration rather than
+     a control. Two reasons it is the right thing to lose on the smallest
+     screen:
+
+       - Space. This is the single largest reclaim available, and a phone has
+         least of it. The header was 26% of a 672px viewport.
+
+       - Cost. `LocalClock` runs a `setInterval` at 1Hz that re-renders
+         itself every second for the life of the page. That is a permanent
+         1Hz render on a device that is also running a fullscreen WebGL
+         background, and it is the most expensive thing in the header by a
+         wide margin. A Cairo readout is a desktop flourish; on a phone the
+         space and the frames are worth more than the timezone.
+
+     The row is NOT hidden. It is taken out of flow, because the privacy
+     control lives in it and that is a link — a control outranks a
+     decoration, and hiding the row would have taken the control with it.
+     Absolute against the fixed header puts it top-right, where it already
+     was, at zero cost in layout height. `margin-bottom` is dropped for the
+     same reason: it was spacing against a row that no longer occupies
+     space. */
+  .headerTop {
+    position: absolute;
+    top: 0.7rem;
+    right: 1rem;
+    left: auto;
+    margin-bottom: 0;
+  }
+
+  /* Just the clock, not the row. */
+  .clockSlot {
+    display: none;
+  }
+
+  /* The mark sits above the nav here, and only here — see the note on
+     `.markSlot` for why desktop does not get one. `mix-blend-mode: difference`
+     is the half of the adaptation that CSS cannot fake with a filter alone: it
+     inverts the white against whatever is behind, so the same element reads on
+     the dark shader and on the Work tab's full-bleed light stage.
+
+     The `headerBare` case is the one that needs it. A white mark with no blend
+     mode is invisible on a light stage, and the Work stage is light by
+     construction. */
+  .markSlot {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.5rem;
+    /* Decorative: it must not swallow a click meant for the tabs beneath, and
+       there is nothing behind it to hit. */
+    pointer-events: none;
+    mix-blend-mode: difference;
+  }
+
+  /* The five tabs have to FIT, and they did not.
+
+     Measured at 375px: the tab list laid out 447px wide inside a 328px
+     container — 119px of overhang, ~60px spilling off each side. `overflow-x:
+     auto` scrolled it, so nothing was missing, but `justify-content: center`
+     on a scroll container centres the OVERFLOW rather than the visible
+     window, which pushed Home off the left edge entirely and clipped Contact
+     to "CON". The first and last tabs were unreachable by scrolling too:
+     the container was already showing the centre of the strip.
+
+     Two changes, because either alone leaves a bad result:
+
+       - The horizontal padding goes. At 0.85rem each side that is 27px per
+         tab, 136px across five — more than the entire overflow, and the
+         single biggest cost in the row. It exists so the selected plate has
+         air around the label on desktop, where there is room to spend. Here
+         the plate is still legible with a little less, and the label itself
+         is what has to survive.
+
+       - The gap tightens, and `justify-content` goes to `flex-start`. Once
+         the row fits there is nothing to centre against an overflow, and
+         `flex-start` is the honest value: it makes the strip start where the
+         eye expects, and it is what keeps it correct if the labels ever grow
+         again, because a row that overflows from its left edge is
+         scrollable while one that overflows both ways is not. */
+
+  .tabs {
+    width: 100%;
+    justify-content: flex-start;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .tabList {
+    gap: 0.35rem;
+  }
+
+  .tab {
+    padding: 0.5rem 0.4rem;
+    letter-spacing: 0.12em;
+    /* Tracking changes, so the trailing-space reclaim has to change with it.
+       Left at the desktop 0.3em this would shift the phone's labels 0.18em too
+       far right — a smaller absolute error than desktop's, but in the opposite
+       direction, which is the harder one to see. */
+    text-indent: 0.12em;
+  }
+
+  .content {
+    /* Was 11rem, which was sized for the OLD header: 4.5rem of top padding, a
+       40px clock row, its gap, and the tabs. Removing the clock row and
+       pulling the top padding down to 1.1rem took roughly 100px off the
+       header, and leaving this at 11rem would have opened a 100px band of
+       empty background between the nav and the first tile — the content
+       would start exactly as far down as before while the chrome above it
+       had moved up, so the fix would have looked like nothing happened.
+
+       This now clears the header with a small margin rather than trying to
+       match a number: mark, gap, tabs, bottom padding, plus breathing room
+       for the first band. */
+    padding-top: 5.5rem;
+    padding-bottom: 3rem;
+  }
+}

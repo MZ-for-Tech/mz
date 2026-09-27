@@ -1,0 +1,323 @@
+/* ═══════════════════════════════════════════════════════════════════════
+   Services panel
+
+   Type on the launcher's own tile language. The previous version of this
+   panel was a seven-tile bento carrying three WebGL2 contexts, nineteen
+   infinite CSS animations, four blur layers per card on mobile and a
+   staggered GSAP reveal that promoted every tile to its own compositor
+   layer — a portfolio-piece demonstrating the studio's technical range,
+   built with exactly that range, on a page whose subject is three
+   paragraphs of prose.
+
+   None of that survives. What is left is: the same inset ring, the same 4px
+   radius, the same yellow hover and the same 6px gutter as the work shelf,
+   so this panel reads as part of the launcher rather than as a page someone
+   pasted into it.
+
+   No WebGL, no canvas, no keyframes, no will-change, no blur. The only
+   transitions here are colour and opacity on a static layout, which is
+   effectively free.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  width: min(1600px, 100%);
+  flex: 1;
+  min-height: 0;
+  /* Same stacked-bands structure as the launcher home, and the same idea:
+     a gap several times the 6px card gutter, so the intro and the closer
+     read as different kinds of thing rather than as more cards.
+
+     The band gap is smaller than the home panel's, and that is measured
+     rather than chosen. This panel has three bands where the home panel has
+     two, and the shell only leaves 577 - 120 (header) - 56 (brand line
+     reserve) = 401px of content box on a short viewport. At the home
+     panel's clamp the two gaps alone came to 82px and the block overflowed
+     by ~50px — which stops the panel centring and drops the closer straight
+     onto the fixed wordmark. This fits inside the box instead. */
+  justify-content: center;
+  gap: clamp(1rem, 2vw, 1.6rem);
+  margin: 0 auto;
+  padding: 0 var(--spacing-container) 1.5rem;
+}
+
+/* ── Intro ──────────────────────────────────────────────────────────────
+   The band label and the count, stacked. This is the one place the page
+   gets a display size: everything below it is body text, so the hierarchy
+   is carried once at the top rather than by competing headings. */
+
+.intro {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  flex: none;
+  text-align: center;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: clamp(1.6rem, 3.4vw, 2.75rem);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  color: var(--color-text);
+}
+
+.count {
+  margin: 0;
+  font-family: var(--font-code);
+  font-size: clamp(0.5rem, 0.72vw, 0.66rem);
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  /* The trailing space that tracking adds to the last glyph pushes a
+     centred line visibly right of true centre; this pulls it back by
+     exactly half of it. Same correction as .trustTitle on the home panel. */
+  text-indent: 0.34em;
+  color: rgba(245, 245, 240, 0.42);
+}
+
+/* ── Pillars ────────────────────────────────────────────────────────────
+   One row of equal pillars, each carrying its own words.
+
+   `auto-fit` with a floor rather than a column count, for the same reason
+   the client roster works this way on the launcher home: a fourth pillar
+   takes the next slot and a fifth wraps, each staying the same width, and
+   nothing in this stylesheet is edited to accommodate it. The count, the
+   numbering and the layout are all derived from lib/services.
+
+   The floor is wide enough that a phrase like "Cost-optimized local
+   inference" never has to break mid-word next to a hairline. */
+
+.pillars {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+  gap: 6px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.pillar {
+  display: flex;
+  min-width: 0;
+}
+
+/* ── Card ───────────────────────────────────────────────────────────────
+   The launcher's one tile treatment, at card size. Identical surface to
+   .hero / .tile on the launcher home — `inset 0 0 0 1px` rather than a
+   `border`, so the ring doesn't eat a pixel of the card's own box. */
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: clamp(1.15rem, 1.9vw, 1.6rem);
+  /* Was 4px. The services cards are full-size surfaces, so they take the top
+     of the scale for a card — 10px, which is the same ~4% the reference uses
+     on a panel of this proportion. */
+  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, 0.04);
+  box-shadow: inset 0 0 0 1px rgba(245, 245, 240, 0.1);
+  transition: box-shadow 0.25s ease, background 0.25s ease;
+}
+
+.card:hover {
+  background: rgba(255, 255, 255, 0.06);
+  box-shadow: inset 0 0 0 1px rgba(245, 245, 240, 0.24);
+}
+
+/* ── Head ───────────────────────────────────────────────────────────────
+   The ordinal and the verb, on one baseline and pushed to opposite ends —
+   the console's own pairing. The ordinal is the quietest thing on the
+   card: it's a position, not content, and it stays at code-label scale so
+   it never competes with the pillar name beside it. */
+
+.head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: clamp(0.9rem, 1.5vw, 1.2rem);
+}
+
+.id {
+  font-family: var(--font-code);
+  font-size: 0.6rem;
+  line-height: 1;
+  letter-spacing: 0.18em;
+  color: rgba(245, 245, 240, 0.3);
+  font-variant-numeric: tabular-nums;
+  transition: color 0.25s ease;
+}
+
+.pillarLabel {
+  font-family: var(--font-code);
+  font-size: clamp(0.56rem, 0.7vw, 0.66rem);
+  line-height: 1;
+  letter-spacing: 0.3em;
+  /* Tracking's trailing space again — this time pulling the label's right
+     edge in so it sits flush with the card's content edge. */
+  margin-right: -0.3em;
+  text-transform: uppercase;
+  color: rgba(245, 245, 240, 0.5);
+  transition: color 0.25s ease;
+}
+
+.card:hover .id,
+.card:hover .pillarLabel {
+  color: var(--color-brand-yellow);
+}
+
+/* ── Title & tagline ──────────────────────────────────────────────────────
+   The service name, then the sentence that sells it. The title is the only
+   display type inside the card; the tagline steps down to body and sits
+   muted, because it's supporting copy for the title rather than a
+   competing heading. */
+
+.cardTitle {
+  margin: 0 0 0.5rem;
+  font-family: var(--font-heading);
+  font-size: clamp(1.15rem, 1.9vw, 1.6rem);
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: var(--color-text);
+  text-wrap: balance;
+}
+
+.tagline {
+  margin: 0 0 clamp(0.95rem, 1.6vw, 1.3rem);
+  font-family: var(--font-base);
+  font-size: clamp(0.85rem, 1.05vw, 0.95rem);
+  line-height: 1.5;
+  color: rgba(245, 245, 240, 0.6);
+  text-wrap: pretty;
+}
+
+/* ── Capabilities ───────────────────────────────────────────────────────
+   A hairline above the list and a fixed gap between rows. The rule is what
+   makes these read as a *specification* rather than as loose bullet
+   fragments — a capability list without one is indistinguishable from a
+   set of tags, and a tag cloud is a worse thing to buy software from.
+
+   A dash rather than a bullet glyph: at this size a filled dot reads as a
+   list item from a document, where a hairline reads as a console readout,
+   which is the register the rest of the launcher is in. */
+.capabilities {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  list-style: none;
+  margin: auto 0 0;
+  padding: clamp(0.85rem, 1.4vw, 1.1rem) 0 0;
+  border-top: 1px solid rgba(245, 245, 240, 0.1);
+}
+
+.capability {
+  position: relative;
+  padding-left: 1rem;
+  font-family: var(--font-base);
+  font-size: clamp(0.8rem, 0.95vw, 0.875rem);
+  line-height: 1.45;
+  color: rgba(245, 245, 240, 0.5);
+  transition: color 0.25s ease;
+}
+
+/* The dash is a pseudo-element rather than a list marker so it can hang off
+   the left edge and pick up the same hover colour as the text. */
+.capability::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.62em;
+  width: 6px;
+  height: 1px;
+  background: rgba(245, 245, 240, 0.28);
+  transition: background 0.25s ease, width 0.25s ease;
+}
+
+.card:hover .capability {
+  color: rgba(245, 245, 240, 0.78);
+}
+
+.card:hover .capability::before {
+  width: 9px;
+  background: var(--color-brand-yellow);
+}
+
+/* ── Closer ─────────────────────────────────────────────────────────────
+   A link, not a button. Nothing here has a destination beyond "start a
+   brief", and the launcher already has a form for that; a filled CTA plate
+   on a page with no other filled plates would be the loudest thing on
+   screen, which is not what a footer link is for.
+
+   The reserve at the bottom is not padding, and that was the first thing
+   tried. The panel is `justify-content: center`, so the block centres
+   itself: adding bottom padding just makes the panel taller, which moves
+   the whole thing up by half the addition and pushes the closer down by
+   the other half. Measured, it got worse — 30px of overlap became 51px.
+
+   The fix is to take the height out of the *cards*, so the whole centred
+   block is short enough for the closer to land above the wordmark. The
+   capabilities list was what made each card 250px tall for three short
+   lines; trimming its bottom padding and the card's own gives back
+   roughly the 40px needed, and costs the card nothing legible.
+
+   The wordmark itself is fixed at `bottom: 1.4rem`, so the reserve that
+   actually matters is the shell's 3.5rem content padding — this panel just
+   has to fit inside it. */
+.closer {
+  margin: 0;
+  text-align: center;
+}
+
+.closerLink {
+  display: inline-block;
+  padding: 0.35rem 0;
+  font-family: var(--font-code);
+  font-size: clamp(0.56rem, 0.72vw, 0.66rem);
+  letter-spacing: 0.28em;
+  /* Same trailing-space correction as the two centred labels above. */
+  text-indent: 0.28em;
+  text-transform: uppercase;
+  color: rgba(245, 245, 240, 0.45);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(245, 245, 240, 0.16);
+  transition: color 0.25s ease, border-color 0.25s ease;
+}
+
+.closerLink:hover {
+  color: var(--color-brand-yellow);
+  border-color: rgba(255, 231, 141, 0.55);
+}
+
+/* ── Responsive ──────────────────────────────────────────────────────────
+   Nothing structural. `auto-fit` with a floor already stacks the pillars on
+   a phone, and every size above is a clamp, so the panel is correct at
+   390px and at 2560px without a single breakpoint being told to restore a
+   shape. */
+
+@media (max-width: 1000px) {
+  /* The shell's content box is what scrolls (see MenuShell), so once the
+     layout is taller than the viewport the block has to stop being centred
+     — centring an overflowing block is what puts the first card up under
+     the header on a phone. Same reason, same fix, as the launcher home. */
+  .panel {
+    justify-content: flex-start;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .id,
+  .pillarLabel,
+  .capability,
+  .capability::before,
+  .closerLink {
+    transition: none;
+  }
+}

@@ -1,42 +1,31 @@
 "use client";
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useCallback } from "react";
 import styles from "./page.module.css";
-import PillNav from "../components/PillNav/PillNav";
-import { Footer } from "../components/Footer/Footer";
-import ScrollExpand from "@/components/ScrollExpand/ScrollExpand";
-import DataStreamHero from "@/components/DataStreamHero/DataStreamHero";
-import { StatusDot } from "@/components/StatusDot/StatusDot";
-const Waves = dynamic(() => import("@/components/Waves/Waves"), { ssr: false });
-const OcrScanner = dynamic(() => import("@/components/OcrScanner/OcrScanner").then(m => m.OcrScanner), { ssr: false });
-import DarkVeil, { DARKVEIL_THEME } from "@/components/DarkVeil/DarkVeil";
 import { gsap } from "@/lib/gsap";
-import dynamic from "next/dynamic";
-import Image from "next/image";
-import { useGSAP } from "@gsap/react";
-const ServicesAccordion = dynamic(() => import("@/components/ServicesAccordion/ServicesAccordion"), { ssr: false });
-import PremiumShowcase from "@/components/PremiumShowcase/PremiumShowcase";
-import Manifesto from "@/components/Manifesto/Manifesto";
-
-import ObfuscatedEmail from "@/components/ObfuscatedEmail/ObfuscatedEmail";
-import { TransitionLink } from "@/components/TransitionLink/TransitionLink";
-import { WorkGrid } from "@/components/sections/WorkGrid";
+import { useRouter } from "next/navigation";
+import { isStartScreenFirstRender } from "@/lib/mzNav";
 import VariableProximity from "@/components/VariableProximity/VariableProximity";
-import IconSprite from "@/components/nested/IconCollage/IconSprite";
 
-
-
-
-const NAV_ITEMS = [
-  { label: 'Work', href: '#work' },
-  { label: 'Products', href: '#products' },
-  { label: 'Services', href: '#services' },
-  { label: 'Contact', href: '/start' }
-];
-
+/**
+ * The start screen.
+ *
+ * This is the only thing left of the old scrolling homepage — everything
+ * below the hero (manifesto, services, products, work, research, CTA) was
+ * retired into the /menu panels.
+ *
+ * The screen itself does not scroll, and the nav pill that used to sit in its
+ * corner is gone: this is a cinematic splash with one job, so a competing
+ * navigation surface on it was pure noise. Clicking anywhere on it — or
+ * pressing SPACE/ENTER — plays `launch()`: the hero elements leave, the
+ * unified background stays, and the launcher converges in on /menu. See
+ * lib/mzNav for why no wipe plays.
+ */
 export default function Home() {
   const mainRef = useRef<HTMLElement>(null);
+  const launchingRef = useRef(false);
+  const router = useRouter();
+
   const [isReadyForHeavy, setIsReadyForHeavy] = useState(false);
-  const [darkVeilVisible, setDarkVeilVisible] = useState(false);
   const [isLogoLoaded, setIsLogoLoaded] = useState(false);
   const [reduceMotion, setReduceMotion] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -65,14 +54,10 @@ export default function Home() {
   }, [isMobile]);
 
   useEffect(() => {
-    let r1: number;
-    let r2: number;
-    const onReady = () => {
-      setIsReadyForHeavy(true);
-      r1 = requestAnimationFrame(() => {
-        r2 = requestAnimationFrame(() => setDarkVeilVisible(true));
-      });
-    };
+    // The 3D logo (and its WebGL context) is not created until the entry wipe
+    // has finished — same gate the hero background used before the background
+    // moved to the root layout.
+    const onReady = () => setIsReadyForHeavy(true);
     window.addEventListener('mz-transition-done', onReady, { once: true });
 
     // Fallback just in case event fired before mount
@@ -80,306 +65,332 @@ export default function Home() {
     return () => {
       window.removeEventListener('mz-transition-done', onReady);
       clearTimeout(timer);
-      cancelAnimationFrame(r1);
-      cancelAnimationFrame(r2);
     };
   }, []);
 
-  useGSAP(() => {
-    // Respect prefers-reduced-motion
-    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  // Returning to the start screen (Escape, back button, logo link) replays the
+  // intro — but compressed, so the user never waits through the 3s cold-load
+  // choreography twice. `mz-launching` is cleared here too: it is what hands
+  // the hero transforms back to the CSS entry animations.
+  useEffect(() => {
+    if (!isStartScreenFirstRender()) {
+      document.documentElement.classList.add("mz-returned");
+      const t = setTimeout(() => {
+        document.documentElement.classList.remove("mz-returned");
+      }, 3000);
+      document.documentElement.classList.remove("mz-launching");
+      return () => clearTimeout(t);
+    }
+    document.documentElement.classList.remove("mz-launching");
+  }, []);
 
-    if (prefersReducedMotion) {
-      gsap.set(".case-item", { opacity: 1, y: 0 }); // Ensure case items are visible without scroll trigger
+  /**
+   * Hero out → navigate. The background is never touched: it lives in the
+   * root layout, so it simply sits there while the foreground clears.
+   */
+  const launch = useCallback((href: string) => {
+    if (launchingRef.current) return;
+    launchingRef.current = true;
+
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const go = () => router.push(href, { scroll: true });
+
+    if (reduce) {
+      go();
       return;
     }
 
-    // Entry animation is now fully handled by CSS in page.module.css
-    // Only scroll-triggered animations remain here
+    // CSS animations outrank inline styles, so the entry animations have to be
+    // detached before GSAP can move the same elements. Both happen in this
+    // synchronous block, before the next paint — no flash of the reset state.
+    document.documentElement.classList.add("mz-launching");
+    gsap.set(".hero-word-inner", { yPercent: 0, rotate: 0, opacity: 1 });
+    gsap.set(".hero-subtext", { opacity: 1, y: 0 });
+    gsap.set(".hero-desc", { opacity: 1, y: 0 });
 
-    // Hero Parallax on Scroll
-    gsap.to(".hero-word", {
-      scale: 0.85,
-      opacity: 0,
-      y: -100,
-      ease: "none",
-      scrollTrigger: {
-        trigger: ".hero-section",
-        start: "top top",
-        end: "bottom top",
-        scrub: true,
+    gsap.timeline({ onComplete: go })
+      .to(".hero-word-inner", {
+        yPercent: -140,
+        rotate: -5,
+        duration: 0.65,
+        ease: "power4.in",
+        stagger: 0.05,
+      }, 0)
+      .to(".hero-subtext", { opacity: 0, y: -30, duration: 0.4, ease: "power2.in" }, 0.08)
+      .to(".hero-desc", { opacity: 0, y: -20, duration: 0.4, ease: "power2.in" }, 0.14)
+      .to(".hero-enter", { opacity: 0, y: 14, duration: 0.3, ease: "power2.in" }, 0)
+      /* The scroll cue leaves with the Enter line it sits beside — the screen
+         is committing to a destination, and a "keep going" prompt surviving
+         the decision would contradict it. */
+      .to(".hero-scroll", { opacity: 0, y: 14, duration: 0.3, ease: "power2.in" }, 0)
+      .to(".hero-logo-3d", { opacity: 0, duration: 0.45, ease: "power2.in" }, 0.1);
+  }, [router]);
+
+  // SPACE / ENTER anywhere on the start screen launches the menu.
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.code !== "Space" && e.key !== "Enter") return;
+      const target = e.target as HTMLElement | null;
+      // Let focused links/buttons handle their own activation.
+      if (target?.closest?.("a, button, input, textarea, select")) return;
+      e.preventDefault();
+      launch("/home");
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [launch]);
+
+  /**
+   * A scroll gesture launches the menu, the same as a click or SPACE/ENTER.
+   *
+   * The whole point of this screen is that it has nothing to scroll, and a
+   * visitor arriving from a traditional website will scroll first — out of
+   * habit, before reading the prompt. On every other site that gesture means
+   * "there's more below". Here it means "this is all there is", so it does
+   * what they were actually reaching for and opens the menu.
+   *
+   * THREE THINGS MAKE THIS SAFE RATHER THAN TRIGGER-HAPPY:
+   *
+   * 1. The screen genuinely cannot scroll. The hero is `100svh` with
+   *    `overflow: hidden` and nothing below it, so there is no content a
+   *    scroll could be reaching for — the gesture is never stolen from a real
+   *    scroll position. This is the whole reason it is safe, and it is also
+   *    why the gesture must never be added to a page that does scroll.
+   *
+   * 2. A direction, an intent threshold, and a one-way lockout. A single
+   *    trackpad flick arrives as a burst of momentum events, so counting
+   *    events would fire on the first one and then re-fire a dozen times
+   *    through the rest of the flick. Instead the gesture accumulates
+   *    distance until it passes a threshold in one consistent direction, and
+   *    `launchingRef` then latches it shut for good. Upward scrolls are
+   *    ignored entirely: nobody scrolls up to ask for more.
+   *
+   * 3. It is registered passively and never calls preventDefault. Lenis
+   *    owns the wheel on this site (`smoothWheel`), and a non-passive
+   *    listener here would race it — the browser would wait on this handler
+   *    before Lenis ever saw the event. Letting the event through untouched
+   *    means the launch is purely additive: on a page that cannot scroll,
+   *    Lenis has nothing to do with it either way.
+   */
+  useEffect(() => {
+    let accumulated = 0;
+
+    const reset = () => {
+      accumulated = 0;
+    };
+
+    const onWheel = (e: WheelEvent) => {
+      // `launch()` owns the latch: it sets `launchingRef` itself and returns
+      // early on a second call. Setting it here first would make that guard
+      // fire on the very call we meant to run, and the navigation would never
+      // happen. Checking it is enough — it is the same one-way switch.
+      if (launchingRef.current) return;
+
+      // Horizontal intent belongs to a carousel or a sideways swipe, not to
+      // "show me more". A diagonal trackpad swipe stays ambiguous.
+      if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) return reset();
+
+      // `deltaMode` decides the unit, and the unit is not always pixels.
+      // Firefox and some Linux setups report whole LINES (~3 units) per
+      // notch, where a pixel threshold would need thirty notches to trip and
+      // the gesture would silently never fire. Page mode is the only one
+      // already in pixels. Normalising here is what makes the threshold mean
+      // the same thing on every browser.
+      const unit = e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? 400 : 1;
+      const delta = e.deltaY * unit;
+
+      // Reversing direction abandons the gesture rather than cancelling the
+      // distance already banked — a user who scrolls down, changes their
+      // mind and scrolls back up should land back at zero, not launch.
+      if (accumulated !== 0 && Math.sign(delta) !== Math.sign(accumulated)) {
+        reset();
       }
-    });
+      if (delta <= 0) return reset();
 
+      accumulated += delta;
+      if (accumulated < 90) return;
 
-    // Case studies scroll animation
-    const caseItems = gsap.utils.toArray(".case-item") as HTMLElement[];
-    caseItems.forEach((item) => {
-      gsap.fromTo(item, {
-        opacity: 0,
-        y: 30
-      }, {
-        opacity: 1,
-        y: 0,
-        duration: 0.8,
-        ease: "power2.out",
-        scrollTrigger: {
-          trigger: item,
-          start: "top 85%",
-        }
-      });
-    });
+      launch("/home");
+    };
 
-  }, { scope: mainRef });
+    // Touch: the same gesture without a wheel event. The start screen has no
+    // scroll of its own, so on a phone the only way to express "keep going"
+    // is a swipe — and this is the audience the idea is really for, since a
+    // phone browser is where the expectation of a scrolling page is
+    // strongest. Measured in px rather than in events, for the same reason
+    // the wheel path is.
+    let touchStartY: number | null = null;
+    const onTouchStart = (e: TouchEvent) => {
+      touchStartY = e.touches[0]?.clientY ?? null;
+    };
+    const onTouchMove = (e: TouchEvent) => {
+      if (touchStartY === null || launchingRef.current) return;
+      const y = e.touches[0]?.clientY;
+      if (y === undefined) return;
+      // Finger moving UP the screen is content scrolling away, which is the
+      // gesture that means "next" everywhere else.
+      if (touchStartY - y < 90) return;
+      touchStartY = null;
+      launch("/home");
+    };
+    const onTouchEnd = () => {
+      touchStartY = null;
+    };
+
+    window.addEventListener("wheel", onWheel, { passive: true });
+    window.addEventListener("touchstart", onTouchStart, { passive: true });
+    window.addEventListener("touchmove", onTouchMove, { passive: true });
+    window.addEventListener("touchend", onTouchEnd, { passive: true });
+    window.addEventListener("touchcancel", onTouchEnd, { passive: true });
+
+    // A wheel burst arrives as discrete events, and a momentum scroll can
+    // pause long enough to look finished. The idle reset stops two separate
+    // flicks a few seconds apart from summing into one launch, which would
+    // otherwise fire on a gesture the user never made as a single movement.
+    const idle = window.setInterval(reset, 400);
+
+    return () => {
+      window.clearInterval(idle);
+      window.removeEventListener("wheel", onWheel);
+      window.removeEventListener("touchstart", onTouchStart);
+      window.removeEventListener("touchmove", onTouchMove);
+      window.removeEventListener("touchend", onTouchEnd);
+      window.removeEventListener("touchcancel", onTouchEnd);
+    };
+  }, [launch]);
 
   return (
-    <>
-      <IconSprite />
-      <div style={{ position: "relative", zIndex: 10 }}>
-        <main ref={mainRef} className={styles.main}>
-          <PillNav
-            items={NAV_ITEMS}
-          />
+    <div style={{ position: "relative", zIndex: 10 }}>
+      <main ref={mainRef} className={styles.main}>
 
-          {/* Sticky Hero Wrapper */}
-          <div style={{ position: "sticky", top: 0, height: "100svh", width: "100%", zIndex: 1, overflow: "hidden" }}>
+        {/* 01 — Start screen */}
+        <section className={`${styles.hero} hero-section`}>
+          {/* NO click-to-launch, and no `cursor: pointer` on the hero.
 
-            {/* 01 — Hero */}
-            <section className={`${styles.hero} hero-section`}>
-              {/* DarkVeil background — deferred until wipe finishes with smooth fade-in */}
-              <div
-                style={{
-                  position: "absolute",
-                  inset: 0,
-                  zIndex: 0,
-                  opacity: darkVeilVisible ? 1 : 0,
-                  transition: 'opacity 1.2s ease-out'
-                }}
-              >
-                {isReadyForHeavy && <DarkVeil {...DARKVEIL_THEME} resolutionScale={0.75} />}
-              </div>
+              The 3D logo underneath is a real drag object: MzLogo3D binds its
+              own pointerdown/pointermove to spin the mark, and sets
+              `cursor: grab` on hover. A section-level click handler swallows
+              that — the pointer goes down, the mark starts turning, and the
+              menu opens underneath it, so the drag is unusable and the logo
+              is worth touching in the first place.
 
-              {/* 3D Logo Background - Deferred until wipe finishes and desktop only */}
-              {isReadyForHeavy && !isMobile && MzLogo3DComponent && (
-                <div
-                  className={styles.heroLogo3D}
-                  style={{
-                    opacity: isLogoLoaded ? 1 : 0,
-                    transition: 'opacity 0.3s ease-out'
-                  }}
-                >
-                  <MzLogo3DComponent
-                    onLoad={() => setIsLogoLoaded(true)}
-                    // Data is usually ready ~1.1–1.5s after load (wipe ends at
-                    // 1.02s). The fade-in waits for the assembly to start (one
-                    // short beat later) so the pre-assembly hold is never
-                    // visible — the logo appears mid-flight and converges as
-                    // the hero words land (~2.8s). 400ms keeps that window
-                    // tight enough that there's no "empty hero" feel.
-                    assemblyStartDelayMs={400}
-                  />
-                </div>
-              )}
+              The explicit Enter control below, SPACE/ENTER, and a scroll
+              gesture all still open the menu, and none of them can collide
+              with a drag. A click that lands on empty background now simply
+              does nothing, which is the correct result: there is no target
+              there, and the affordance is stated rather than implied. */}
 
-              <div className={styles.heroContent}>
-                <div className={styles.heroWordsRow}>
-                  <div className={`${styles.heroWord} hero-word ${styles.heroWordHover}`}>
-                    <div className="hero-word-inner">
-                      <a href="https://nullhypothesis.dev" target="_blank" rel="noopener noreferrer">
-                        {reduceMotion ? "RESEARCH." : (
-                          <VariableProximity
-                            label="RESEARCH."
-                            fromFontVariationSettings="'wght' 400"
-                            toFontVariationSettings="'wght' 900"
-                            containerRef={mainRef}
-                            radius={200}
-                            falloff="exponential"
-                          />
-                        )}
-                      </a>
-                    </div>
-                  </div>
-                  <div className={`${styles.heroWord} hero-word`}>
-                    <div className="hero-word-inner">
-                      {reduceMotion ? "SOFTWARE." : (
-                        <VariableProximity
-                          label="SOFTWARE."
-                          fromFontVariationSettings="'wght' 400"
-                          toFontVariationSettings="'wght' 900"
-                          containerRef={mainRef}
-                          radius={200}
-                          falloff="exponential"
-                        />
-                      )}
-                    </div>
-                  </div>
-                  <div className={`${styles.heroWord} hero-word`}>
-                    <div className="hero-word-inner">
-                      {reduceMotion ? "KNOWLEDGE." : (
-                        <VariableProximity
-                          label="KNOWLEDGE."
-                          fromFontVariationSettings="'wght' 400"
-                          toFontVariationSettings="'wght' 900"
-                          containerRef={mainRef}
-                          radius={200}
-                          falloff="exponential"
-                        />
-                      )}
-                    </div>
-                  </div>
-                </div>
-                <div className={`${styles.heroSubtext} hero-subtext`}>In that order.</div>
-              </div>
-
-              <div className={`${styles.heroDescription} hero-desc`}>
-                Engineered in Cairo. Owned by you. We build proprietary systems and transfer the exact knowledge you need to run them.
-              </div>
-
-
-
-              <div className={`${styles.heroScrollWrapper} hero-scroll-wrapper`}>
-                <div className={`${styles.scrollIndicator} scroll-indicator-line`}>
-                  <div className={styles.scrollLine}></div>
-                </div>
-              </div>
-            </section>
-          </div>
-
-          <div style={{
-            background: "var(--page-bg, var(--color-bg))",
-            position: "relative",
-            zIndex: 2,
-            borderTopLeftRadius: "40px",
-            borderTopRightRadius: "40px",
-            boxShadow: "0 -20px 80px rgba(0,0,0,0.8)"
-          }}>
-            <div style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0, pointerEvents: "none", zIndex: -1 }}>
-              <div style={{ position: "sticky", top: 0, height: "100svh", overflow: "hidden" }}>
-                <Waves
-                  lineColor="rgba(141, 184, 42, 0.15)"
-                  backgroundColor="transparent"
-                  waveSpeedX={0.02}
-                  waveSpeedY={0.01}
-                  waveAmpX={40}
-                  waveAmpY={20}
-                  xGap={12}
-                  yGap={36}
-                />
-              </div>
+          {/* 3D Logo — desktop only, deferred until the entry wipe finishes */}
+          {isReadyForHeavy && !isMobile && MzLogo3DComponent && (
+            <div
+              className={`${styles.heroLogo3D} hero-logo-3d`}
+              style={{
+                opacity: isLogoLoaded ? 1 : 0,
+                transition: 'opacity 0.3s ease-out'
+              }}
+            >
+              <MzLogo3DComponent
+                onLoad={() => setIsLogoLoaded(true)}
+                // Data is usually ready ~1.1–1.5s after load (wipe ends at
+                // 1.02s). The fade-in waits for the assembly to start (one
+                // short beat later) so the pre-assembly hold is never
+                // visible — the logo appears mid-flight and converges as
+                // the hero words land (~2.8s). 400ms keeps that window
+                // tight enough that there's no "empty hero" feel.
+                assemblyStartDelayMs={400}
+              />
             </div>
+          )}
 
-            <PremiumShowcase />
-            <Manifesto />
-
-            {/* 03 — Services/Capabilities */}
-            <ServicesAccordion />
-
-            {/* 04 — Products */}
-            <section id="products" className={styles.products}>
-              <div className={styles.sectionHeader}>Products</div>
-
-              <div className={styles.productScrollContainer}>
-                {[1].map((num) => (
-                  <div key={num} className={styles.productSnapItem}>
-                    <div className={styles.showcaseCard}>
-                      <Image
-                        src="/mz-logo.min.svg"
-                        alt="MZ Watermark"
-                        width={600}
-                        height={600}
-                        className={styles.productWatermark}
-                        style={{ opacity: 0.05, filter: "brightness(0) invert(1)" }}
+          <div className={styles.heroContent}>
+            <div className={styles.heroWordsRow}>
+              <div className={`${styles.heroWord} hero-word ${styles.heroWordHover}`}>
+                <div className="hero-word-inner">
+                  <a href="https://nullhypothesis.dev" target="_blank" rel="noopener noreferrer">
+                    {reduceMotion ? "RESEARCH." : (
+                      <VariableProximity
+                        label="RESEARCH."
+                        fromFontVariationSettings="'wght' 400"
+                        toFontVariationSettings="'wght' 900"
+                        containerRef={mainRef}
+                        radius={200}
+                        falloff="exponential"
                       />
-                      <div className={styles.proprietaryStamp}>
-                        MZ © PROPRIETARY TECHNOLOGY
-                      </div>
-
-                      <div className={styles.productContent}>
-                        <div className={styles.productNameWrapper}>
-                          <div className={styles.productName}>Occhio</div>
-                          <div className={styles.pronunciation}>/ OK-yoo /</div>
-                        </div>
-                        <div className={styles.productTagline}>An OCR that reads Arabic the way Arabic should be read</div>
-                        <div className={styles.productDesc}>Most document processing tools were built for Latin scripts and extended to Arabic later. Occhio starts where the region starts. Arabic, French, and English as equal priorities, designed for the institutional documents governments, universities, and enterprises in MENA actually handle.</div>
-                        <div style={{ marginTop: '2rem' }}>
-                          <StatusDot status="IN DEVELOPMENT" />
-                        </div>
-                      </div>
-                      <div className={styles.productVisual}>
-                        <OcrScanner />
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </section>
-
-
-            {/* 05 — Work */}
-            <WorkGrid />
-
-
-
-
-
-            {/* 07 — TNH Portal / ScrollExpand */}
-            <section className={styles.tnhPortalWrapper}>
-              <ScrollExpand
-                customMedia={
-                  <div className={styles.tnhMediaBg}>
-                    <DataStreamHero />
-                  </div>
-                }
-                title="Our research doesn't stay internal."
-                useWindowScroll
-                startWidth={50}
-                startHeight={60}
-                startRadius={28}
-                endRadius={0}
-                mediaZoom={1.0}
-                scrollDistance={1.0}
-                holdDistance={0.35}
-                overlayScrim={0}
-              >
-                <div className={styles.tnhOverlayContent}>
-                  <div className={styles.tnhText}>
-                    Our research doesn&apos;t stay internal.
-                  </div>
-                  <a
-                    href="https://nullhypothesis.dev"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={styles.tnhLink}
-                  >
-                    ↗ nullhypothesis.dev
+                    )}
                   </a>
                 </div>
-              </ScrollExpand>
-            </section>
-
-            {/* 08 — CTA */}
-            <section id="contact" className={styles.ctaSection}>
-              <div className={styles.sectionHeader}>Initiate</div>
-
-              <div className={styles.ctaText}>
-                Tell us what you&apos;re building.<br />
-                We&apos;ll tell you what it&apos;s missing.
               </div>
-
-              <ObfuscatedEmail user="hello" domain="mzfortech.com" className={styles.ctaEmail} />
-
-              <div className={styles.ctaActionWrapper}>
-                <TransitionLink href="/start" className={styles.submitBtn}>
-                  START A PROJECT →
-                </TransitionLink>
+              <div className={`${styles.heroWord} hero-word`}>
+                <div className="hero-word-inner">
+                  {reduceMotion ? "SOFTWARE." : (
+                    <VariableProximity
+                      label="SOFTWARE."
+                      fromFontVariationSettings="'wght' 400"
+                      toFontVariationSettings="'wght' 900"
+                      containerRef={mainRef}
+                      radius={200}
+                      falloff="exponential"
+                    />
+                  )}
+                </div>
               </div>
-            </section>
+              <div className={`${styles.heroWord} hero-word`}>
+                <div className="hero-word-inner">
+                  {reduceMotion ? "KNOWLEDGE." : (
+                    <VariableProximity
+                      label="KNOWLEDGE."
+                      fromFontVariationSettings="'wght' 400"
+                      toFontVariationSettings="'wght' 900"
+                      containerRef={mainRef}
+                      radius={200}
+                      falloff="exponential"
+                    />
+                  )}
+                </div>
+              </div>
+            </div>
+            <div className={`${styles.heroSubtext} hero-subtext`}>In that order.</div>
           </div>
-        </main>
-      </div>
 
-      <Footer />
-    </>
+          <div className={`${styles.heroDescription} hero-desc`}>
+            Engineered in Cairo. Owned by you. We build proprietary systems and transfer the exact knowledge you need to run them.
+          </div>
+
+          {/* Two affordances on two axes, deliberately.
+
+              ENTER is a real <button> but draws as bare type — no frame, no
+              fill — so it reads as the console's idle "press to start" line
+              rather than as the page's primary action. The hit area around it
+              is still comfortably larger than the word, because a target does
+              not have to be visible to be real.
+
+              The scroll cue is centred under the hero, in the space the 3D
+              logo leaves. They are kept apart on purpose: the corner is for
+              the one thing that looks clickable, and the centre is for the
+              one thing that is not. A framed chevron in the corner would read
+              as a scroll-to-top control and teach the wrong gesture; a bare
+              mark drifting under the hero is the oldest scroll affordance
+              there is.
+
+              Nothing here says "click anywhere" — that handler was removed so
+              it could not swallow the 3D logo's drag. These two are the whole
+              advertised surface: one button, one gesture. */}
+          <button
+            type="button"
+            className={`${styles.enterPrompt} hero-enter`}
+            onClick={() => launch("/home")}
+            aria-label="Enter the menu"
+          >
+            <span className={styles.enterLabel}>Enter</span>
+          </button>
+
+          <div className={`${styles.heroScrollWrapper} hero-scroll`} aria-hidden="true">
+            <span className={styles.scrollIndicator}>
+              <span className={styles.scrollLine} />
+            </span>
+          </div>
+        </section>
+      </main>
+    </div>
   );
 }
-

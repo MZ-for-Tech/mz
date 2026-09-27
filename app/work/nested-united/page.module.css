@@ -955,3 +955,23 @@
     display: block;
   }
 }
+/* Replaces the site-wide footer: a single low-weight legal link. */
+.pageFoot {
+  display: flex;
+  justify-content: center;
+  padding: 3rem var(--spacing-container) 4rem;
+}
+
+.privacyLink {
+  font-family: var(--font-code);
+  font-size: 0.62rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(245, 245, 240, 0.4);
+  text-decoration: none;
+  transition: color 0.25s ease;
+}
+
+.privacyLink:hover {
+  color: rgba(245, 245, 240, 0.8);
+}

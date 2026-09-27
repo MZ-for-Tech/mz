@@ -25,9 +25,31 @@
   --glass-noise-soft: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.3'/%3E%3C/svg%3E");
 
   /* TNH Specific Colors */
-  --color-tnh-bg: var(--color-text);
-  --color-tnh-text: #1A1208;
-  --color-tnh-text-rgb: 26, 18, 8;
+
+  /* The Null Hypothesis is a paper-coloured product — its own site is built
+     on a cream ground with near-black ink — so this is a literal rather than
+     a derivation, on purpose. Deriving it from `--color-text` as it did for
+     a while made the TNH surface a cool off-white (#F5F5F0) in the dark
+     theme, which is not the cream the product is actually designed on, and
+     quietly coupled a product's surface colour to the host page's ink. */
+  --color-tnh-bg: #F5F0E8;
+  --color-tnh-text: #F5F5F0;
+  /* The product's own ink — near-black with a brown cast, the ink The Null
+     Hypothesis is typeset in on its cream ground. It is NOT the same as
+     --color-tnh-text, which stayed light because the only other consumer of
+     it is the old full-bleed TNH section on the homepage, where the surface
+     behind it is the dark shell. Now that a TNH surface exists on a dark
+     page (the launcher card), the pair is genuinely two-sided: a light token
+     for light surfaces, a dark one for the cream. */
+  --color-tnh-ink: #1A1208;
+  --color-tnh-ink-rgb: 26, 18, 8;
+  /* DataStreamHero draws its glyphs in this colour. It has to follow the
+     theme's own text colour, because it is drawn as translucent marks on the
+     page background rather than on a TNH surface of its own — the old value
+     was a near-black ink intended for a light TNH page, which is invisible
+     on this dark shell. Deriving it from --color-text-rgb keeps it correct
+     in either theme instead of duplicating a literal that can drift. */
+  --color-tnh-text-rgb: var(--color-text-rgb);
   --color-tnh-accent: #8B1A1A;
   --color-footer-bg: var(--color-bg);
   --color-footer-text: var(--color-text);
@@ -40,9 +62,32 @@
   --font-tnh: var(--font-serif), serif;
 
   /* Layout */
-  --radius-lg: 28px;
-  --radius-md: 20px;
-  --radius-sm: 8px;
+
+  /* Radius scale, measured off the console home-screen reference rather than
+     taken from a generic UI kit.
+
+     The measurement: on the reference's largest card — a 155×83px feature
+     panel — the corner resolves over 2–3px, which is 3–4% of the box's short
+     side. Its game tiles are the same, and the top-bar controls have no plate
+     at all, just bare icons. So the reference is NOT a rounded system. It is
+     a sharp system that uses a small, roughly proportional radius to stop the
+     corners from reading as machined-off, and reserves real curvature for the
+     genuinely circular things (the avatar, the dock indicators).
+
+     These four values are that proportion applied to the sizes actually on
+     this site, and the steps are proportional rather than even: a 250px hero
+     card at 10px is the same 4% as a 137px work tile at 6px. An evenly-spaced
+     scale (4 / 8 / 12 / 16) would have made the small objects read as rounded
+     and the large ones as square, which is the inversion of the reference.
+
+     The bottom of the scale is deliberately tiny. 3px on a 55px form field is
+     ~1px of visual softening — a catch-light on the corner, nothing more.
+     That is the honest translation: a control you press is a rectangle, and
+     the radius is there so the corner reads as drawn rather than chopped. */
+  --radius-sm: 3px;
+  --radius-md: 6px;
+  --radius-lg: 10px;
+  --radius-xl: 18px;
 
   --spacing-container: 8vw;
 }
@@ -66,8 +111,9 @@
 
   /* Existing Accents & Specifics */
   --color-acid-green: #00ff41;
-  --color-tnh-text: #F5F5F0;
-  --color-tnh-text-rgb: 245, 245, 240;
+  /* --color-tnh-text / -rgb are not repeated here: both themes now derive
+     them from --color-text, so a literal in one block and not the other
+     can't leave the stream drawing in the wrong ink. */
   --color-footer-bg: #F8F7F2;
   --color-footer-text: #0D0F08;
 }
@@ -94,13 +140,70 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* The site-wide MZ link, fixed to the top-left of the viewport.
+
+   It is here because it is the studio's mark on every page, including the
+   splash and the case study, which have no launcher chrome of their own. It
+   is a real link to `/`, not decoration, and `mix-blend-mode: difference` is
+   what lets one white mark survive both the dark shader and the light Work
+   stage without a second asset.
+
+   On a phone it is suppressed and `MenuShell` renders its own centred mark
+   instead — see the mobile rule below. On desktop it stays exactly as it is. */
 .layout-logo-link {
   mix-blend-mode: difference;
+  /* Position and size, both of which used to be inline on the element and had
+     to be undone with `!important` from a media query. They belong here.
+
+     100px is the original, and it was correct. It is more than twice the
+     privacy control and three times the tab row, which is the point: the
+     top-left corner carries the studio's identity and the top-right carries a
+     utility, and they should not be the same weight. A 44px attempt made the
+     mark the same size as the control beside it — two same-ranked objects in
+     one corner, which is neither clearly brand nor clearly utility, and it
+     gave up the identity role the large mark was doing for free.
+
+     The nav's leftward lean was never this element's fault. It was trailing
+     `letter-spacing` inside the tab labels, fixed at the source with
+     `text-indent` on `.tab`; the logo can be as large as it likes and the nav
+     still measures centred.
+
+     1.5rem of inset lines the mark's top edge up with the desktop header's own
+     padding, so it sits on the header's grid rather than floating above it. */
+  position: fixed;
+  top: 1.5rem;
+  left: 1.5rem;
+  z-index: 9999;
 }
 
 .layout-logo-img {
   filter: brightness(0) invert(1);
   mix-blend-mode: difference;
+  /* The rendered size. The `width`/`height` props on the `<Image>` are the
+     intrinsic ratio only — without this the element falls back to those and
+     renders at 100px, which happens to be the value we want, but by accident
+     rather than by decision. */
+  width: 100px;
+  height: auto;
+}
+
+/* Suppressed ONLY where the shell's own centred mark replaces it — a phone.
+   On desktop this link is the site's mark, it sits top-left clear of the tab
+   row, and it is the only wordmark on the page, so it stays.
+
+   The rule is inside the mobile query for that reason: an unscoped version of
+   it removed the desktop logo as well, which was not a fix for anything.
+
+   `:has()` is required rather than a class. The logo lives in the root layout
+   and the shell is rendered *by* that layout as a descendant, so the shell can
+   never be an ancestor of the thing it needs to hide — no attribute on the
+   shell can reach it. `body:has()` is the one selector that sees both, and it
+   scopes to the document rather than to a route list, so a new launcher route
+   inherits the behaviour without being added to a list somewhere. */
+@media (max-width: 768px) {
+  body:has([data-shell="launcher"]) .layout-logo-link {
+    display: none;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -121,14 +224,30 @@ body {
 }
 
 @media (max-width: 768px) {
+  /* The mark shrinks on a phone and only on a phone. Desktop keeps 100px,
+     because that is the rank the top-left corner is supposed to carry — see
+     the note on `.layout-logo-link`.
+
+     36px here, and the reasoning is the same as on every other small-screen
+     value in this file: a phone is where the space is scarce and where the
+     mark competes with a centred nav. 100px on a 375px screen is 27% of the
+     width, which is a masthead; 36px is present without competing.
+
+     No `!important` any more. This query used to have to override the
+     element's own inline position and size, which is the only situation where
+     `!important` is the right tool; with those moved into the base rule, an
+     override is an ordinary cascade and this is just a value that differs on
+     a phone. The launcher branch below suppresses the whole link anyway, so
+     this only ever applies to the splash, the privacy page and the case
+     study. */
   .layout-logo-link {
-    top: 26px !important;
-    left: 32px !important;
+    top: 1.1rem;
+    left: 1.1rem;
   }
 
   .layout-logo-img {
-    width: auto !important;
-    height: 40px !important;
+    width: 36px;
+    height: auto;
   }
 }
 
@@ -215,8 +334,21 @@ a {
 :where(a, button, [tabindex]):focus-visible {
   outline: 2px solid var(--color-brand-yellow);
   outline-offset: 3px;
-  border-radius: 2px;
-}
+  /* No `border-radius` here, and that is the fix rather than an omission.
+
+     This rule set a 2px radius on EVERY focusable element in the site, at
+     zero specificity inside `:where()`. Any component that declared its own
+     radius — the nav plate, the work tiles, the form fields — won the
+     cascade against it, and the focus ring was drawn to whatever that
+     component's radius happened to be. So a focused control showed a sharp
+     yellow ring around a rounded object, or a rounded ring around a sharp
+     one, decided per-component rather than by anyone.
+
+     `outline` follows the element's own border-radius by definition, so
+     dropping the override is the only way the ring matches the thing it is
+     ringing. A ring that is the wrong shape is worse than no ring: it still
+     passes a contrast check while drawing attention to an edge that is not
+     there. */
 
 /* Custom Scrollbar for non-Lenis native scrolling areas */
 ::-webkit-scrollbar {

@@ -4,6 +4,7 @@ import { useLayoutEffect, useRef } from "react";
 import { gsap } from "@/lib/gsap";
 
 import { prefersReducedMotion } from "@/lib/useReducedMotion";
+import { takeWipeDecision } from "@/lib/mzNav";
 
 const COLUMNS = 5;
 const WIPE_DURATION = 0.9; // seconds — must match transition below
@@ -21,10 +22,16 @@ export default function Template({ children }: { children: React.ReactNode }) {
     const exitOverlay = document.querySelector("[data-transition-exit]");
     exitOverlay?.remove();
 
-    if (prefersReducedMotion()) {
+    // Navigations inside the start-screen ↔ launcher world skip the wipe: the
+    // background must stay on screen while the foreground swaps. See lib/mzNav.
+    const shouldWipe = takeWipeDecision(window.location.pathname);
+
+    if (!shouldWipe || prefersReducedMotion()) {
       if (containerRef.current) containerRef.current.style.display = 'none';
-      window.dispatchEvent(new Event('mz-transition-done'));
-      return;
+      // Async: listeners for this event attach in passive effects, which run
+      // after this layout effect. A synchronous dispatch would be missed.
+      const t = setTimeout(() => window.dispatchEvent(new Event('mz-transition-done')), 0);
+      return () => clearTimeout(t);
     }
 
     let timer: ReturnType<typeof setTimeout>;

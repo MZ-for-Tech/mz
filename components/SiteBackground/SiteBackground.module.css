@@ -1,0 +1,35 @@
+/*
+ * The unified background. Lives in the root layout so it is mounted exactly
+ * once for the whole session and survives every route change — this is what
+ * lets the start screen hand off to the launcher without the shader ever
+ * freezing, restarting, or costing a second WebGL context.
+ *
+ * z-index: -1 places it above the canvas/body background (body's background
+ * propagates to the canvas because <html> declares none) and below every
+ * in-flow descendant, so no page needs to opt in.
+ */
+.background {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: transparent;
+  opacity: 0;
+  transition: opacity 1.2s ease-out;
+  pointer-events: none;
+}
+
+.background[data-visible] {
+  opacity: 1;
+}
+
+/* A route that opts out of the shader gets a flat ground of its own, so the
+   page does not depend on `body`'s background propagating to the canvas for
+   its contrast. `--color-bg` is the same near-black the shader sits on, so
+   the transition between them is invisible — what changes is that the gold
+   stops moving. `data-plain` is also what holds the element at opacity 0
+   while the canvas is absent, rather than mid-fade. */
+.background[data-plain] {
+  background: var(--color-bg);
+  opacity: 1;
+  transition: none;
+}
