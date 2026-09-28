@@ -92,7 +92,7 @@ function LenisGsapBridge() {
     window.addEventListener("pageshow", onPageShow);
 
     // 5. AUTO-RESIZE — updates Lenis limit whenever DOM heights shift
-    //    (e.g. ScrollExpand track, accordions, lazy chunks, font/image layout)
+    //    (e.g. accordions, lazy chunks, font/image layout)
     //    so scrolling never locks prematurely against a stale page height limit.
     let resizeTimer: ReturnType<typeof setTimeout>;
     const onDomResize = () => {

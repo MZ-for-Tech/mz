@@ -8,12 +8,11 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  if (!CUSTOM_STUDIES.some((study) => study.slug === slug)) return {};
-  return researchArticleMetadata('en');
+  return researchArticleMetadata('en', slug);
 }
 
 export default async function ResearchArticlePage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  if (!CUSTOM_STUDIES.some((study) => study.slug === slug)) notFound();
-  return <ResearchArticle locale="en" />;
+  if (!CUSTOM_STUDIES.some((study) => study.slug === slug && study.published)) notFound();
+  return <ResearchArticle locale="en" slug={slug} />;
 }

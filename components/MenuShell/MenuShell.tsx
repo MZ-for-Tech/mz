@@ -13,6 +13,26 @@ import IconSprite from "@/components/nested/IconCollage/IconSprite";
 import { LocalClock } from "@/components/LocalClock/LocalClock";
 import styles from "./MenuShell.module.css";
 
+function PrivacyGlyph() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      width="18"
+      height="18"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.6"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <circle cx="12" cy="12" r="8.6" />
+      <path d="M12 11.2v5" />
+      <path d="M12 7.7v0.1" />
+    </svg>
+  );
+}
+
 /** The launcher chrome: status block, tab row, keyboard handling, and the
  * converge-in that plays when the start screen hands over.
  *
@@ -158,14 +178,6 @@ export default function MenuShell({ children }: { children: React.ReactNode }) {
     <div
       ref={shellRef}
       className={styles.shell}
-      /* Announced to CSS, not used to branch in JS. The Work stage is
-         full-bleed, and it is light: either a screenshot from the studio's own
-         set or the paper field a project without one stands in on. That
-         changes what colour the chrome has to be, and it changes it for the
-         clock and the brand line too — which live in their own modules and
-         would otherwise need a prop threaded through the shell to learn it.
-         One attribute on the shell answers it for every descendant at once. */
-      data-stage={isWorkPanel ? "light" : "dark"}
       /* Also answers "is there launcher chrome here?", for one rule in
          globals.css to switch the site-wide MZ link off. That link is fixed to
          the viewport and lives in the root layout, so it cannot know a shell
@@ -223,30 +235,21 @@ export default function MenuShell({ children }: { children: React.ReactNode }) {
             so the two can be switched off independently — see the
             `data-shell` note below. */}
         <div className={styles.markSlot} data-converge>
-          {/* `mz-logo.min.svg`, NOT `mz.svg`. They look like the same studio's
-              mark and are not: `mz-logo.min.svg` is 165 flat `#020202` paths —
-              a pure silhouette with no colour of its own, which is what makes
-              it adaptable. `mz.svg` is the same geometry filled with a
-              165-stop green-to-yellow gradient, and putting that in the header
-              put a lime gradient in the top bar on every launcher page.
-
-              The adaptation is the two lines below, and both are load-bearing:
-              `brightness(0) invert(1)` collapses the black to pure white, and
-              `mix-blend-mode: difference` inverts it back against whatever is
-              behind it. That is why the mark survives the dark shader, the
-              cream paper card and the full-bleed light Work stage without a
-              second asset — and it is why the shell's copy needs BOTH. A white
-              mark with no blend mode is invisible on the Work stage, which is
-              exactly the case `.headerBare` exists to handle for the tabs. */}
-          <Image
-            src="/mz-logo.min.svg"
-            alt=""
-            aria-hidden="true"
-            width={100}
-            height={100}
-            className={styles.mark}
-            priority
-          />
+          {/* `mz-logo.min.svg` is the flat black silhouette, unlike the
+              gradient `mz.svg`. The regular shell uses it as white ink on its
+              dark header; Work renders a second copy in the difference-blended
+              overlay below so it can invert against the actual stage. */}
+          {!isWorkPanel && (
+            <Image
+              src="/mz-logo.min.svg"
+              alt=""
+              aria-hidden="true"
+              width={100}
+              height={100}
+              className={styles.mark}
+              priority
+            />
+          )}
         </div>
 
         {/* No ◀ ▶ affordance at the ends of the row. Neither reference has
@@ -292,7 +295,7 @@ export default function MenuShell({ children }: { children: React.ReactNode }) {
             The empty band was never a slot waiting to be filled; it was the
             width of a row with nothing on the left of it. */}
         <div className={styles.headerMeta} data-converge>
-          <LocalClock className={styles.clockSlot} />
+          {!isWorkPanel && <LocalClock className={styles.clockSlot} />}
 
           {/* An icon, not the word "Privacy". At this size and at this contrast
               a word is a second headline competing with the tabs, and it
@@ -307,58 +310,42 @@ export default function MenuShell({ children }: { children: React.ReactNode }) {
               the shell that loaded abruptly while every tab beside it
               crossfaded. Same component, same `wantsWipe` decision, no
               per-call-site judgement about which transition is correct. */}
+          {!isWorkPanel && (
+            <TransitionLink
+              href="/privacy"
+              data-tile
+              className={styles.privacy}
+              aria-label="Privacy"
+              title="Privacy"
+            >
+              <PrivacyGlyph />
+            </TransitionLink>
+          )}
+        </div>
+      </header>
+
+      {isWorkPanel && (
+        <div className={styles.workAdaptiveChrome}>
+          <Image
+            src="/mz-logo.min.svg"
+            alt=""
+            width={100}
+            height={100}
+            className={styles.workAdaptiveMark}
+            priority
+          />
+          <LocalClock className={styles.workAdaptiveClock} />
           <TransitionLink
             href="/privacy"
             data-tile
-            className={styles.privacy}
+            className={`${styles.privacy} ${styles.workAdaptivePrivacy}`}
             aria-label="Privacy"
             title="Privacy"
           >
-            <svg
-              viewBox="0 0 24 24"
-              width="18"
-              height="18"
-              fill="none"
-              stroke="currentColor"
-              /* Back down toward the original 1.6, for the same reason the
-                 glyph is bigger: the 1.9 was compensating for a 14px icon
-                 resolving to sub-pixel ink, and at 18px that compensation
-                 overcorrects into something heavy.
-
-                 The three sizes this control has been through, and why each
-                 was wrong:
-
-                   - 20px in a bordered box: too loud. The frame made it the
-                     only hard-edged object in the header.
-                   - 14px bare: too small. The frame had been doing half the
-                     work of making the glyph read, and removing it without
-                     raising the glyph left the control genuinely hard to
-                     find — a worse failure than being too loud, because a
-                     loud privacy link is an aesthetic problem and an
-                     invisible one is a usability problem.
-                   - 18px bare: the glyph carries itself.
-
-                 The box and the glyph have to move separately, which is the
-                 whole reason this control has a transparent 40px box rather
-                 than no box at all. 40px is a touch target, not a size; the
-                 glyph is what the eye reads, and it had been carrying a size
-                 chosen for a frame that no longer exists. */
-              strokeWidth="1.6"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              aria-hidden="true"
-            >
-              <circle cx="12" cy="12" r="8.6" />
-              {/* Stem and dot, the "i" itself. The dot is a zero-length dash
-                  rather than a filled circle so it picks up the same stroke
-                  weight as the ring instead of sitting on it as a heavier
-                  blob. */}
-              <path d="M12 11.2v5" />
-              <path d="M12 7.7v0.1" />
-            </svg>
+            <PrivacyGlyph />
           </TransitionLink>
         </div>
-      </header>
+      )}
 
       <main
         className={`${styles.content} ${isTallPanel ? styles.contentWindowScroll : ""}`}
@@ -385,13 +372,13 @@ export default function MenuShell({ children }: { children: React.ReactNode }) {
           activation and Esc-to-go-back all still work exactly as before. Only
           the instruction is gone, never the capability.
 
-          What remains is the wordmark, which is not an instruction and holds
-          the same centre line on its own. It is a closing signature for the
-          launcher rather than a footer — the shell has no end, so there is
-          nothing for a rule or navigation to sit under. */}
-      <div className={styles.hints} data-converge aria-hidden="true">
-        <span className={styles.hintsBrand}>MZ — Research. Software. Knowledge.</span>
-      </div>
+          On the other launcher panels, the wordmark remains as a closing
+          signature. Work uses the full height for the carousel instead. */}
+      {!isWorkPanel && (
+        <div className={styles.hints} data-converge aria-hidden="true">
+          <span className={styles.hintsBrand}>MZ — Research. Software. Knowledge.</span>
+        </div>
+      )}
     </div>
   );
 }

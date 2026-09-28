@@ -1,10 +1,12 @@
-import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import ServicesPanel from "./ServicesPanel";
 
-export const metadata: Metadata = {
-  title: "MZ | Services",
-  description: "Three pillars, one team — Build, Deploy, Teach.",
-};
+export const metadata = pageMetadata({
+  title: "Software Engineering Services",
+  description:
+    "MZ helps organizations build and deploy software systems, then transfers the knowledge teams need to operate them.",
+  path: "/services",
+});
 
 /**
  * Services — the capability list, as a launcher panel.

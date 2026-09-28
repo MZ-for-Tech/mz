@@ -4,6 +4,7 @@ import { TransitionLink } from "@/components/TransitionLink/TransitionLink";
 import ObfuscatedEmail from "@/components/ObfuscatedEmail/ObfuscatedEmail";
 import Image from "next/image";
 import { PROJECTS } from "@/lib/projects";
+import { pageMetadata } from "@/lib/seo";
 import IconCollage from "@/components/nested/IconCollage/IconCollage";
 import IconSprite from "@/components/nested/IconCollage/IconSprite";
 import IframePreview from "@/components/IframePreview/IframePreview";
@@ -21,12 +22,14 @@ const redHatDisplay = Red_Hat_Display({
 });
 
 
-export const metadata = {
-  title: "Nested United | MZ Work",
+export const metadata = pageMetadata({
+  title: "Nested United Case Study",
   description:
-    PROJECTS.find((p) => p.slug === "nested-united")?.tagline ||
-    "Nested United project",
-};
+    "How MZ designed and built a digital platform for Nested United, bringing five specialist brands into one coherent web experience. " +
+    (PROJECTS.find((p) => p.slug === "nested-united")?.tagline ||
+      "Nested United project"),
+  path: "/work/nested-united",
+});
 
 export default function NestedUnitedWorld() {
 
@@ -58,7 +61,7 @@ export default function NestedUnitedWorld() {
             />
           </div>
 
-          <p className={styles.heroSubtitle}>The story behind developing nestedunited.com</p>
+          <h1 className={styles.heroSubtitle}>Nested United website case study</h1>
         </div>
 
         {/* The Animated SVG Collage natively embedded in the hero */}
@@ -72,7 +75,7 @@ export default function NestedUnitedWorld() {
 
         <div className={styles.writeupBlock}>
           <div className={styles.writeupTextContainer}>
-            <h3 className={styles.writeupTitle}>The Problem</h3>
+            <h2 className={styles.writeupTitle}>The Problem</h2>
             <p className={styles.writeupText}>
               Nested United operates five distinct sub-brands under one roof — boutique hospitality, events, real estate, tech, and creative services. They came in with a clear brand vision and zero technical infrastructure. The work was to take that vision and build it into something real, navigable, and alive on screen.
             </p>
@@ -86,7 +89,7 @@ export default function NestedUnitedWorld() {
 
         <div className={styles.writeupBlock}>
           <div className={styles.writeupTextContainer}>
-            <h3 className={styles.writeupTitle}>Our Approach</h3>
+            <h2 className={styles.writeupTitle}>Our Approach</h2>
             <p className={styles.writeupText}>
               We used their design direction as a foundation and brought significant creative input of our own — rethinking sections, building a proper component system, and adding an entire motion layer that wasn&apos;t in the original brief. The preloader, the custom SVG animations, the transitions — all our own work, and ultimately what people remember most about the site.
             </p>
@@ -100,7 +103,7 @@ export default function NestedUnitedWorld() {
 
         <div className={styles.writeupBlock}>
           <div className={styles.writeupTextContainer}>
-            <h3 className={styles.writeupTitle}>The Outcome</h3>
+            <h2 className={styles.writeupTitle}>The Outcome</h2>
             <p className={styles.writeupText}>
               Nested United now has a digital home that lives up to the scale of their ambitions. Five brands, one coherent identity. The animations — which weren&apos;t part of the original brief — ended up being what people respond to most. A platform that started as a design file is now something people genuinely remember.
             </p>
@@ -125,7 +128,7 @@ export default function NestedUnitedWorld() {
           {/* 1. High Performance */}
           <div className={`${styles.bentoCard} ${styles.cardPerformance}`}>
             <div className={styles.cardContent}>
-              <h4 className={styles.featureTitle}>High Performance</h4>
+              <h3 className={styles.featureTitle}>High Performance</h3>
               <p className={styles.featureText}>Engineered for speed. The platform delivers instant load times and maintains a flawless 60 FPS across all devices.</p>
             </div>
             <div className={styles.cardVisual}>
@@ -151,7 +154,7 @@ export default function NestedUnitedWorld() {
           {/* 2. Perfect SEO */}
           <div className={`${styles.bentoCard} ${styles.cardSEO}`}>
             <div className={styles.cardContent}>
-              <h4 className={styles.featureTitle}>Perfect SEO</h4>
+              <h3 className={styles.featureTitle}>Perfect SEO</h3>
               <p className={styles.featureText}>Optimized for visibility. The architecture achieves perfect technical SEO scores to secure top search rankings.</p>
             </div>
             <div className={styles.cardVisual}>
@@ -176,7 +179,7 @@ export default function NestedUnitedWorld() {
           {/* 3. Agentic Compatibility */}
           <div className={`${styles.bentoCard} ${styles.cardAgentic}`}>
             <div className={styles.cardContent}>
-              <h4 className={styles.featureTitle}>Agentic Compatibility</h4>
+              <h3 className={styles.featureTitle}>Agentic Compatibility</h3>
               <p className={styles.featureText}>Built for the future. Clean semantic structures allow flawless parsing by both human users and AI agents.</p>
             </div>
             <div className={styles.cardVisual}>
@@ -214,7 +217,7 @@ export default function NestedUnitedWorld() {
           {/* 4. Bilingual Support */}
           <div className={`${styles.bentoCard} ${styles.cardBilingual}`}>
             <div className={styles.cardContent}>
-              <h4 className={styles.featureTitle}>Bilingual Support</h4>
+              <h3 className={styles.featureTitle}>Bilingual Support</h3>
               <p className={styles.featureText}>Seamlessly localized. Full RTL and LTR support ensures a native experience for both Arabic and English users.</p>
             </div>
             <div className={styles.cardVisual}>
@@ -235,7 +238,7 @@ export default function NestedUnitedWorld() {
           {/* 5. Fluid Animations */}
           <div className={`${styles.bentoCard} ${styles.cardAnimations}`}>
             <div className={styles.cardContent}>
-              <h4 className={styles.featureTitle}>Fluid Animations</h4>
+              <h3 className={styles.featureTitle}>Fluid Animations</h3>
               <p className={styles.featureText}>Dynamic and engaging. Hardware-accelerated micro-interactions bring the interface to life.</p>
             </div>
             <div className={styles.cardVisual}>

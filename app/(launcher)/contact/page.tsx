@@ -1,10 +1,12 @@
-import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import ContactPanel from "./ContactPanel";
 
-export const metadata: Metadata = {
-  title: "MZ | Contact",
-  description: "Tell us what you're building. We'll tell you what it's missing.",
-};
+export const metadata = pageMetadata({
+  title: "Contact MZ",
+  description:
+    "Discuss a software, research, or Arabic OCR project with MZ, a technology engineering studio based in Cairo, Egypt.",
+  path: "/contact",
+});
 
 /**
  * Contact — the project brief, as a launcher panel.

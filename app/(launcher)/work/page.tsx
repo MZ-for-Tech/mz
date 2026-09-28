@@ -1,11 +1,12 @@
-import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import { WorkShelf } from "@/components/sections/WorkShelf";
 
-export const metadata: Metadata = {
-  title: "MZ | Work",
+export const metadata = pageMetadata({
+  title: "Software Projects and Case Studies",
   description:
-    "Platforms built for institutions that can't afford to guess — proprietary products and client work, on one shelf.",
-};
+    "Explore MZ software projects, client platforms, and proprietary products, including the Nested United digital platform and selected client work.",
+  path: "/work",
+});
 
 /**
  * Work — every project, on one shelf.

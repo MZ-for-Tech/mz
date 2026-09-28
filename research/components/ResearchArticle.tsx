@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Cpu, Users } from "lucide-react";
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import Section from "@/research/features/studies/shared/Section";
 import AnalysisSection from "@/research/features/studies/shared/AnalysisSection";
 import Marginalia from "@/research/components/Marginalia";
@@ -9,25 +10,26 @@ import { VisualizationEngine } from "@/research/features/engine/VisualizationEng
 import { CUSTOM_STUDIES } from "@/research/data/studies";
 import { appliedStatsStrings } from "@/research/data/strings/appliedStats";
 
-const project = CUSTOM_STUDIES[0];
-
-export function researchArticleMetadata(locale: string): Metadata {
+export function researchArticleMetadata(locale: 'en' | 'ar', slug: string): Metadata {
+    const project = CUSTOM_STUDIES.find((item) => item.slug === slug && item.published);
+    if (!project) return {};
     const title = locale === 'ar' && project.title_ar ? project.title_ar : project.title;
     const description = locale === 'ar' && project.description_ar ? project.description_ar : project.description || project.tagline || '';
     const path = locale === 'ar' ? `/research/ar/${project.slug}` : `/research/${project.slug}`;
 
     return {
-        title,
-        description,
-        alternates: {
-            canonical: path,
+        ...pageMetadata({
+            title,
+            description,
+            path,
+            locale: locale === 'ar' ? 'ar_EG' : 'en_US',
             languages: {
                 en: `/research/${project.slug}`,
                 ar: `/research/ar/${project.slug}`,
             },
-        },
+            type: 'article',
+        }),
         authors: project.authors?.map((author) => ({ name: author.name })),
-        openGraph: { title, description, url: `https://mzfortech.com${path}`, type: 'article' },
     };
 }
 
@@ -41,17 +43,47 @@ const tocData = [
     { id: "synthesis", label: "§6 Discussion & Unified Synthesis" },
 ];
 
-export default function ResearchArticle({ locale = 'en' }: { locale?: string }) {
+export default function ResearchArticle({ locale = 'en', slug }: { locale?: 'en' | 'ar'; slug: string }) {
     const s = appliedStatsStrings[locale as 'en' | 'ar'] || appliedStatsStrings.en;
-    const project = CUSTOM_STUDIES.find(p => p.slug === 'vgg19-bloodmnist-compression');
+    const project = CUSTOM_STUDIES.find((item) => item.slug === slug && item.published);
 
     if (!project) return <div className="p-8 text-semantic-error">Page Not Found</div>;
 
     const title = (locale === 'ar' && project?.title_ar) ? project.title_ar : project?.title;
     const tagline = (locale === 'ar' && project?.tagline_ar) ? project.tagline_ar : project?.tagline;
+    const canonicalUrl = `https://mzfortech.com${locale === 'ar' ? '/research/ar' : '/research'}/${project.slug}`;
+    const articleSchema = {
+        '@context': 'https://schema.org',
+        '@type': 'ScholarlyArticle',
+        headline: title,
+        description: project.description,
+        inLanguage: locale === 'ar' ? 'ar' : 'en',
+        datePublished: project.published_at,
+        dateModified: project.updated_at || project.published_at,
+        author: project.authors?.map((author) => ({ '@type': 'Person', name: author.name })),
+        publisher: {
+            '@type': 'Organization',
+            '@id': 'https://mzfortech.com/#organization',
+            name: 'MZ',
+            url: 'https://mzfortech.com/',
+        },
+        mainEntityOfPage: canonicalUrl,
+        url: canonicalUrl,
+        isPartOf: {
+            '@type': 'CreativeWorkSeries',
+            name: 'The Null Hypothesis',
+            url: `https://mzfortech.com/${locale === 'ar' ? 'research/ar' : 'research'}`,
+        },
+    };
 
     return (
-        <div className="research-content" dir={locale === 'ar' ? 'rtl' : 'ltr'}>
+        <div className="research-content" lang={locale} dir={locale === 'ar' ? 'rtl' : 'ltr'}>
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{
+                    __html: JSON.stringify(articleSchema).replace(/</g, '\\u003c'),
+                }}
+            />
             <article className="max-w-4xl mx-auto relative z-10 px-5 py-16 md:px-8 md:py-24">
                 <header className="mb-12 relative z-20">
                     <div className="mb-7 flex flex-wrap items-center justify-between gap-4">

@@ -1,4 +1,4 @@
-import { redirect } from "next/navigation";
+import { permanentRedirect } from "next/navigation";
 
 /**
  * /start is gone — the project brief now lives at /menu/contact, inside the
@@ -9,5 +9,5 @@ import { redirect } from "next/navigation";
  * already indexed or bookmarked.
  */
 export default function StartRedirect() {
-  redirect("/contact");
+  permanentRedirect("/contact");
 }

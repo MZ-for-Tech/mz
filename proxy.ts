@@ -28,28 +28,7 @@ export function proxy(request: NextRequest) {
     });
   }
 
-  // Add Link response headers for agent discovery (RFC 8288) to all HTML responses
-  const response = NextResponse.next();
-  
-  // Only add link headers to HTML page requests, not static assets
-  if (request.nextUrl.pathname.startsWith('/_next') || request.nextUrl.pathname.includes('.')) {
-    return response;
-  }
-
-  const site = "https://mzfortech.com";
-  const links = [
-    `<${site}/.well-known/api-catalog>; rel="api-catalog"`,
-    `<${site}/.well-known/openapi.json>; rel="service-desc"`,
-    `<${site}/.well-known/oauth-authorization-server>; rel="oauth-authorization-server"`,
-    `<${site}/.well-known/oauth-protected-resource>; rel="oauth-protected-resource"`,
-    `<${site}/sitemap.xml>; rel="sitemap"`,
-    `<${site}/llms.txt>; rel="describedby"`
-  ];
-
-  response.headers.set('Link', links.join(', '));
-  response.headers.set('X-AI-Accessible', 'true');
-  
-  return response;
+  return NextResponse.next();
 }
 
 export const config = {

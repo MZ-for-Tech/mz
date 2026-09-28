@@ -1,31 +1,35 @@
-# MZ | Research. Software. Knowledge.
-> Research-driven technology company. Engineered in Cairo. Owned by you.
+# MZ
 
-## About MZ
-MZ is a technology engineering firm based in Cairo, Egypt. We build proprietary systems and transfer the exact knowledge our clients need to run them.
-- **Location:** Cairo, Egypt
-- **Email:** hello@mzfortech.com
-- **Website:** https://mzfortech.com
-- **Research Portal:** https://mzfortech.com/research
+> MZ is a technology engineering studio based in Cairo, Egypt. The studio builds software and proprietary systems, publishes applied research, and transfers the knowledge clients need to operate the systems it builds.
 
-## Core Philosophy
-Research, Software, Knowledge. In that order.
+## Primary pages
 
-## Products
+- [MZ home](https://mzfortech.com/): Studio overview.
+- [Work](https://mzfortech.com/work): Selected software projects and products.
+- [Services](https://mzfortech.com/services): Software engineering, deployment, and knowledge transfer.
+- [About MZ](https://mzfortech.com/intel): Studio approach and background.
+- [Contact](https://mzfortech.com/contact): Project inquiries.
+- [The Null Hypothesis research portal](https://mzfortech.com/research): MZ's published research.
+- [Research in Arabic](https://mzfortech.com/research/ar): Arabic edition of the research portal.
+- [Plain-text site summary](https://mzfortech.com/content.md): Machine-readable overview of the studio and selected work.
+- [XML sitemap](https://mzfortech.com/sitemap.xml): Canonical pages available for crawling.
 
-### Occhio (OK-yoo)
-An OCR (Optical Character Recognition) system that reads Arabic the way Arabic should be read.
-Most document processing tools were built for Latin scripts and extended to Arabic later. Occhio starts where the region starts: Arabic, French, and English as equal priorities, designed for the institutional documents governments, universities, and enterprises in MENA actually handle. (Currently in development).
+## What MZ does
 
-## Selected Work / Case Studies
-- **Nested United:** A unified ecosystem of specialized brands delivering smart project operations, hospitality management, and sustainable business growth. (https://nestedunited.com)
-- **The Null Hypothesis:** MZ research, made explorable. (https://mzfortech.com/research)
-- **SSC League:** Internal proprietary system. (Access Restricted)
-- **ERP System:** Internal proprietary system. (Access Restricted)
+MZ works across research, software, and knowledge transfer. Its services include building software systems, helping deploy them, and teaching client teams how to operate them.
 
-## Machine-Readable Resources
-- Sitemap: https://mzfortech.com/sitemap.xml
-- OpenAPI: https://mzfortech.com/.well-known/openapi.json
-- Agent Card: https://mzfortech.com/.well-known/agent.json
-- AI Plugin: https://mzfortech.com/.well-known/ai-plugin.json
-- MCP Server: https://mzfortech.com/.well-known/mcp.json
+MZ is based in Cairo, Egypt. Contact: [hello@mzfortech.com](mailto:hello@mzfortech.com).
+
+## Products and research
+
+- **Occhio** is an Arabic-first OCR system in development, designed for Arabic, French, and English institutional documents.
+- **The Null Hypothesis** is MZ's research publication. Its published study examines statistical compression of VGG19 for BloodMNIST blood-cell image classification using L1 regularization, structured L0 gates, and low-rank SVD.
+
+## Selected work
+
+- [Nested United case study](https://mzfortech.com/work/nested-united): MZ's work on a digital platform for Nested United.
+- [Nested United website](https://nestedunited.com/): The client website.
+
+## Machine-readable content
+
+The public machine-readable resources are this file, [content.md](https://mzfortech.com/content.md), and the [sitemap](https://mzfortech.com/sitemap.xml). The site does not expose a public OpenAPI, MCP, OAuth, commerce, or payment API.

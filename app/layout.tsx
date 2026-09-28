@@ -26,18 +26,22 @@ const cormorant = Cormorant_Garamond({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://mzfortech.com"),
-  title: "MZ | Research. Software. Knowledge.",
-  description: "Research-driven technology company. Cairo, Egypt.",
+  title: {
+    default: "MZ — Research, Software and Knowledge",
+    template: "%s | MZ",
+  },
+  applicationName: "MZ",
+  description:
+    "MZ is a technology engineering studio in Cairo, Egypt, building software and proprietary systems and sharing the research and knowledge behind them.",
+  creator: "MZ",
+  publisher: "MZ",
   openGraph: {
-    title: "MZ | Research. Software. Knowledge.",
-    description: "Research-driven technology company. Cairo, Egypt.",
-    url: "https://mzfortech.com",
     siteName: "MZ",
     images: [{ url: "/og.webp", width: 1200, height: 630 }],
     locale: "en_US",
     type: "website",
   },
-  twitter: { card: "summary_large_image" },
+  twitter: { card: "summary_large_image", images: ["/og.webp"] },
 };
 
 export const viewport: Viewport = {

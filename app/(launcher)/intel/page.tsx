@@ -1,11 +1,12 @@
-import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import IntelPanel from "./IntelPanel";
 
-export const metadata: Metadata = {
-  title: "MZ | Intel",
+export const metadata = pageMetadata({
+  title: "About MZ",
   description:
-    "How we think — systems, statistics, sustainability, and the research that doesn't stay internal.",
-};
+    "Learn about MZ's approach to research, software engineering, and knowledge transfer from its Cairo, Egypt studio.",
+  path: "/intel",
+});
 
 /**
  * Intel: who we are, how we think, and where the research goes.

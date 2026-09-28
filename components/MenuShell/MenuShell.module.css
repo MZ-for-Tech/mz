@@ -71,21 +71,10 @@
    `.header` for why the two flanks have to be equal-basis, not equal-size.
 
    It is `pointer-events: none` because there is nothing behind it to hit and
-   it must never swallow a click meant for the tab beside it.
-
-   `mix-blend-mode: difference` is the half of the adaptation that CSS cannot
-   fake with a filter alone: it inverts the white against whatever is behind,
-   so the same element reads on the dark shader AND on the Work tab's
-   full-bleed stage without a second asset.
-
-   Note the blend adapts to the PLATE, not to the page: the header is
-   `position: fixed` with a `z-index` and so forms a stacking group, which
-   means the only thing the mark can composite against is the `::before` inside
-   it. On the dark panels that plate is a 0.97 dark wash, so the blend resolves
-   to white. On Work the plate is removed, the blend has no backdrop and passes
-   the white through unchanged — and the stage there is dark, so white is still
-   the right ink. The no-op and the correct answer coincide, which is why no
-   `data-stage` branch is needed for the mark. */
+   it must never swallow a click meant for the tab beside it. The flat black
+   artwork is converted to white, then difference blending makes it invert
+   against the stage beneath it, matching the adaptive mark on case-study
+   pages. */
 .markSlot {
   flex: 1 1 0;
   min-width: 0;
@@ -93,7 +82,6 @@
   align-items: center;
   justify-content: flex-start;
   pointer-events: none;
-  mix-blend-mode: difference;
 }
 
 .mark {
@@ -105,12 +93,9 @@
      the least interactive thing in the bar and should not be the biggest. */
   width: clamp(1.5rem, 2.2vw, 2.125rem);
   height: auto;
-  /* The artwork is flat `#020202`. Collapsing it to white is half the
-     adaptation; the other half is `mix-blend-mode: difference` on the slot's
-     parent, above. Both are needed — a white mark with no blend mode vanishes
-     on the Work tab's full-bleed light stage, which is the same problem
-     `.headerBare` solves for the tab labels. */
+  /* The artwork is flat `#020202`; collapse it to white before blending. */
   filter: brightness(0) invert(1);
+  mix-blend-mode: normal;
   opacity: 0.92;
 }
 
@@ -273,6 +258,41 @@
   text-shadow: none;
 }
 
+/* The MZ mark and clock sit in a separate, viewport-level blend layer on
+   Work. Keeping it outside this header leaves the nav's own selected-tab
+   contrast untouched. */
+.workAdaptiveChrome {
+  position: fixed;
+  inset: 0;
+  z-index: 7;
+  pointer-events: none;
+  mix-blend-mode: difference;
+}
+
+.workAdaptiveMark {
+  position: absolute;
+  top: 1.1rem;
+  left: 1.5rem;
+  width: clamp(1.5rem, 2.2vw, 2.125rem);
+  height: auto;
+  filter: brightness(0) invert(1);
+}
+
+.workAdaptiveClock {
+  position: absolute;
+  top: 1.6rem;
+  right: calc(1.5rem + 40px + 1.1rem);
+}
+
+.workAdaptivePrivacy {
+  position: absolute;
+  top: calc(0.9rem - 1px);
+  right: 1.5rem;
+  pointer-events: auto;
+  /* Match the privacy glyph's optical centre to the clock's text baseline,
+     not to the full 40px hit target. */
+}
+
 /* The nav, the middle slot.
 
    `flex: 0 0 auto` and NOT `flex: 1` — this is the one item in the bar whose
@@ -399,27 +419,6 @@
 
 .hintsBrand {
   color: rgba(245, 245, 240, 0.28);
-}
-
-/* The brand line is fixed chrome over a full-bleed stage that is light on the
-   Work tab, so it inverts with everything else in the shell. */
-:global([data-stage="light"]) .hintsBrand {
-  color: rgba(13, 15, 8, 0.4);
-  text-shadow: 0 1px 10px rgba(245, 245, 240, 0.8);
-}
-
-/* Same reasoning for the privacy control: a dark plate on a light stage reads
-   as a hole, and a transparent one leaves pale ink on paper. */
-:global([data-stage="light"]) .privacy {
-  background: rgba(245, 245, 240, 0.5);
-  border-color: rgba(13, 15, 8, 0.16);
-  color: rgba(13, 15, 8, 0.6);
-}
-
-:global([data-stage="light"]) .privacy:hover {
-  color: var(--color-brand-yellow);
-  background: rgba(13, 15, 8, 0.72);
-  border-color: rgba(255, 231, 141, 0.5);
 }
 
 /* ── Selection frame ─────────────────────────────────────────────────── */
@@ -621,6 +620,33 @@
     flex-direction: column;
   }
 
+  /* Work keeps the same stacked mobile header as the other panels. Its
+     desktop variant drops the scrim and uses dark tabs; on a phone the nav
+     sits over the dark header wash again, so return to the shared light ink. */
+  .headerBare::before {
+    display: block;
+    background: linear-gradient(
+      to bottom,
+      rgba(13, 15, 8, 0.97) 0%,
+      rgba(13, 15, 8, 0.94) 72%,
+      rgba(13, 15, 8, 0) 100%
+    );
+  }
+
+  .headerBare .tab {
+    color: rgba(245, 245, 240, 0.55);
+    text-shadow: none;
+  }
+
+  .headerBare .tab:hover {
+    color: rgba(245, 245, 240, 0.9);
+  }
+
+  .headerBare .tabActive,
+  .headerBare .tabActive:hover {
+    color: rgba(13, 15, 8, 0.95);
+  }
+
   /* The clock is gone on a phone; the privacy control stays and floats.
 
      The clock was 40px of row, 15px of gap and 17px of clock — 72px of the
@@ -678,7 +704,23 @@
     flex: none;
     align-self: stretch;
     justify-content: center;
+    height: 1.5rem;
     margin-bottom: 0.5rem;
+  }
+
+  .workAdaptiveMark {
+    top: 1.1rem;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .workAdaptiveClock {
+    display: none;
+  }
+
+  .workAdaptivePrivacy {
+    top: 0.7rem;
+    right: 1rem;
   }
 
   /* The five tabs have to FIT, and they did not.

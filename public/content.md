@@ -1,22 +1,41 @@
-# MZ | Research. Software. Knowledge.
+# MZ — Research, Software and Knowledge
 
-Engineered in Cairo. Owned by you. We build proprietary systems and transfer the exact knowledge you need to run them.
+MZ is a technology engineering studio based in Cairo, Egypt. It builds software and proprietary systems, conducts applied research, and transfers the knowledge clients need to operate the systems it builds.
 
-## Products
+## Studio
 
-### Occhio (/ OK-yoo /)
-An OCR that reads Arabic the way Arabic should be read. 
-Most document processing tools were built for Latin scripts and extended to Arabic later. Occhio starts where the region starts: Arabic, French, and English as equal priorities, designed for the institutional documents governments, universities, and enterprises in MENA actually handle.
-*Status: IN DEVELOPMENT*
+- **Location:** Cairo, Egypt
+- **Email:** hello@mzfortech.com
+- **Website:** https://mzfortech.com
+- **Services:** Software engineering, deployment support, and knowledge transfer
 
-## Work
+## Product in development
 
-1. **Nested United** - A unified ecosystem of specialized brands delivering smart project operations, hospitality management, technology solutions, marketing, and sustainable business growth. (https://nestedunited.com)
-2. **The Null Hypothesis** - MZ research, made explorable. (https://mzfortech.com/research)
-3. **SSC League** - Internal System (Access Restricted)
-4. **ERP System** - Internal System (Access Restricted)
+### Occhio
 
-## Initiate
+Occhio is an Arabic-first optical character recognition (OCR) system in development. It is designed for Arabic, French, and English institutional documents.
 
-Tell us what you're building. We'll tell you what it's missing.
-**Contact:** hello@mzfortech.com
+## Research
+
+### The Null Hypothesis
+
+The Null Hypothesis is MZ's research publication. The published study investigates statistical compression of VGG19 for BloodMNIST blood-cell image classification. It examines L1 regularization, structured L0 gates, and low-rank singular value decomposition (SVD).
+
+- English research portal: https://mzfortech.com/research
+- Arabic research portal: https://mzfortech.com/research/ar
+- Study: https://mzfortech.com/research/vgg19-bloodmnist-compression
+- Study in Arabic: https://mzfortech.com/research/ar/vgg19-bloodmnist-compression
+- Paper PDF: https://mzfortech.com/research-applied-stats-in-ai.pdf
+
+## Selected work
+
+### Nested United
+
+MZ designed and built a digital platform for Nested United, bringing five specialist brands into one coherent web experience.
+
+- Case study: https://mzfortech.com/work/nested-united
+- Client website: https://nestedunited.com
+
+## Contact
+
+For project inquiries, email hello@mzfortech.com or visit https://mzfortech.com/contact.

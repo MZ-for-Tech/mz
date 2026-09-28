@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -11,11 +11,12 @@ import {
 import DataStreamHero from "@/components/DataStreamHero/DataStreamHero";
 import styles from "./page.module.css";
 
-export const metadata: Metadata = {
-  title: "MZ — Research. Software. Knowledge.",
+export const metadata = pageMetadata({
+  title: "Software Studio in Cairo",
   description:
-    "A research-driven technology studio in Cairo: published research, client platforms, and proprietary software.",
-};
+    "Explore MZ's software work, applied research, and proprietary systems. MZ is a technology engineering studio based in Cairo, Egypt.",
+  path: "/home",
+});
 
 /**
  * The launcher home.

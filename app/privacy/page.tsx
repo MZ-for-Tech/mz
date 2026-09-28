@@ -1,4 +1,5 @@
 import styles from "./page.module.css";
+import { pageMetadata } from "@/lib/seo";
 import { TransitionLink } from "@/components/TransitionLink/TransitionLink";
 import ObfuscatedEmail from "@/components/ObfuscatedEmail/ObfuscatedEmail";
 
@@ -24,6 +25,13 @@ import ObfuscatedEmail from "@/components/ObfuscatedEmail/ObfuscatedEmail";
  * noise in a legal document.
  */
 const LAST_UPDATED = "26 September 2026";
+
+export const metadata = pageMetadata({
+  title: "Privacy Policy",
+  description:
+    "Read how MZ handles information submitted through its website and how to contact the team with privacy questions.",
+  path: "/privacy",
+});
 
 /**
  * Privacy — a legacy-world page outside the launcher shell.

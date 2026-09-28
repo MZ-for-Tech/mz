@@ -5,7 +5,7 @@ export default function ResearchHome({ locale = 'en' }: { locale?: 'en' | 'ar' }
   const isArabic = locale === 'ar';
 
   return (
-    <main className="research-main" dir={isArabic ? 'rtl' : 'ltr'}>
+    <main className="research-main" lang={locale} dir={isArabic ? 'rtl' : 'ltr'}>
       <div className="research-home">
         <h1 className="max-w-4xl font-latex text-5xl leading-[1.04] tracking-tight text-ink md:text-7xl">
           {isArabic ? <>النظرية <span className="italic text-accent">تأتي أولاً.</span></> : <>Theory <span className="italic text-accent">comes first.</span></>}

@@ -9,7 +9,7 @@ export default function PremiumShowcase() {
     <div className={styles.sectionContainer}>
       <div className={styles.wrapper}>
         <div className={styles.leftCopy}>
-          <p>We are a research-driven technology company.</p>
+          <h1>MZ is a research-driven technology studio in Cairo, Egypt.</h1>
           <p>We build proprietary software, deploy AI products, and transfer knowledge — in institutions that can&apos;t afford to guess.</p>
         </div>
 

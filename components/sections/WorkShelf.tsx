@@ -8,51 +8,14 @@ import { transitionTo } from "@/components/TransitionLink/TransitionLink";
 import styles from "./WorkShelf.module.css";
 
 /**
- * The shelf: every project, in one centred row, the selected one bulged.
+ * Five-project carousel. The selected square is in front at the centre;
+ * modulo offsets put the remaining squares in two rows behind it and rotate
+ * them around as selection changes. Left and right move cyclically, while
+ * MenuShell still handles up and down from the surrounding interface.
  *
- * WHY THERE IS NO INFINITE SCROLL
- *
- * This was built to wrap infinitely — the list was rendered three times and
- * the track was translated by one tile step per move, folding the index with
- * modulo. That is the right technique for forty items and the wrong one for
- * four: with so few, the repeated copies are all visible at once, so the
- * duplication reads as a bug rather than as depth. It also needed a measured
- * step, a ResizeObserver to keep that step honest, and a hand-rolled key
- * handler that fought the launcher's own spatial navigation for the same
- * arrow keys.
- *
- * They all fit on screen, so all of them are shown. No track, no offset
- * arithmetic, no wrap, no measurement. If a future collection outgrows one
- * screen, that is the point at which the wrap returns — as a decision made
- * then, against a real count, rather than pre-built and unused now.
- *
- * ARROWS ARE NOT HANDLED HERE
- *
- * The tiles are ordinary [data-tile] stops, which means MenuShell's spatial
- * navigation already moves between them — left and right along this row, up
- * and down to and from the tab row. An earlier version installed its own
- * left/right listener with stopPropagation, so pressing an arrow moved the
- * shelf selection and the launcher selection fought over the same keypress.
- * Selection is now simply derived from focus, so there is nothing to keep in
- * sync and no second handler to disagree.
- *
- * A TILE IS A LINK, NOT A CURSOR POSITION
- *
- * Reaching a project takes two activations: the first brings it to the stage,
- * the second opens its case study. A single activation was wrong because the
- * click that was only meant to look at a project threw the visitor out of the
- * launcher, and there is no Back affordance inside a console — Esc goes to
- * the start screen, not to the row you were on.
- *
- * The two-step is also how the stage earns its keep: a first activation that
- * changes a full-bleed stage is a large, obvious change of state, which is
- * what makes the second one an informed act rather than a guess. It is the
- * same reason the row bulges.
- *
- * Keyboard and pointer go through one function, and "pointing at" is separate
- * from "armed". Arrowing onto a tile selects it for free; it does not arm it.
- * Folding those together made Enter open the case study on the first press
- * for anyone using the keyboard, which is the most ordinary path there is.
+ * Focus previews and disarms a tile. Click or Enter arms it; a second
+ * activation opens its case study. Pointer hover does not change selection,
+ * so the carousel does not move underneath the pointer.
  */
 
 /* The shelf is the client's book of work, so it is the subset that says so in
@@ -89,7 +52,9 @@ export function WorkShelf() {
    * So: moving the selection is free and silent, and arming is a deliberate
    * act — a click, or Enter. The two-step then behaves identically for a
    * mouse and for the keyboard, and neither can trip the other. */
-  const [activeSlug, setActiveSlug] = useState(projects[0]?.slug);
+  const [activeSlug, setActiveSlug] = useState(
+    projects[Math.floor(projects.length / 2)]?.slug
+  );
   const [armedSlug, setArmedSlug] = useState<string | null>(null);
 
   const activeIndex = Math.max(
@@ -146,18 +111,32 @@ export function WorkShelf() {
 
   const onTileKeyDown = useCallback(
     (e: React.KeyboardEvent, slug: string) => {
+      if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
+        e.preventDefault();
+        e.stopPropagation();
+        const tiles = Array.from(
+          e.currentTarget
+            .closest("ul")
+            ?.querySelectorAll<HTMLElement>("[data-tile]") ?? []
+        );
+        const currentIndex = projects.findIndex((project) => project.slug === slug);
+        const step = e.key === "ArrowRight" ? 1 : -1;
+        const nextIndex =
+          (currentIndex + step + projects.length) % projects.length;
+        tiles[nextIndex]?.focus();
+        return;
+      }
       if (e.key !== "Enter" && e.key !== " ") return;
       e.preventDefault();
       e.stopPropagation();
       activate(slug);
     },
-    [activate]
+    [activate, projects]
   );
 
-  // Selection follows focus and the cursor, because both are free movements —
-  // but either one DISARMS. Arriving at a tile by any means that isn't a
-  // deliberate activation always costs one press before it costs two, which is
-  // the behaviour the whole split exists to produce.
+  // Selection follows focus, but never hover. Repositioning the carousel on
+  // pointer entry would move the target under the pointer; keyboard movement
+  // and deliberate activation are stable inputs for the rotating layout.
   const select = useCallback((slug: string) => {
     setActiveSlug(slug);
     setArmedSlug(null);
@@ -230,6 +209,10 @@ export function WorkShelf() {
       <ul className={styles.shelf} aria-label="Projects">
         {projects.map((project, i) => {
           const isActive = i === activeIndex;
+          const halfLength = Math.floor(projects.length / 2);
+          const slotOffset =
+            ((i - activeIndex + projects.length + halfLength) %
+              projects.length) - halfLength;
           const initials = project.name
             .split(/\s+/)
             .map((word) => word[0])
@@ -237,59 +220,71 @@ export function WorkShelf() {
             .slice(0, 2);
 
           return (
-            <li key={project.slug} className={styles.slot}>
-              {/* A mark with no background of its own gets the whole card
-                  turned white. Nested United's logo is a bare black path, so
-                  on the dark surface it disappeared completely — a small
-                  plate behind the icon was not enough, it needed a field to
-                  sit in. Initials tiles keep the dark surface, because type
-                  set in the site's own colour is already legible on it. */}
+            <li
+              key={project.slug}
+              className={styles.slot}
+              data-offset={slotOffset}
+            >
               <div
                 data-tile
-                className={`${styles.tile} ${
-                  isActive ? styles.tileActive : ""
-                } ${project.logo ? styles.tileOnLight : ""}`}
+                className={`${styles.tile} ${isActive ? styles.tileActive : ""}`}
                 style={{ ["--accent-rgb" as string]: project.accentColorRgb }}
                 role="button"
                 tabIndex={0}
                 aria-label={project.name}
                 aria-current={isActive ? "true" : undefined}
                 onFocus={() => select(project.slug)}
-                onMouseEnter={() => select(project.slug)}
                 onClick={() => activate(project.slug)}
                 onKeyDown={(e) => onTileKeyDown(e, project.slug)}
               >
-                {project.logo ? (
-                  <Image
-                    src={project.logo}
-                    alt=""
-                    width={200}
-                    height={200}
-                    className={styles.tileLogo}
-                  />
-                ) : (
-                  <span className={styles.tileInitials}>{initials}</span>
-                )}
-
-                {/* The label sits INSIDE the card, across its bottom — the
-                    Xbox arrangement. It was below the card, which meant the
-                    name was a separate object hanging under a mark rather
-                    than part of the thing it names, and it made the row
-                    taller for no reason.
-
-                    Inside, it needs a scrim of its own: the card is white
-                    when it carries a mark, and this type is the site's light
-                    ink, so on a white card it would be invisible without one.
-                    The scrim is the same device the launcher tiles use for
-                    their action bars, and it costs no extra height because
-                    the band is part of the card rather than added to it. */}
-                <span className={styles.tileMeta}>
-                  <span className={styles.tileName}>{project.name}</span>
-                  <span className={styles.tileCategory}>
-                    {project.category}
-                  </span>
+                <span className={styles.tileFace}>
+                  {project.logo && project.slug !== "nested-united" ? (
+                    <Image
+                      src={project.logo}
+                      alt=""
+                      width={200}
+                      height={200}
+                      className={styles.tileLogo}
+                    />
+                  ) : !project.logo ? (
+                    <span className={styles.tileInitials}>{initials}</span>
+                  ) : null}
                 </span>
               </div>
+            </li>
+          );
+        })}
+      </ul>
+
+      {/* Keep the captions in their own blending layer. The logo tiles need
+          transforms and depth opacity; text needs to blend against the stage
+          behind them, so it cannot live inside those transformed tile layers. */}
+      <ul className={styles.labelShelf} aria-hidden="true">
+        {projects.map((project, i) => {
+          const halfLength = Math.floor(projects.length / 2);
+          const slotOffset =
+            ((i - activeIndex + projects.length + halfLength) % projects.length) -
+            halfLength;
+
+          return (
+            <li
+              key={project.slug}
+              className={styles.labelSlot}
+              data-offset={slotOffset}
+            >
+              {project.slug === "nested-united" && (
+                <Image
+                  src={project.logo!}
+                  alt=""
+                  width={200}
+                  height={200}
+                  className={styles.adaptiveLogo}
+                />
+              )}
+              <span className={styles.tileMeta}>
+                <span className={styles.tileName}>{project.name}</span>
+                <span className={styles.tileCategory}>{project.category}</span>
+              </span>
             </li>
           );
         })}

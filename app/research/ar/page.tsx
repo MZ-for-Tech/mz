@@ -1,19 +1,13 @@
-import type { Metadata } from 'next';
+import { pageMetadata } from '@/lib/seo';
 import ResearchHome from '@/research/components/ResearchHome';
 
-export const metadata: Metadata = {
-  title: 'الفرضية الصفرية | أبحاث MZ',
+export const metadata = pageMetadata({
+  title: 'الفرضية الصفرية',
   description: 'أبحاث MZ من السؤال إلى المنتج، مع أفكار وأساليب تفاعلية.',
-  alternates: { canonical: '/research/ar', languages: { en: '/research', ar: '/research/ar' } },
-  openGraph: {
-    title: 'الفرضية الصفرية | أبحاث MZ',
-    description: 'أبحاث MZ من السؤال إلى المنتج، مع أفكار وأساليب تفاعلية.',
-    url: 'https://mzfortech.com/research/ar',
-    siteName: 'MZ',
-    locale: 'ar_EG',
-    type: 'website',
-  },
-};
+  path: '/research/ar',
+  locale: 'ar_EG',
+  languages: { en: '/research', ar: '/research/ar' },
+});
 
 export default function ArabicResearchPage() {
   return <ResearchHome locale="ar" />;

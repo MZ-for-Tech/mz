@@ -10,7 +10,7 @@
   font-size: 0.8rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: rgba(245, 245, 240, 0.45);
+  color: rgba(255, 255, 255, 0.86);
   /* Tabular figures: a proportional clock shifts the whole cluster sideways
      every time the digit widths change, which at 1Hz is a visible twitch. */
   font-variant-numeric: tabular-nums;
@@ -19,24 +19,9 @@
 }
 
 .time {
-  color: rgba(245, 245, 240, 0.85);
+  color: #fff;
 }
 
 .zone {
-  color: rgba(245, 245, 240, 0.35);
+  color: rgba(255, 255, 255, 0.72);
 }
-
-/* The clock is off-white on every launcher route, and does not invert on
-   `[data-stage="light"]`.
-
-   The old rule that did invert is worth remembering, because removing it is a
-   real decision rather than a deletion. `data-stage="light"` describes the
-   HEADER's palette — Work drops the header's dark plate — and the old rule read
-   it as "the page behind is light" and recoloured the clock dark to match.
-   But what the clock sits on there is the stage, not the plate, and the stage
-   is a dark shader. So the inversion put dark ink on a dark surface.
-
-   The lesson generalises past this module: that flag is not a statement about
-   the background behind the chrome. Branch on the surface the text is actually
-   over. */
-

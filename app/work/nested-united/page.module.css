@@ -90,12 +90,13 @@
 .heroSubtitle {
   font-family: var(--font-mono);
   font-size: 0.9rem;
+  font-weight: 400;
   letter-spacing: 0.05em;
   text-transform: uppercase;
   color: #fffbf3;
   background-color: #100f0d;
   padding: 0.5rem 1rem;
-  margin-top: 1rem;
+  margin: 1rem 0 0;
   z-index: 10;
   text-align: center;
   pointer-events: auto;
