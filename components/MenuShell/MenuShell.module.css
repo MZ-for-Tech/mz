@@ -737,37 +737,12 @@
     right: 1rem;
   }
 
-  /* The five tabs have to FIT, and they did not.
-
-     Measured at 375px: the tab list laid out 447px wide inside a 328px
-     container — 119px of overhang, ~60px spilling off each side. `overflow-x:
-     auto` scrolled it, so nothing was missing, but `justify-content: center`
-     on a scroll container centres the OVERFLOW rather than the visible
-     window, which pushed Home off the left edge entirely and clipped Contact
-     to "CON". The first and last tabs were unreachable by scrolling too:
-     the container was already showing the centre of the strip.
-
-     Two changes, because either alone leaves a bad result:
-
-       - The horizontal padding goes. At 0.85rem each side that is 27px per
-         tab, 136px across five — more than the entire overflow, and the
-         single biggest cost in the row. It exists so the selected plate has
-         air around the label on desktop, where there is room to spend. Here
-         the plate is still legible with a little less, and the label itself
-         is what has to survive.
-
-       - The gap tightens, and `justify-content` goes to `flex-start`. Once
-         the row fits there is nothing to centre against an overflow, and
-         `flex-start` is the honest value: it makes the strip start where the
-         eye expects, and it is what keeps it correct if the labels ever grow
-         again, because a row that overflows from its left edge is
-         scrollable while one that overflows both ways is not. */
+  /* The tabs use the available row width. Auto margins centre the list when
+     its intrinsic width fits and collapse to zero when it overflows, so the
+     first tab stays reachable from the left edge on narrow phones. */
 
   .tabs {
-    /* The nav is the widest thing in the column, so it is the thing the
-       column centres. `width: 100%` rather than `flex: 1 1 auto` because
-       `align-self: stretch` is not what is centring it here — the column's
-       `align-items: center` is, and it needs an actual width to centre. */
+    /* Provides a full-width centering and scrolling track for the tab list. */
     width: 100%;
     justify-content: flex-start;
     overflow-x: auto;
@@ -781,6 +756,7 @@
 
   .tabList {
     gap: 0.35rem;
+    margin-inline: auto;
   }
 
   .tab {

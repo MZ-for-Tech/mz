@@ -322,6 +322,15 @@
   margin-top: 0.35rem;
   text-align: center;
   pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+.labelSlot:not([data-offset="0"]) .tileMeta {
+  opacity: 0;
+}
+
+.labelSlot[data-offset="0"] .tileMeta {
+  opacity: 1;
 }
 
 .tileName {
@@ -394,21 +403,6 @@
 
   .labelSlot {
     top: 44px;
-  }
-
-  /* Keep the carousel on mobile, but give only the front project a caption.
-     The five 144px captions collide when compressed into a phone-width row;
-     the smaller/fainter logos already communicate which projects are behind. */
-  .labelSlot:not([data-offset="0"]) .tileMeta {
-    opacity: 0;
-  }
-
-  .labelSlot[data-offset="0"] .tileMeta {
-    opacity: 1;
-  }
-
-  .tileMeta {
-    transition: opacity 0.25s ease;
   }
 
   .adaptiveLogo {
