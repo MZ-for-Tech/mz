@@ -468,18 +468,10 @@
    artwork being bright. Those rules are per-surface, so a tile on the paper
    with no field behind it still gets the right ink.
 
-   The warm cast on the left is the yellow brand light spilling across a
-   paper surface — the same reason a real sheet of paper picks up the colour
-   of the lamp above it. It keeps the card from reading as a flat swatch. */
+   Its paper token is shared with the Research page, so the card is already
+   standing on the destination's exact ground before the portal opens. */
 .heroPaper {
-  background:
-    linear-gradient(
-      115deg,
-      rgba(255, 231, 141, 0.16) 0%,
-      rgba(255, 231, 141, 0.04) 38%,
-      transparent 70%
-    ),
-    var(--color-tnh-bg, #F5F0E8);
+  background: var(--color-tnh-bg, #f5f2ed);
 }
 
 /* A project whose screenshot is being held back: the mark, centred on a light

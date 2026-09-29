@@ -55,7 +55,7 @@
 }
 
 .tnh-site {
-  --paper-val: #f5f2ed;
+  --paper-val: var(--color-tnh-bg, #f5f2ed);
   --ink-val: #111111;
   --pencil-val: #756b5e;
   --accent-val: #8b3a2b;

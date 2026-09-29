@@ -9,6 +9,7 @@ import {
   type FeaturedSlot,
 } from "@/lib/projects";
 import DataStreamHero from "@/components/DataStreamHero/DataStreamHero";
+import ResearchPortalLink from "@/components/ResearchPortalLink/ResearchPortalLink";
 import styles from "./page.module.css";
 
 export const metadata = pageMetadata({
@@ -259,6 +260,15 @@ function HeroCard({
     >
       {body}
     </a>
+  ) : project.link === "/research" ? (
+    <ResearchPortalLink
+      className={className}
+      actionClassName={styles.heroAction}
+      title={project.name}
+      aria-label={project.name}
+    >
+      {body}
+    </ResearchPortalLink>
   ) : (
     <Link
       href={project.link || (project.hasCaseStudy ? `/work/${project.slug}` : "/work")}

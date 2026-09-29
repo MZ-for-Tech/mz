@@ -10,6 +10,9 @@ export default function ResearchLoader() {
   const [exiting, setExiting] = useState(false);
 
   useLayoutEffect(() => {
+    // The launcher card expands above the route change. This loader is the
+    // handoff surface, so remove the temporary card as soon as it is mounted.
+    document.querySelector("[data-research-portal]")?.remove();
     setVisible(true);
     setExiting(false);
 
