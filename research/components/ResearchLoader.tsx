@@ -1,13 +1,18 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useLayoutEffect, useState } from 'react';
+import { usePathname } from 'next/navigation';
 
-/** The original Null Hypothesis loading treatment, shown when /research mounts. */
+/** The Null Hypothesis skeleton used for entry and internal route transitions. */
 export default function ResearchLoader() {
+  const pathname = usePathname();
   const [visible, setVisible] = useState(true);
   const [exiting, setExiting] = useState(false);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
+    setVisible(true);
+    setExiting(false);
+
     let removeTimer: number | undefined;
     const fadeTimer = window.setTimeout(() => {
       setExiting(true);
@@ -18,7 +23,7 @@ export default function ResearchLoader() {
       window.clearTimeout(fadeTimer);
       if (removeTimer !== undefined) window.clearTimeout(removeTimer);
     };
-  }, []);
+  }, [pathname]);
 
   if (!visible) return null;
 
