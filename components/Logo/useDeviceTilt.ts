@@ -51,14 +51,14 @@ export function useDeviceTilt() {
         return;
       }
 
-      // Degrees → a lean. 22° is a comfortable wrist tilt; dividing by it
-      // means a full-strength lean happens when the device is turned about a
-      // fifth of a right angle, which is roughly the point where a person
-      // holding a phone has clearly meant to move it.
+      // Small phone movements should move the mark immediately. Ignore a
+      // fraction of a degree of sensor drift, then reach full input after an
+      // 8° tilt: that makes an ordinary wrist adjustment visible without
+      // needing an exaggerated phone movement.
       const dBeta = e.beta - neutral.current.beta;
       const dGamma = e.gamma - neutral.current.gamma;
-      tilt.current.x = clamp(dGamma / 22, -1, 1);
-      tilt.current.y = clamp(dBeta / 22, -1, 1);
+      tilt.current.x = normalizeTilt(dGamma);
+      tilt.current.y = normalizeTilt(dBeta);
     };
 
     window.addEventListener("deviceorientation", onOrientation, { passive: true });
@@ -122,4 +122,10 @@ export async function requestDeviceTilt(): Promise<boolean> {
 // none.
 function clamp(value: number, min: number, max: number): number {
   return Math.min(Math.max(value, min), max);
+}
+
+function normalizeTilt(degrees: number): number {
+  const deadZone = 0.35;
+  const responsiveDegrees = Math.sign(degrees) * Math.max(0, Math.abs(degrees) - deadZone);
+  return clamp(responsiveDegrees / 8, -1, 1);
 }

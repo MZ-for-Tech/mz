@@ -377,8 +377,9 @@ function Logo({ onLoad, assemblyStartDelayMs = 0 }: { onLoad?: () => void; assem
     const scrollTiltX = scrollProgress * 0.4; // max ~23° backward tilt
 
     // --- Mouse tracking & interaction ---
-    // Tilt influence doubles while hovering (feels magnetic)
-    const tiltStrength = isHovered ? 0.22 : 0.10;
+    // Touch devices have no cursor, so give their sensor input a wider range
+    // and a quicker response. A small wrist movement should read in the mark.
+    const tiltStrength = isMobile ? 0.48 : isHovered ? 0.22 : 0.10;
 
     // Base organic sway (feels like it's floating in fluid)
     const swayX = Math.sin(t * 0.8) * 0.03;
@@ -405,28 +406,33 @@ function Logo({ onLoad, assemblyStartDelayMs = 0 }: { onLoad?: () => void; assem
     // the mark is neutral because both are zero.
     const tiltX = deviceTilt.current.x;
     const tiltY = deviceTilt.current.y;
-    const aimX = state.pointer.x + tiltX;
-    const aimY = state.pointer.y + tiltY;
+    const aimX = isMobile
+      ? MathUtils.clamp(state.pointer.x + tiltX, -1, 1)
+      : state.pointer.x + tiltX;
+    const aimY = isMobile
+      ? MathUtils.clamp(state.pointer.y + tiltY, -1, 1)
+      : state.pointer.y + tiltY;
 
     // Combine scroll tilt, aim, drag rotation, and organic sway
     const targetX = scrollTiltX + aimY * tiltStrength + swayX + dragRotation.current.x;
-    const targetY = aimX * (isHovered ? 0.25 : 0.15) + swayY + dragRotation.current.y;
-    const targetZ = -aimX * (isHovered ? 0.10 : 0.05);
+    const targetY = aimX * (isMobile ? 0.42 : isHovered ? 0.25 : 0.15) + swayY + dragRotation.current.y;
+    const targetZ = -aimX * (isMobile ? 0.14 : isHovered ? 0.10 : 0.05);
+    const rotationResponse = isMobile ? 0.18 : 0.08;
 
     logoRef.current.rotation.x = MathUtils.lerp(
       logoRef.current.rotation.x,
       targetX,
-      0.08
+      rotationResponse
     );
     logoRef.current.rotation.y = MathUtils.lerp(
       logoRef.current.rotation.y,
       targetY + scrollVel.current,
-      0.08
+      rotationResponse
     );
     logoRef.current.rotation.z = MathUtils.lerp(
       logoRef.current.rotation.z,
       targetZ,
-      0.08
+      rotationResponse
     );
 
     // Decay the scroll kick each frame

@@ -7,15 +7,23 @@ import AnalysisSection from "@/research/features/studies/shared/AnalysisSection"
 import Marginalia from "@/research/components/Marginalia";
 import MathBox from "@/research/features/studies/shared/MathBox";
 import { VisualizationEngine } from "@/research/features/engine/VisualizationEngine";
-import { CUSTOM_STUDIES } from "@/research/data/studies";
+import { CUSTOM_STUDIES, hasArabicStudyMetadata } from "@/research/data/studies";
 import { appliedStatsStrings } from "@/research/data/strings/appliedStats";
 
 export function researchArticleMetadata(locale: 'en' | 'ar', slug: string): Metadata {
     const project = CUSTOM_STUDIES.find((item) => item.slug === slug && item.published);
     if (!project) return {};
-    const title = locale === 'ar' && project.title_ar ? project.title_ar : project.title;
-    const description = locale === 'ar' && project.description_ar ? project.description_ar : project.description || project.tagline || '';
+    if (locale === 'ar' && !hasArabicStudyMetadata(project)) {
+        return { title: project.title, robots: { index: false, follow: true } };
+    }
+    const title = locale === 'ar' ? project.title_ar! : project.title;
+    const description = locale === 'ar'
+        ? project.description_ar!
+        : project.description || project.tagline || '';
     const path = locale === 'ar' ? `/research/ar/${project.slug}` : `/research/${project.slug}`;
+    const languages: Record<string, string> = hasArabicStudyMetadata(project)
+        ? { en: `/research/${project.slug}`, ar: `/research/ar/${project.slug}` }
+        : { en: `/research/${project.slug}` };
 
     return {
         ...pageMetadata({
@@ -23,17 +31,15 @@ export function researchArticleMetadata(locale: 'en' | 'ar', slug: string): Meta
             description,
             path,
             locale: locale === 'ar' ? 'ar_EG' : 'en_US',
-            languages: {
-                en: `/research/${project.slug}`,
-                ar: `/research/ar/${project.slug}`,
-            },
+            languages,
             type: 'article',
         }),
         authors: project.authors?.map((author) => ({ name: author.name })),
     };
 }
 
-const tocData = [
+const tocLabels = {
+  en: [
     { id: "intro", label: "Introduction" },
     { id: "methodology", label: "§1 Research Methodology" },
     { id: "baseline", label: "§2 Baseline Model Analysis" },
@@ -41,7 +47,17 @@ const tocData = [
     { id: "l0-gates", label: "§4 Structured L0 Gates" },
     { id: "svd", label: "§5 Low-Rank SVD" },
     { id: "synthesis", label: "§6 Discussion & Unified Synthesis" },
-];
+  ],
+  ar: [
+    { id: "intro", label: "مقدمة" },
+    { id: "methodology", label: "§1 منهجية البحث" },
+    { id: "baseline", label: "§2 تحليل النموذج الأساسي" },
+    { id: "lasso", label: "§3 تنظيم L1" },
+    { id: "l0-gates", label: "§4 بوابات L0 المهيكلة" },
+    { id: "svd", label: "§5 تحليل SVD منخفض الرتبة" },
+    { id: "synthesis", label: "§6 المناقشة والتركيب" },
+  ],
+};
 
 export default function ResearchArticle({ locale = 'en', slug }: { locale?: 'en' | 'ar'; slug: string }) {
     const s = appliedStatsStrings[locale as 'en' | 'ar'] || appliedStatsStrings.en;
@@ -51,12 +67,21 @@ export default function ResearchArticle({ locale = 'en', slug }: { locale?: 'en'
 
     const title = (locale === 'ar' && project?.title_ar) ? project.title_ar : project?.title;
     const tagline = (locale === 'ar' && project?.tagline_ar) ? project.tagline_ar : project?.tagline;
+    const description = locale === 'ar' && project.description_ar
+        ? project.description_ar
+        : project.description || project.tagline || '';
+    const category = locale === 'ar' && project.category_ar
+        ? project.category_ar
+        : project.category || 'Machine Learning';
+    const tocData = tocLabels[locale];
     const canonicalUrl = `https://mzfortech.com${locale === 'ar' ? '/research/ar' : '/research'}/${project.slug}`;
     const articleSchema = {
         '@context': 'https://schema.org',
         '@type': 'ScholarlyArticle',
         headline: title,
-        description: project.description,
+        description,
+        alternativeHeadline: tagline,
+        genre: category,
         inLanguage: locale === 'ar' ? 'ar' : 'en',
         datePublished: project.published_at,
         dateModified: project.updated_at || project.published_at,
@@ -71,7 +96,7 @@ export default function ResearchArticle({ locale = 'en', slug }: { locale?: 'en'
         url: canonicalUrl,
         isPartOf: {
             '@type': 'CreativeWorkSeries',
-            name: 'The Null Hypothesis',
+            name: locale === 'ar' ? 'الفرضية الصفرية' : 'The Null Hypothesis',
             url: `https://mzfortech.com/${locale === 'ar' ? 'research/ar' : 'research'}`,
         },
     };
@@ -96,7 +121,7 @@ export default function ResearchArticle({ locale = 'en', slug }: { locale?: 'en'
                         </div>
                     </div>
                     <div className="flex items-center gap-3 border-t-[3px] border-ink py-3 font-mono text-xs uppercase tracking-widest text-accent">
-                        <Cpu className="h-4 w-4" /> {project.category || 'Machine Learning'}
+                        <Cpu className="h-4 w-4" /> {category}
                     </div>
                     <h1 className="max-w-4xl font-latex text-4xl leading-[0.98] tracking-tight text-ink md:text-6xl">{title}</h1>
                     {tagline && <p className="mt-5 max-w-3xl font-serif text-xl italic leading-relaxed text-ink/65 md:text-2xl">{tagline}</p>}
@@ -109,13 +134,17 @@ export default function ResearchArticle({ locale = 'en', slug }: { locale?: 'en'
                 <div className="mb-12 grid grid-cols-1 gap-8 py-8 border-b border-ink/10">
                     <div className="space-y-4">
                         <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-tertiary">
-                            <Users className="w-3 h-3" /> Research Team
+                            <Users className="w-3 h-3" /> {locale === 'ar' ? 'فريق البحث' : 'Research Team'}
                         </div>
                         <div className="flex flex-wrap gap-x-6 gap-y-2">
                             {project.authors?.map((author: { name: string; role?: string }) => (
                                 <div key={author.name}>
                                     <span className="block text-sm font-bold text-ink">{author.name}</span>
-                                    <span className="text-xxs font-mono uppercase text-tertiary">{author.role || "Researcher"}</span>
+                            <span className="text-xxs font-mono uppercase text-tertiary">
+                                {locale === 'ar'
+                                    ? author.role === 'Researcher' || !author.role ? 'باحث' : author.role
+                                    : author.role || 'Researcher'}
+                            </span>
                                 </div>
                             ))}
                         </div>

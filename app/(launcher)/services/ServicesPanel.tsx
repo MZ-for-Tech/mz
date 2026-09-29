@@ -60,8 +60,27 @@ import styles from "./page.module.css";
  */
 
 export default function ServicesPanel() {
+  const serviceStructuredData = {
+    "@context": "https://schema.org",
+    "@graph": SERVICES.map((service) => ({
+      "@type": "Service",
+      "@id": `https://mzfortech.com/services#${service.id}`,
+      name: service.title,
+      serviceType: service.pillar,
+      description: `${service.tagline} ${service.capabilities.join(". ")}.`,
+      provider: { "@id": "https://mzfortech.com/#organization" },
+      url: "https://mzfortech.com/services",
+    })),
+  };
+
   return (
     <div className={styles.panel}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(serviceStructuredData).replace(/</g, "\\u003c"),
+        }}
+      />
       <div className={styles.intro}>
         <h1 className={styles.title}>Services</h1>
         <p className={styles.count}>

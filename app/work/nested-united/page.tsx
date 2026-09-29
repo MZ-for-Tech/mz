@@ -22,12 +22,34 @@ const redHatDisplay = Red_Hat_Display({
 });
 
 
+const caseStudyDescription =
+  "How MZ designed and built a digital platform for Nested United, bringing five specialist brands into one coherent web experience. " +
+  (PROJECTS.find((p) => p.slug === "nested-united")?.tagline || "Nested United project");
+
+const caseStudyStructuredData = {
+  "@context": "https://schema.org",
+  "@type": "CreativeWork",
+  "@id": "https://mzfortech.com/work/nested-united#case-study",
+  name: "Nested United website case study",
+  headline: "Nested United website case study",
+  description: caseStudyDescription,
+  inLanguage: "en",
+  genre: "Digital platform case study",
+  image: "https://mzfortech.com/nested/screenshots/desktop.webp",
+  author: { "@id": "https://mzfortech.com/#organization" },
+  publisher: { "@id": "https://mzfortech.com/#organization" },
+  about: {
+    "@type": "Organization",
+    name: "Nested United",
+    url: "https://nestedunited.com/",
+  },
+  mainEntityOfPage: "https://mzfortech.com/work/nested-united",
+  url: "https://mzfortech.com/work/nested-united",
+};
+
 export const metadata = pageMetadata({
   title: "Nested United Case Study",
-  description:
-    "How MZ designed and built a digital platform for Nested United, bringing five specialist brands into one coherent web experience. " +
-    (PROJECTS.find((p) => p.slug === "nested-united")?.tagline ||
-      "Nested United project"),
+  description: caseStudyDescription,
   path: "/work/nested-united",
 });
 
@@ -35,6 +57,12 @@ export default function NestedUnitedWorld() {
 
   return (
     <div className={`${styles.worldContainer} ${redHatDisplay.variable}`}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(caseStudyStructuredData).replace(/</g, "\\u003c"),
+        }}
+      />
       <IconSprite />
 
       {/* Hero Strip */}

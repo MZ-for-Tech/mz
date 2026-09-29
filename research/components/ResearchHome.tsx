@@ -1,4 +1,4 @@
-import { CUSTOM_STUDIES } from '@/research/data/studies';
+import { CUSTOM_STUDIES, hasArabicStudyMetadata } from '@/research/data/studies';
 import Bookshelf from '@/research/features/research/Bookshelf';
 
 export default function ResearchHome({ locale = 'en' }: { locale?: 'en' | 'ar' }) {
@@ -20,7 +20,12 @@ export default function ResearchHome({ locale = 'en' }: { locale?: 'en' | 'ar' }
           <p id="research-shelf-label" className="font-mono text-xs uppercase tracking-[0.16em] text-ink/45">
             {isArabic ? 'بحث مختار' : 'Research on the shelf'}
           </p>
-          <Bookshelf studies={CUSTOM_STUDIES.filter((study) => study.published)} locale={locale} />
+          <Bookshelf
+            studies={CUSTOM_STUDIES.filter(
+              (study) => study.published && (!isArabic || hasArabicStudyMetadata(study)),
+            )}
+            locale={locale}
+          />
         </section>
       </div>
     </main>
