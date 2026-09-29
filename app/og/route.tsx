@@ -17,9 +17,29 @@ function sectionFor(path: string) {
 
 function limit(text: string, length: number) {
   const normalized = text.replace(/\s+/g, " ").trim();
-  return normalized.length > length
-    ? `${normalized.slice(0, length - 1).trimEnd()}…`
-    : normalized;
+  if (normalized.length <= length) return normalized;
+
+  const candidate = normalized.slice(0, length - 1).trimEnd();
+  const boundary = candidate.lastIndexOf(" ");
+  const shortened = boundary >= length * 0.7 ? candidate.slice(0, boundary) : candidate;
+  return `${shortened}…`;
+}
+
+function actionFor(path: string, isArabic: boolean) {
+  if (isArabic) {
+    if (path.startsWith("/research")) return "اقرأ البحث ↗";
+    if (path.startsWith("/work")) return "استكشف الأعمال ↗";
+    if (path === "/contact") return "ابدأ محادثة ↗";
+    return "ابدأ مشروعاً ↗";
+  }
+
+  if (path.startsWith("/research")) return "READ THE RESEARCH ↗";
+  if (path === "/work/nested-united") return "VIEW THE CASE STUDY ↗";
+  if (path.startsWith("/work")) return "EXPLORE OUR WORK ↗";
+  if (path === "/services") return "TELL US WHAT YOU'RE BUILDING ↗";
+  if (path === "/contact") return "START A CONVERSATION ↗";
+  if (path === "/intel") return "GET TO KNOW MZ ↗";
+  return "START A PROJECT ↗";
 }
 
 export async function GET(request: Request) {
@@ -27,14 +47,15 @@ export async function GET(request: Request) {
   const title = limit(searchParams.get("title") || "Model Zero for Technology Solutions", 110);
   const description = limit(
     searchParams.get("description") || "A Cairo-based software and AI company building custom systems and training teams to run them.",
-    155,
+    125,
   );
   const path = searchParams.get("path") || "/";
   const isArabic = searchParams.get("locale")?.startsWith("ar") ?? false;
   const cardDescription = path === "/"
-    ? "A Cairo-based software and AI company building custom systems and training teams to run them."
+    ? "Software and AI systems, built in Cairo. Teams trained to run them."
     : description;
   const section = sectionFor(path);
+  const action = actionFor(path, isArabic);
   const logo = await readFile(join(process.cwd(), "public/mz.svg"), "utf8");
   const logoSource = `data:image/svg+xml;base64,${Buffer.from(logo).toString("base64")}`;
   const arabicFont = isArabic
@@ -95,6 +116,7 @@ export async function GET(request: Request) {
 
         <img
           src={logoSource}
+          alt="MZ logo"
           style={{
             position: "absolute",
             right: "74px",
@@ -191,16 +213,24 @@ export async function GET(request: Request) {
             >
               {cardDescription}
             </div>
+            <div
+              style={{
+                display: "flex",
+                alignSelf: isArabic ? "flex-end" : "flex-start",
+                alignItems: "center",
+                marginTop: 24,
+                border: "1px solid rgba(168,201,93,0.58)",
+                borderRadius: 3,
+                padding: "15px 22px",
+                background: "rgba(168,201,93,0.08)",
+                color: "#ffe78d",
+                fontSize: 17,
+                letterSpacing: "0.1em",
+              }}
+            >
+              {action}
+            </div>
           </div>
-
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              height: 1,
-              background: "rgba(245,245,240,0.14)",
-            }}
-          />
         </div>
       </div>
     ),

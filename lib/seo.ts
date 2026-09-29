@@ -9,6 +9,16 @@ type PageMetadataOptions = {
   type?: "website" | "article";
 };
 
+function fitDescription(text: string, maxLength: number): string {
+  const normalized = text.replace(/\s+/g, " ").trim();
+  if (normalized.length <= maxLength) return normalized;
+
+  const candidate = normalized.slice(0, maxLength - 1).trimEnd();
+  const boundary = candidate.lastIndexOf(" ");
+  const shortened = boundary >= maxLength * 0.7 ? candidate.slice(0, boundary) : candidate;
+  return `${shortened}…`;
+}
+
 /** Page-specific search and share metadata with one canonical URL source. */
 export function pageMetadata({
   title,
@@ -18,16 +28,18 @@ export function pageMetadata({
   languages,
   type = "website",
 }: PageMetadataOptions): Metadata {
-  const imageParams = new URLSearchParams({ title, description, path, locale });
+  const metaDescription = fitDescription(description, 155);
+  const socialDescription = fitDescription(description, 125);
+  const imageParams = new URLSearchParams({ title, description: socialDescription, path, locale });
   const imageUrl = `/og?${imageParams.toString()}`;
 
   return {
     title,
-    description,
+    description: metaDescription,
     alternates: { canonical: path, ...(languages ? { languages } : {}) },
     openGraph: {
       title,
-      description,
+      description: socialDescription,
       url: path,
       siteName: "MZ",
       images: [{ url: imageUrl, alt: title, width: 1200, height: 630 }],
@@ -37,7 +49,7 @@ export function pageMetadata({
     twitter: {
       card: "summary_large_image",
       title,
-      description,
+      description: socialDescription,
       images: [imageUrl],
     },
   };

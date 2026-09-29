@@ -13,7 +13,7 @@ const siteStructuredData = {
       logo: "https://www.mzfortech.com/mz.svg",
       email: "hello@mzfortech.com",
       description:
-        "Model Zero for Technology Solutions (MZ) is a Cairo-based software and AI company. It builds custom systems and trains teams to run them, informed by applied research.",
+        "Model Zero for Technology Solutions (MZ) builds software and AI in Cairo, then trains teams to run it. Applied research informs the work.",
       address: {
         "@type": "PostalAddress",
         addressLocality: "Cairo",
@@ -34,7 +34,7 @@ const siteStructuredData = {
 export const metadata = pageMetadata({
   title: "Model Zero for Technology Solutions",
   description:
-    "Model Zero for Technology Solutions (MZ) is a Cairo-based software and AI company. It builds custom systems and trains teams to run them, informed by applied research.",
+    "Model Zero for Technology Solutions (MZ) builds software and AI in Cairo, then trains teams to run it. Applied research informs the work.",
   path: "/",
 });
 
