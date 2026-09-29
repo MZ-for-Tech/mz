@@ -10,7 +10,7 @@ export default function ResearchLayout({ children }: { children: React.ReactNode
     <div className="tnh-site">
       <ResearchLoader />
       <header className="research-navbar">
-        <Link href="/research" className="research-brand">
+        <Link href="/research" className="research-brand" aria-label="The Null Hypothesis home">
           <Logo size={26} />
           <span className="research-wordmark">The Null Hypothesis</span>
         </Link>
@@ -21,8 +21,9 @@ export default function ResearchLayout({ children }: { children: React.ReactNode
       </header>
       {children}
       <footer className="research-footer">
-        <span>© {new Date().getFullYear()} Model Zero for Technology Solutions</span>
-        <TransitionLink href="/home">Model Zero for Technology Solutions ↗</TransitionLink>
+        <TransitionLink href="/home">
+          © {new Date().getFullYear()} Model Zero for Technology Solutions
+        </TransitionLink>
       </footer>
     </div>
   );

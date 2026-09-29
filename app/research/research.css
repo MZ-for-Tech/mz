@@ -345,11 +345,15 @@
 body:has(.tnh-site) .layout-logo-link { display: none; }
 
 @media (max-width: 768px) {
-  .research-navbar { padding: 0.6rem 1rem 0.6rem 6rem; }
+  .research-navbar { padding: 0.6rem 1rem; }
   .research-navlinks { gap: 0.5rem; }
   .research-wordmark { font-size: 0.625rem; }
   .research-main { padding: 3rem 1rem 4rem; }
   .research-home { padding: 5rem 0; }
   .research-content .breakout { display: none; }
   .research-footer { padding-inline: 1rem; }
+}
+
+@media (max-width: 600px) {
+  .research-wordmark { display: none; }
 }
