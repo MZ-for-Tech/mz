@@ -4,7 +4,7 @@ export interface ProjectProcessStep {
   description: string;
 }
 
-export type ProjectKind = "work" | "product";
+export type ProjectKind = "work" | "product" | "demo";
 
 /**
  * The three claims the home page's Featured band makes.
@@ -39,8 +39,8 @@ export type FeaturedSlot = (typeof FEATURED_SLOTS)[number]["id"];
  * grid and a single hardcoded product card — which implied the studio had
  * shipped client work before it had. They are now one collection: the shelf
  * treats a proprietary product and a client's platform identically, because
- * from the visitor's side that is the truth. `kind` exists only so a detail
- * view can label them differently.
+ * from the visitor's side that is the truth. `kind` labels client work, MZ
+ * products, and demonstration builds where they are presented.
  *
  * Media is a field, not a branch. `coverImage` is what the stage shows; when
  * a project has a promotional video later, `video` fills in and the stage
@@ -473,5 +473,25 @@ export const PROJECTS: ProjectData[] = [
       { label: "Frame Rate", value: "60 FPS" },
       { label: "Design System", value: "Custom Architectural" },
     ],
+  },
+  {
+    id: "07",
+    slug: "zstore",
+    name: "ZStore",
+    kind: "demo",
+    client: "MZ",
+    category: "Fictional e-commerce demo",
+    year: "2026",
+    tagline: "A fictional storefront built to showcase MZ's e-commerce capabilities.",
+    description:
+      "ZStore is a demonstration project created by MZ to show how a custom e-commerce storefront can look and work. The brand and store are fictional.",
+    tags: ["E-commerce", "Demo"],
+    accentColor: "#88b600",
+    accentColorRgb: "136, 182, 0",
+    isPrivate: false,
+    link: "https://zstore.mzfortech.com",
+    screenshots: [],
+    process: [],
+    highlights: [],
   },
 ];

@@ -155,6 +155,11 @@
     opacity 0.65s ease;
 }
 
+.labelSlot[data-offset="hidden"],
+.slot[data-offset="hidden"] {
+  display: none;
+}
+
 .labelSlot[data-offset="-2"] {
   transform: translateX(-50%) translate(clamp(-332px, -17vw, -210px), 24px) scale(0.78);
   opacity: 0.72;
@@ -356,6 +361,11 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.labelSlot[data-kind="demo"] .tileCategory {
+  font-size: 0.42rem;
+  letter-spacing: 0.08em;
 }
 
 .tile:hover .tileLogo {

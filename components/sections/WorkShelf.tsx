@@ -8,30 +8,37 @@ import { transitionTo } from "@/components/TransitionLink/TransitionLink";
 import styles from "./WorkShelf.module.css";
 
 /**
- * Five-project carousel. The selected square is in front at the centre;
- * modulo offsets put the remaining squares in two rows behind it and rotate
- * them around as selection changes. Left and right move cyclically, while
- * MenuShell still handles up and down from the surrounding interface.
+ * Five-visible-project carousel. The selected square is in front at the
+ * centre; nearby projects sit behind it and rotate around as selection
+ * changes. Left and right move cyclically, while MenuShell still handles up
+ * and down from the surrounding interface.
  *
  * Focus previews and disarms a tile. Click or Enter arms it; a second
- * activation opens its case study. Pointer hover does not change selection,
- * so the carousel does not move underneath the pointer.
+ * activation opens its case study or live project. Pointer hover does not
+ * change selection, so the carousel does not move underneath the pointer.
  */
 
-/* The shelf is the client's book of work, so it is the subset that says so in
- * the data. The Null Hypothesis is MZ's own research arm rather than a
- * commission and opts out — it stays on the launcher home's Featured band,
- * which is a different question.
+/* The shelf is the studio's portfolio of built work: client work, products,
+ * and demos. The Null Hypothesis is MZ's research arm rather than a build and
+ * opts out — it stays on the launcher home's Featured band, which is a
+ * different question.
  *
  * Module scope, not inside the component. Filtering here rather than in the
  * data keeps PROJECTS a record of everything that exists, and keeps the home
  * page's Featured band reading the same array for its own subset. But a
  * `.filter()` inside the component body returns a fresh array every render,
- * which makes it a new dependency of `openCaseStudy` on every render — the
+ * which makes it a new dependency of `openProject` on every render — the
  * callback would then be rebuilt each time and the manual memoisation on
  * `activate` could not hold. The collection is static, so it is resolved
  * once. */
 const SHELF_PROJECTS = PROJECTS.filter((p) => p.showOnWorkShelf !== false);
+
+/** Keep five projects visible while allowing larger collections to rotate. */
+function getSlotOffset(index: number, activeIndex: number, count: number) {
+  const rawOffset = (index - activeIndex + count) % count;
+  const offset = rawOffset > count / 2 ? rawOffset - count : rawOffset;
+  return Math.abs(offset) <= 2 ? offset : null;
+}
 
 export function WorkShelf() {
   const projects = SHELF_PROJECTS;
@@ -63,17 +70,16 @@ export function WorkShelf() {
     projects.findIndex((p) => p.slug === activeSlug)
   );
 
-  // Enter OR click opens the case study for the selected project.
+  // Enter OR click opens the case study or the project's declared link.
   //
-  // A project with no case study simply has nothing to open, so the second
-  // activation is a no-op rather than a dead end: the tile is already at the
-  // front of the stage, and the first activation is still what brought it
-  // there.
-  const openCaseStudy = useCallback(
+  // Case studies take priority; otherwise a declared link opens the live
+  // project or demo.
+  const openProject = useCallback(
     (slug: string) => {
       const project = projects.find((p) => p.slug === slug);
-      if (!project?.hasCaseStudy) return;
-      /* Through `transitionTo`, not `router.push`.
+      if (!project) return;
+      if (project.hasCaseStudy) {
+        /* Through `transitionTo`, not `router.push`.
 
          The tiles are `role="button"` with a two-press arm/confirm
          interaction, so there is no anchor to hang a click handler on and
@@ -83,7 +89,15 @@ export function WorkShelf() {
          same question the link component does, rather than this call site
          deciding for itself. A future case study inside the launcher world
          would correctly get the crossfade instead. */
-      void transitionTo(router, `/work/${project.slug}`);
+        void transitionTo(router, `/work/${project.slug}`);
+        return;
+      }
+      if (!project.link) return;
+      if (project.link.startsWith("/")) {
+        void transitionTo(router, project.link);
+      } else {
+        window.location.assign(project.link);
+      }
     },
     [projects, router]
   );
@@ -105,9 +119,9 @@ export function WorkShelf() {
         setActiveSlug(slug);
         return;
       }
-      openCaseStudy(slug);
+      openProject(slug);
     },
-    [armedSlug, openCaseStudy]
+    [armedSlug, openProject]
   );
 
   const onTileKeyDown = useCallback(
@@ -115,16 +129,24 @@ export function WorkShelf() {
       if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
         e.preventDefault();
         e.stopPropagation();
-        const tiles = Array.from(
-          e.currentTarget
-            .closest("ul")
-            ?.querySelectorAll<HTMLElement>("[data-tile]") ?? []
-        );
         const currentIndex = projects.findIndex((project) => project.slug === slug);
         const step = e.key === "ArrowRight" ? 1 : -1;
         const nextIndex =
           (currentIndex + step + projects.length) % projects.length;
-        tiles[nextIndex]?.focus();
+        const target = e.currentTarget
+          .closest("ul")
+          ?.querySelector<HTMLElement>(`[data-project-index="${nextIndex}"]`);
+        if (target?.closest("li")?.getAttribute("data-offset") === "hidden") {
+          setActiveSlug(projects[nextIndex].slug);
+          setArmedSlug(null);
+          requestAnimationFrame(() => {
+            document
+              .querySelector<HTMLElement>(`[data-project-index="${nextIndex}"]`)
+              ?.focus();
+          });
+        } else {
+          target?.focus();
+        }
         return;
       }
       if (e.key !== "Enter" && e.key !== " ") return;
@@ -210,10 +232,7 @@ export function WorkShelf() {
       <ul className={styles.shelf} aria-label="Projects">
         {projects.map((project, i) => {
           const isActive = i === activeIndex;
-          const halfLength = Math.floor(projects.length / 2);
-          const slotOffset =
-            ((i - activeIndex + projects.length + halfLength) %
-              projects.length) - halfLength;
+          const slotOffset = getSlotOffset(i, activeIndex, projects.length);
           const initials = project.name
             .split(/\s+/)
             .map((word) => word[0])
@@ -224,15 +243,16 @@ export function WorkShelf() {
             <li
               key={project.slug}
               className={styles.slot}
-              data-offset={slotOffset}
+              data-offset={slotOffset ?? "hidden"}
             >
               <div
                 data-tile
+                data-project-index={i}
                 className={`${styles.tile} ${isActive ? styles.tileActive : ""}`}
                 style={{ ["--accent-rgb" as string]: project.accentColorRgb }}
                 role="button"
                 tabIndex={0}
-                aria-label={project.name}
+                aria-label={`${project.name}, ${project.category}`}
                 aria-current={isActive ? "true" : undefined}
                 onFocus={() => select(project.slug)}
                 onClick={() => activate(project.slug)}
@@ -262,16 +282,14 @@ export function WorkShelf() {
           behind them, so it cannot live inside those transformed tile layers. */}
       <ul className={styles.labelShelf} aria-hidden="true">
         {projects.map((project, i) => {
-          const halfLength = Math.floor(projects.length / 2);
-          const slotOffset =
-            ((i - activeIndex + projects.length + halfLength) % projects.length) -
-            halfLength;
+          const slotOffset = getSlotOffset(i, activeIndex, projects.length);
 
           return (
             <li
               key={project.slug}
               className={styles.labelSlot}
-              data-offset={slotOffset}
+              data-offset={slotOffset ?? "hidden"}
+              data-kind={project.kind}
             >
               {project.slug === "nested-united" && (
                 <Image
