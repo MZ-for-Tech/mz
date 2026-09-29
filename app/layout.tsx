@@ -54,6 +54,8 @@ import Image from "next/image";
 import { CustomCursor } from "@/components/CustomCursor/CustomCursor";
 import WebMCP from "@/components/WebMCP/WebMCP";
 import SiteBackground from "@/components/SiteBackground/SiteBackground";
+import GamepadNavigation from "@/components/GamepadNavigation/GamepadNavigation";
+import KonamiArcade from "@/components/KonamiArcade/KonamiArcade";
 
 export default function RootLayout({
   children,
@@ -70,6 +72,8 @@ export default function RootLayout({
       </head>
       <body>
         <SiteBackground />
+        <GamepadNavigation />
+        <KonamiArcade />
         <WebMCP />
         <CustomCursor />
         {/* The studio's mark, and the only wordmark on the splash, the privacy

@@ -361,6 +361,14 @@ a {
      there. */
 }
 
+/* Programmatic focus from a controller does not always match the browser's
+   `:focus-visible` heuristic, so keep the selected control visible while the
+   gamepad is driving navigation. */
+.mz-gamepad-active :focus {
+  outline: 2px solid var(--color-brand-yellow);
+  outline-offset: 3px;
+}
+
 /* Quiet, theme-aware scrollbar for the MZ shell. Research owns its own paper
    palette, so it keeps the browser scrollbar instead of inheriting shell ink. */
 :root:not(:has(.tnh-site)) {

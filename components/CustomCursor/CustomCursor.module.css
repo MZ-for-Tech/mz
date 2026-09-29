@@ -12,6 +12,7 @@
 
 @media (hover: none), (prefers-reduced-motion: reduce) {
   .cursor { display: none !important; }
+  .cursor.gamepadActive { display: block !important; }
 }
 
 .cursorDot {

@@ -1,6 +1,7 @@
 "use client";
 
 import { useLayoutEffect, useRef } from "react";
+import { usePathname } from "next/navigation";
 import { gsap } from "@/lib/gsap";
 
 import { prefersReducedMotion } from "@/lib/useReducedMotion";
@@ -14,6 +15,7 @@ const WIPE_TOTAL_MS = (WIPE_DURATION + WIPE_STAGGER * (COLUMNS - 1)) * 1000;
 export default function Template({ children }: { children: React.ReactNode }) {
   const columns = COLUMNS;
   const containerRef = useRef<HTMLDivElement>(null);
+  const pathname = usePathname();
 
   // Remove any exit overlay injected by TransitionLink. useLayoutEffect fires
   // synchronously before the browser paints, so our columns (initial y:0%)
@@ -33,6 +35,8 @@ export default function Template({ children }: { children: React.ReactNode }) {
       const t = setTimeout(() => window.dispatchEvent(new Event('mz-transition-done')), 0);
       return () => clearTimeout(t);
     }
+
+    if (containerRef.current) containerRef.current.style.display = "flex";
 
     let timer: ReturnType<typeof setTimeout>;
     let raf2: number;
@@ -79,7 +83,7 @@ export default function Template({ children }: { children: React.ReactNode }) {
       clearTimeout(timer);
       tween?.kill();
     };
-  }, []);
+  }, [pathname]);
 
   /* HIDE THE OVERLAY ONCE THE WIPE IS DONE — and this is not optional.
 

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import gsap from "gsap";
 import React from "react";
 import { wantsWipe } from "@/lib/mzNav";
+import { prefersReducedMotion } from "@/lib/useReducedMotion";
 
 interface TransitionLinkProps extends Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, keyof LinkProps>, LinkProps {
   children: React.ReactNode;
@@ -45,7 +46,10 @@ export async function transitionTo(router: { push: (href: string, opts?: { scrol
 
   // Launcher-internal routes keep their shared background, and Research
   // entry is covered by its own skeleton loader.
-  if (!wantsWipe(window.location.pathname, targetUrl.pathname)) {
+  if (
+    !wantsWipe(window.location.pathname, targetUrl.pathname) ||
+    prefersReducedMotion()
+  ) {
     window.scrollTo(0, 0);
     router.push(href, { scroll: true });
     return;

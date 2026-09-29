@@ -393,7 +393,7 @@ export default function Home() {
             <h1 className={styles.heroWordsRow}>
               <span className={`${styles.heroWord} hero-word ${styles.heroWordHover}`}>
                 <span className="hero-word-inner">
-                  <Link href="/research">
+                  <Link href="/research" data-tile>
                     {reduceMotion ? "RESEARCH." : (
                       <VariableProximity
                         label="RESEARCH."
@@ -464,6 +464,8 @@ export default function Home() {
               advertised surface: one link, one gesture. */}
           <Link
             href="/home"
+            data-tile
+            data-controller-default
             className={`${styles.enterPrompt} hero-enter`}
             onNavigate={(event) => {
               event.preventDefault();
