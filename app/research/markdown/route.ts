@@ -64,8 +64,8 @@ export async function GET(request: NextRequest) {
         '',
         ...outline.map((item) => `- ${item}`),
         '',
-        `${locale === 'ar' ? 'صفحة البحث' : 'Read the paper'}: https://mzfortech.com${articlePath}`,
-        `${locale === 'ar' ? 'تنزيل ملف PDF' : 'Download the PDF'}: https://mzfortech.com/research-applied-stats-in-ai.pdf`,
+        `${locale === 'ar' ? 'صفحة البحث' : 'Read the paper'}: https://www.mzfortech.com${articlePath}`,
+        `${locale === 'ar' ? 'تنزيل ملف PDF' : 'Download the PDF'}: https://www.mzfortech.com/research-applied-stats-in-ai.pdf`,
       ].join('\n')
     : [
         locale === 'ar' ? '# الفرضية الصفرية — أبحاث MZ' : '# The Null Hypothesis — MZ Research',
@@ -78,7 +78,7 @@ export async function GET(request: NextRequest) {
         '',
         locale === 'ar' ? '## بحث مختار' : '## Featured research',
         '',
-        `- [${title}](https://mzfortech.com${articlePath}) — ${tagline}`,
+        `- [${title}](https://www.mzfortech.com${articlePath}) — ${tagline}`,
       ].join('\n');
 
   const headers: Record<string, string> = {

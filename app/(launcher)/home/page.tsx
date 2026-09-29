@@ -12,9 +12,9 @@ import DataStreamHero from "@/components/DataStreamHero/DataStreamHero";
 import styles from "./page.module.css";
 
 export const metadata = pageMetadata({
-  title: "Software Studio in Cairo",
+  title: "Software, AI & Knowledge Transfer",
   description:
-    "Explore MZ's software work, applied research, and proprietary systems. MZ is a technology engineering studio based in Cairo, Egypt.",
+    "MZ is a Cairo-based software and AI company building custom systems and training teams to run them. Explore our work and applied research.",
   path: "/home",
 });
 

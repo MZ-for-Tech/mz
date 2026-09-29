@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://mzfortech.com/sitemap.xml
+Sitemap: https://www.mzfortech.com/sitemap.xml

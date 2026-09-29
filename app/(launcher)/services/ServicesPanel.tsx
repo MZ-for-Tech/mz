@@ -64,12 +64,12 @@ export default function ServicesPanel() {
     "@context": "https://schema.org",
     "@graph": SERVICES.map((service) => ({
       "@type": "Service",
-      "@id": `https://mzfortech.com/services#${service.id}`,
+      "@id": `https://www.mzfortech.com/services#${service.id}`,
       name: service.title,
       serviceType: service.pillar,
       description: `${service.tagline} ${service.capabilities.join(". ")}.`,
-      provider: { "@id": "https://mzfortech.com/#organization" },
-      url: "https://mzfortech.com/services",
+      provider: { "@id": "https://www.mzfortech.com/#organization" },
+      url: "https://www.mzfortech.com/services",
     })),
   };
 

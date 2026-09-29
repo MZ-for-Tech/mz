@@ -74,7 +74,7 @@ export default function ResearchArticle({ locale = 'en', slug }: { locale?: 'en'
         ? project.category_ar
         : project.category || 'Machine Learning';
     const tocData = tocLabels[locale];
-    const canonicalUrl = `https://mzfortech.com${locale === 'ar' ? '/research/ar' : '/research'}/${project.slug}`;
+    const canonicalUrl = `https://www.mzfortech.com${locale === 'ar' ? '/research/ar' : '/research'}/${project.slug}`;
     const articleSchema = {
         '@context': 'https://schema.org',
         '@type': 'ScholarlyArticle',
@@ -88,16 +88,16 @@ export default function ResearchArticle({ locale = 'en', slug }: { locale?: 'en'
         author: project.authors?.map((author) => ({ '@type': 'Person', name: author.name })),
         publisher: {
             '@type': 'Organization',
-            '@id': 'https://mzfortech.com/#organization',
+            '@id': 'https://www.mzfortech.com/#organization',
             name: 'MZ',
-            url: 'https://mzfortech.com/',
+            url: 'https://www.mzfortech.com/',
         },
         mainEntityOfPage: canonicalUrl,
         url: canonicalUrl,
         isPartOf: {
             '@type': 'CreativeWorkSeries',
             name: locale === 'ar' ? 'الفرضية الصفرية' : 'The Null Hypothesis',
-            url: `https://mzfortech.com/${locale === 'ar' ? 'research/ar' : 'research'}`,
+            url: `https://www.mzfortech.com/${locale === 'ar' ? 'research/ar' : 'research'}`,
         },
     };
 

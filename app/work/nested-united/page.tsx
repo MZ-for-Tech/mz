@@ -29,22 +29,22 @@ const caseStudyDescription =
 const caseStudyStructuredData = {
   "@context": "https://schema.org",
   "@type": "CreativeWork",
-  "@id": "https://mzfortech.com/work/nested-united#case-study",
+  "@id": "https://www.mzfortech.com/work/nested-united#case-study",
   name: "Nested United website case study",
   headline: "Nested United website case study",
   description: caseStudyDescription,
   inLanguage: "en",
   genre: "Digital platform case study",
-  image: "https://mzfortech.com/nested/screenshots/desktop.webp",
-  author: { "@id": "https://mzfortech.com/#organization" },
-  publisher: { "@id": "https://mzfortech.com/#organization" },
+  image: "https://www.mzfortech.com/nested/screenshots/desktop.webp",
+  author: { "@id": "https://www.mzfortech.com/#organization" },
+  publisher: { "@id": "https://www.mzfortech.com/#organization" },
   about: {
     "@type": "Organization",
     name: "Nested United",
     url: "https://nestedunited.com/",
   },
-  mainEntityOfPage: "https://mzfortech.com/work/nested-united",
-  url: "https://mzfortech.com/work/nested-united",
+  mainEntityOfPage: "https://www.mzfortech.com/work/nested-united",
+  url: "https://www.mzfortech.com/work/nested-united",
 };
 
 export const metadata = pageMetadata({

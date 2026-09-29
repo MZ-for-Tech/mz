@@ -29,7 +29,7 @@ interface TransitionLinkProps extends Omit<React.AnchorHTMLAttributes<HTMLAnchor
  *     launcher faded.
  *
  * The wipe decision is NOT made here. It is delegated to `wantsWipe` in
- * lib/mzNav, which is the single place that knows the site's two worlds, so a
+ * lib/mzNav, which is the single place that knows the site's route transitions, so a
  * caller cannot accidentally get the wrong transition by importing the wrong
  * helper — and so launcher-internal navigation keeps skipping the wipe
  * exactly as it does through the component.
@@ -43,8 +43,8 @@ export async function transitionTo(router: { push: (href: string, opts?: { scrol
   // for a navigation that goes nowhere.
   if (targetUrl.pathname === window.location.pathname) return;
 
-  // Start-screen ↔ launcher navigations never wipe: the unified background
-  // stays on screen and the foreground handles its own animation.
+  // Launcher-internal routes keep their shared background, and Research
+  // entry is covered by its own skeleton loader.
   if (!wantsWipe(window.location.pathname, targetUrl.pathname)) {
     window.scrollTo(0, 0);
     router.push(href, { scroll: true });

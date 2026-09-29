@@ -1,22 +1,22 @@
 # MZ
 
-> MZ is a technology engineering studio based in Cairo, Egypt. The studio builds software and proprietary systems, publishes applied research, and transfers the knowledge clients need to operate the systems it builds.
+> Model Zero for Technology Solutions (MZ) is a Cairo-based software and AI company. It builds custom systems and trains teams to run them, informed by applied research.
 
 ## Primary pages
 
-- [MZ home](https://mzfortech.com/): Studio overview.
-- [Work](https://mzfortech.com/work): Selected software projects and products.
-- [Services](https://mzfortech.com/services): Software engineering, deployment, and knowledge transfer.
-- [About MZ](https://mzfortech.com/intel): Studio approach and background.
-- [Contact](https://mzfortech.com/contact): Project inquiries.
-- [The Null Hypothesis research portal](https://mzfortech.com/research): MZ's published research.
-- [Research in Arabic](https://mzfortech.com/research/ar): Arabic edition of the research portal.
-- [Plain-text site summary](https://mzfortech.com/content.md): Machine-readable overview of the studio and selected work.
-- [XML sitemap](https://mzfortech.com/sitemap.xml): Canonical pages available for crawling.
+- [MZ home](https://www.mzfortech.com/): Studio overview.
+- [Work](https://www.mzfortech.com/work): Selected software projects and products.
+- [Services](https://www.mzfortech.com/services): Software engineering, deployment, and knowledge transfer.
+- [About MZ](https://www.mzfortech.com/intel): Studio approach and background.
+- [Contact](https://www.mzfortech.com/contact): Project inquiries.
+- [The Null Hypothesis research portal](https://www.mzfortech.com/research): MZ's published research.
+- [Research in Arabic](https://www.mzfortech.com/research/ar): Arabic edition of the research portal.
+- [Plain-text site summary](https://www.mzfortech.com/content.md): Machine-readable overview of the studio and selected work.
+- [XML sitemap](https://www.mzfortech.com/sitemap.xml): Canonical pages available for crawling.
 
 ## What MZ does
 
-MZ works across research, software, and knowledge transfer. Its services include building software systems, helping deploy them, and teaching client teams how to operate them.
+MZ builds custom software and AI systems, helps deploy them, and trains client teams to operate them. Applied research informs its products and client work.
 
 MZ is based in Cairo, Egypt. Contact: [hello@mzfortech.com](mailto:hello@mzfortech.com).
 
@@ -27,9 +27,9 @@ MZ is based in Cairo, Egypt. Contact: [hello@mzfortech.com](mailto:hello@mzforte
 
 ## Selected work
 
-- [Nested United case study](https://mzfortech.com/work/nested-united): MZ's work on a digital platform for Nested United.
+- [Nested United case study](https://www.mzfortech.com/work/nested-united): MZ's work on a digital platform for Nested United.
 - [Nested United website](https://nestedunited.com/): The client website.
 
 ## Machine-readable content
 
-The public machine-readable resources are this file, [content.md](https://mzfortech.com/content.md), and the [sitemap](https://mzfortech.com/sitemap.xml). The site does not expose a public OpenAPI, MCP, OAuth, commerce, or payment API.
+The public machine-readable resources are this file, [content.md](https://www.mzfortech.com/content.md), and the [sitemap](https://www.mzfortech.com/sitemap.xml). The site does not expose a public OpenAPI, MCP, OAuth, commerce, or payment API.

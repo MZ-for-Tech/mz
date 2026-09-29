@@ -317,7 +317,7 @@ export default function Home() {
     const onFirstTouch = (e: Event) => {
       if (tiltAskedRef.current) return;
       const target = e.target;
-      if (target instanceof Element && target.closest("button")) return;
+      if (target instanceof Element && target.closest("a, button")) return;
       tiltAskedRef.current = true;
       void requestDeviceTilt();
     };
@@ -445,11 +445,11 @@ export default function Home() {
 
           {/* Two affordances on two axes, deliberately.
 
-              ENTER is a real <button> but draws as bare type — no frame, no
-              fill — so it reads as the console's idle "press to start" line
-              rather than as the page's primary action. The hit area around it
-              is still comfortably larger than the word, because a target does
-              not have to be visible to be real.
+              ENTER is a real link to /home, which works without JavaScript
+              and gives crawlers a direct path to the site's content. It draws
+              as bare type — no frame, no fill — so it reads as the console's
+              idle "press to start" line rather than a nav bar. During normal
+              client navigation, onNavigate preserves the launch animation.
 
               The scroll cue that used to sit in the centre is gone. It taught
               the swipe that opens the menu, but on a touch device it was
@@ -461,15 +461,18 @@ export default function Home() {
 
               Nothing here says "click anywhere" — that handler was removed so
               it could not swallow the 3D logo's drag. These two are the whole
-              advertised surface: one button, one gesture. */}
-          <button
-            type="button"
+              advertised surface: one link, one gesture. */}
+          <Link
+            href="/home"
             className={`${styles.enterPrompt} hero-enter`}
-            onClick={() => launch("/home")}
+            onNavigate={(event) => {
+              event.preventDefault();
+              launch("/home");
+            }}
             aria-label="Enter the menu"
           >
             <span className={styles.enterLabel}>Enter</span>
-          </button>
+          </Link>
 
         </section>
       </main>

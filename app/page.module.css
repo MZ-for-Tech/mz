@@ -259,7 +259,7 @@
  * need to be visible to be real, and shrinking it to match the glyphs would
  * only make it harder to use.
  *
- * It is still a real <button>: focusable, clickable, and reachable by
+ * It is a real <a> link: focusable, clickable, crawlable, and reachable by
  * keyboard. It just no longer looks like the page's primary action, which it
  * never was. */
 .enterPrompt {
@@ -310,7 +310,7 @@
    two controls in the corner of a splash screen outranked the one thing the
    screen actually wants you to do. So is the centred scroll cue that used to
    teach the gesture underneath it: the screen is a launch screen, it has one
-   destination, and the button at the bottom-right says which. SPACE/ENTER
+   destination, and the link at the bottom-right says which. SPACE/ENTER
    still work without being advertised. */
 
 /* The exit is driven by GSAP, but CSS animations outrank inline styles —

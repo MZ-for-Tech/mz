@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 import { CUSTOM_STUDIES, hasArabicStudyMetadata } from "@/research/data/studies";
 
-const SITE = "https://mzfortech.com";
+const SITE = "https://www.mzfortech.com";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const staticPages = [

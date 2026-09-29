@@ -4,7 +4,7 @@ import IntelPanel from "./IntelPanel";
 export const metadata = pageMetadata({
   title: "About MZ",
   description:
-    "Learn about MZ's approach to research, software engineering, and knowledge transfer from its Cairo, Egypt studio.",
+    "Learn about MZ, a Cairo-based software and AI company building custom systems and training teams to run them, informed by applied research.",
   path: "/intel",
 });
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type FormEvent } from "react";
 import Link from "next/link";
 import ObfuscatedEmail from "@/components/ObfuscatedEmail/ObfuscatedEmail";
 import styles from "./page.module.css";
@@ -240,6 +240,43 @@ export default function ContactPanel() {
   const [timeline, setTimeline] = useState<string | null>(null);
   const [referral, setReferral] = useState<string | null>(null);
   const [fileName, setFileName] = useState<string | null>(null);
+  const [submissionState, setSubmissionState] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [submissionMessage, setSubmissionMessage] = useState("");
+
+  const submitBrief = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const form = event.currentTarget;
+    setSubmissionState("sending");
+    setSubmissionMessage("");
+
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        body: new FormData(form),
+      });
+      const result = (await response.json()) as { message?: string };
+
+      if (!response.ok) {
+        setSubmissionState("error");
+        setSubmissionMessage(
+          result.message ?? "We couldn't send your brief. Please email us directly."
+        );
+        return;
+      }
+
+      form.reset();
+      setCategories([]);
+      setBudget(null);
+      setTimeline(null);
+      setReferral(null);
+      setFileName(null);
+      setSubmissionState("sent");
+      setSubmissionMessage("Your brief is on its way. We'll be in touch soon.");
+    } catch {
+      setSubmissionState("error");
+      setSubmissionMessage("We couldn't send your brief. Please email us directly.");
+    }
+  };
 
   const toggleCategory = (category: string) => {
     setCategories((prev) =>
@@ -354,7 +391,19 @@ export default function ContactPanel() {
           </p>
         </div>
 
-        <form className={styles.form} onSubmit={(e) => e.preventDefault()}>
+        <form className={styles.form} onSubmit={submitBrief}>
+          {/* Honeypot for basic bot filtering; real visitors never see this field. */}
+          <label className={styles.honeypot} aria-hidden="true">
+            Company website
+            <input name="companyWebsite" tabIndex={-1} autoComplete="off" />
+          </label>
+          {categories.map((category) => (
+            <input key={category} type="hidden" name="expertise" value={category} />
+          ))}
+          <input type="hidden" name="budget" value={budget ?? ""} />
+          <input type="hidden" name="timeline" value={timeline ?? ""} />
+          <input type="hidden" name="referral" value={referral ?? ""} />
+
           <section className={styles.section}>
             <h2 className={styles.sectionTitle}>
               <span>01</span> Expertise Required
@@ -381,9 +430,12 @@ export default function ContactPanel() {
             <label>
               <span className={styles.label}>Brief description</span>
               <textarea
+                name="description"
                 className={styles.textarea}
                 rows={4}
                 placeholder="Share your vision, challenges, and desired outcomes..."
+                required
+                maxLength={5000}
               />
             </label>
           </section>
@@ -433,8 +485,12 @@ export default function ContactPanel() {
                 <span className={styles.label}>Email address</span>
                 <input
                   type="email"
+                  name="email"
                   className={styles.input}
                   placeholder="So we can reach you..."
+                  autoComplete="email"
+                  required
+                  maxLength={254}
                 />
               </label>
 
@@ -442,6 +498,7 @@ export default function ContactPanel() {
                 <span className={styles.label}>Attachments</span>
                 <input
                   type="file"
+                  name="attachment"
                   id="brief-attachment"
                   className={styles.fileInput}
                   onChange={(e) =>
@@ -474,8 +531,8 @@ export default function ContactPanel() {
               the submit read as the end of the brief rather than as one
               more control in a list of them. */}
           <section className={`${styles.section} ${styles.submitSection}`}>
-            <button type="submit" className={styles.submit}>
-              Send Brief
+            <button type="submit" className={styles.submit} disabled={submissionState === "sending"}>
+              {submissionState === "sending" ? "Sending…" : "Send Brief"}
               {/* lucide arrow-right (inlined; see PERFORMANCE_REAUDIT §7) */}
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -494,6 +551,13 @@ export default function ContactPanel() {
                 <path d="m12 5 7 7-7 7" />
               </svg>
             </button>
+            <p
+              className={styles.submitMessage}
+              role={submissionState === "error" ? "alert" : "status"}
+              aria-live="polite"
+            >
+              {submissionMessage}
+            </p>
           </section>
         </form>
       </div>

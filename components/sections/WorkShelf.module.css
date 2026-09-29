@@ -111,13 +111,13 @@
 
 /* ── Shelf ───────────────────────────────────────────────────────────── */
 
-/* The active card sits at the front and top of a five-card carousel. The
-   other four step downward into two rows behind it; modulo offsets rotate
-   them around as selection changes. */
+/* The active card sits at the front of a five-card carousel. The other four
+   recede in shallow depth steps; modulo offsets rotate them around as
+   selection changes. */
 .shelf {
   position: absolute;
   z-index: 1;
-  top: 78%;
+  top: 88%;
   left: 50%;
   width: 0;
   height: 0;
@@ -132,7 +132,7 @@
 .labelShelf {
   position: absolute;
   z-index: 2;
-  top: 78%;
+  top: 88%;
   left: 50%;
   width: 0;
   height: 0;
@@ -156,12 +156,12 @@
 }
 
 .labelSlot[data-offset="-2"] {
-  transform: translateX(-50%) translate(clamp(-332px, -17vw, -210px), 96px) scale(0.78);
+  transform: translateX(-50%) translate(clamp(-332px, -17vw, -210px), 24px) scale(0.78);
   opacity: 0.72;
 }
 
 .labelSlot[data-offset="-1"] {
-  transform: translateX(-50%) translate(clamp(-180px, -9vw, -120px), 48px) scale(0.9);
+  transform: translateX(-50%) translate(clamp(-180px, -9vw, -120px), 12px) scale(0.9);
   opacity: 0.84;
 }
 
@@ -171,12 +171,12 @@
 }
 
 .labelSlot[data-offset="1"] {
-  transform: translateX(-50%) translate(clamp(120px, 9vw, 180px), 48px) scale(0.9);
+  transform: translateX(-50%) translate(clamp(120px, 9vw, 180px), 12px) scale(0.9);
   opacity: 0.84;
 }
 
 .labelSlot[data-offset="2"] {
-  transform: translateX(-50%) translate(clamp(210px, 17vw, 332px), 96px) scale(0.78);
+  transform: translateX(-50%) translate(clamp(210px, 17vw, 332px), 24px) scale(0.78);
   opacity: 0.72;
 }
 
@@ -209,13 +209,13 @@
 
 .slot[data-offset="-2"] {
   z-index: 1;
-  transform: translate(-50%, -50%) translate(clamp(-332px, -17vw, -210px), 96px) scale(0.78);
+  transform: translate(-50%, -50%) translate(clamp(-332px, -17vw, -210px), 24px) scale(0.78);
   opacity: 0.72;
 }
 
 .slot[data-offset="-1"] {
   z-index: 2;
-  transform: translate(-50%, -50%) translate(clamp(-180px, -9vw, -120px), 48px) scale(0.9);
+  transform: translate(-50%, -50%) translate(clamp(-180px, -9vw, -120px), 12px) scale(0.9);
   opacity: 0.84;
 }
 
@@ -227,13 +227,13 @@
 
 .slot[data-offset="1"] {
   z-index: 2;
-  transform: translate(-50%, -50%) translate(clamp(120px, 9vw, 180px), 48px) scale(0.9);
+  transform: translate(-50%, -50%) translate(clamp(120px, 9vw, 180px), 12px) scale(0.9);
   opacity: 0.84;
 }
 
 .slot[data-offset="2"] {
   z-index: 1;
-  transform: translate(-50%, -50%) translate(clamp(210px, 17vw, 332px), 96px) scale(0.78);
+  transform: translate(-50%, -50%) translate(clamp(210px, 17vw, 332px), 24px) scale(0.78);
   opacity: 0.72;
 }
 
@@ -385,15 +385,30 @@
 
 @media (max-width: 768px) {
   .shelf {
-    top: 70%;
+    top: 80%;
   }
 
   .labelShelf {
-    top: 70%;
+    top: 80%;
   }
 
   .labelSlot {
     top: 44px;
+  }
+
+  /* Keep the carousel on mobile, but give only the front project a caption.
+     The five 144px captions collide when compressed into a phone-width row;
+     the smaller/fainter logos already communicate which projects are behind. */
+  .labelSlot:not([data-offset="0"]) .tileMeta {
+    opacity: 0;
+  }
+
+  .labelSlot[data-offset="0"] .tileMeta {
+    opacity: 1;
+  }
+
+  .tileMeta {
+    transition: opacity 0.25s ease;
   }
 
   .adaptiveLogo {
@@ -409,11 +424,11 @@
   }
 
   .slot[data-offset="-2"] {
-    transform: translate(-50%, -50%) translate(-116px, 86px) scale(0.72);
+    transform: translate(-50%, -50%) translate(-116px, 20px) scale(0.72);
   }
 
   .slot[data-offset="-1"] {
-    transform: translate(-50%, -50%) translate(-78px, 44px) scale(0.88);
+    transform: translate(-50%, -50%) translate(-78px, 10px) scale(0.88);
   }
 
   .slot[data-offset="0"] {
@@ -421,19 +436,19 @@
   }
 
   .slot[data-offset="1"] {
-    transform: translate(-50%, -50%) translate(78px, 44px) scale(0.88);
+    transform: translate(-50%, -50%) translate(78px, 10px) scale(0.88);
   }
 
   .slot[data-offset="2"] {
-    transform: translate(-50%, -50%) translate(116px, 86px) scale(0.72);
+    transform: translate(-50%, -50%) translate(116px, 20px) scale(0.72);
   }
 
   .labelSlot[data-offset="-2"] {
-    transform: translateX(-50%) translate(-116px, 86px) scale(0.72);
+    transform: translateX(-50%) translate(-116px, 20px) scale(0.72);
   }
 
   .labelSlot[data-offset="-1"] {
-    transform: translateX(-50%) translate(-78px, 44px) scale(0.88);
+    transform: translateX(-50%) translate(-78px, 10px) scale(0.88);
   }
 
   .labelSlot[data-offset="0"] {
@@ -441,11 +456,11 @@
   }
 
   .labelSlot[data-offset="1"] {
-    transform: translateX(-50%) translate(78px, 44px) scale(0.88);
+    transform: translateX(-50%) translate(78px, 10px) scale(0.88);
   }
 
   .labelSlot[data-offset="2"] {
-    transform: translateX(-50%) translate(116px, 86px) scale(0.72);
+    transform: translateX(-50%) translate(116px, 20px) scale(0.72);
   }
 
 }

@@ -361,35 +361,27 @@ a {
      there. */
 }
 
-/* Custom Scrollbar for non-Lenis native scrolling areas */
-::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+/* Quiet, theme-aware scrollbar for the MZ shell. Research owns its own paper
+   palette, so it keeps the browser scrollbar instead of inheriting shell ink. */
+:root:not(:has(.tnh-site)) {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--color-text) 22%, transparent) transparent;
 }
 
-::-webkit-scrollbar-track {
-  background: var(--color-bg);
+:root:not(:has(.tnh-site))::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
 }
 
-::-webkit-scrollbar-thumb {
-  background: rgba(245, 245, 240, 0.2);
-  border-radius: 5px;
-  border: 2px solid var(--color-bg);
+:root:not(:has(.tnh-site))::-webkit-scrollbar-track {
+  background: transparent;
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(245, 245, 240, 0.4);
+:root:not(:has(.tnh-site))::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--color-text) 22%, transparent);
+  border-radius: 2px;
 }
 
-:root[data-theme="light"] ::-webkit-scrollbar-track {
-  background: var(--color-bg);
-}
-
-:root[data-theme="light"] ::-webkit-scrollbar-thumb {
-  background: rgba(13, 15, 8, 0.2);
-  border: 2px solid var(--color-bg);
-}
-
-:root[data-theme="light"] ::-webkit-scrollbar-thumb:hover {
-  background: rgba(13, 15, 8, 0.4);
+:root:not(:has(.tnh-site))::-webkit-scrollbar-thumb:hover {
+  background: var(--color-brand-yellow);
 }

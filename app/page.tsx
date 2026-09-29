@@ -6,14 +6,14 @@ const siteStructuredData = {
   "@graph": [
     {
       "@type": "Organization",
-      "@id": "https://mzfortech.com/#organization",
-      name: "MZ",
-      alternateName: "MZ for Tech Solutions",
-      url: "https://mzfortech.com/",
-      logo: "https://mzfortech.com/mz.svg",
+      "@id": "https://www.mzfortech.com/#organization",
+      name: "Model Zero for Technology Solutions",
+      alternateName: "MZ",
+      url: "https://www.mzfortech.com/",
+      logo: "https://www.mzfortech.com/mz.svg",
       email: "hello@mzfortech.com",
       description:
-        "MZ is a technology engineering studio based in Cairo, Egypt. It builds software and proprietary systems, conducts applied research, and transfers the knowledge clients need to operate what is built.",
+        "Model Zero for Technology Solutions (MZ) is a Cairo-based software and AI company. It builds custom systems and trains teams to run them, informed by applied research.",
       address: {
         "@type": "PostalAddress",
         addressLocality: "Cairo",
@@ -22,19 +22,19 @@ const siteStructuredData = {
     },
     {
       "@type": "WebSite",
-      "@id": "https://mzfortech.com/#website",
-      url: "https://mzfortech.com/",
-      name: "MZ — Research, Software and Knowledge",
+      "@id": "https://www.mzfortech.com/#website",
+      url: "https://www.mzfortech.com/",
+      name: "Model Zero for Technology Solutions",
       inLanguage: "en",
-      publisher: { "@id": "https://mzfortech.com/#organization" },
+      publisher: { "@id": "https://www.mzfortech.com/#organization" },
     },
   ],
 };
 
 export const metadata = pageMetadata({
-  title: "Research, Software and Knowledge",
+  title: "Model Zero for Technology Solutions",
   description:
-    "MZ is a technology engineering studio in Cairo, Egypt, building software and proprietary systems and sharing the research and knowledge behind them.",
+    "Model Zero for Technology Solutions (MZ) is a Cairo-based software and AI company. It builds custom systems and trains teams to run them, informed by applied research.",
   path: "/",
 });
 

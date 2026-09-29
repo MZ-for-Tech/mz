@@ -123,9 +123,14 @@ function LenisGsapBridge() {
 }
 
 export function SmoothScrolling({ children }: { children: ReactNode }) {
+  const pathname = usePathname();
   const reduceMotion = useReducedMotion();
+  const isResearchRoute =
+    pathname === "/research" || pathname.startsWith("/research/");
 
-  if (reduceMotion) {
+  // Research uses native browser scrolling. Unmounting the root provider also
+  // removes Lenis' global wheel handling and its GSAP bridge for this subtree.
+  if (reduceMotion || isResearchRoute) {
     return <>{children}</>;
   }
 

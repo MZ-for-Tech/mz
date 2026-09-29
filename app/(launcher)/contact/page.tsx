@@ -4,7 +4,7 @@ import ContactPanel from "./ContactPanel";
 export const metadata = pageMetadata({
   title: "Contact MZ",
   description:
-    "Discuss a software, research, or Arabic OCR project with MZ, a technology engineering studio based in Cairo, Egypt.",
+    "Contact Model Zero for Technology Solutions in Cairo about custom software, AI deployment, or Arabic OCR.",
   path: "/contact",
 });
 

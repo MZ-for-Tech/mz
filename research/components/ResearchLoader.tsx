@@ -12,7 +12,7 @@ export default function ResearchLoader() {
     const fadeTimer = window.setTimeout(() => {
       setExiting(true);
       removeTimer = window.setTimeout(() => setVisible(false), 350);
-    }, 50);
+    }, 400);
 
     return () => {
       window.clearTimeout(fadeTimer);

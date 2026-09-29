@@ -25,14 +25,14 @@ const cormorant = Cormorant_Garamond({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://mzfortech.com"),
+  metadataBase: new URL("https://www.mzfortech.com"),
   title: {
-    default: "MZ — Research, Software and Knowledge",
+    default: "Model Zero for Technology Solutions",
     template: "%s | MZ",
   },
   applicationName: "MZ",
   description:
-    "MZ is a technology engineering studio in Cairo, Egypt, building software and proprietary systems and sharing the research and knowledge behind them.",
+    "Model Zero for Technology Solutions (MZ) is a Cairo-based software and AI company that builds custom systems and trains teams to run them.",
   creator: "MZ",
   publisher: "MZ",
   openGraph: {

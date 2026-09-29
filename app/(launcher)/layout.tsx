@@ -18,7 +18,7 @@ import MenuShell from "@/components/MenuShell/MenuShell";
 export const metadata: Metadata = {
   title: "MZ",
   description:
-    "MZ is a research-driven technology studio in Cairo. Selected work, services, research and contact.",
+    "Model Zero for Technology Solutions (MZ) builds custom software and AI systems, and trains teams to operate them. Based in Cairo, Egypt.",
 };
 
 export default function MenuLayout({ children }: { children: React.ReactNode }) {

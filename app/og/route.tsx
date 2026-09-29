@@ -24,15 +24,15 @@ function limit(text: string, length: number) {
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
-  const title = limit(searchParams.get("title") || "Research, Software and Knowledge", 110);
+  const title = limit(searchParams.get("title") || "Model Zero for Technology Solutions", 110);
   const description = limit(
-    searchParams.get("description") || "A technology engineering studio in Cairo, Egypt.",
+    searchParams.get("description") || "A Cairo-based software and AI company building custom systems and training teams to run them.",
     155,
   );
   const path = searchParams.get("path") || "/";
   const isArabic = searchParams.get("locale")?.startsWith("ar") ?? false;
   const cardDescription = path === "/"
-    ? "An engineering studio in Cairo, building proprietary systems for ambitious teams."
+    ? "A Cairo-based software and AI company building custom systems and training teams to run them."
     : description;
   const section = sectionFor(path);
   const logo = await readFile(join(process.cwd(), "public/mz.svg"), "utf8");

@@ -53,7 +53,8 @@ export function WorkShelf() {
    * act — a click, or Enter. The two-step then behaves identically for a
    * mouse and for the keyboard, and neither can trip the other. */
   const [activeSlug, setActiveSlug] = useState(
-    projects[Math.floor(projects.length / 2)]?.slug
+    projects.find((project) => project.slug === "feps")?.slug ??
+      projects[Math.floor(projects.length / 2)]?.slug
   );
   const [armedSlug, setArmedSlug] = useState<string | null>(null);
 

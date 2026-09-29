@@ -7,10 +7,10 @@ export default function ResearchHome({ locale = 'en' }: { locale?: 'en' | 'ar' }
   return (
     <main className="research-main" lang={locale} dir={isArabic ? 'rtl' : 'ltr'}>
       <div className="research-home">
-        <h1 className="max-w-4xl font-latex text-5xl leading-[1.04] tracking-tight text-ink md:text-7xl">
+        <h1 className="max-w-4xl font-latex text-[3.5rem] leading-[1.04] tracking-tight text-ink">
           {isArabic ? <>النظرية <span className="italic text-accent">تأتي أولاً.</span></> : <>Theory <span className="italic text-accent">comes first.</span></>}
         </h1>
-        <p className="mt-8 max-w-2xl text-lg leading-relaxed text-ink/65 md:text-xl">
+        <p className="mt-8 max-w-2xl text-[1.375rem] leading-relaxed text-ink/65">
           {isArabic
             ? 'يتتبع منشور الفرضية الصفرية أبحاث MZ من السؤال إلى المنتج، ويتيح استكشاف الأفكار والأساليب وراء ما نبنيه من خلال تجارب تفاعلية.'
             : 'The Null Hypothesis follows MZ research from question to product, making the ideas and methods behind what we build explorable through interactive work.'}

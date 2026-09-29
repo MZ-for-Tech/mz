@@ -5,7 +5,7 @@ const bundleAnalyzer = withBundleAnalyzer({
   enabled: process.env.ANALYZE === "true",
 });
 
-const SITE = "https://mzfortech.com";
+const SITE = "https://www.mzfortech.com";
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,

@@ -326,15 +326,19 @@ export default function MenuShell({ children }: { children: React.ReactNode }) {
 
       {isWorkPanel && (
         <div className={styles.workAdaptiveChrome}>
-          <Image
-            src="/mz-logo.min.svg"
-            alt=""
-            width={100}
-            height={100}
-            className={styles.workAdaptiveMark}
-            priority
-          />
-          <LocalClock className={styles.workAdaptiveClock} />
+          <div className={styles.workAdaptiveMarkSlot}>
+            <Image
+              src="/mz-logo.min.svg"
+              alt=""
+              width={100}
+              height={100}
+              className={styles.workAdaptiveMark}
+              priority
+            />
+          </div>
+          <div className={styles.workAdaptiveClockSlot}>
+            <LocalClock />
+          </div>
           <TransitionLink
             href="/privacy"
             data-tile
@@ -353,7 +357,10 @@ export default function MenuShell({ children }: { children: React.ReactNode }) {
         {/* Keyed by pathname so every panel assembles itself on arrival —
             that is the "converge" of a tab switch, with the shell holding
             still above it. */}
-        <div key={pathname} className={styles.panel}>
+        <div
+          key={pathname}
+          className={`${styles.panel} ${isWorkPanel ? styles.panelWork : ""}`}
+        >
           {children}
         </div>
       </main>
