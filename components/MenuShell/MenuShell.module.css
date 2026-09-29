@@ -71,18 +71,23 @@
    exactly this. `flex: 1 1 0` rather than a fixed width — see the note on
    `.header` for why the two flanks have to be equal-basis, not equal-size.
 
-   It is `pointer-events: none` because there is nothing behind it to hit and
-   it must never swallow a click meant for the tab beside it. The flat black
-   artwork is converted to white, then difference blending makes it invert
-   against the stage beneath it, matching the adaptive mark on case-study
-   pages. */
+   The slot itself is the MZ home link. The flat black artwork is converted to
+   white, then difference blending makes it invert against the stage beneath
+   it, matching the adaptive mark on case-study pages. */
 .markSlot {
   flex: 1 1 0;
   min-width: 0;
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  pointer-events: none;
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.markSlot:focus-visible,
+.workAdaptiveMarkSlot:focus-visible {
+  outline: 2px solid var(--color-brand-yellow);
+  outline-offset: 5px;
 }
 
 .mark {
@@ -286,6 +291,8 @@
   display: flex;
   align-items: center;
   justify-content: flex-start;
+  pointer-events: auto;
+  cursor: pointer;
 }
 
 .workAdaptiveMark {

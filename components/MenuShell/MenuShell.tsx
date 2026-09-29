@@ -219,22 +219,14 @@ export default function MenuShell({ children }: { children: React.ReactNode }) {
           mark becomes chrome in the same bar as the rest of the chrome instead
           of a separate object hovering over it. */}
       <header className={`${styles.header} ${isWorkPanel ? styles.headerBare : ""}`}>
-        {/* The mark, on the left of the bar — the identity slot a console
-            top bar reserves for exactly this.
-
-            It is NOT a link, and that is the point. A logo you cannot click
-            still has to look like something you cannot click; giving it an
-            href would advertise a destination the rest of the bar does not.
-            The Escape key is the way back to the start screen, and the wordmark
-            is a signature rather than a control. `aria-hidden` for the same
-            reason it was before: the name it spells is already the document
-            title, the brand line at the foot of the page and the favicon.
-
-            The root layout still renders its own copy of this mark, top-left,
-            for the pages with no launcher chrome. This one is inside the shell,
-            so the two can be switched off independently — see the
-            `data-shell` note below. */}
-        <div className={styles.markSlot} data-converge>
+        {/* The mark returns to the MZ splash, matching the site-wide brand
+            link on pages that do not use the launcher shell. */}
+        <TransitionLink
+          href="/"
+          className={styles.markSlot}
+          aria-label="MZ home"
+          data-converge
+        >
           {/* `mz-logo.min.svg` is the flat black silhouette, unlike the
               gradient `mz.svg`. The regular shell uses it as white ink on its
               dark header; Work renders a second copy in the difference-blended
@@ -250,7 +242,7 @@ export default function MenuShell({ children }: { children: React.ReactNode }) {
               priority
             />
           )}
-        </div>
+        </TransitionLink>
 
         {/* No ◀ ▶ affordance at the ends of the row. Neither reference has
             one: the tabs are a destination bar, and the shell already states
@@ -326,7 +318,11 @@ export default function MenuShell({ children }: { children: React.ReactNode }) {
 
       {isWorkPanel && (
         <div className={styles.workAdaptiveChrome}>
-          <div className={styles.workAdaptiveMarkSlot}>
+          <TransitionLink
+            href="/"
+            className={styles.workAdaptiveMarkSlot}
+            aria-label="MZ home"
+          >
             <Image
               src="/mz-logo.min.svg"
               alt=""
@@ -335,7 +331,7 @@ export default function MenuShell({ children }: { children: React.ReactNode }) {
               className={styles.workAdaptiveMark}
               priority
             />
-          </div>
+          </TransitionLink>
           <div className={styles.workAdaptiveClockSlot}>
             <LocalClock />
           </div>
