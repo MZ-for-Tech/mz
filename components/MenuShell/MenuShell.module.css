@@ -725,6 +725,8 @@
   .workAdaptiveMarkSlot {
     top: 1.1rem;
     left: 50%;
+    height: 1.5rem;
+    justify-content: center;
     transform: translateX(-50%);
   }
 
