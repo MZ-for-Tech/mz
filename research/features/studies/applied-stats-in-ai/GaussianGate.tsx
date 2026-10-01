@@ -43,7 +43,7 @@ export default function GaussianGate() {
   return (
     <div className="w-full py-16 border-y border-ink/5 my-12 bg-ink/[0.01] rounded-sm">
       <div className="mb-12 px-8">
-        <div className="text-xxs font-mono uppercase tracking-[0.2em] text-tertiary mb-2">
+        <div className="text-xs font-mono uppercase tracking-[0.2em] text-tertiary mb-2">
           Differentiable L0 Relaxation
         </div>
         <h4 className="text-2xl font-latex font-bold text-ink mb-2 tracking-tight">The Gaussian Stochastic Gate</h4>
@@ -93,15 +93,15 @@ export default function GaussianGate() {
               {/* Grid Lines */}
               <line x1="200" y1="150" x2="200" y2="160" stroke="var(--color-ink)" strokeOpacity={0.2} />
               <line x1="300" y1="150" x2="300" y2="160" stroke="var(--color-ink)" strokeOpacity={0.2} />
-              <text x="200" y="175" textAnchor="middle" className="text-xxs font-mono fill-ink/40">0</text>
-              <text x="300" y="175" textAnchor="middle" className="text-xxs font-mono fill-ink/40">1</text>
-              <text x="250" y="140" textAnchor="middle" className="text-xxs font-mono fill-accent font-bold uppercase tracking-widest">Active Threshold</text>
+              <text x="200" y="175" textAnchor="middle" className="text-xs font-mono fill-ink/40">0</text>
+              <text x="300" y="175" textAnchor="middle" className="text-xs font-mono fill-ink/40">1</text>
+              <text x="250" y="140" textAnchor="middle" className="text-xs font-mono fill-accent font-bold uppercase tracking-widest">Active Threshold</text>
             </svg>
           </div>
 
           {/* Channel Array Visualizer */}
           <div className="space-y-6">
-            <span className="text-xxs font-mono uppercase tracking-[0.2em] text-tertiary font-bold">Tensor Shutter Array (Stochastic)</span>
+            <span className="text-xs font-mono uppercase tracking-[0.2em] text-tertiary font-bold">Tensor Shutter Array (Stochastic)</span>
             <div className="grid grid-cols-6 md:grid-cols-12 gap-3">
               {channelStates.map((state, i) => (
                 <div key={i} className="aspect-square relative group">

@@ -6,6 +6,7 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import { Activity, CheckCircle2 } from 'lucide-react';
 import { VizSlider, VizPlayControls, VizStat, VizInsight } from '@/research/features/studies/applied-stats-in-ai/VizPrimitives';
+import { RESEARCH_CHART_FONT_SIZE } from '@/research/lib/typography';
 
 const RAW_DATA = [
     { epoch: 1, f1: 98.10, sparsity: 21.5 },
@@ -148,19 +149,19 @@ export default function LassoPhaseTransition() {
                                 dataKey="epoch"
                                 type="number"
                                 domain={[0, 22]}
-                                tick={{ fontSize: 10, fill: "var(--pencil-val)", fontFamily: "var(--font-mono)" }}
-                                label={{ value: 'Epochs', position: 'insideBottom', offset: -5, fontSize: 10, fill: "var(--tertiary-val)", fontFamily: "var(--font-mono)" }}
+                                tick={{ fontSize: RESEARCH_CHART_FONT_SIZE, fill: "var(--pencil-val)", fontFamily: "var(--font-mono)" }}
+                                label={{ value: 'Epochs', position: 'insideBottom', offset: -5, fontSize: RESEARCH_CHART_FONT_SIZE, fill: "var(--tertiary-val)", fontFamily: "var(--font-mono)" }}
                             />
                             <YAxis
                                 domain={[0, 100]}
-                                tick={{ fontSize: 10, fill: "var(--pencil-val)", fontFamily: "var(--font-mono)" }}
-                                label={{ value: 'Performance Metric (%)', angle: -90, position: 'insideLeft', fontSize: 10, fill: "var(--tertiary-val)", fontFamily: "var(--font-mono)" }}
+                                tick={{ fontSize: RESEARCH_CHART_FONT_SIZE, fill: "var(--pencil-val)", fontFamily: "var(--font-mono)" }}
+                                label={{ value: 'Performance Metric (%)', angle: -90, position: 'insideLeft', fontSize: RESEARCH_CHART_FONT_SIZE, fill: "var(--tertiary-val)", fontFamily: "var(--font-mono)" }}
                             />
                             <Tooltip
                                 content={({ active, payload }) => {
                                     if (active && payload && payload.length) {
                                         return (
-                                            <div className="bg-paper border border-ink/10 p-4 rounded-sm font-mono text-xxs min-w-[140px]">
+                                            <div className="bg-paper border border-ink/10 p-4 rounded-sm font-mono text-xs min-w-[140px]">
                                                 <p className="font-bold text-ink border-b border-ink/5 pb-2 mb-2 uppercase tracking-widest">Epoch {payload[0].payload.epoch}</p>
                                                 <div className="space-y-1">
                                                     <p className="flex justify-between">
@@ -310,4 +311,3 @@ export default function LassoPhaseTransition() {
         </div>
     );
 }
-

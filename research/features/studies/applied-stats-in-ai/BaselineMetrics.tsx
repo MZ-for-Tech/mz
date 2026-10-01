@@ -28,24 +28,24 @@ export default function BaselineMetrics() {
         {/* Metric Sidebar */}
         <div className="lg:col-span-4 border-e border-ink/5 p-6 space-y-8 bg-ink/[0.01]">
           <div className="space-y-4">
-            <div className="flex items-center gap-2 text-xxs font-mono uppercase tracking-widest text-tertiary">
+            <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-tertiary">
               <Target className="w-3 h-3" />
               Summary Statistics
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="p-4 bg-paper border border-ink/5 rounded-sm">
-                <div className="text-[10px] font-mono text-tertiary uppercase mb-1">Macro-F1</div>
+                <div className="text-xs font-mono text-tertiary uppercase mb-1">Macro-F1</div>
                 <div className="text-xl font-latex font-bold text-ink">98.57%</div>
               </div>
               <div className="p-4 bg-paper border border-ink/5 rounded-sm">
-                <div className="text-[10px] font-mono text-tertiary uppercase mb-1">Latency</div>
+                <div className="text-xs font-mono text-tertiary uppercase mb-1">Latency</div>
                 <div className="text-xl font-latex font-bold text-ink">231ms</div>
               </div>
             </div>
           </div>
 
           <div className="space-y-4">
-            <div className="flex items-center gap-2 text-xxs font-mono uppercase tracking-widest text-tertiary">
+            <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-tertiary">
               <TrendingUp className="w-3 h-3" />
               Class Insights
             </div>
@@ -63,15 +63,15 @@ export default function BaselineMetrics() {
                     {data[hoveredIdx].name}
                   </h5>
                   <div className="space-y-2">
-                    <div className="flex justify-between text-xxs font-mono">
+                    <div className="flex justify-between text-xs font-mono">
                       <span className="text-tertiary">Precision</span>
                       <span className="text-ink font-bold">{data[hoveredIdx].precision}%</span>
                     </div>
-                    <div className="flex justify-between text-xxs font-mono">
+                    <div className="flex justify-between text-xs font-mono">
                       <span className="text-tertiary">Recall</span>
                       <span className="text-ink font-bold">{data[hoveredIdx].recall}%</span>
                     </div>
-                    <div className="flex justify-between text-xxs font-mono pt-2 border-t border-accent/10">
+                    <div className="flex justify-between text-xs font-mono pt-2 border-t border-accent/10">
                       <span className="text-tertiary">F1-Score</span>
                       <span className="text-accent font-bold">{data[hoveredIdx].f1}%</span>
                     </div>
@@ -94,8 +94,8 @@ export default function BaselineMetrics() {
         {/* The Visual Plate */}
         <div className="lg:col-span-8 p-8 relative">
           <div className="mb-6 flex justify-between items-end">
-            <span className="text-xxs font-mono uppercase tracking-[0.2em] text-tertiary">F1-Score Distribution (%)</span>
-            <div className="flex gap-4 text-[10px] font-mono text-tertiary uppercase tracking-widest">
+            <span className="text-xs font-mono uppercase tracking-[0.2em] text-tertiary">F1-Score Distribution (%)</span>
+            <div className="flex gap-4 text-xs font-mono text-tertiary uppercase tracking-widest">
               <div className="flex items-center gap-1.5">
                 <div className="w-2 h-2 rounded-full bg-ink" />
                 <span>Optimal</span>
@@ -113,7 +113,7 @@ export default function BaselineMetrics() {
               {data.map((item, i) => (
                 <div key={item.name} className="flex items-center gap-4">
                   <span className={cn(
-                    "text-[10px] font-mono uppercase tracking-tighter w-32 text-right transition-colors duration-300",
+                    "text-xs font-mono uppercase tracking-tighter w-32 text-right transition-colors duration-300",
                     hoveredIdx === i ? "text-ink font-bold" : "text-tertiary opacity-60"
                   )}>
                     {item.name}
@@ -128,7 +128,7 @@ export default function BaselineMetrics() {
               {[90, 92, 94, 96, 98, 100].map(v => (
                 <div key={v} className="relative h-full">
                   <div className="h-full w-[1px] bg-ink/[0.03] border-s border-dashed border-ink/10" />
-                  <span className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[9px] font-mono text-tertiary opacity-40">{v}%</span>
+                  <span className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-xs font-mono text-tertiary opacity-40">{v}%</span>
                 </div>
               ))}
             </div>
@@ -141,7 +141,7 @@ export default function BaselineMetrics() {
               style={{ left: `calc(144px + ${(MACRO_F1 - 90) / 10 * (100 - 0)}%)` }}
               className="absolute top-0 bottom-0 w-[1px] bg-accent/20 z-10"
             >
-              <div className="absolute top-0 left-1/2 -translate-x-1/2 bg-accent text-paper text-[8px] font-mono px-1 py-0.5 rounded-t-sm whitespace-nowrap">
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 bg-accent text-paper text-xs font-mono px-1 py-0.5 rounded-t-sm whitespace-nowrap">
                 AVG: {MACRO_F1}%
               </div>
             </motion.div>
@@ -201,7 +201,7 @@ export default function BaselineMetrics() {
                               initial={{ opacity: 0, y: 5 }}
                               animate={{ opacity: 1, y: -15 }}
                               exit={{ opacity: 0, y: 5 }}
-                              className="absolute end-0 text-[10px] font-mono font-bold text-ink whitespace-nowrap bg-paper px-1 rounded-sm border border-ink/5"
+                              className="absolute end-0 text-xs font-mono font-bold text-ink whitespace-nowrap bg-paper px-1 rounded-sm border border-ink/5"
                             >
                               {item.f1.toFixed(2)}%
                             </motion.div>

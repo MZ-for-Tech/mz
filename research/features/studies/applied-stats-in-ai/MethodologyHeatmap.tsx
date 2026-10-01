@@ -45,7 +45,7 @@ export default function MethodologyHeatmap() {
             Visualizing the relative performance drop across compression variants compared to the uncompressed baseline. Structurally distinctive classes remain stable, whereas morphologically ambiguous classes account for the majority of the degradation.
           </p>
         </div>
-        <div className="flex items-center gap-4 text-xxs font-mono uppercase tracking-widest text-tertiary">
+        <div className="flex items-center gap-4 text-xs font-mono uppercase tracking-widest text-tertiary">
           <div className="flex items-center gap-1"><div className="w-2 h-2 bg-ink" /> Stable</div>
           <div className="flex items-center gap-1"><div className="w-2 h-2 bg-accent" /> High Loss</div>
         </div>
@@ -59,7 +59,7 @@ export default function MethodologyHeatmap() {
               <div className="w-32 shrink-0" /> {/* Spacer */}
               <div className="flex-1 grid grid-cols-8 gap-1">
                 {classes.map(c => (
-                  <div key={c} className="text-xxs font-mono text-tertiary uppercase tracking-tighter text-center rotate-[-45deg] origin-bottom-left h-20 -translate-x-1/2 whitespace-nowrap">
+                  <div key={c} className="text-xs font-mono text-tertiary uppercase tracking-tighter text-center rotate-[-45deg] origin-bottom-left h-20 -translate-x-1/2 whitespace-nowrap">
                     {c === "Immature Granulocytes" ? "IG" : c}
                   </div>
                 ))}
@@ -70,7 +70,7 @@ export default function MethodologyHeatmap() {
             <div className="space-y-1">
               {methods.map(m => (
                 <div key={m} className="flex items-center">
-                  <div className="w-32 shrink-0 text-[10px] font-mono font-bold uppercase tracking-widest text-ink">
+                  <div className="w-32 shrink-0 text-xs font-mono font-bold uppercase tracking-widest text-ink">
                     {m}
                   </div>
                   <div className="flex-1 grid grid-cols-8 gap-1">
@@ -104,7 +104,7 @@ export default function MethodologyHeatmap() {
                             {m === "Baseline" ? val.toFixed(1) : delta === 0 ? "±0.0" : `${delta > 0 ? "+" : ""}${delta.toFixed(1)}%`}
                           </span>
                           {m !== "Baseline" && delta !== 0 && (
-                            <span className="text-[9px] font-mono text-paper/40 uppercase tracking-tighter">
+                            <span className="text-xs font-mono text-paper/40 uppercase tracking-tighter">
                               vs Base
                             </span>
                           )}
@@ -135,7 +135,7 @@ export default function MethodologyHeatmap() {
               >
                 <div className="flex justify-between items-start">
                   <div>
-                    <span className="text-xxs font-mono uppercase text-tertiary">{hoveredCell.m} Method</span>
+                    <span className="text-xs font-mono uppercase text-tertiary">{hoveredCell.m} Method</span>
                     <h5 className="text-xl font-latex font-bold text-ink leading-none">{hoveredCell.c} Performance</h5>
                   </div>
                   <div className="text-3xl font-latex font-bold text-accent">

@@ -46,7 +46,7 @@ export default function CompoundingSimulator() {
       <div className="p-6 border-b border-ink/5 bg-ink/[0.02] flex justify-between items-center">
         <div>
           <h4 className="text-lg font-latex font-bold text-ink tracking-tight">Compounding Efficiency</h4>
-          <p className="text-xxs font-mono uppercase tracking-widest text-tertiary">Simulation of Pipeline Stacking</p>
+          <p className="text-xs font-mono uppercase tracking-widest text-tertiary">Simulation of Pipeline Stacking</p>
         </div>
         <div className="flex items-center gap-2 text-accent">
           <Zap className="w-4 h-4 fill-current" />
@@ -59,7 +59,7 @@ export default function CompoundingSimulator() {
       <div className="grid grid-cols-1 lg:grid-cols-2">
         <div className="p-8 border-e border-ink/5 space-y-10">
           <div className="space-y-4">
-            <div className="text-xxs font-mono uppercase tracking-[0.2em] text-tertiary border-b border-ink/5 pb-2">Compression Vectors</div>
+            <div className="text-xs font-mono uppercase tracking-[0.2em] text-tertiary border-b border-ink/5 pb-2">Compression Vectors</div>
             
             <button 
               onClick={() => setL0Enabled(!l0Enabled)}
@@ -74,7 +74,7 @@ export default function CompoundingSimulator() {
                 </div>
                 <div>
                   <span className={cn("block text-sm font-bold uppercase", l0Enabled ? "text-accent" : "text-ink")}>Structured L0 Surgery</span>
-                  <span className="text-xxs text-secondary opacity-60">Pruning Conv Channels</span>
+                  <span className="text-xs text-secondary opacity-60">Pruning Conv Channels</span>
                 </div>
               </div>
             </button>
@@ -92,7 +92,7 @@ export default function CompoundingSimulator() {
                 </div>
                 <div>
                   <span className={cn("block text-sm font-bold uppercase", svdEnabled ? "text-accent" : "text-ink")}>Low-Rank SVD</span>
-                  <span className="text-xxs text-secondary opacity-60">Factorizing Dense Heads</span>
+                  <span className="text-xs text-secondary opacity-60">Factorizing Dense Heads</span>
                 </div>
               </div>
             </button>
@@ -110,7 +110,7 @@ export default function CompoundingSimulator() {
               />
               <div className="flex items-center gap-4 px-2">
                 <Binary className="w-4 h-4 text-ink/20" />
-                <span className="text-xxs text-secondary opacity-60">Post-Training Quantization Strategy</span>
+                <span className="text-xs text-secondary opacity-60">Post-Training Quantization Strategy</span>
               </div>
             </div>
 
@@ -124,7 +124,7 @@ export default function CompoundingSimulator() {
                 >
                   <div className="flex items-start gap-3">
                     <Zap className="w-4 h-4 text-semantic-error mt-0.5 shrink-0" />
-                    <p className="text-xxs leading-relaxed text-semantic-error/70 font-latex italic">
+                    <p className="text-xs leading-relaxed text-semantic-error/70 font-latex italic">
                       <strong>WARNING:</strong> 4-bit precision may induce representation collapse in structurally pruned models without intensive Quantization-Aware Training (QAT).
                     </p>
                   </div>
@@ -134,7 +134,7 @@ export default function CompoundingSimulator() {
           </div>
 
           <div className="relative pt-6 flex flex-col items-center gap-4">
-             <div className="text-xxs font-mono uppercase text-tertiary tracking-widest mb-2">Architectural Result</div>
+             <div className="text-xs font-mono uppercase text-tertiary tracking-widest mb-2">Architectural Result</div>
              <div className="flex flex-col items-center gap-1 w-full max-w-[200px]">
                 <motion.div 
                   animate={{ 
@@ -143,7 +143,7 @@ export default function CompoundingSimulator() {
                     opacity: l0Enabled ? 0.8 : 0.1,
                     filter: precision !== "FP32" ? `grayscale(${precision === "INT4" ? 1 : 0.5}) brightness(${precision === "INT4" ? 1.5 : 1.2})` : "none"
                   }}
-                  className="h-12 rounded-t-sm flex items-center justify-center text-paper font-mono text-xxs overflow-hidden"
+                  className="h-12 rounded-t-sm flex items-center justify-center text-paper font-mono text-xs overflow-hidden"
                 >
                   {l0Enabled ? "THIN CONV" : "DENSE CONV"}
                 </motion.div>
@@ -155,7 +155,7 @@ export default function CompoundingSimulator() {
                     opacity: svdEnabled ? 0.8 : 0.2,
                     filter: precision !== "FP32" ? `grayscale(${precision === "INT4" ? 1 : 0.5}) brightness(${precision === "INT4" ? 1.5 : 1.2})` : "none"
                   }}
-                  className="h-20 rounded-b-sm flex items-center justify-center text-paper font-mono text-xxs overflow-hidden"
+                  className="h-20 rounded-b-sm flex items-center justify-center text-paper font-mono text-xs overflow-hidden"
                 >
                   {svdEnabled ? "LR HEAD" : "DENSE CLASSIFIER"}
                 </motion.div>
@@ -170,7 +170,7 @@ export default function CompoundingSimulator() {
 
           <div className="space-y-8 relative z-10">
             <div>
-              <div className="text-xxs font-mono uppercase tracking-[0.3em] text-accent mb-4">Memory Footprint</div>
+              <div className="text-xs font-mono uppercase tracking-[0.3em] text-accent mb-4">Memory Footprint</div>
               <div className="flex items-baseline gap-4">
                 <VizCounter 
                   value={stats.size} 
@@ -182,7 +182,7 @@ export default function CompoundingSimulator() {
             </div>
 
             <div>
-              <div className="text-xxs font-mono uppercase tracking-[0.3em] text-accent mb-4">Inference Latency</div>
+              <div className="text-xs font-mono uppercase tracking-[0.3em] text-accent mb-4">Inference Latency</div>
               <div className="flex items-baseline gap-4">
                 <VizCounter 
                   value={stats.latency} 

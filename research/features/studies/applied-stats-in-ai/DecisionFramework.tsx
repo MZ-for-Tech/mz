@@ -57,7 +57,7 @@ export default function DecisionFramework() {
       <div className="mb-12">
         <div className="flex items-center gap-3 mb-4">
           <Target className="w-5 h-5 text-accent" />
-          <span className="text-xxs font-mono uppercase tracking-[0.3em] text-tertiary">Deployment Decision Matrix</span>
+          <span className="text-xs font-mono uppercase tracking-[0.3em] text-tertiary">Deployment Decision Matrix</span>
         </div>
         <h3 className="text-3xl font-latex font-bold text-ink mb-2">The Deployment Framework</h3>
         <p className="text-sm text-secondary italic font-latex max-w-xl">
@@ -75,7 +75,7 @@ export default function DecisionFramework() {
             className="space-y-8"
           >
             <div>
-              <span className="text-xxs font-mono uppercase text-accent font-bold tracking-widest mb-1 block">Step 01</span>
+              <span className="text-xs font-mono uppercase text-accent font-bold tracking-widest mb-1 block">Step 01</span>
               <h4 className="text-xl font-latex font-bold text-ink">Primary Constraint Analysis</h4>
             </div>
 
@@ -117,10 +117,10 @@ export default function DecisionFramework() {
           >
             <div className="flex justify-between items-end">
               <div>
-                <span className="text-xxs font-mono uppercase text-accent font-bold tracking-widest mb-1 block">Step 02</span>
+                <span className="text-xs font-mono uppercase text-accent font-bold tracking-widest mb-1 block">Step 02</span>
                 <h4 className="text-xl font-latex font-bold text-ink">Fidelity Tolerance Threshold</h4>
               </div>
-              <button onClick={() => setStep("constraint")} className="text-xxs font-mono text-tertiary hover:text-accent transition-colors uppercase tracking-widest border-b border-ink/10 pb-0.5">← Previous</button>
+              <button onClick={() => setStep("constraint")} className="text-xs font-mono text-tertiary hover:text-accent transition-colors uppercase tracking-widest border-b border-ink/10 pb-0.5">← Previous</button>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -159,13 +159,13 @@ export default function DecisionFramework() {
             <div className="p-10 bg-paper border border-ink/10 rounded-sm relative overflow-hidden">
               <div className="flex items-center gap-2 mb-8">
                 <div className="w-8 h-[1px] bg-accent" />
-                <span className="text-xxs font-mono uppercase tracking-[0.3em] text-tertiary font-bold">Recommended Methodology Identified</span>
+                <span className="text-xs font-mono uppercase tracking-[0.3em] text-tertiary font-bold">Recommended Methodology Identified</span>
               </div>
 
               <div className="flex flex-col md:flex-row justify-between gap-12 items-start relative z-10">
                 <div className="flex-1 space-y-6">
                   <div>
-                    <span className="text-xxs font-mono text-accent font-bold uppercase tracking-widest px-2 py-1 bg-accent/5 border border-accent/10 rounded-xs mb-3 inline-block">
+                    <span className="text-xs font-mono text-accent font-bold uppercase tracking-widest px-2 py-1 bg-accent/5 border border-accent/10 rounded-xs mb-3 inline-block">
                       {getRecommendation().tag}
                     </span>
                     <h2 className="text-5xl font-latex font-bold text-ink tracking-tighter leading-none">
@@ -180,21 +180,21 @@ export default function DecisionFramework() {
                 <div className="w-full md:w-64 space-y-4">
                   <div className="p-6 bg-ink/[0.02] border border-ink/10 rounded-sm space-y-6">
                     <div>
-                      <span className="block text-xxs font-mono text-tertiary uppercase tracking-widest mb-2">Empirical Stability</span>
+                      <span className="block text-xs font-mono text-tertiary uppercase tracking-widest mb-2">Empirical Stability</span>
                       <div className="flex items-baseline gap-2">
                         <span className="text-2xl font-latex font-bold text-ink">{getRecommendation().metrics.f1}</span>
-                        <span className="text-xxs font-mono text-semantic-success">{getRecommendation().metrics.delta}</span>
+                        <span className="text-xs font-mono text-semantic-success">{getRecommendation().metrics.delta}</span>
                       </div>
                     </div>
                     <div>
-                      <span className="block text-xxs font-mono text-tertiary uppercase tracking-widest mb-2">Throughput Variance</span>
+                      <span className="block text-xs font-mono text-tertiary uppercase tracking-widest mb-2">Throughput Variance</span>
                       <span className="text-2xl font-latex font-bold text-accent">{getRecommendation().metrics.latency}</span>
                     </div>
                   </div>
 
                   <button
                     onClick={reset}
-                    className="w-full py-4 bg-ink/5 hover:bg-ink/10 border border-ink/10 text-xxs font-mono uppercase tracking-widest text-ink transition-all flex items-center justify-center gap-2 rounded-sm"
+                    className="w-full py-4 bg-ink/5 hover:bg-ink/10 border border-ink/10 text-xs font-mono uppercase tracking-widest text-ink transition-all flex items-center justify-center gap-2 rounded-sm"
                   >
                     <RotateCcw className="w-3 h-3" /> Re-evaluate
                   </button>

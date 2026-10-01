@@ -13,6 +13,7 @@ import {
   Cell,
 } from "recharts";
 import { Info, Image as ImageIcon, BarChart3 } from "lucide-react";
+import { RESEARCH_CHART_FONT_SIZE } from '@/research/lib/typography';
 
 const classData = [
   { name: "Basophil", count: 1218, color: "#5e756b", image: "/images/studies/applied-stats-in-ai/classes/basophil.webp", description: "Leukocytes characterized by large, dark-staining granules that often obscure the nucleus. Key in inflammatory responses." },
@@ -34,7 +35,7 @@ export default function BloodMNISTExplorer() {
       <div className="p-6 border-b border-ink/5 flex justify-between items-center bg-ink/[0.02]">
         <div>
           <h3 className="text-xl font-latex font-bold text-ink tracking-tight">Hematological Dataset Exploration</h3>
-          <p className="text-xxs text-tertiary font-mono uppercase tracking-widest mt-1">Dataset N = 17,092 Samples</p>
+          <p className="text-xs text-tertiary font-mono uppercase tracking-widest mt-1">Dataset N = 17,092 Samples</p>
         </div>
         <div className="flex bg-paper border border-ink/10 rounded-sm p-1">
           <button
@@ -71,15 +72,15 @@ export default function BloodMNISTExplorer() {
                       angle={-45}
                       textAnchor="end"
                       interval={0}
-                      tick={{ fontSize: 10, fill: "var(--pencil-val)", fontFamily: "var(--font-mono)" }}
+                      tick={{ fontSize: RESEARCH_CHART_FONT_SIZE, fill: "var(--pencil-val)", fontFamily: "var(--font-mono)" }}
                     />
-                    <YAxis tick={{ fontSize: 10, fill: "var(--pencil-val)", fontFamily: "var(--font-mono)" }} />
+                    <YAxis tick={{ fontSize: RESEARCH_CHART_FONT_SIZE, fill: "var(--pencil-val)", fontFamily: "var(--font-mono)" }} />
                     <Tooltip
                       cursor={{ fill: 'var(--color-ink)', fillOpacity: 0.03 }}
                       content={({ active, payload }) => {
                         if (active && payload && payload.length) {
                           return (
-                            <div className="bg-paper border border-ink/10 p-3 rounded-sm  font-mono text-xxs">
+                            <div className="bg-paper border border-ink/10 p-3 rounded-sm  font-mono text-xs">
                               <p className="font-bold text-ink mb-1">{payload[0].payload.name}</p>
                               <p className="text-accent">Count: {payload[0].value}</p>
                             </div>
@@ -117,7 +118,7 @@ export default function BloodMNISTExplorer() {
                         <div className="h-full bg-blue-400 w-[85%]" />
                       </div>
                     </div>
-                    <span className="text-xxs font-mono text-tertiary uppercase vertical-rl">RGB Mean</span>
+                    <span className="text-xs font-mono text-tertiary uppercase vertical-rl">RGB Mean</span>
                   </div>
                 </div>
               </div>
@@ -138,7 +139,7 @@ export default function BloodMNISTExplorer() {
                     className={`p-4 rounded-sm border text-left transition-all ${selectedClass.name === cls.name ? "bg-ink text-paper border-ink" : "bg-paper border-ink/10 text-ink hover:border-accent"}`}
                   >
                     <div className="text-xs font-mono font-bold mb-1 truncate">{cls.name}</div>
-                    <div className={`text-xxs ${selectedClass.name === cls.name ? "text-paper/60" : "text-tertiary"}`}>
+                    <div className={`text-xs ${selectedClass.name === cls.name ? "text-paper/60" : "text-tertiary"}`}>
                       {cls.count} samples
                     </div>
                   </button>
@@ -183,7 +184,7 @@ export default function BloodMNISTExplorer() {
         </AnimatePresence>
       </div>
 
-      <div className="px-8 py-4 bg-ink/[0.02] border-t border-ink/5 flex justify-between text-xxs font-mono text-tertiary uppercase tracking-widest">
+      <div className="px-8 py-4 bg-ink/[0.02] border-t border-ink/5 flex justify-between text-xs font-mono text-tertiary uppercase tracking-widest">
         <span>Dataset: BloodMNIST-224</span>
         <span>Task: 8-Class Classification</span>
         <span>Sparsity Context: Baseline Analysis</span>

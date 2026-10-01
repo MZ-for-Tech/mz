@@ -203,7 +203,7 @@ export default function VGGArchitectureExplorer() {
         <div className="p-8 bg-paper border border-ink/10 rounded-sm ">
             <div className="flex justify-between items-start mb-12">
                 <div>
-                    <div className="text-xxs font-mono uppercase tracking-[0.2em] text-tertiary mb-2">
+                    <div className="text-xs font-mono uppercase tracking-[0.2em] text-tertiary mb-2">
                         Feature Hierarchy & Volumetrics
                     </div>
                     <h4 className="text-xl font-latex font-bold text-ink mb-1 tracking-tight">VGG19 Hierarchical Construction</h4>
@@ -284,7 +284,7 @@ export default function VGGArchitectureExplorer() {
                                         </div>
                                         <div>
                                             <h4 className="text-xl font-bold font-latex text-ink">{activeBlock.name}</h4>
-                                            <span className="text-xxs font-mono uppercase tracking-[0.2em] text-tertiary">
+                                            <span className="text-xs font-mono uppercase tracking-[0.2em] text-tertiary">
                                                 {activeBlock.layers.length} Composite Layers
                                             </span>
                                         </div>
@@ -310,10 +310,10 @@ export default function VGGArchitectureExplorer() {
                                     </div>
 
                                     <div className="space-y-4">
-                                        <div className="text-xxs uppercase font-mono tracking-[0.2em] text-tertiary border-b border-ink/10 pb-2">Sub-Layer Stack</div>
+                                        <div className="text-xs uppercase font-mono tracking-[0.2em] text-tertiary border-b border-ink/10 pb-2">Sub-Layer Stack</div>
                                         <div className="space-y-2 max-h-48 overflow-y-auto pe-2 custom-scrollbar">
                                             {activeBlock.layers.map(layer => (
-                                                <div key={layer.name} className="flex justify-between items-center text-xxs font-mono bg-paper/50 p-2 border border-ink/[0.03] rounded-[1px]">
+                                                <div key={layer.name} className="flex justify-between items-center text-xs font-mono bg-paper/50 p-2 border border-ink/[0.03] rounded-[1px]">
                                                     <span className="text-secondary font-bold">{layer.name}</span>
                                                     <span className="text-tertiary opacity-60">{layer.shape}</span>
                                                 </div>

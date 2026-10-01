@@ -83,7 +83,7 @@ export default function ConfusionHeatmap() {
     <div className="w-full bg-paper border border-ink/10 rounded-sm p-8 my-8">
       <div className="flex flex-col md:flex-row justify-between items-start gap-6 mb-12">
         <div>
-          <div className="text-xxs font-mono uppercase tracking-[0.2em] text-tertiary mb-2">
+          <div className="text-xs font-mono uppercase tracking-[0.2em] text-tertiary mb-2">
             Cross-Methodology Comparison
           </div>
           <h3 className="text-2xl font-latex font-bold text-ink mb-2 tracking-tight">Unified Error Topology Analysis</h3>
@@ -116,7 +116,7 @@ export default function ConfusionHeatmap() {
                   key={i}
                   className="w-12 relative flex items-end justify-center pb-2"
                 >
-                  <div className="absolute origin-bottom-left -rotate-45 text-xxs font-mono text-tertiary uppercase whitespace-nowrap left-1/2 -translate-x-1/2">
+                  <div className="absolute origin-bottom-left -rotate-45 text-xs font-mono text-tertiary uppercase whitespace-nowrap left-1/2 -translate-x-1/2">
                     {c}
                   </div>
                 </div>
@@ -128,7 +128,7 @@ export default function ConfusionHeatmap() {
               {activeMatrix.map((row, r) => (
                 <div key={r} className="flex">
                   {/* Row Label */}
-                  <div className="absolute start-0 -translate-x-full w-[120px] pe-4 h-12 flex items-center justify-end text-xxs font-mono text-tertiary uppercase text-right">
+                  <div className="absolute start-0 -translate-x-full w-[120px] pe-4 h-12 flex items-center justify-end text-xs font-mono text-tertiary uppercase text-right">
                     {classes[r]}
                   </div>
 
@@ -140,7 +140,7 @@ export default function ConfusionHeatmap() {
                       style={getCellStyle(val, r, c)}
                       whileHover={{ scale: 1.1, zIndex: 10, boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1)" }}
                     >
-                      <span className={`text-xxs font-mono transition-opacity ${val === 0 ? "opacity-10" : "opacity-100"} ${r === c ? "text-paper" : "text-accent font-bold"}`}>
+                      <span className={`text-xs font-mono transition-opacity ${val === 0 ? "opacity-10" : "opacity-100"} ${r === c ? "text-paper" : "text-accent font-bold"}`}>
                         {val}
                       </span>
                     </motion.div>
@@ -149,7 +149,7 @@ export default function ConfusionHeatmap() {
               ))}
             </div>
 
-            <div className="mt-8 flex justify-start gap-12 text-xxs font-mono uppercase tracking-tighter text-tertiary">
+            <div className="mt-8 flex justify-start gap-12 text-xs font-mono uppercase tracking-tighter text-tertiary">
               <div className="flex items-center gap-2">
                 <div className="w-3 h-3 bg-ink rounded-[2px]" /> Correct Class
               </div>
@@ -164,7 +164,7 @@ export default function ConfusionHeatmap() {
         <div className="lg:col-span-4 space-y-6">
           <div className="p-6 bg-ink/5 rounded-sm border border-ink/10 relative overflow-hidden">
             <Target className="absolute -bottom-4 -end-4 w-24 h-24 opacity-5 text-ink" />
-            <h4 className="text-xxs font-latex font-bold uppercase tracking-widest text-tertiary mb-4">Boundary Sensitivity</h4>
+            <h4 className="text-xs font-latex font-bold uppercase tracking-widest text-tertiary mb-4">Boundary Sensitivity</h4>
             <AnimatePresence mode="wait">
               <motion.div
                 key={model}
@@ -182,7 +182,7 @@ export default function ConfusionHeatmap() {
 
                 <div className="flex flex-col justify-center">
                   <div className="flex justify-between items-baseline mb-2">
-                    <span className="text-xxs font-mono uppercase text-tertiary tracking-widest">Macro F1 Stability</span>
+                    <span className="text-xs font-mono uppercase text-tertiary tracking-widest">Macro F1 Stability</span>
                     <span className="text-2xl font-latex font-bold text-ink">
                       {model === "baseline" ? "98.57%" : model === "lasso" ? "98.29%" : model === "svd" ? "98.77%" : "93.11%"}
                     </span>

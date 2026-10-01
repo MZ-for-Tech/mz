@@ -12,6 +12,7 @@ import {
   Legend
 } from "recharts";
 import { Info } from "lucide-react";
+import { RESEARCH_CHART_FONT_SIZE } from '@/research/lib/typography';
 
 const infoData = [
   { name: "Baseline", aic: 279.2, bic: 1136.0, mdl: 142.0 },
@@ -42,18 +43,18 @@ export default function InformationTheoryChart() {
               <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--color-ink)" strokeOpacity={0.05} />
               <XAxis
                 dataKey="name"
-                tick={{ fontSize: 10, fill: "var(--pencil-val)", fontFamily: "var(--font-mono)" }}
+                tick={{ fontSize: RESEARCH_CHART_FONT_SIZE, fill: "var(--pencil-val)", fontFamily: "var(--font-mono)" }}
               />
               <YAxis
-                tick={{ fontSize: 10, fill: "var(--pencil-val)", fontFamily: "var(--font-mono)" }}
-                label={{ value: 'Score (Millions)', angle: -90, position: 'insideLeft', fontSize: 10, fontFamily: "var(--font-mono)" }}
+                tick={{ fontSize: RESEARCH_CHART_FONT_SIZE, fill: "var(--pencil-val)", fontFamily: "var(--font-mono)" }}
+                label={{ value: 'Score (Millions)', angle: -90, position: 'insideLeft', fontSize: RESEARCH_CHART_FONT_SIZE, fontFamily: "var(--font-mono)" }}
               />
               <Tooltip
                 cursor={{ fill: 'var(--color-ink)', fillOpacity: 0.03 }}
                 content={({ active, payload }) => {
                   if (active && payload && payload.length) {
                     return (
-                      <div className="bg-paper border border-ink/10 p-3 rounded-sm  font-mono text-xxs">
+                      <div className="bg-paper border border-ink/10 p-3 rounded-sm  font-mono text-xs">
                         <p className="font-bold text-ink mb-2 border-b border-ink/5 pb-1">{payload[0].payload.name}</p>
                         <div className="space-y-1">
                           <p className="text-ink">AIC: {payload[0].value}M</p>
@@ -67,7 +68,7 @@ export default function InformationTheoryChart() {
                 }}
               />
               <Legend
-                wrapperStyle={{ fontSize: '10px', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', letterSpacing: '0.05em', paddingTop: '20px' }}
+                wrapperStyle={{ fontSize: 'var(--text-xs)', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', letterSpacing: '0.05em', paddingTop: '20px' }}
               />
               <Bar dataKey="aic" name="AIC (Akaike)" fill="var(--color-ink)" radius={[2, 2, 0, 0]} />
               <Bar dataKey="bic" name="BIC (Bayesian)" fill="var(--color-accent)" radius={[2, 2, 0, 0]} />
@@ -82,13 +83,13 @@ export default function InformationTheoryChart() {
             <h4 className="text-xs font-mono uppercase tracking-widest text-tertiary mb-4">Metric Definitions</h4>
             <div className="space-y-4">
               <div>
-                <span className="text-xxs font-mono font-bold text-ink block mb-1">AIC / BIC</span>
+                <span className="text-xs font-mono font-bold text-ink block mb-1">AIC / BIC</span>
                 <p className="text-xs text-secondary leading-relaxed latex-prose">
                   Penalize complexity to prevent overfitting. BIC imposes a stronger penalty based on sample size, favouring simpler models.
                 </p>
               </div>
               <div>
-                <span className="text-xxs font-mono font-bold text-tertiary block mb-1">MDL</span>
+                <span className="text-xs font-mono font-bold text-tertiary block mb-1">MDL</span>
                 <p className="text-xs text-secondary leading-relaxed latex-prose">
                   Minimum Description Length. Evaluates the statistical hypothesis by the length of its shortest possible description.
                 </p>

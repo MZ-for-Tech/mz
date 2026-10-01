@@ -39,7 +39,7 @@ export default function ModelParadox() {
           <Zap className="w-24 h-24" />
         </div>
         <div>
-            <div className="text-xxs font-mono text-tertiary uppercase tracking-[0.2em] mb-1">Efficiency Gain</div>
+            <div className="text-xs font-mono text-tertiary uppercase tracking-[0.2em] mb-1">Efficiency Gain</div>
             <div className="text-lg font-latex font-normal text-accent mb-4 tracking-tight">2.39x Speedup</div>
         </div>
         <div className="text-2xl md:text-3xl font-latex font-normal text-ink mb-3 tracking-tight flex flex-wrap items-baseline gap-x-1">
@@ -62,7 +62,7 @@ export default function ModelParadox() {
         <div className="absolute top-0 end-0 p-4 opacity-5">
           <Cpu className="w-24 h-24" />
         </div>
-        <div className="text-xxs font-mono text-tertiary uppercase tracking-[0.2em] mb-4">Storage Footprint</div>
+        <div className="text-xs font-mono text-tertiary uppercase tracking-[0.2em] mb-4">Storage Footprint</div>
         <div className="text-2xl md:text-3xl font-latex font-normal text-ink mb-3 tracking-tight flex flex-wrap items-baseline gap-x-1">
           <VizCounter value={532.6} suffix="MB" decimals={1} />
           <span className="text-accent opacity-40 mx-0.5 text-xl">→</span>

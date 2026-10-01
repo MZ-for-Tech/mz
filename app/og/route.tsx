@@ -114,6 +114,8 @@ export async function GET(request: Request) {
           />
         </svg>
 
+        {/* ImageResponse renders this asset into an OG bitmap; next/image does not apply here. */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={logoSource}
           alt="MZ logo"

@@ -19,12 +19,13 @@ Occhio is an Arabic-first optical character recognition (OCR) system in developm
 
 ### The Null Hypothesis
 
-The Null Hypothesis is MZ's research publication. The published study investigates statistical compression of VGG19 for BloodMNIST blood-cell image classification. It examines L1 regularization, structured L0 gates, and low-rank singular value decomposition (SVD).
+The Null Hypothesis is MZ's research publication. Its published study investigates statistical compression of VGG19 for BloodMNIST blood-cell classification, using L1 regularization, structured L0 gates, and low-rank SVD. It also publishes The Institutional Machine, a series about measurement, incentives, information, and control. Its first article, “The Measure and the Target,” follows Goodhart's law from statistical model selection to AI reward models and benchmarks.
 
 - English research portal: https://www.mzfortech.com/research
 - Arabic research portal: https://www.mzfortech.com/research/ar
-- Study: https://www.mzfortech.com/research/vgg19-bloodmnist-compression
-- Study in Arabic: https://www.mzfortech.com/research/ar/vgg19-bloodmnist-compression
+- The Measure and the Target: https://www.mzfortech.com/research/essays/the-measure-and-the-target
+- Study: https://www.mzfortech.com/research/papers/vgg19-bloodmnist-compression
+- Study in Arabic: https://www.mzfortech.com/research/ar/papers/vgg19-bloodmnist-compression
 - Paper PDF: https://www.mzfortech.com/research-applied-stats-in-ai.pdf
 
 ## Selected work

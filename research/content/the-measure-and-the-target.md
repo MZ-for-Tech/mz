@@ -1,0 +1,67 @@
+**The Measure and the Target**
+
+> In 1975, the British economist Charles Goodhart wrote what should be the most important quote in artificial intelligence safety: "Any observed statistical regularity will tend to collapse once pressure is placed upon it for control purposes."
+>
+> Or in the words of anthropologist Marilyn Strathern: “When a measure becomes a target, it ceases to be a good measure.”
+
+**1. From In-Sample Fit to Held-Out Prediction**
+
+Traditional statisticians almost always rejected the idea of a “one measure fits all”. Take R2 in regression modeling for example. It was introduced because there was a need for a concrete number that’d tell how much of the variance in the target variable was explained by the model.
+
+Then came the realization that it’s easily inflatable, as adding predictors can only maintain or increase in-sample R2, even when those predictors contribute little genuine explanatory value.
+
+<!-- visual:r2-inflation -->
+
+Thus they decided to get the harshest statistical weapon: degrees of freedom. Should one introduce an irrelevant feature, DOF makes unnecessary complexity harder to reward. It became a more conservative measure of fit, but still lacked generalizability outside of the dataset.
+
+AIC, BIC, and cross-validated R2 approached the broader problem from different directions, each attempting to distinguish meaningful model performance from fit that exists only in the data at hand.
+
+When machine learning came to be, it shifted much of the emphasis from estimating and interpreting relationships toward optimizing out-of-sample predictive performance.
+
+A business will benefit from knowing p-values and confidence intervals to deeply understand which variables drive sales, but sometimes the question could be “where will our business be in a year?” So if the business looks at their sales numbers and wants an idea of what that will look like by Q4, it might be more useful to use a predictive model rather than an inferential one.
+
+A data scientist is asked to model sales, they might decide to fit a linear regression model if it’s suitable. Since they’re not asked for more than prediction of sales figures given specific variables, the whole R2 problem becomes less relevant per se.
+
+They split the data into training and testing and validation. At a small scale, that separation helps protect us from fooling ourselves.
+
+**2. Two Proxy Layers in RLHF**
+
+But what happens when you put this problem onto a large scale? Attention Is All You Need changed the architecture of the field in 2017.
+
+2017 especially was a pivotal year for the AI field. Google-owned DeepMind and a small, non-profit research laboratory called OpenAI raised the question: How can we communicate goals to an AI system when writing the correct reward function ourselves is difficult? The outcome of that collaboration was a paper titled “Deep Reinforcement Learning from Human Preferences”. The paper that would become a fundamental step toward the technique of “Reinforcement Learning from Human Feedback”.
+
+By 2022, ChatGPT had brought large language models to mass audiences, and Goodhart's law became even more critical.
+
+You create human preference scores because loss doesn't capture usefulness. Then models are optimized against those preference scores.
+
+You create reward models because humans cannot evaluate millions of samples. Then policies discover weaknesses in the reward model.
+
+<!-- visual:double-goodhart -->
+
+RLHF is simple in theory, yet it challenges Goodhart’s law not once, but twice. To begin, a dedicated reward model is trained to anticipate what human evaluators favor. Subsequently, the language model is optimized directly against this proxy.
+
+Consequently, one ends up optimizing for a *representation of human preference* rather than genuine user intent. In the gap between the proxy and the underlying objective, reward hacking becomes possible; more subtle distortions, including sycophancy and other evaluator-pleasing behavior, can emerge when they are rewarded more reliably than the thing we actually intended to measure.
+
+At research scale, however, even the benchmark can eventually become a target.
+
+**3. When Benchmarks Become Targets**
+
+You create a held-out test set because training performance is gameable.
+
+But once the same benchmark is reused across papers, architectures, and research decisions for years, researchers begin indirectly optimizing against it too. Eventually the benchmark itself indirectly becomes part of the development process.
+
+In the era of Large Language Models (LLMs), this problem acquired a very unserious name for a serious problem: Benchmaxxing. Whichever benchmark becomes the leading star, it also becomes the target to optimize for—just like R2 before it.
+
+The result could be a model that looks more competent than it actually is. MMLU, HumanEval, GSM8K, SWE-bench, or whatever benchmark happens to dominate the current leaderboard becomes commercially important.
+
+<!-- visual:benchmaxxing -->
+
+Data gets curated around benchmark-like tasks, post-training decisions are informed by leaderboard movement, and eventually the distinction between “we built a better model” and “we built a model better at the tests everyone is watching” becomes increasingly difficult to establish.
+
+The deeper issue isn't that benchmarks get gamed. It's that once they are, we lose the ability to evaluate the evaluation itself. A student who cheats on an exam still gets a high score. The exam can no longer tell us what it was supposed to.
+
+**4. An Old Problem at a New Scale**
+
+<!-- paragraph:thesis --> And so the problem is less a uniquely machine learning problem than an old problem given a new optimizer: Goodhart’s law applied at computational scale.
+
+That raises a question: What if many of the problems we now call “AI alignment” are old problems of measurement, incentives, information, and control—only with a far more powerful optimizer on the other side?

@@ -369,8 +369,8 @@ a {
   outline-offset: 3px;
 }
 
-/* Quiet, theme-aware scrollbar for the MZ shell. Research owns its own paper
-   palette, so it keeps the browser scrollbar instead of inheriting shell ink. */
+/* Quiet, theme-aware scrollbar for the MZ shell. Research overrides this with
+   its own paper, pencil, and accent colors in research.css. */
 :root:not(:has(.tnh-site)) {
   scrollbar-width: thin;
   scrollbar-color: color-mix(in srgb, var(--color-text) 22%, transparent) transparent;

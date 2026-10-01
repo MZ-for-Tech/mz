@@ -8,6 +8,7 @@ import {
 } from "recharts";
 import { Info, Shrink, ChevronRight, Activity } from "lucide-react";
 import { VizToggleGroup } from "@/research/features/studies/applied-stats-in-ai/VizPrimitives";
+import { RESEARCH_CHART_FONT_SIZE } from '@/research/lib/typography';
 
 // --- DATA & TYPES ---
 
@@ -108,12 +109,12 @@ export default function PCARedundancy() {
                 >
                   <div className="flex justify-between items-end mb-2">
                     <div className="flex items-center gap-2">
-                      <span className={`text-xxs font-mono uppercase tracking-widest ${isSelected ? "text-accent font-bold" : "text-ink/60"}`}>
+                      <span className={`text-xs font-mono uppercase tracking-widest ${isSelected ? "text-accent font-bold" : "text-ink/60"}`}>
                         {layer.name}
                       </span>
                       {isSelected && <Activity className="w-3 h-3 text-accent animate-pulse" />}
                     </div>
-                    <div className="text-xxs font-mono text-ink/60">
+                    <div className="text-xs font-mono text-ink/60">
                       <span className="text-ink font-bold">{neededCount}</span> / {layer.total} Dim
                     </div>
                   </div>
@@ -137,8 +138,8 @@ export default function PCARedundancy() {
                   </div>
                   
                   <div className="mt-1 flex justify-between">
-                    <span className="text-xxs font-mono text-ink/20 uppercase">Architectural Capacity</span>
-                    <span className="text-xxs font-mono text-accent uppercase font-bold">
+                    <span className="text-xs font-mono text-ink/20 uppercase">Architectural Capacity</span>
+                    <span className="text-xs font-mono text-accent uppercase font-bold">
                       {Math.round(100 - percentage)}% Redundant
                     </span>
                   </div>
@@ -149,7 +150,7 @@ export default function PCARedundancy() {
 
           <div className="absolute bottom-8 start-8 flex items-center gap-2 text-ink/60">
             <Info className="w-3 h-3" />
-            <span className="text-xxs font-mono uppercase tracking-widest">Select a layer to audit variance decay</span>
+            <span className="text-xs font-mono uppercase tracking-widest">Select a layer to audit variance decay</span>
           </div>
         </div>
 
@@ -165,7 +166,7 @@ export default function PCARedundancy() {
                 className="flex flex-col h-full"
               >
                 <div className="mb-6">
-                  <span className="text-xxs font-mono uppercase tracking-widest text-ink/60">Audit Insight</span>
+                  <span className="text-xs font-mono uppercase tracking-widest text-ink/60">Audit Insight</span>
                   <h5 className="text-lg font-latex font-bold text-ink">{selectedLayer} Scree Plot</h5>
                 </div>
 
@@ -184,10 +185,10 @@ export default function PCARedundancy() {
                           if (active && payload && payload.length) {
                             return (
                               <div className="bg-paper border border-ink/10 p-2 rounded-sm">
-                                <p className="text-xxs font-mono text-ink">
+                                <p className="text-xs font-mono text-ink">
                                   {typeof payload[0].value === 'number' ? payload[0].value.toFixed(1) : payload[0].value}% Var Explained
                                 </p>
-                                <p className="text-xxs font-mono text-ink/60">{payload[0].payload.x} Components</p>
+                                <p className="text-xs font-mono text-ink/60">{payload[0].payload.x} Components</p>
                               </div>
                             );
                           }
@@ -207,12 +208,12 @@ export default function PCARedundancy() {
                         y={Number(threshold)} 
                         stroke="var(--color-ink)" 
                         strokeDasharray="3 3" 
-                        label={{ value: `${threshold}% Target`, position: 'right', fill: 'var(--color-ink)', fontSize: 10, fontFamily: 'var(--font-mono)' }} 
+                        label={{ value: `${threshold}% Target`, position: 'right', fill: 'var(--color-ink)', fontSize: RESEARCH_CHART_FONT_SIZE, fontFamily: 'var(--font-mono)' }}
                       />
                     </AreaChart>
                   </ResponsiveContainer>
                   
-                  <div className="absolute bottom-[-25px] start-0 end-0 flex justify-between text-xxs font-mono text-ink/60 uppercase">
+                  <div className="absolute bottom-[-25px] start-0 end-0 flex justify-between text-xs font-mono text-ink/60 uppercase">
                     <span>1 Dim</span>
                     <span>{PCA_DATA.find(d => d.name === selectedLayer)?.total} Dim</span>
                   </div>
@@ -226,7 +227,7 @@ export default function PCARedundancy() {
                   </div>
                   <button 
                     onClick={() => setSelectedLayer(null)}
-                    className="flex items-center gap-1 text-xxs font-mono uppercase tracking-widest text-ink/60 hover:text-ink transition-colors"
+                    className="flex items-center gap-1 text-xs font-mono uppercase tracking-widest text-ink/60 hover:text-ink transition-colors"
                   >
                     Close Audit <ChevronRight className="w-3 h-3" />
                   </button>

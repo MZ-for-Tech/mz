@@ -95,7 +95,7 @@ export default function SVDImageReconstructor() {
           </div>
           <button
             onClick={() => setShowOriginal(!showOriginal)}
-            className="flex items-center gap-2 px-4 py-2 bg-paper border border-ink/10 rounded-sm text-xxs font-mono uppercase tracking-widest hover:bg-ink hover:text-paper transition-all"
+            className="flex items-center gap-2 px-4 py-2 bg-paper border border-ink/10 rounded-sm text-xs font-mono uppercase tracking-widest hover:bg-ink hover:text-paper transition-all"
           >
             {showOriginal ? <EyeOff className="w-3 h-3" /> : <Eye className="w-3 h-3" />}
             {showOriginal ? "Back to Reconstruction" : "View Original Data"}
@@ -119,10 +119,10 @@ export default function SVDImageReconstructor() {
             )}
 
             <div className="absolute top-4 start-4 flex flex-col gap-2">
-              <div className="px-3 py-1 bg-ink text-paper text-xxs font-mono uppercase tracking-widest rounded-sm ">
+              <div className="px-3 py-1 bg-ink text-paper text-xs font-mono uppercase tracking-widest rounded-sm ">
                 Rank k = {showOriginal ? "Native" : rank}
               </div>
-              <div className="px-3 py-1 bg-paper/90 text-ink text-xxs font-mono uppercase tracking-widest border border-ink/10 rounded-sm">
+              <div className="px-3 py-1 bg-paper/90 text-ink text-xs font-mono uppercase tracking-widest border border-ink/10 rounded-sm">
                 {showOriginal ? "100" : Math.min(99.9, energy).toFixed(1)}% Energy
               </div>
             </div>
@@ -136,7 +136,7 @@ export default function SVDImageReconstructor() {
         <div className="lg:col-span-5 p-8 border-s border-ink/5 flex flex-col justify-between space-y-8">
           <div className="space-y-6">
             <div>
-              <span className="text-xxs font-mono uppercase tracking-widest text-ink/60 mb-2 block">Audit Objective</span>
+              <span className="text-xs font-mono uppercase tracking-widest text-ink/60 mb-2 block">Audit Objective</span>
               <p className="text-xs text-secondary leading-relaxed latex-prose italic border-s-2 border-ink/10 ps-4">
                 The previous section proved that <strong>weights</strong> are redundant. This section proves that the <strong>diagnostic data itself</strong> is low-rank, allowing the network to discard high-frequency &quot;noise&quot; without losing the cell&apos;s nucleus structure.
               </p>
@@ -144,8 +144,8 @@ export default function SVDImageReconstructor() {
 
             <div className="p-6 bg-ink/5 border border-ink/10 rounded-sm space-y-4">
               <div className="flex justify-between items-center">
-                <span className="text-xxs font-mono font-bold uppercase tracking-widest text-ink/60">Compression Rank</span>
-                <span className="text-xxs font-mono text-accent font-bold">k = {rank}</span>
+                <span className="text-xs font-mono font-bold uppercase tracking-widest text-ink/60">Compression Rank</span>
+                <span className="text-xs font-mono text-accent font-bold">k = {rank}</span>
               </div>
               <input
                 type="range"
@@ -155,7 +155,7 @@ export default function SVDImageReconstructor() {
                 onChange={(e) => setRank(parseInt(e.target.value))}
                 className="w-full h-1 bg-ink/10 rounded-full appearance-none cursor-pointer accent-accent disabled:opacity-30"
               />
-              <div className="flex justify-between text-xxs font-mono text-tertiary opacity-40 uppercase tracking-tighter">
+              <div className="flex justify-between text-xs font-mono text-tertiary opacity-40 uppercase tracking-tighter">
                 <span>Abstract Pattern</span>
                 <span>Clinical Detail</span>
               </div>
@@ -164,7 +164,7 @@ export default function SVDImageReconstructor() {
             <div className="p-6 border border-ink/10 rounded-sm bg-paper relative overflow-hidden">
               <div className="flex items-center gap-2 mb-3">
                 <Info className="w-3 h-3 text-accent" />
-                <span className="text-xxs font-mono font-bold uppercase tracking-widest text-ink/80">Diagnostic Insight</span>
+                <span className="text-xs font-mono font-bold uppercase tracking-widest text-ink/80">Diagnostic Insight</span>
               </div>
               <p className="text-xs text-secondary leading-relaxed latex-prose">
                 {rank < 15 ?
@@ -179,11 +179,11 @@ export default function SVDImageReconstructor() {
           <div className="pt-6 border-t border-ink/5">
             <div className="flex items-center gap-4">
               <div className="flex-1">
-                <span className="block text-xxs font-mono text-tertiary uppercase tracking-widest mb-1">Information Gain</span>
+                <span className="block text-xs font-mono text-tertiary uppercase tracking-widest mb-1">Information Gain</span>
                 <span className="text-2xl font-latex font-bold text-accent">{(400 / (showOriginal ? 400 : rank)).toFixed(1)}x</span>
               </div>
               <div className="flex-1">
-                <span className="block text-xxs font-mono text-tertiary uppercase tracking-widest mb-1">Fidelity Price</span>
+                <span className="block text-xs font-mono text-tertiary uppercase tracking-widest mb-1">Fidelity Price</span>
                 <span className="text-sm font-latex font-bold text-ink">
                   {rank < 31 ? "High Loss" : rank < 50 ? "Minimal" : "Zero Cost"}
                 </span>

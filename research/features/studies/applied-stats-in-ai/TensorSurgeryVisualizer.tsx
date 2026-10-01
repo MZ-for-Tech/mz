@@ -127,7 +127,7 @@ export default function TensorSurgeryVisualizer() {
                                         {stage === "compact" ? SURVIVING_COUNT : TOTAL_CHANNELS}
                                     </motion.span>, 14, 14]
                                 </div>
-                                <span className="text-xxs font-mono text-tertiary uppercase mt-1 block">Batch × Channels × Height × Width</span>
+                                <span className="text-xs font-mono text-tertiary uppercase mt-1 block">Batch × Channels × Height × Width</span>
                             </div>
 
                             <div className="pt-6 border-t border-ink/5 space-y-4">
@@ -176,7 +176,7 @@ export default function TensorSurgeryVisualizer() {
                     </div>
 
                     <div className="p-6 border border-accent/10 bg-accent/[0.02] rounded-sm">
-                        <span className="block text-xxs font-mono uppercase text-accent mb-2 tracking-[0.2em] font-bold">Hardware Paradox</span>
+                        <span className="block text-xs font-mono uppercase text-accent mb-2 tracking-[0.2em] font-bold">Hardware Paradox</span>
                         <p className="text-xs font-latex text-secondary leading-relaxed italic opacity-80">
                             Without physical rearrangement, zeroed weights still consume memory bandwidth. Physical surgery is the only path to real-world latency reduction.
                         </p>

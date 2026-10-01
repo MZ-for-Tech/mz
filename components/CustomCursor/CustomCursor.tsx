@@ -94,7 +94,7 @@ export function CustomCursor() {
       window.removeEventListener("mz-gamepad-cursor-move", onGamepadCursorMove);
       document.removeEventListener("mouseover", handleMouseOver);
     };
-  }, [isGamepadCursor, pathname]);
+  }, [isGamepadCursor, isResearchRoute, pathname]);
 
   if (isResearchRoute) return null;
 

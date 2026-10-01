@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { RESEARCH_CHART_FONT_SIZE } from '@/research/lib/typography';
 import {
   ScatterChart,
   Scatter,
@@ -135,8 +136,8 @@ export default function ParetoFrontier() {
               name="Reduction" 
               unit="%" 
               domain={metric === "latRed" ? [-10, 60] : [0, 100]}
-              tick={{ fontSize: 10, fill: "var(--pencil-val)", fontFamily: "var(--font-mono)" }}
-              label={{ value: `Reduction in ${metric === "paramRed" ? "Parameters" : "Latency"} (%)`, position: 'bottom', offset: 0, style: { fontSize: 10, fill: 'var(--pencil-val)', fontFamily: "var(--font-mono)", textTransform: 'uppercase', letterSpacing: '0.1em' } }}
+              tick={{ fontSize: RESEARCH_CHART_FONT_SIZE, fill: "var(--pencil-val)", fontFamily: "var(--font-mono)" }}
+              label={{ value: `Reduction in ${metric === "paramRed" ? "Parameters" : "Latency"} (%)`, position: 'bottom', offset: 0, style: { fontSize: RESEARCH_CHART_FONT_SIZE, fill: 'var(--pencil-val)', fontFamily: "var(--font-mono)", textTransform: 'uppercase', letterSpacing: '0.1em' } }}
             />
             <YAxis 
               type="number" 
@@ -144,8 +145,8 @@ export default function ParetoFrontier() {
               name="F1-Score" 
               unit="%" 
               domain={[96, 100]}
-              tick={{ fontSize: 10, fill: "var(--pencil-val)", fontFamily: "var(--font-mono)" }}
-              label={{ value: 'Macro F1-Score (%)', angle: -90, position: 'insideLeft', style: { fontSize: 10, fill: 'var(--pencil-val)', fontFamily: "var(--font-mono)", textTransform: 'uppercase', letterSpacing: '0.1em' } }}
+              tick={{ fontSize: RESEARCH_CHART_FONT_SIZE, fill: "var(--pencil-val)", fontFamily: "var(--font-mono)" }}
+              label={{ value: 'Macro F1-Score (%)', angle: -90, position: 'insideLeft', style: { fontSize: RESEARCH_CHART_FONT_SIZE, fill: 'var(--pencil-val)', fontFamily: "var(--font-mono)", textTransform: 'uppercase', letterSpacing: '0.1em' } }}
             />
             <ZAxis type="number" range={[100, 100]} />
             <Tooltip content={<CustomTooltip />} cursor={{ strokeDasharray: '3 3' }} />
@@ -153,7 +154,7 @@ export default function ParetoFrontier() {
               {data.map((entry, index) => (
                 <Cell key={`cell-${index}`} fill={entry.color} />
               ))}
-              <LabelList dataKey="name" position="top" style={{ fontSize: 12, fontWeight: 'bold', fill: 'var(--ink-val)', fontFamily: 'var(--font-latex)' }} offset={10} />
+              <LabelList dataKey="name" position="top" style={{ fontSize: RESEARCH_CHART_FONT_SIZE, fontWeight: 'bold', fill: 'var(--ink-val)', fontFamily: 'var(--font-latex)' }} offset={10} />
             </Scatter>
           </ScatterChart>
         </ResponsiveContainer>
@@ -168,7 +169,7 @@ export default function ParetoFrontier() {
               {item.name === "SVD" && <path d="M 7 1 L 1 12 L 13 12 Z" fill={item.color} />}
               {item.name === "L0 Surgery" && <path d="M 7 1 L 12 7 L 7 13 L 2 7 Z" fill={item.color} />}
             </svg>
-            <span className="text-xxs font-mono uppercase tracking-widest text-secondary">{item.name}</span>
+            <span className="text-xs font-mono uppercase tracking-widest text-secondary">{item.name}</span>
           </div>
         ))}
       </div>

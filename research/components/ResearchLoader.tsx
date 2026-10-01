@@ -6,27 +6,27 @@ import { usePathname } from 'next/navigation';
 /** The Null Hypothesis skeleton used for entry and internal route transitions. */
 export default function ResearchLoader() {
   const pathname = usePathname();
-  const [visible, setVisible] = useState(true);
-  const [exiting, setExiting] = useState(false);
+  const [exitingPath, setExitingPath] = useState<string | null>(null);
+  const [hiddenPath, setHiddenPath] = useState<string | null>(null);
 
   useLayoutEffect(() => {
     // The launcher card expands above the route change. This loader is the
     // handoff surface, so remove the temporary card as soon as it is mounted.
     document.querySelector("[data-research-portal]")?.remove();
-    setVisible(true);
-    setExiting(false);
 
-    let removeTimer: number | undefined;
     const fadeTimer = window.setTimeout(() => {
-      setExiting(true);
-      removeTimer = window.setTimeout(() => setVisible(false), 350);
+      setExitingPath(pathname);
     }, 400);
+    const removeTimer = window.setTimeout(() => setHiddenPath(pathname), 750);
 
     return () => {
       window.clearTimeout(fadeTimer);
-      if (removeTimer !== undefined) window.clearTimeout(removeTimer);
+      window.clearTimeout(removeTimer);
     };
   }, [pathname]);
+
+  const visible = hiddenPath !== pathname;
+  const exiting = exitingPath === pathname;
 
   if (!visible) return null;
 

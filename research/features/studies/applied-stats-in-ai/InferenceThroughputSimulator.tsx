@@ -67,7 +67,7 @@ export default function InferenceThroughputSimulator() {
     <div className="w-full bg-paper border border-ink/10 rounded-sm p-8 my-12  overflow-hidden">
       <div className="flex flex-col md:flex-row justify-between items-start gap-8 mb-12">
         <div className="max-w-md">
-          <div className="text-xxs font-mono uppercase tracking-[0.2em] text-tertiary mb-2">
+          <div className="text-xs font-mono uppercase tracking-[0.2em] text-tertiary mb-2">
             Hardware Inference Race
           </div>
           <h3 className="text-2xl font-latex font-bold text-ink mb-2 tracking-tight">Throughput Benchmark</h3>
@@ -80,14 +80,14 @@ export default function InferenceThroughputSimulator() {
           {!isRunning ? (
             <button
               onClick={startRace}
-              className="flex items-center gap-2 px-6 py-2 bg-ink text-paper text-xxs font-mono uppercase tracking-[0.2em] rounded-sm hover:bg-accent transition-colors"
+              className="flex items-center gap-2 px-6 py-2 bg-ink text-paper text-xs font-mono uppercase tracking-[0.2em] rounded-sm hover:bg-accent transition-colors"
             >
               <Play className="w-3 h-3" /> Execute Benchmark
             </button>
           ) : (
             <button
               onClick={resetRace}
-              className="flex items-center gap-2 px-6 py-2 border border-ink/20 text-ink text-xxs font-mono uppercase tracking-[0.2em] rounded-sm hover:bg-ink/5 transition-colors"
+              className="flex items-center gap-2 px-6 py-2 border border-ink/20 text-ink text-xs font-mono uppercase tracking-[0.2em] rounded-sm hover:bg-ink/5 transition-colors"
             >
               <RotateCcw className="w-3 h-3" /> Reset
             </button>
@@ -100,10 +100,10 @@ export default function InferenceThroughputSimulator() {
         <div className="relative">
           <div className="flex justify-between items-center mb-4">
             <div className="flex items-center gap-2">
-              <span className="text-xxs font-mono font-bold uppercase tracking-widest text-accent">L0 Structured Surgery</span>
+              <span className="text-xs font-mono font-bold uppercase tracking-widest text-accent">L0 Structured Surgery</span>
               {l0Finished && <CheckCircle2 className="w-3 h-3 text-accent" />}
             </div>
-            <span className="text-xxs font-latex font-bold text-tertiary">LATENCY: {L0_LATENCY}ms</span>
+            <span className="text-xs font-latex font-bold text-tertiary">LATENCY: {L0_LATENCY}ms</span>
           </div>
           <div className="h-12 bg-ink/5 rounded-sm relative flex items-center px-2 overflow-hidden">
             <motion.div
@@ -126,10 +126,10 @@ export default function InferenceThroughputSimulator() {
         <div className="relative">
           <div className="flex justify-between items-center mb-4">
             <div className="flex items-center gap-2">
-              <span className="text-xxs font-mono font-bold uppercase tracking-widest text-secondary">Baseline VGG19</span>
+              <span className="text-xs font-mono font-bold uppercase tracking-widest text-secondary">Baseline VGG19</span>
               {baselineFinished && <CheckCircle2 className="w-3 h-3 text-secondary" />}
             </div>
-            <span className="text-xxs font-latex font-bold text-tertiary">LATENCY: {BASELINE_LATENCY}ms</span>
+            <span className="text-xs font-latex font-bold text-tertiary">LATENCY: {BASELINE_LATENCY}ms</span>
           </div>
           <div className="h-12 bg-ink/5 rounded-sm relative flex items-center px-2 overflow-hidden">
             <motion.div
@@ -151,17 +151,17 @@ export default function InferenceThroughputSimulator() {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-8 border-t border-ink/5">
         <div className="space-y-1">
-          <span className="block text-xxs font-mono text-tertiary uppercase tracking-widest">Elapsed Time</span>
+          <span className="block text-xs font-mono text-tertiary uppercase tracking-widest">Elapsed Time</span>
           <span className="text-xl font-latex font-bold text-ink">{(elapsed / 1000).toFixed(2)}s</span>
         </div>
         <div className="space-y-1">
-          <span className="block text-xxs font-mono text-tertiary uppercase tracking-widest">L0 Status</span>
+          <span className="block text-xs font-mono text-tertiary uppercase tracking-widest">L0 Status</span>
           <span className={`text-xl font-latex font-bold ${l0Finished ? 'text-accent' : 'text-ink'}`}>
             {l0Finished ? "COMPLETE" : `${Math.floor(l0Progress)}%`}
           </span>
         </div>
         <div className="space-y-1">
-          <span className="block text-xxs font-mono text-tertiary uppercase tracking-widest">Efficiency Gain</span>
+          <span className="block text-xs font-mono text-tertiary uppercase tracking-widest">Efficiency Gain</span>
           <span className="text-xl font-latex font-normal text-accent">2.39x Speedup</span>
         </div>
       </div>

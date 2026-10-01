@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { CUSTOM_STUDIES, hasArabicStudyMetadata } from "@/research/data/studies";
+import { getResearchArticlePath } from "@/research/lib/paths";
 
 const SITE = "https://www.mzfortech.com";
 
@@ -20,8 +21,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
   }));
 
   for (const study of CUSTOM_STUDIES.filter((item) => item.published)) {
-    const english = `/research/${study.slug}`;
-    const arabic = `/research/ar/${study.slug}`;
+    const english = getResearchArticlePath(study, 'en');
+    const arabic = getResearchArticlePath(study, 'ar');
     const hasArabic = hasArabicStudyMetadata(study);
     const alternates = {
       languages: {

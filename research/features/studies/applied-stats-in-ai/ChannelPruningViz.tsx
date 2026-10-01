@@ -114,12 +114,12 @@ export default function ChannelPruningViz() {
                     <div className="p-8 bg-paper border border-ink/10 rounded-sm space-y-2">
                         <div className="flex items-center gap-3 mb-4">
                             <Box className="w-4 h-4 text-tertiary" />
-                            <span className="text-xxs font-mono uppercase tracking-[0.2em] text-tertiary font-bold">Tensor Shape</span>
+                            <span className="text-xs font-mono uppercase tracking-[0.2em] text-tertiary font-bold">Tensor Shape</span>
                         </div>
                         <div className="font-latex text-3xl font-black text-ink tracking-tighter">
                             [B, <motion.span key={isReconstructed ? remainingCount : TOTAL_CHANNELS} initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} className="text-accent">{isReconstructed ? remainingCount : TOTAL_CHANNELS}</motion.span>, 14, 14]
                         </div>
-                        <div className="text-xxs opacity-40 uppercase tracking-[0.2em] font-mono pt-2 text-tertiary">
+                        <div className="text-xs opacity-40 uppercase tracking-[0.2em] font-mono pt-2 text-tertiary">
                             Batch × Channels × Height × Width
                         </div>
                     </div>

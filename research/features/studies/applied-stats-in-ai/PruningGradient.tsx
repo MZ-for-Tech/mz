@@ -35,7 +35,7 @@ export default function PruningGradient() {
       <div className="space-y-2 max-w-2xl mx-auto">
         {layers.map((layer, index) => (
           <div key={layer.id} className="flex items-center gap-4 group">
-            <div className="w-24 text-xxs font-mono text-tertiary uppercase tracking-tighter shrink-0 flex justify-between items-center pe-2 border-e border-ink/5">
+            <div className="w-24 text-xs font-mono text-tertiary uppercase tracking-tighter shrink-0 flex justify-between items-center pe-2 border-e border-ink/5">
               <span>L{layer.id}</span>
               <span className="opacity-40">{layer.block}</span>
             </div>
@@ -54,10 +54,10 @@ export default function PruningGradient() {
               />
 
               <div className="relative z-10 w-full flex justify-between items-center">
-                <span className="text-xxs font-mono font-bold text-ink/60 group-hover:text-ink transition-colors">
+                <span className="text-xs font-mono font-bold text-ink/60 group-hover:text-ink transition-colors">
                   {layer.channels}
                 </span>
-                <span className="text-xxs font-mono text-tertiary">
+                <span className="text-xs font-mono text-tertiary">
                   {layer.survival.toFixed(1)}%
                 </span>
               </div>

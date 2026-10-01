@@ -2,11 +2,36 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useSyncExternalStore } from 'react';
 import { Check, ChevronDown, Languages, Moon, Sun } from 'lucide-react';
 
 type Locale = 'en' | 'ar';
 type Theme = 'light' | 'dark' | 'modern-light' | 'modern-dark';
+const themeChangeEvent = 'research-theme-change';
+const validThemes: Theme[] = ['light', 'dark', 'modern-light', 'modern-dark'];
+
+function subscribeToResearchTheme(onChange: () => void) {
+  window.addEventListener('storage', onChange);
+  window.addEventListener(themeChangeEvent, onChange);
+  return () => {
+    window.removeEventListener('storage', onChange);
+    window.removeEventListener(themeChangeEvent, onChange);
+  };
+}
+
+function getResearchTheme(): Theme {
+  const storedTheme = window.localStorage.getItem('research-theme');
+  return validThemes.includes(storedTheme as Theme) ? storedTheme as Theme : 'light';
+}
+
+function getServerResearchTheme(): Theme {
+  return 'light';
+}
+
+function saveResearchTheme(theme: Theme) {
+  window.localStorage.setItem('research-theme', theme);
+  window.dispatchEvent(new Event(themeChangeEvent));
+}
 
 const THEMES: { label: string; family: 'academic' | 'modern' }[] = [
   { label: 'Academic Mode', family: 'academic' },
@@ -24,35 +49,24 @@ export default function ResearchHeaderControls() {
   const locale: Locale = pathname === '/research/ar' || pathname.startsWith('/research/ar/') ? 'ar' : 'en';
   const [languageOpen, setLanguageOpen] = useState(false);
   const [themeOpen, setThemeOpen] = useState(false);
-  const [theme, setTheme] = useState<Theme>('light');
-  const [themeReady, setThemeReady] = useState(false);
+  const theme = useSyncExternalStore(subscribeToResearchTheme, getResearchTheme, getServerResearchTheme);
 
   useEffect(() => {
-    const storedTheme = window.localStorage.getItem('research-theme') as Theme | null;
-    if (storedTheme && ['light', 'dark', 'modern-light', 'modern-dark'].includes(storedTheme)) {
-      setTheme(storedTheme);
-    }
-    setThemeReady(true);
-  }, []);
-
-  useEffect(() => {
-    if (!themeReady) return;
     const site = document.querySelector<HTMLElement>('.tnh-site');
     site?.setAttribute('data-theme', theme);
-    window.localStorage.setItem('research-theme', theme);
-  }, [theme, themeReady]);
+  }, [theme]);
 
   const isDark = theme.endsWith('dark');
   const family = theme.startsWith('modern') ? 'modern' : 'academic';
 
   const toggleLightDark = () => {
     const nextTheme = isDark ? 'light' : 'dark';
-    setTheme(family === 'modern' ? `modern-${nextTheme}` as Theme : nextTheme);
+    saveResearchTheme(family === 'modern' ? `modern-${nextTheme}` as Theme : nextTheme);
   };
 
   const selectThemeFamily = (nextFamily: 'academic' | 'modern') => {
     const nextTheme = isDark ? 'dark' : 'light';
-    setTheme(nextFamily === 'modern' ? `modern-${nextTheme}` as Theme : nextTheme);
+    saveResearchTheme(nextFamily === 'modern' ? `modern-${nextTheme}` as Theme : nextTheme);
     setThemeOpen(false);
   };
 

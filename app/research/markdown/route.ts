@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { readFileSync } from 'node:fs';
+import { basename, join } from 'node:path';
 import { CUSTOM_STUDIES, hasArabicStudyMetadata } from '@/research/data/studies';
+import { getResearchArticlePath } from '@/research/lib/paths';
 
 export async function GET(request: NextRequest) {
   const url = new URL(request.url);
@@ -7,10 +10,11 @@ export async function GET(request: NextRequest) {
   const requestedPath = originalPath || '/research';
   const locale = requestedPath.startsWith('/research/ar') ? 'ar' : 'en';
   const isResearchIndex = requestedPath === '/research' || requestedPath === '/research/ar';
-  const articleMatch = requestedPath.match(/^\/research\/(ar\/)?([^/]+)\/?$/);
+  const articleMatch = requestedPath.match(/^\/research\/(?:ar\/)?(papers|essays)\/([^/]+)\/?$/);
+  const requestedType = articleMatch?.[1] === 'essays' ? 'essay' : 'paper';
   const requestedSlug = articleMatch?.[2];
   const requestedStudy = CUSTOM_STUDIES.find(
-    (item) => item.published && item.slug === requestedSlug,
+    (item) => item.published && item.slug === requestedSlug && item.article_type === requestedType,
   );
   const study = isResearchIndex
     ? CUSTOM_STUDIES.find((item) => item.published)
@@ -26,9 +30,7 @@ export async function GET(request: NextRequest) {
     });
   }
 
-  const articlePath = locale === 'ar'
-    ? `/research/ar/${study.slug}`
-    : `/research/${study.slug}`;
+  const articlePath = getResearchArticlePath(study, locale);
   const title = locale === 'ar' ? study.title_ar! : study.title;
   const tagline = locale === 'ar' ? study.tagline_ar! : study.tagline;
   const description = locale === 'ar' ? study.description_ar! : study.description;
@@ -49,8 +51,28 @@ export async function GET(request: NextRequest) {
         'Low-rank SVD compression',
         'Interactive visualizations are available on the web page.',
       ];
+  const essayBlocks = requestedStudy?.content_file
+    ? readFileSync(join(process.cwd(), 'research', 'content', basename(requestedStudy.content_file)), 'utf8').trim().split(/\n\s*\n/)
+    : [];
+  if (essayBlocks[0] === `**${title}**`) essayBlocks.shift();
+  const essayText = essayBlocks
+    .filter((block) => !/^<!--\s*visual:[a-z0-9-]+\s*-->$/.test(block.trim()))
+    .map((block) => block.replace(/<!--\s*paragraph:thesis\s*-->\s*/, ''))
+    .join('\n\n');
 
-  const content = requestedStudy
+  const content = requestedStudy?.article_type === 'essay' && requestedStudy.content_file
+    ? [
+        `# ${title}`,
+        '',
+        `*${requestedStudy.series || 'The Institutional Machine'} · Article ${String(requestedStudy.series_number || 1).padStart(2, '0')}*`,
+        '',
+        `_${tagline}_`,
+        '',
+        essayText,
+        '',
+        `Read online: https://www.mzfortech.com${articlePath}`,
+      ].join('\n')
+    : requestedStudy
     ? [
         `# ${title}`,
         '',

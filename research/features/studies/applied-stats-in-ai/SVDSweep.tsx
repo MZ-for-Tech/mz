@@ -13,6 +13,7 @@ import {
 } from "recharts";
 import { Sigma, Activity } from 'lucide-react';
 import { VizSlider, VizPlayControls, VizStat, VizInsight } from "@/research/features/studies/applied-stats-in-ai/VizPrimitives";
+import { RESEARCH_CHART_FONT_SIZE } from '@/research/lib/typography';
 
 const sweepData = [
   { threshold: 0.1, rankFC0: 19, rankFC3: 12, params: 20.72, reduction: 85.2, f1: 43.70, auc: 85.77, minF1: 0.0 },
@@ -154,30 +155,30 @@ export default function SVDSweep() {
                 type="number"
                 domain={[0.5, 0.1]}
                 reversed
-                tick={{ fontSize: 10, fill: "var(--pencil-val)", fontFamily: "var(--font-mono)" }}
-                label={{ value: 'Energy Threshold (ε)', position: 'insideBottom', offset: -10, fontSize: 10, fill: "var(--tertiary-val)", fontFamily: "var(--font-mono)", fontWeight: "bold" }}
+                tick={{ fontSize: RESEARCH_CHART_FONT_SIZE, fill: "var(--pencil-val)", fontFamily: "var(--font-mono)" }}
+                label={{ value: 'Energy Threshold (ε)', position: 'insideBottom', offset: -10, fontSize: RESEARCH_CHART_FONT_SIZE, fill: "var(--tertiary-val)", fontFamily: "var(--font-mono)", fontWeight: "bold" }}
               />
 
               <YAxis
                 yAxisId="left"
                 domain={[0, 100]}
-                tick={{ fontSize: 10, fill: "var(--pencil-val)", fontFamily: "var(--font-mono)" }}
-                label={{ value: 'F1 Score %', angle: -90, position: 'insideLeft', offset: 10, fontSize: 10, fill: "var(--tertiary-val)", fontFamily: "var(--font-mono)" }}
+                tick={{ fontSize: RESEARCH_CHART_FONT_SIZE, fill: "var(--pencil-val)", fontFamily: "var(--font-mono)" }}
+                label={{ value: 'F1 Score %', angle: -90, position: 'insideLeft', offset: 10, fontSize: RESEARCH_CHART_FONT_SIZE, fill: "var(--tertiary-val)", fontFamily: "var(--font-mono)" }}
               />
 
               <YAxis
                 yAxisId="right"
                 orientation="right"
                 domain={[70, 90]}
-                tick={{ fontSize: 10, fill: "var(--accent-val)", fontFamily: "var(--font-mono)" }}
-                label={{ value: 'Reduction %', angle: 90, position: 'insideRight', offset: 10, fontSize: 10, fill: "var(--accent-val)", fontFamily: "var(--font-mono)" }}
+                tick={{ fontSize: RESEARCH_CHART_FONT_SIZE, fill: "var(--accent-val)", fontFamily: "var(--font-mono)" }}
+                label={{ value: 'Reduction %', angle: 90, position: 'insideRight', offset: 10, fontSize: RESEARCH_CHART_FONT_SIZE, fill: "var(--accent-val)", fontFamily: "var(--font-mono)" }}
               />
 
               <Tooltip
                 content={({ active, payload }) => {
                   if (active && payload && payload.length) {
                     return (
-                      <div className="bg-ink text-paper p-4 rounded-sm font-mono text-xxs border border-accent/20">
+                      <div className="bg-ink text-paper p-4 rounded-sm font-mono text-xs border border-accent/20">
                         <p className="font-bold border-b border-paper/10 pb-2 mb-2 uppercase tracking-widest text-accent">SVD Profile: ε={payload[0].payload.threshold}</p>
                         <div className="grid grid-cols-2 gap-4">
                           <div>
@@ -197,7 +198,7 @@ export default function SVDSweep() {
               />
 
               {/* Background Safety Zone */}
-              <ReferenceLine yAxisId="left" y={90} stroke="var(--ink-val)" strokeDasharray="3 3" opacity={0.1} label={{ position: 'right', value: 'STABILITY FLOOR', fontSize: 8, fill: 'var(--tertiary-val)' }} />
+              <ReferenceLine yAxisId="left" y={90} stroke="var(--ink-val)" strokeDasharray="3 3" opacity={0.1} label={{ position: 'right', value: 'STABILITY FLOOR', fontSize: RESEARCH_CHART_FONT_SIZE, fill: 'var(--tertiary-val)' }} />
 
               {/* Main F1 Curve */}
               <Area
@@ -238,13 +239,13 @@ export default function SVDSweep() {
           <div className="p-6 bg-paper border border-ink/10 rounded-sm relative overflow-hidden h-full flex flex-col justify-center">
             <div className="flex items-center gap-3 mb-4 border-b border-ink/5 pb-3">
               <Sigma className="w-5 h-5 text-accent" />
-              <h4 className="text-xxs font-mono font-bold uppercase tracking-[0.2em] text-ink">Spectral Rank Profile</h4>
+              <h4 className="text-xs font-mono font-bold uppercase tracking-[0.2em] text-ink">Spectral Rank Profile</h4>
             </div>
 
             <div className="flex-1 flex flex-col justify-between">
               <div className="space-y-4">
                 <div>
-                  <div className="flex justify-between text-xxs font-mono text-tertiary uppercase mb-2 tracking-[0.2em]">
+                  <div className="flex justify-between text-xs font-mono text-tertiary uppercase mb-2 tracking-[0.2em]">
                     <span>FC0 Latent Rank</span>
                     <span className="font-latex font-normal text-ink">{current.rankFC0}</span>
                   </div>
@@ -257,7 +258,7 @@ export default function SVDSweep() {
                 </div>
 
                 <div>
-                  <div className="flex justify-between text-xxs font-mono text-tertiary uppercase mb-2 tracking-[0.2em]">
+                  <div className="flex justify-between text-xs font-mono text-tertiary uppercase mb-2 tracking-[0.2em]">
                     <span>FC3 Latent Rank</span>
                     <span className="font-latex font-normal text-ink">{current.rankFC3}</span>
                   </div>
@@ -271,7 +272,7 @@ export default function SVDSweep() {
 
                 <div className="pt-3 border-t border-ink/5">
                   <div className="flex justify-between items-center">
-                    <span className="text-xxs font-mono text-tertiary uppercase tracking-[0.2em]">Active Parameters</span>
+                    <span className="text-xs font-mono text-tertiary uppercase tracking-[0.2em]">Active Parameters</span>
                     <span className="text-lg font-latex font-normal text-accent">{current.params.toFixed(2)}M</span>
                   </div>
                 </div>

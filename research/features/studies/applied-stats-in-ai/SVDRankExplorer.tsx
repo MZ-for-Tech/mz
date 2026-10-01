@@ -116,12 +116,12 @@ export default function SVDRankExplorer() {
 
                 <div className="flex items-center gap-6 px-6 py-3 bg-paper border border-ink/10 rounded-sm ">
                     <div className="text-center">
-                        <span className="block text-xxs uppercase font-mono tracking-[0.2em] text-ink/60 mb-1">Energy</span>
+                        <span className="block text-xs uppercase font-mono tracking-[0.2em] text-ink/60 mb-1">Energy</span>
                         <span className="text-xl font-latex font-bold text-accent">{Math.min(99.9, energy).toFixed(1)}%</span>
                     </div>
                     <div className="w-px h-8 bg-ink/5" />
                     <div className="text-center">
-                        <span className="block text-xxs uppercase font-mono tracking-[0.2em] text-ink/60 mb-1">Compression</span>
+                        <span className="block text-xs uppercase font-mono tracking-[0.2em] text-ink/60 mb-1">Compression</span>
                         <span className="text-xl font-latex font-bold">{paramReduction}x</span>
                     </div>
                 </div>
@@ -129,7 +129,7 @@ export default function SVDRankExplorer() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-16 px-8">
                 <div className="space-y-4">
-                    <div className="flex justify-between items-center text-xxs font-mono uppercase tracking-widest text-ink/60">
+                    <div className="flex justify-between items-center text-xs font-mono uppercase tracking-widest text-ink/60">
                         <span className="flex items-center gap-2"><Layers className="w-3 h-3" /> Uncompressed Weights</span>
                         <span>{SIZE}x{SIZE} Tensor</span>
                     </div>
@@ -139,7 +139,7 @@ export default function SVDRankExplorer() {
                 </div>
 
                 <div className="space-y-4 relative">
-                    <div className="flex justify-between items-center text-xxs font-mono uppercase tracking-widest text-accent font-bold">
+                    <div className="flex justify-between items-center text-xs font-mono uppercase tracking-widest text-accent font-bold">
                         <span className="flex items-center gap-2"><Minimize2 className="w-3 h-3" /> SVD Approximation (Rank-{k})</span>
                         <span className="text-ink/60 font-normal">{(SIZE * k + k * SIZE).toLocaleString()} Parameters</span>
                     </div>
@@ -155,7 +155,7 @@ export default function SVDRankExplorer() {
                                     className="absolute inset-0 flex items-center justify-center bg-paper/20 pointer-events-none"
                                 >
                                     <div className="px-4 py-2 bg-paper border border-ink/10  rounded-sm">
-                                        <p className="text-xxs font-mono uppercase tracking-widest font-bold text-accent">Geometric Primitive</p>
+                                        <p className="text-xs font-mono uppercase tracking-widest font-bold text-accent">Geometric Primitive</p>
                                     </div>
                                 </motion.div>
                             )}
@@ -167,7 +167,7 @@ export default function SVDRankExplorer() {
             <div className="px-8 space-y-12">
                 <div className="p-8 bg-paper border border-ink/10 rounded-sm  space-y-6">
                     <div className="flex justify-between items-center">
-                        <span className="text-xxs font-mono uppercase tracking-[0.3em] text-ink/60">Approximation Rank <span className="text-accent">k</span></span>
+                        <span className="text-xs font-mono uppercase tracking-[0.3em] text-ink/60">Approximation Rank <span className="text-accent">k</span></span>
                         <div className="px-3 py-1 bg-ink text-paper text-xs font-mono rounded-sm ">k = {k}</div>
                     </div>
                     <input

@@ -49,7 +49,7 @@ export default function PractitionersPlaybook() {
           </div>
           <div>
             <h3 className="text-2xl font-latex font-bold tracking-tight text-ink">The Practitioner&apos;s Playbook</h3>
-            <p className="text-xxs font-mono uppercase tracking-[0.2em] text-secondary">Summary of Research Recommendations</p>
+            <p className="text-xs font-mono uppercase tracking-[0.2em] text-secondary">Summary of Research Recommendations</p>
           </div>
         </div>
       </div>
@@ -77,7 +77,7 @@ export default function PractitionersPlaybook() {
                   <h4 className={`text-sm font-latex font-bold mb-1 ${activeId === rule.id ? "text-ink" : "text-secondary group-hover:text-ink"}`}>
                     {rule.title}
                   </h4>
-                  <p className="text-xxs font-mono uppercase tracking-widest text-tertiary">
+                  <p className="text-xs font-mono uppercase tracking-widest text-tertiary">
                     {rule.subtitle}
                   </p>
                 </div>
@@ -111,7 +111,7 @@ export default function PractitionersPlaybook() {
                   <div className="flex items-start gap-4 p-6 bg-ink/[0.02] border border-ink/10 rounded-sm">
                     <Info className="w-5 h-5 text-accent shrink-0 mt-1" />
                     <div>
-                      <span className="block text-xxs font-mono uppercase tracking-[0.2em] text-tertiary mb-2 font-bold">Practical Implementation</span>
+                      <span className="block text-xs font-mono uppercase tracking-[0.2em] text-tertiary mb-2 font-bold">Practical Implementation</span>
                       <p className="text-sm font-latex font-bold text-ink">
                         {rule.recommendation}
                       </p>

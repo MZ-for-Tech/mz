@@ -139,9 +139,9 @@
 .research-cover-label,
 .research-cover-authors {
   font-family: var(--font-mono);
-  font-size: 8px;
-  line-height: 1.5;
-  letter-spacing: 0.11em;
+  font-size: clamp(0.54rem, 0.48vw, 0.62rem);
+  line-height: 1.28;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
@@ -157,20 +157,28 @@
   margin-bottom: 2px;
   color: var(--color-ink);
   font-family: var(--font-latex);
-  font-size: 12px;
+  font-size: 0.64rem;
   font-style: italic;
   opacity: 0.55;
 }
 .research-cover h3 {
-  margin: 5px 0 7px;
+  margin: 4px 0 6px;
   font-family: var(--font-latex);
-  font-size: 17px;
-  line-height: 1;
+  font-size: clamp(1rem, 1vw, 1.1rem);
+  line-height: 1.02;
   font-weight: 600;
-  letter-spacing: -0.04em;
+  letter-spacing: -0.025em;
 }
-.research-cover-rule { width: 28px; height: 1px; margin: 8px 0 6px; background: var(--color-accent); }
-.research-cover-authors { color: var(--color-ink); opacity: 0.62; font-size: 7px; }
+.research-cover-rule { width: 24px; height: 1px; margin: 6px 0 5px; background: var(--color-accent); }
+.research-cover-authors {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  color: var(--color-ink);
+  font-size: clamp(0.5rem, 0.45vw, 0.56rem);
+  letter-spacing: 0.035em;
+  opacity: 0.62;
+}
 
 .moleskine-wrapper {
   display: block;
@@ -286,7 +294,7 @@
 
 .notebook-quote-text {
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: var(--text-xs);
   line-height: 1.45;
   color: var(--color-ink);
   text-align: center;

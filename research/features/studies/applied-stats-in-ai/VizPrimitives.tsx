@@ -38,12 +38,12 @@ export function VizSlider({
       {(label || (formatValue && !hideValue)) && (
         <div className="flex justify-between items-center">
           {label && (
-            <div className="text-xxs font-mono uppercase tracking-[0.2em] text-tertiary">
+            <div className="text-xs font-mono uppercase tracking-[0.2em] text-tertiary">
               {label}
             </div>
           )}
           {formatValue && !hideValue && (
-            <span className="text-xxs font-mono font-bold text-accent tracking-widest">
+            <span className="text-xs font-mono font-bold text-accent tracking-widest">
               {formatValue(value)}
             </span>
           )}
@@ -59,7 +59,7 @@ export function VizSlider({
         className="w-full h-1 bg-ink/10 rounded-sm appearance-none cursor-pointer accent-accent"
       />
       {(minLabel || maxLabel) && (
-        <div className="flex justify-between text-xxs font-mono text-tertiary uppercase tracking-widest mt-1">
+        <div className="flex justify-between text-xs font-mono text-tertiary uppercase tracking-widest mt-1">
           <span>{minLabel}</span>
           <span>{maxLabel}</span>
         </div>
@@ -103,7 +103,7 @@ export function VizToggleGroup({
             key={opt.value}
             onClick={() => onChange(opt.value)}
             className={cn(
-              "px-4 py-1.5 rounded-[3px] text-xxs font-mono uppercase tracking-widest transition-all flex items-center gap-2",
+              "px-4 py-1.5 rounded-[3px] text-xs font-mono uppercase tracking-widest transition-all flex items-center gap-2",
               isActive
                 ? opt.accentWhenActive
                   ? "bg-accent text-paper"
@@ -223,7 +223,7 @@ export function VizInsight({
       {(title || Icon) && !sections && (
         <div
           className={cn(
-            "flex items-center gap-2 mb-2 text-xxs font-mono uppercase tracking-[0.2em]",
+            "flex items-center gap-2 mb-2 text-xs font-mono uppercase tracking-[0.2em]",
             isAlert ? "text-accent" : "text-tertiary"
           )}
         >
@@ -250,7 +250,7 @@ export function VizInsight({
               key={section.title}
               className={cn(idx > 0 && "pt-4 border-t border-ink/[0.06]")}
             >
-              <h5 className="text-xxs font-mono uppercase tracking-[0.2em] text-ink mb-1">
+              <h5 className="text-xs font-mono uppercase tracking-[0.2em] text-ink mb-1">
                 {section.title}
               </h5>
               <div className="text-sm font-latex italic leading-relaxed text-secondary">
@@ -302,7 +302,7 @@ export function VizStat({
         )}
       />
       <div className="flex items-center justify-between mb-4">
-        <span className="block text-xxs font-mono text-tertiary uppercase tracking-[0.2em]">
+        <span className="block text-xs font-mono text-tertiary uppercase tracking-[0.2em]">
           {label}
         </span>
         {Icon && <Icon className="w-3.5 h-3.5 text-tertiary opacity-40" />}
@@ -317,10 +317,10 @@ export function VizStat({
         >
           {value}
         </span>
-        {unit && <span className="text-xxs font-mono text-tertiary uppercase font-bold tracking-wider">{unit}</span>}
+        {unit && <span className="text-xs font-mono text-tertiary uppercase font-bold tracking-wider">{unit}</span>}
       </div>
       {subLabel && (
-        <span className="text-xxs font-mono text-tertiary uppercase mt-1 tracking-widest">
+        <span className="text-xs font-mono text-tertiary uppercase mt-1 tracking-widest">
           {subLabel}
         </span>
       )}
@@ -349,6 +349,8 @@ interface EditorialPlateProps {
   children: React.ReactNode;
   className?: string;
   spineColor?: string;
+  compact?: boolean;
+  figureCaption?: { number: number; text: string };
 }
 
 export function EditorialPlate({
@@ -358,23 +360,29 @@ export function EditorialPlate({
   children,
   className,
   spineColor = "var(--color-ink)",
+  compact = false,
+  figureCaption,
 }: EditorialPlateProps) {
+  const PlateWrapper = figureCaption ? "figure" : "div";
+
   return (
-    <div className={cn("w-full py-12 border-y border-ink/10 my-12", className)}>
-      <div className="relative ps-8">
-        <div 
-          className="absolute start-0 top-0 bottom-0 w-[3px] rounded-full"
-          style={{ backgroundColor: spineColor, opacity: 0.15 }}
-        />
+    <PlateWrapper className={cn("w-full border-y border-ink/10", compact ? "my-8 py-7" : "my-12 py-12", figureCaption && "mx-auto max-w-3xl", className)}>
+      <div className={cn("relative", compact ? "ps-0" : "ps-8")}>
+        {!compact && (
+          <div
+            className="absolute start-0 top-0 bottom-0 w-[3px] rounded-full"
+            style={{ backgroundColor: spineColor, opacity: 0.15 }}
+          />
+        )}
         {(title || identifier || description) && (
-          <div className="mb-8">
+          <div className={compact ? "mb-5" : "mb-8"}>
             {identifier && (
-              <div className="text-xxs font-mono uppercase tracking-[0.3em] text-tertiary mb-2 italic">
+              <div className="text-xs font-mono uppercase tracking-[0.3em] text-tertiary mb-2 italic">
                 § {identifier}
               </div>
             )}
             {title && (
-              <h4 className="text-2xl font-latex font-bold text-ink mb-2 tracking-tight">
+                <h4 className={cn("font-latex font-bold text-ink mb-2 tracking-tight", compact ? "text-xl" : "text-2xl")}>
                 {title}
               </h4>
             )}
@@ -391,7 +399,12 @@ export function EditorialPlate({
           {children}
         </div>
       </div>
-    </div>
+      {figureCaption && (
+        <figcaption className="mt-3 w-full text-left font-serif text-sm leading-relaxed text-secondary">
+          <span className="font-bold text-ink">Figure {figureCaption.number}:</span> {figureCaption.text}
+        </figcaption>
+      )}
+    </PlateWrapper>
   );
 }
 

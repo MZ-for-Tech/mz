@@ -14,6 +14,14 @@ const nextConfig: NextConfig = {
   experimental: {
     optimizePackageImports: ["@react-three/drei"],
   },
+  turbopack: {
+    root: process.cwd(),
+  },
+  outputFileTracingIncludes: {
+    "/research/\\[slug\\]": ["./research/content/the-measure-and-the-target.md"],
+    "/research/essays/\\[slug\\]": ["./research/content/the-measure-and-the-target.md"],
+    "/research/markdown": ["./research/content/the-measure-and-the-target.md"],
+  },
   images: {
     formats: ["image/avif", "image/webp"],
     minimumCacheTTL: 31536000,

@@ -4,6 +4,7 @@ import {
 } from 'recharts';
 import { Database, Scissors, ZoomIn, Activity, Cpu, HardDrive } from 'lucide-react';
 import { VizSlider, VizToggleGroup, VizStat, VizInsight } from "@/research/features/studies/applied-stats-in-ai/VizPrimitives";
+import { RESEARCH_CHART_FONT_SIZE } from '@/research/lib/typography';
 
 // --- DATA GENERATION ---
 const BINS_FULL = 80;
@@ -101,7 +102,7 @@ export default function WeightHistogramExplorer() {
                 <div className="space-y-6">
                     <div className="flex justify-between items-end border-b border-ink/10 pb-2">
                         <span className="text-xs font-bold font-latex text-ink">Full Spectrum Density</span>
-                        <span className="text-xxs font-mono uppercase text-tertiary tracking-[0.2em]">
+                        <span className="text-xs font-mono uppercase text-tertiary tracking-[0.2em]">
                             Magnitude Distribution (|w|)
                         </span>
                     </div>
@@ -113,7 +114,7 @@ export default function WeightHistogramExplorer() {
                                     dataKey="magnitude" 
                                     axisLine={false} 
                                     tickLine={false}
-                                    tick={{ fontSize: 9, fill: 'var(--color-ink)', opacity: 0.4, fontFamily: 'var(--font-mono)' }}
+                                    tick={{ fontSize: RESEARCH_CHART_FONT_SIZE, fill: 'var(--color-ink)', opacity: 0.4, fontFamily: 'var(--font-mono)' }}
                                     interval={19}
                                 />
                                 <YAxis 
@@ -121,7 +122,7 @@ export default function WeightHistogramExplorer() {
                                     domain={[scale === 'log' ? 1 : 0, 'auto']}
                                     axisLine={false}
                                     tickLine={false}
-                                    tick={{ fontSize: 9, fill: 'var(--color-ink)', opacity: 0.4, fontFamily: 'var(--font-mono)' }}
+                                    tick={{ fontSize: RESEARCH_CHART_FONT_SIZE, fill: 'var(--color-ink)', opacity: 0.4, fontFamily: 'var(--font-mono)' }}
                                 />
                                 <Bar dataKey="count" isAnimationActive={true}>
                                     {fullData.map((entry, index) => (
@@ -143,7 +144,7 @@ export default function WeightHistogramExplorer() {
                             <span className="text-xs font-bold font-latex text-ink uppercase">Surgical Threshold Sweep</span>
                             <ZoomIn className="w-3 h-3 text-accent" />
                         </div>
-                        <span className="text-xxs font-mono text-accent font-bold tracking-widest">ε = {threshold.toFixed(3)}</span>
+                        <span className="text-xs font-mono text-accent font-bold tracking-widest">ε = {threshold.toFixed(3)}</span>
                     </div>
                     <div className="h-[280px] w-full bg-paper border border-ink/5 rounded-sm p-4 relative">
                         <ResponsiveContainer width="100%" height="100%">
@@ -153,7 +154,7 @@ export default function WeightHistogramExplorer() {
                                     dataKey="magnitude" 
                                     axisLine={false} 
                                     tickLine={false}
-                                    tick={{ fontSize: 9, fill: 'var(--color-ink)', opacity: 0.4, fontFamily: 'var(--font-mono)' }}
+                                    tick={{ fontSize: RESEARCH_CHART_FONT_SIZE, fill: 'var(--color-ink)', opacity: 0.4, fontFamily: 'var(--font-mono)' }}
                                     interval={9}
                                 />
                                 <YAxis hide />

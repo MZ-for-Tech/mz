@@ -9,6 +9,8 @@ import MathBox from "@/research/features/studies/shared/MathBox";
 import { VisualizationEngine } from "@/research/features/engine/VisualizationEngine";
 import { CUSTOM_STUDIES, hasArabicStudyMetadata } from "@/research/data/studies";
 import { appliedStatsStrings } from "@/research/data/strings/appliedStats";
+import ResearchEssay from '@/research/components/ResearchEssay';
+import { getResearchArticlePath } from '@/research/lib/paths';
 
 export function researchArticleMetadata(locale: 'en' | 'ar', slug: string): Metadata {
     const project = CUSTOM_STUDIES.find((item) => item.slug === slug && item.published);
@@ -20,10 +22,10 @@ export function researchArticleMetadata(locale: 'en' | 'ar', slug: string): Meta
     const description = locale === 'ar'
         ? project.description_ar!
         : project.description || project.tagline || '';
-    const path = locale === 'ar' ? `/research/ar/${project.slug}` : `/research/${project.slug}`;
+    const path = getResearchArticlePath(project, locale);
     const languages: Record<string, string> = hasArabicStudyMetadata(project)
-        ? { en: `/research/${project.slug}`, ar: `/research/ar/${project.slug}` }
-        : { en: `/research/${project.slug}` };
+        ? { en: getResearchArticlePath(project, 'en'), ar: getResearchArticlePath(project, 'ar') }
+        : { en: getResearchArticlePath(project, 'en') };
 
     return {
         ...pageMetadata({
@@ -64,6 +66,7 @@ export default function ResearchArticle({ locale = 'en', slug }: { locale?: 'en'
     const project = CUSTOM_STUDIES.find((item) => item.slug === slug && item.published);
 
     if (!project) return <div className="p-8 text-semantic-error">Page Not Found</div>;
+    if (project.article_type === 'essay') return <ResearchEssay study={project} />;
 
     const title = (locale === 'ar' && project?.title_ar) ? project.title_ar : project?.title;
     const tagline = (locale === 'ar' && project?.tagline_ar) ? project.tagline_ar : project?.tagline;
@@ -74,7 +77,7 @@ export default function ResearchArticle({ locale = 'en', slug }: { locale?: 'en'
         ? project.category_ar
         : project.category || 'Machine Learning';
     const tocData = tocLabels[locale];
-    const canonicalUrl = `https://www.mzfortech.com${locale === 'ar' ? '/research/ar' : '/research'}/${project.slug}`;
+    const canonicalUrl = `https://www.mzfortech.com${getResearchArticlePath(project, locale)}`;
     const articleSchema = {
         '@context': 'https://schema.org',
         '@type': 'ScholarlyArticle',
@@ -109,7 +112,7 @@ export default function ResearchArticle({ locale = 'en', slug }: { locale?: 'en'
                     __html: JSON.stringify(articleSchema).replace(/</g, '\\u003c'),
                 }}
             />
-            <article className="max-w-4xl mx-auto relative z-10 px-5 py-16 md:px-8 md:py-24">
+            <article className="max-w-4xl mx-auto relative z-10 px-5 pt-8 pb-16 md:px-8 md:pt-10 md:pb-24">
                 <header className="mb-12 relative z-20">
                     <div className="mb-7 flex flex-wrap items-center justify-between gap-4">
                         <Link href={locale === 'ar' ? '/research/ar' : '/research'} className="font-mono text-xs uppercase tracking-widest text-ink/55 hover:text-accent">
@@ -117,7 +120,7 @@ export default function ResearchArticle({ locale = 'en', slug }: { locale?: 'en'
                         </Link>
                         <div className="flex gap-3">
                             <a href="https://github.com/MZ-for-Tech/vgg19-compression" target="_blank" rel="noreferrer" className="border border-ink/20 px-4 py-2 font-mono text-xs uppercase tracking-widest hover:border-accent">GitHub</a>
-                            <a href="/research-applied-stats-in-ai.pdf" download className="bg-ink px-4 py-2 font-mono text-xs uppercase tracking-widest text-paper hover:bg-accent">{locale === 'ar' ? 'تحميل البحث' : 'Read the paper'}</a>
+                            <a href="/research-applied-stats-in-ai.pdf" target="_blank" rel="noreferrer" className="bg-ink px-4 py-2 font-mono text-xs uppercase tracking-widest text-paper hover:bg-accent">{locale === 'ar' ? 'قراءة البحث' : 'Read the paper'}</a>
                         </div>
                     </div>
                     <div className="flex items-center gap-3 border-t-[3px] border-ink py-3 font-mono text-xs uppercase tracking-widest text-accent">
@@ -125,7 +128,7 @@ export default function ResearchArticle({ locale = 'en', slug }: { locale?: 'en'
                     </div>
                     <h1 className="max-w-4xl font-latex text-4xl leading-[0.98] tracking-tight text-ink md:text-6xl">{title}</h1>
                     {tagline && <p className="mt-5 max-w-3xl font-serif text-xl italic leading-relaxed text-ink/65 md:text-2xl">{tagline}</p>}
-                    <nav className="mt-8 flex flex-wrap gap-x-5 gap-y-2 border-y border-ink/15 py-4 font-mono text-[10px] uppercase tracking-widest text-ink/55" aria-label={locale === 'ar' ? 'محتويات البحث' : 'Paper contents'}>
+                    <nav className="mt-8 flex flex-wrap gap-x-5 gap-y-2 border-y border-ink/15 py-4 font-mono text-xs uppercase tracking-widest text-ink/55" aria-label={locale === 'ar' ? 'محتويات البحث' : 'Paper contents'}>
                         {tocData.map((item) => <a key={item.id} href={`#${item.id}`} className="hover:text-accent">{item.label}</a>)}
                     </nav>
                 </header>
@@ -140,7 +143,7 @@ export default function ResearchArticle({ locale = 'en', slug }: { locale?: 'en'
                             {project.authors?.map((author: { name: string; role?: string }) => (
                                 <div key={author.name}>
                                     <span className="block text-sm font-bold text-ink">{author.name}</span>
-                            <span className="text-xxs font-mono uppercase text-tertiary">
+                            <span className="text-xs font-mono uppercase text-tertiary">
                                 {locale === 'ar'
                                     ? author.role === 'Researcher' || !author.role ? 'باحث' : author.role
                                     : author.role || 'Researcher'}

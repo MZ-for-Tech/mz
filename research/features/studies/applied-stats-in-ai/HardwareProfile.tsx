@@ -17,7 +17,7 @@ export default function HardwareProfile() {
           </div>
           <div>
             <h3 className="text-xl font-latex font-bold tracking-tight">Hardware Profiling Audit</h3>
-            <p className="text-xxs font-mono uppercase tracking-[0.3em] opacity-40">System Audit & Reproducibility Specs</p>
+            <p className="text-xs font-mono uppercase tracking-[0.3em] opacity-40">System Audit & Reproducibility Specs</p>
           </div>
         </div>
 
@@ -30,7 +30,7 @@ export default function HardwareProfile() {
             
             <div className="space-y-6">
               <div className="flex gap-4 items-start">
-                <div className="text-xxs font-mono opacity-30 w-8 mt-1">GPU</div>
+                <div className="text-xs font-mono opacity-30 w-8 mt-1">GPU</div>
                 <div>
                   <div className="text-sm font-bold">NVIDIA T4 Tensor Core</div>
                   <div className="text-xs opacity-60">16GB GDDR6 • Turing Architecture</div>
@@ -38,7 +38,7 @@ export default function HardwareProfile() {
               </div>
               
               <div className="flex gap-4 items-start">
-                <div className="text-xxs font-mono opacity-30 w-8 mt-1">CPU</div>
+                <div className="text-xs font-mono opacity-30 w-8 mt-1">CPU</div>
                 <div>
                   <div className="text-sm font-bold">Intel Xeon Processor</div>
                   <div className="text-xs opacity-60">2 vCPUs @ 2.20GHz (Cloud Instance)</div>
@@ -46,7 +46,7 @@ export default function HardwareProfile() {
               </div>
 
               <div className="flex gap-4 items-start">
-                <div className="text-xxs font-mono opacity-30 w-8 mt-1">RAM</div>
+                <div className="text-xs font-mono opacity-30 w-8 mt-1">RAM</div>
                 <div>
                   <div className="text-sm font-bold">12.7 GB System RAM</div>
                   <div className="text-xs opacity-60">Google Colab Runtime Environment</div>
@@ -63,7 +63,7 @@ export default function HardwareProfile() {
             
             <div className="space-y-6">
               <div className="flex gap-4 items-start">
-                <div className="text-xxs font-mono opacity-30 w-8 mt-1">OS</div>
+                <div className="text-xs font-mono opacity-30 w-8 mt-1">OS</div>
                 <div>
                   <div className="text-sm font-bold">Ubuntu 22.04 LTS</div>
                   <div className="text-xs opacity-60">Linux Kernel (Colab Container)</div>
@@ -71,7 +71,7 @@ export default function HardwareProfile() {
               </div>
 
               <div className="flex gap-4 items-start">
-                <div className="text-xxs font-mono opacity-30 w-8 mt-1">ENV</div>
+                <div className="text-xs font-mono opacity-30 w-8 mt-1">ENV</div>
                 <div>
                   <div className="text-sm font-bold">Python 3.10.x</div>
                   <div className="text-xs opacity-60">PyTorch 2.x • CUDA 12.x Support</div>
@@ -79,7 +79,7 @@ export default function HardwareProfile() {
               </div>
 
               <div className="flex gap-4 items-start">
-                <div className="text-xxs font-mono opacity-30 w-8 mt-1">DATA</div>
+                <div className="text-xs font-mono opacity-30 w-8 mt-1">DATA</div>
                 <div>
                   <div className="text-sm font-bold">medmnist v3.0.2</div>
                   <div className="text-xs opacity-60">BloodMNIST+ (224px native resolution)</div>
@@ -89,7 +89,7 @@ export default function HardwareProfile() {
           </div>
         </div>
 
-        <div className="mt-12 pt-8 border-t border-paper/10 flex justify-between items-center text-xxs font-mono opacity-30 uppercase tracking-tighter">
+        <div className="mt-12 pt-8 border-t border-paper/10 flex justify-between items-center text-xs font-mono opacity-30 uppercase tracking-tighter">
           <span>Benchmarked @ Batch Size 32</span>
           <span>Floating Point Precision: FP32</span>
           <span>Inference Context: Local/Non-Distributed</span>

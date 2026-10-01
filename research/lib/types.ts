@@ -21,6 +21,14 @@ export interface Study extends BaseEditorialMetadata {
   updated_at: string;
   toc?: { id: string; label: string }[];
   authors?: { name: string; role?: string }[];
+  article_type?: 'paper' | 'essay';
+  series?: string;
+  series_number?: number;
+  content_file?: string;
+  thumbnail?: string;
+  thumbnail_alt?: string;
+  hero_image?: string;
+  hero_image_alt?: string;
 }
 
 export type StudyWithContent = Study & {
