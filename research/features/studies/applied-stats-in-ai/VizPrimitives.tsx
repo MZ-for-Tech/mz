@@ -400,7 +400,7 @@ export function EditorialPlate({
         </div>
       </div>
       {figureCaption && (
-        <figcaption className="mt-3 w-full text-left font-serif text-sm leading-relaxed text-secondary">
+        <figcaption className="mt-3 w-full text-left font-serif text-base leading-relaxed text-secondary">
           <span className="font-bold text-ink">Figure {figureCaption.number}:</span> {figureCaption.text}
         </figcaption>
       )}

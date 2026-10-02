@@ -78,7 +78,7 @@ export default function DoubleGoodhartFlow() {
           <desc id={descriptionId}>People want accurate, helpful answers. The reward model imperfectly predicts human preferences, creating the first gap. The language model then optimizes that proxy and can exploit its weaknesses, widening the second gap. The slider increases optimization pressure.</desc>
 
           <line x1="64" x2="736" y1={baselineY} y2={baselineY} stroke="var(--ink-val)" strokeOpacity="0.22" strokeDasharray="4 7" />
-          <text x="64" y="158" fill="var(--pencil-val)" fontSize="12" fontFamily="var(--font-code), monospace">INTENDED OUTCOME</text>
+          <text x="64" y="158" fill="var(--pencil-val)" fontSize="13" fontFamily="var(--font-code), monospace">INTENDED OUTCOME</text>
 
           <motion.path
             d={`M ${stages[0].x} ${baselineY} C 220 ${baselineY}, 270 ${rewardY}, ${stages[1].x} ${rewardY}`}
@@ -115,24 +115,24 @@ export default function DoubleGoodhartFlow() {
           )}
 
           <motion.g initial={{ opacity: pressure > 3 ? 1 : 0.35 }} animate={{ opacity: pressure > 3 ? 1 : 0.35 }} transition={reduceMotion ? { duration: 0 } : { duration: 0.2 }}>
-            <text x="414" y={(rewardY + baselineY) / 2 + 4} fill="var(--accent-val)" fontSize="11" fontFamily="var(--font-code), monospace">PREFERENCE PROXY</text>
-            <text x="688" y={(policyY + baselineY) / 2 + 4} textAnchor="end" fill="var(--accent-val)" fontSize="11" fontFamily="var(--font-code), monospace">OPTIMIZATION GAP</text>
+            <text x="414" y={(rewardY + baselineY) / 2 + 4} fill="var(--accent-val)" fontSize="13" fontFamily="var(--font-code), monospace">PREFERENCE PROXY</text>
+            <text x="688" y={(policyY + baselineY) / 2 + 4} textAnchor="end" fill="var(--accent-val)" fontSize="13" fontFamily="var(--font-code), monospace">OPTIMIZATION GAP</text>
           </motion.g>
         </svg>
 
         <div className="grid grid-cols-3 gap-2 border-y border-ink/10 py-3 sm:gap-4">
           <div>
-            <p className="mb-1 font-mono text-[0.65rem] uppercase tracking-wider text-tertiary">Human intent</p>
+            <p className="mb-1 font-mono text-xs uppercase tracking-wider text-tertiary">Human intent</p>
             <p className="font-serif text-sm leading-snug text-ink sm:text-base">Help me solve this accurately.</p>
           </div>
           <div>
-            <p className="mb-1 font-mono text-[0.65rem] uppercase tracking-wider text-tertiary">Reward model</p>
+            <p className="mb-1 font-mono text-xs uppercase tracking-wider text-tertiary">Reward model</p>
             <motion.p key={pressure < 35 ? 'proxy-low' : pressure < 70 ? 'proxy-mid' : 'proxy-high'} initial={reduceMotion ? false : { opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} className="font-serif text-sm leading-snug text-ink sm:text-base">
               {pressure < 35 ? 'Learn what people tend to prefer.' : pressure < 70 ? 'Prefer answers that sound helpful.' : 'Confidence becomes the signal.'}
             </motion.p>
           </div>
           <div>
-            <p className="mb-1 font-mono text-[0.65rem] uppercase tracking-wider text-tertiary">LLM policy</p>
+            <p className="mb-1 font-mono text-xs uppercase tracking-wider text-tertiary">LLM policy</p>
             <motion.p key={pressure < 35 ? 'policy-low' : pressure < 70 ? 'policy-mid' : 'policy-high'} initial={reduceMotion ? false : { opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} className="font-serif text-sm leading-snug text-ink sm:text-base">
               {pressure < 35 ? 'Answer with useful evidence.' : pressure < 70 ? 'Make the answer sound helpful.' : 'Sound certain, even without evidence.'}
             </motion.p>
