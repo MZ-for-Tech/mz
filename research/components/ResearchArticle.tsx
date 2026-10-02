@@ -10,6 +10,7 @@ import { VisualizationEngine } from "@/research/features/engine/VisualizationEng
 import { CUSTOM_STUDIES, hasArabicStudyMetadata } from "@/research/data/studies";
 import { appliedStatsStrings } from "@/research/data/strings/appliedStats";
 import ResearchEssay from '@/research/components/ResearchEssay';
+import ResearchContentsSidebar from '@/research/components/ResearchContentsSidebar';
 import { getResearchArticlePath } from '@/research/lib/paths';
 
 export function researchArticleMetadata(locale: 'en' | 'ar', slug: string): Metadata {
@@ -139,10 +140,9 @@ export default function ResearchArticle({ locale = 'en', slug }: { locale?: 'en'
                     </div>
                     <h1 className="max-w-4xl font-latex text-4xl leading-[0.98] tracking-tight text-ink md:text-6xl">{title}</h1>
                     {tagline && <p className="mt-5 max-w-3xl font-serif text-xl italic leading-relaxed text-ink/65 md:text-2xl">{tagline}</p>}
-                    <nav className="mt-8 flex flex-wrap gap-x-5 gap-y-2 border-y border-ink/15 py-4 font-mono text-xs uppercase tracking-widest text-ink/55" aria-label={locale === 'ar' ? 'محتويات البحث' : 'Paper contents'}>
-                        {tocData.map((item) => <a key={item.id} href={`#${item.id}`} className="hover:text-accent">{item.label}</a>)}
-                    </nav>
                 </header>
+
+                <ResearchContentsSidebar items={tocData} locale={locale} />
 
                 {/* Authors Section */}
                 <div className="mb-12 grid grid-cols-1 gap-8 py-8 border-b border-ink/10">

@@ -5,6 +5,7 @@ import Image from 'next/image';
 import type { Study } from '@/research/lib/types';
 import { getResearchArticlePath } from '@/research/lib/paths';
 import { VisualizationEngine } from '@/research/features/engine/VisualizationEngine';
+import ResearchContentsSidebar from '@/research/components/ResearchContentsSidebar';
 
 function inlineMarkdown(text: string) {
   const pieces = text.split(/(\[[^\]]+\]\(https?:\/\/[^)\s]+\)|\*\*[^*]+\*\*|\*[^*]+\*)/g);
@@ -72,6 +73,7 @@ export default function ResearchEssay({ study }: { study: Study }) {
     '@type': 'Article',
     headline: study.title,
     description: study.description || study.tagline,
+    keywords: study.keywords,
     author: study.authors?.map((author) => ({
       '@type': 'Person',
       name: author.name,
@@ -134,6 +136,11 @@ export default function ResearchEssay({ study }: { study: Study }) {
             <span aria-hidden="true">·</span>
             <span>{readingMinutes} min read</span>
           </div>
+          {study.keywords?.length ? (
+            <p className="mt-3 max-w-4xl text-sm leading-relaxed text-ink/60">
+              <span className="font-semibold text-ink/75">Keywords:</span> {study.keywords.join(' · ')}
+            </p>
+          ) : null}
         </header>
 
         {(study.hero_image || study.thumbnail) && (
@@ -147,6 +154,8 @@ export default function ResearchEssay({ study }: { study: Study }) {
             />
           </figure>
         )}
+
+        {study.toc?.length ? <ResearchContentsSidebar items={study.toc} /> : null}
 
         <div className="latex-prose space-y-4 text-xl">
           {blocks.map((block, index) => {
@@ -180,7 +189,7 @@ export default function ResearchEssay({ study }: { study: Study }) {
               const label = heading[1].replace(/[.!?]+$/, '');
               const isReferencesHeading = label === 'References';
               return (
-                <h2 key={index} id={headingId(label)} className={`${isReferencesHeading ? 'mt-12 border-t border-ink/20 pt-8' : 'pt-8'} text-3xl font-bold text-ink`}>
+                <h2 key={index} id={headingId(label)} className={`${isReferencesHeading ? 'mt-12 border-t border-ink/20 pt-8' : 'pt-8'} scroll-mt-24 text-3xl font-bold text-ink`}>
                   {label}
                 </h2>
               );

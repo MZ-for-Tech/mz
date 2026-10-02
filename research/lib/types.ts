@@ -9,6 +9,7 @@ export interface BaseEditorialMetadata {
   category_ar?: string;
   description?: string;
   description_ar?: string;
+  keywords?: string[];
 }
 
 export interface Study extends BaseEditorialMetadata {
