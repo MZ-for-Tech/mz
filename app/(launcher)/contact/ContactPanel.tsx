@@ -1,7 +1,6 @@
 "use client";
 
-import { useRef, useState, type FormEvent } from "react";
-import { measure } from '@/lib/measurement';
+import { useState, type FormEvent } from "react";
 import Link from "next/link";
 import ObfuscatedEmail from "@/components/ObfuscatedEmail/ObfuscatedEmail";
 import styles from "./page.module.css";
@@ -236,7 +235,6 @@ function OptionRow({
 }
 
 export default function ContactPanel() {
-  const formStarted = useRef(false);
   const [categories, setCategories] = useState<string[]>([]);
   const [budget, setBudget] = useState<string | null>(null);
   const [timeline, setTimeline] = useState<string | null>(null);
@@ -256,10 +254,9 @@ export default function ContactPanel() {
         method: "POST",
         body: new FormData(form),
       });
-      const result = (await response.json()) as { message?: string; delivered?: boolean };
+      const result = (await response.json()) as { message?: string };
 
-      if (!response.ok || result.delivered !== true) {
-        measure('contact_form_error', '/contact');
+      if (!response.ok) {
         setSubmissionState("error");
         setSubmissionMessage(
           result.message ?? "We couldn't send your brief. Please email us directly."
@@ -267,7 +264,6 @@ export default function ContactPanel() {
         return;
       }
 
-      measure('contact_form_success', '/contact');
       form.reset();
       setCategories([]);
       setBudget(null);
@@ -275,9 +271,8 @@ export default function ContactPanel() {
       setReferral(null);
       setFileName(null);
       setSubmissionState("sent");
-      setSubmissionMessage("Your brief was accepted for delivery. We'll be in touch soon.");
+      setSubmissionMessage("Your brief is on its way. We'll be in touch soon.");
     } catch {
-      measure('contact_form_error', '/contact');
       setSubmissionState("error");
       setSubmissionMessage("We couldn't send your brief. Please email us directly.");
     }
@@ -296,7 +291,9 @@ export default function ContactPanel() {
       <div className={styles.grid}>
         <div className={styles.intro}>
           <h1 className={styles.title}>
-            Tell us what you want to build.
+            So.
+            <br />
+            What do you wanna talk about?
           </h1>
 
           {/* The address sits straight on the page, as it did on /start. A
@@ -394,9 +391,7 @@ export default function ContactPanel() {
           </p>
         </div>
 
-        <form className={styles.form} onSubmit={submitBrief} onFocus={() => {
-          if (!formStarted.current) { formStarted.current = true; measure('contact_form_start', '/contact'); }
-        }}>
+        <form className={styles.form} onSubmit={submitBrief}>
           {/* Honeypot for basic bot filtering; real visitors never see this field. */}
           <label className={styles.honeypot} aria-hidden="true">
             Company website

@@ -2,9 +2,9 @@ import { pageMetadata } from "@/lib/seo";
 import ContactPanel from "./ContactPanel";
 
 export const metadata = pageMetadata({
-  title: "Contact MZ for Tech | Discuss Your Project",
+  title: "Contact MZ",
   description:
-    "Tell MZ about your software, website, business-system, AI or training project. Contact our Cairo-based team to discuss scope and next steps.",
+    "Contact Model Zero for Technology Solutions in Cairo about custom software, AI deployment, or Arabic OCR.",
   path: "/contact",
 });
 

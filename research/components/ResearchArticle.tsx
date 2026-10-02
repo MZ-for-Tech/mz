@@ -19,9 +19,7 @@ export function researchArticleMetadata(locale: 'en' | 'ar', slug: string): Meta
     if (locale === 'ar' && !hasArabicStudyMetadata(project)) {
         return { title: project.title, robots: { index: false, follow: true } };
     }
-    const title = slug === 'vgg19-bloodmnist-compression'
-        ? locale === 'ar' ? 'ضغط نموذج VGG19 على BloodMNIST | أبحاث MZ' : 'VGG19 Compression on BloodMNIST | MZ Research'
-        : locale === 'ar' ? project.title_ar! : project.title;
+    const title = locale === 'ar' ? project.title_ar! : project.title;
     const description = locale === 'ar'
         ? project.description_ar!
         : project.description || project.tagline || '';
@@ -123,7 +121,7 @@ export default function ResearchArticle({ locale = 'en', slug }: { locale?: 'en'
     };
 
     return (
-        <main id="main-content" className="research-content" data-reading-progress lang={locale} dir={locale === 'ar' ? 'rtl' : 'ltr'}>
+        <div className="research-content" data-reading-progress lang={locale} dir={locale === 'ar' ? 'rtl' : 'ltr'}>
             <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{
@@ -366,6 +364,6 @@ export default function ResearchArticle({ locale = 'en', slug }: { locale?: 'en'
                     </div>
                 </Section>
             </article>
-        </main>
+        </div>
     );
 }

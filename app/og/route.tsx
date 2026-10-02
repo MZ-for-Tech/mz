@@ -44,16 +44,6 @@ function actionFor(path: string, isArabic: boolean) {
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
-  if (searchParams.get('locale')?.startsWith('ar')) {
-    const cards: Record<string, string> = {
-      '/research/ar': 'arabic-research',
-      '/research/ar/papers/vgg19-bloodmnist-compression': 'arabic-vgg19',
-    };
-    const file = cards[searchParams.get('path') || ''];
-    if (!file) return new Response('Arabic social card unavailable', { status: 404 });
-    const image = await readFile(join(process.cwd(), `public/og/${file}.png`));
-    return new Response(new Uint8Array(image), { headers: { 'Content-Type': 'image/png', 'Cache-Control': 'public, max-age=86400, s-maxage=31536000' } });
-  }
   const title = limit(searchParams.get("title") || "Model Zero for Technology Solutions", 110);
   const description = limit(
     searchParams.get("description") || "A Cairo-based software and AI company building custom systems and training teams to run them.",
@@ -64,11 +54,10 @@ export async function GET(request: Request) {
   const cardDescription = path === "/"
     ? "Software and AI systems, built in Cairo. Teams trained to run them."
     : description;
-  const section = isArabic && path.startsWith('/research') ? 'أبحاث MZ' : sectionFor(path);
+  const section = sectionFor(path);
   const action = actionFor(path, isArabic);
   const logo = await readFile(join(process.cwd(), "public/mz.svg"), "utf8");
   const logoSource = `data:image/svg+xml;base64,${Buffer.from(logo).toString("base64")}`;
-  const latinFont = await readFile(join(process.cwd(), 'node_modules/next/dist/compiled/@vercel/og/Geist-Regular.ttf'));
   const arabicFont = isArabic
     ? await readFile(join(process.cwd(), "public/fonts/og/NotoNaskhArabicUI-Regular.ttf"))
     : undefined;
@@ -85,7 +74,7 @@ export async function GET(request: Request) {
           overflow: "hidden",
           background: "linear-gradient(112deg, #0d0f08 0%, #0d0f08 62%, #11150a 100%)",
           color: "#f5f5f0",
-          fontFamily: "Geist",
+          fontFamily: "Arial, sans-serif",
         }}
       >
         <svg
@@ -206,7 +195,7 @@ export async function GET(request: Request) {
                 lineHeight: 1.08,
                 letterSpacing: isArabic ? "0" : "-0.04em",
                 textAlign: isArabic ? "right" : "left",
-                fontFamily: isArabic ? "NotoNaskhArabic, Geist" : "Geist",
+                fontFamily: isArabic ? "NotoNaskhArabic" : "Arial, sans-serif",
               }}
             >
               {title}
@@ -221,7 +210,7 @@ export async function GET(request: Request) {
                 lineHeight: 1.42,
                 marginTop: 20,
                 textAlign: isArabic ? "right" : "left",
-                fontFamily: isArabic ? "NotoNaskhArabic, Geist" : "Geist",
+                fontFamily: isArabic ? "NotoNaskhArabic" : "Arial, sans-serif",
               }}
             >
               {cardDescription}
@@ -250,10 +239,18 @@ export async function GET(request: Request) {
     {
       ...size,
       headers: { "Cache-Control": "public, max-age=86400, s-maxage=31536000" },
-      fonts: [
-        { name: 'Geist', data: latinFont, style: 'normal', weight: 400 },
-        ...(arabicFont ? [{ name: 'NotoNaskhArabic', data: arabicFont, style: 'normal' as const, weight: 400 as const }] : []),
-      ],
+      ...(arabicFont
+        ? {
+            fonts: [
+              {
+                name: "NotoNaskhArabic",
+                data: arabicFont,
+                style: "normal" as const,
+                weight: 400 as const,
+              },
+            ],
+          }
+        : {}),
     },
   );
 }

@@ -14,7 +14,7 @@ export default function ResearchSeriesPage({
   const firstArticle = articles[0];
 
   return (
-    <main id="main-content" className="research-main" lang="en" dir="ltr">
+    <main className="research-main" lang="en" dir="ltr">
       <div className="research-home research-home-editorial">
         <header className="max-w-4xl">
           <Link href="/research" className="font-mono text-xs uppercase tracking-widest text-ink/55 transition-colors hover:text-accent">

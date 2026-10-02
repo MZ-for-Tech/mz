@@ -123,7 +123,7 @@ export default function Template({ children }: { children: React.ReactNode }) {
           height: "100vh",
           pointerEvents: "none",
           zIndex: 99999,
-          display: "none",
+          display: "flex",
         }}
       >
         {Array.from({ length: columns }).map((_, i) => (

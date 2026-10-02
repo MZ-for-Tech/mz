@@ -4,7 +4,7 @@ import { CUSTOM_STUDIES, hasArabicStudyMetadata } from '@/research/data/studies'
 
 export function generateStaticParams() {
   return CUSTOM_STUDIES
-    .filter((study) => study.published && study.article_type === 'paper' && hasArabicStudyMetadata(study) && study.arabic_translation_status !== 'draft')
+    .filter((study) => study.published && study.article_type === 'paper' && hasArabicStudyMetadata(study))
     .map((study) => ({ slug: study.slug }));
 }
 
@@ -15,6 +15,6 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function ArabicResearchPaperPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  if (!CUSTOM_STUDIES.some((study) => study.slug === slug && study.published && study.article_type === 'paper' && hasArabicStudyMetadata(study) && study.arabic_translation_status !== 'draft')) notFound();
+  if (!CUSTOM_STUDIES.some((study) => study.slug === slug && study.published && study.article_type === 'paper' && hasArabicStudyMetadata(study))) notFound();
   return <ResearchArticle locale="ar" slug={slug} />;
 }

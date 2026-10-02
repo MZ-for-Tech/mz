@@ -28,12 +28,12 @@ export type MenuTab = {
  * home tab that drifts to the end of its own list is a bug no amount of data
  * modelling would prevent.
  */
-export const LAUNCHER_ROOT = "/";
+export const LAUNCHER_ROOT = "/home";
 
 export const MENU_TABS: MenuTab[] = [
   { label: "Home", href: LAUNCHER_ROOT },
   { label: "Work", href: "/work" },
   { label: "Services", href: "/services" },
-  { label: "About", href: "/intel" },
+  { label: "Intel", href: "/intel" },
   { label: "Contact", href: "/contact" },
 ];

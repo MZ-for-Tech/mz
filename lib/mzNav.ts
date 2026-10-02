@@ -49,7 +49,7 @@ const LAUNCHER_PATHS = [
 ];
 
 export function isLauncherPath(pathname: string): boolean {
-  return LAUNCHER_PATHS.includes(pathname) || pathname.startsWith('/services/');
+  return LAUNCHER_PATHS.includes(pathname);
 }
 
 /** Paths owned by the standalone Research experience. */

@@ -38,9 +38,9 @@ export default function FeaturedResearchEssay({
             ) : series}
             {' · '}{isArabic ? `المقال ${number}` : `Article ${number}`}{year ? ` · ${year}` : ''}
           </p>
-          <h2 id="research-featured-title" className="mt-4 max-w-2xl font-latex text-4xl leading-[1.04] tracking-tight text-ink sm:text-5xl lg:text-6xl">
+          <h1 id="research-featured-title" className="mt-4 max-w-2xl font-latex text-4xl leading-[1.04] tracking-tight text-ink sm:text-5xl lg:text-6xl">
             {title}
-          </h2>
+          </h1>
           {tagline && <p className="mt-5 max-w-xl text-lg leading-relaxed text-ink/65 sm:text-xl">{tagline}</p>}
           <div className="mt-7 flex flex-wrap items-center gap-x-5 gap-y-3">
             {author && <span className="text-sm text-ink/55">{author}</span>}

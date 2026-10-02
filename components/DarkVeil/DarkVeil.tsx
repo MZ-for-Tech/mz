@@ -132,7 +132,16 @@ type Props = {
  * greener hueShift −170 and /start + /privacy also ran the static default
  * variant).
  */
-export { DARKVEIL_THEME } from '@/lib/site-theme';
+export const DARKVEIL_THEME = {
+  hueShift: 198,
+  noiseIntensity: 0,
+  scanlineIntensity: 0.05,
+  scanlineFrequency: 0.01,
+  speed: 0.2,
+  warpAmount: 0.5,
+  variant: 'wave',
+  resolutionScale: 0.75,
+} as const;
 
 export default function DarkVeil({
                                    hueShift = 0,

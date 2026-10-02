@@ -243,6 +243,21 @@ export const CLIENTS: ClientLogo[] = [
     logo: "/logos/nested-united.svg",
     tone: "ink",
   },
+  {
+    name: "FEPS",
+    sector: "Events management system",
+    logo: "/logos/feps.png",
+    tone: "color",
+    // A circular seal, not a wordmark — see LogoForm for why that needs a
+    // larger cap to carry the same weight as the two wordmarks beside it.
+    form: "emblem",
+  },
+  {
+    name: "Lux",
+    sector: "Actuaries & consultants",
+    logo: "/logos/lux.png",
+    tone: "light",
+  },
 ];
 
 /**
@@ -269,10 +284,10 @@ export const PROJECTS: ProjectData[] = [
     name: "Z Studio",
     kind: "product",
     client: "MZ",
-    category: "Product configuration",
+    category: "Platform",
     year: "2025",
-    tagline: "Product-configuration work by MZ.",
-    description: "Product-configuration work. Contact MZ to discuss current scope and availability.",
+    tagline: "",
+    description: "",
     tags: [],
     accentColor: "#88b600",
     accentColorRgb: "136, 182, 0",
@@ -287,10 +302,10 @@ export const PROJECTS: ProjectData[] = [
     name: "Misura",
     kind: "product",
     client: "MZ",
-    category: "Statistical analysis",
+    category: "Platform",
     year: "2025",
-    tagline: "A statistical-analysis product by MZ.",
-    description: "Misura is MZ's statistical-analysis product. Contact the team for current features and availability.",
+    tagline: "",
+    description: "",
     tags: [],
     accentColor: "#88b600",
     accentColorRgb: "136, 182, 0",
@@ -315,7 +330,6 @@ export const PROJECTS: ProjectData[] = [
   {
     id: "03",
     slug: "thanawaya-bank",
-    showOnWorkShelf: false,
     name: "Thanawaya Bank",
     kind: "product",
     client: "MZ",
@@ -334,7 +348,6 @@ export const PROJECTS: ProjectData[] = [
   {
     id: "04",
     slug: "feps",
-    showOnWorkShelf: false,
     name: "FEPS",
     kind: "work",
     client: "FEPS",
@@ -406,9 +419,9 @@ export const PROJECTS: ProjectData[] = [
     // centre of the argument.
     featuredSlot: "work",
     tagline:
-      "Five specialist brands brought together in one web experience.",
+      "A unified digital presence engineered for real estate transparency & institutional scale.",
     description:
-      "A multi-brand website with a shared information structure, reusable components and a responsive motion layer.",
+      "Nested United required an architecture that bridges high-end architectural aesthetics with rigorous data management. We designed and built a sleek, modern web platform engineered to convey trust, clarity, and institutional capability.",
     tags: ["Web Architecture", "Frontend Systems", "Branding"],
     accentColor: "#88b600",
     accentColorRgb: "136, 182, 0",
@@ -441,23 +454,23 @@ export const PROJECTS: ProjectData[] = [
     process: [
       {
         phase: "01 / DISCOVERY",
-        title: "Multi-brand information structure",
-        description: "Organized five specialist brands into one website using the supplied design direction.",
+        title: "Deconstructing Complex Real Estate Data",
+        description: "Mapped out data dependencies and established a design language rooted in structural elegance and minimal friction.",
       },
       {
         phase: "02 / ARCHITECTURE",
         title: "High-Performance Next.js Frontend",
-        description: "Built reusable website components and a motion layer for the multi-brand experience.",
+        description: "Built a responsive, hardware-accelerated web experience with subtle micro-interactions and instant route transitions.",
       },
       {
         phase: "03 / DEPLOYMENT",
-        title: "Deployment and handover",
-        description: "Prepared the multi-brand website for hosting and documented its reusable components.",
+        title: "Zero-Downtime Infrastructure",
+        description: "Configured resilient hosting pipelines and performance budgets to maintain 60fps rendering across all viewport sizes.",
       },
     ],
     highlights: [
-      { label: "Scope", value: "Multi-brand website" },
-      { label: "Interface", value: "Responsive" },
+      { label: "Performance Score", value: "99/100" },
+      { label: "Frame Rate", value: "60 FPS" },
       { label: "Design System", value: "Custom Architectural" },
     ],
   },

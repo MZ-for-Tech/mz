@@ -2,10 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
-import dynamic from 'next/dynamic';
-import { useReducedMotion } from '@/lib/useReducedMotion';
-import { DARKVEIL_THEME } from '@/lib/site-theme';
-const DarkVeil = dynamic(() => import('@/components/DarkVeil/DarkVeil'), { ssr: false });
+import DarkVeil, { DARKVEIL_THEME } from "@/components/DarkVeil/DarkVeil";
 import styles from "./SiteBackground.module.css";
 
 /**
@@ -37,7 +34,6 @@ import styles from "./SiteBackground.module.css";
 const PLAIN_ROUTES = ["/privacy", "/research"];
 
 export default function SiteBackground() {
-  const reducedMotion = useReducedMotion();
   const [mounted, setMounted] = useState(false);
   const [visible, setVisible] = useState(false);
   const pathname = usePathname();
@@ -80,7 +76,7 @@ export default function SiteBackground() {
      a plain route never creates the WebGL context in the first place —
      there is no state to reset, and no moment where it exists and is then
      torn down. */
-  const showCanvas = mounted && !isPlain && !reducedMotion;
+  const showCanvas = mounted && !isPlain;
 
   return (
     <div
@@ -89,7 +85,7 @@ export default function SiteBackground() {
       data-plain={isPlain ? "" : undefined}
       aria-hidden="true"
     >
-      {showCanvas && <DarkVeil {...DARKVEIL_THEME} />}
+      {showCanvas && <DarkVeil {...DARKVEIL_THEME} resolutionScale={0.75} />}
     </div>
   );
 }

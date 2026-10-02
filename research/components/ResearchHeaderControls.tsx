@@ -4,8 +4,6 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState, useSyncExternalStore } from 'react';
 import { Check, ChevronDown, Languages, Moon, Sun } from 'lucide-react';
-import { CUSTOM_STUDIES, hasArabicStudyMetadata } from '@/research/data/studies';
-import { getResearchArticlePath } from '@/research/lib/paths';
 
 type Locale = 'en' | 'ar';
 type Theme = 'light' | 'dark' | 'modern-light' | 'modern-dark';
@@ -41,9 +39,9 @@ const THEMES: { label: string; family: 'academic' | 'modern' }[] = [
 ];
 
 function alternateLocalePath(pathname: string, locale: Locale) {
-  const study = CUSTOM_STUDIES.find(item => item.published && (getResearchArticlePath(item, 'en') === pathname || getResearchArticlePath(item, 'ar') === pathname));
-  if (study && (locale === 'en' || hasArabicStudyMetadata(study) && study.arabic_translation_status !== 'draft')) return getResearchArticlePath(study, locale);
-  return locale === 'ar' ? '/research/ar' : '/research';
+  const relativePath = pathname.replace(/^\/research(?:\/ar)?\/?/, '');
+  if (!relativePath) return locale === 'ar' ? '/research/ar' : '/research';
+  return locale === 'ar' ? `/research/ar/${relativePath}` : `/research/${relativePath}`;
 }
 
 export default function ResearchHeaderControls() {
@@ -82,7 +80,7 @@ export default function ResearchHeaderControls() {
             setLanguageOpen((open) => !open);
             setThemeOpen(false);
           }}
-          aria-label={locale === 'ar' ? 'تغيير اللغة' : 'Switch language'}
+          aria-label="Switch language"
           aria-expanded={languageOpen}
         >
           <Languages aria-hidden="true" />
@@ -91,13 +89,13 @@ export default function ResearchHeaderControls() {
         </button>
         {languageOpen && (
           <div className="research-control-dropdown research-language-dropdown">
-            <span className="research-dropdown-heading">{locale === 'ar' ? 'اختر اللغة' : 'Select language'}</span>
+            <span className="research-dropdown-heading">Select Language</span>
             <Link href={alternateLocalePath(pathname, 'en')} onClick={() => setLanguageOpen(false)}>
               <span><strong>English</strong></span>
               {locale === 'en' && <Check aria-label="Current language" />}
             </Link>
             <Link href={alternateLocalePath(pathname, 'ar')} onClick={() => setLanguageOpen(false)}>
-              <span><strong>{pathname !== '/research' && alternateLocalePath(pathname, 'ar') === '/research/ar' ? 'الأبحاث بالعربية' : 'العربية'}</strong></span>
+              <span><strong>العربية</strong></span>
               {locale === 'ar' && <Check aria-label="Current language" />}
             </Link>
           </div>

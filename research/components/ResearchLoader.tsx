@@ -1,15 +1,10 @@
 'use client';
 
-import { useLayoutEffect, useState, useSyncExternalStore } from 'react';
+import { useLayoutEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
-import { useReducedMotion } from '@/lib/useReducedMotion';
-
-const subscribe = () => () => {};
 
 /** The Null Hypothesis skeleton used for entry and internal route transitions. */
 export default function ResearchLoader() {
-  const hydrated = useSyncExternalStore(subscribe, () => true, () => false);
-  const reducedMotion = useReducedMotion();
   const pathname = usePathname();
   const [exitingPath, setExitingPath] = useState<string | null>(null);
   const [hiddenPath, setHiddenPath] = useState<string | null>(null);
@@ -33,7 +28,7 @@ export default function ResearchLoader() {
   const visible = hiddenPath !== pathname;
   const exiting = exitingPath === pathname;
 
-  if (!visible || !hydrated || reducedMotion) return null;
+  if (!visible) return null;
 
   return (
     <div className="research-loader" aria-hidden="true" style={{ opacity: exiting ? 0 : 1, pointerEvents: exiting ? 'none' : 'auto' }}>

@@ -82,7 +82,7 @@ export default function ServicesPanel() {
         }}
       />
       <div className={styles.intro}>
-        <h1 className={styles.title}>Software, AI and knowledge transfer.</h1>
+        <h1 className={styles.title}>Services</h1>
         <p className={styles.count}>
           {SERVICE_COUNT} pillars. One team.
         </p>

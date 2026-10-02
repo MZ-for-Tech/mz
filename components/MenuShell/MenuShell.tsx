@@ -94,8 +94,7 @@ export default function MenuShell({ children }: { children: React.ReactNode }) {
   // because panels mount and unmount underneath the shell.
   const moveSelection = useCallback((e: KeyboardEvent) => {
     const target = e.target as HTMLElement | null;
-    if (target?.closest?.("input, textarea, select, summary, [contenteditable]")) return;
-    if (!target?.closest?.('[data-tile]')) return;
+    if (target?.closest?.("input, textarea, select, [contenteditable]")) return;
 
     const tiles = Array.from(
       document.querySelectorAll<HTMLElement>("[data-tile]")
@@ -173,7 +172,7 @@ export default function MenuShell({ children }: { children: React.ReactNode }) {
   // Dropping this box out of the scrollport role (`overflow: visible`) hands
   // the job back to the viewport, which is what every other panel already
   // effectively scrolls, and the column pins correctly.
-  const isTallPanel = pathname !== "/work";
+  const isTallPanel = pathname === "/contact";
 
   return (
     <div
@@ -261,7 +260,7 @@ export default function MenuShell({ children }: { children: React.ReactNode }) {
               const active =
                 tab.href === LAUNCHER_ROOT
                   ? pathname === LAUNCHER_ROOT
-                  : pathname === tab.href || pathname.startsWith(`${tab.href}/`);
+                  : pathname === tab.href;
               return (
                 <li key={tab.href}>
                   <Link
@@ -349,8 +348,6 @@ export default function MenuShell({ children }: { children: React.ReactNode }) {
       )}
 
       <main
-        id="main-content"
-        tabIndex={-1}
         className={`${styles.content} ${isTallPanel ? styles.contentWindowScroll : ""}`}
       >
         {/* Keyed by pathname so every panel assembles itself on arrival —

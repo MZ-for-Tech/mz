@@ -92,10 +92,6 @@
   --spacing-container: 8vw;
 }
 
-.skip-link { position: fixed; top: 8px; left: 12px; z-index: 100000; padding: 12px 18px; background: #0d0f08; color: #ffe78d; transform: translateY(-180%); }
-.skip-link:focus { transform: none; outline: 2px solid #ffe78d; }
-:focus-visible { outline: 2px solid var(--color-brand-yellow); outline-offset: 4px; }
-
 :root[data-theme="light"] {
   /* Architectural Neutral Canvas */
   --color-bg: #F8F7F2;
