@@ -7,8 +7,16 @@ import { getResearchArticlePath } from '@/research/lib/paths';
 import { VisualizationEngine } from '@/research/features/engine/VisualizationEngine';
 
 function inlineMarkdown(text: string) {
-  const pieces = text.split(/(\*\*[^*]+\*\*|\*[^*]+\*)/g);
+  const pieces = text.split(/(\[[^\]]+\]\(https?:\/\/[^)\s]+\)|\*\*[^*]+\*\*|\*[^*]+\*)/g);
   return pieces.map((piece, index) => {
+    const link = piece.match(/^\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)$/);
+    if (link) {
+      return (
+        <a key={index} href={link[2]} target="_blank" rel="noreferrer" className="text-accent underline decoration-accent/40 underline-offset-4 hover:decoration-accent">
+          {inlineMarkdown(link[1])}
+        </a>
+      );
+    }
     if (piece.startsWith('**') && piece.endsWith('**')) {
       return <strong key={index}>{piece.slice(2, -2)}</strong>;
     }
@@ -24,7 +32,8 @@ function headingId(text: string) {
 }
 
 function estimateReadingMinutes(markdown: string, title: string) {
-  const readingText = markdown
+  const articleBody = markdown.split(/\n\*\*References\*\*\s*\n/)[0];
+  const readingText = articleBody
     .trim()
     .split(/\n\s*\n/)
     .filter((block, index) => {
@@ -50,6 +59,7 @@ export default function ResearchEssay({ study }: { study: Study }) {
 
   const markdown = readFileSync(join(process.cwd(), 'research', 'content', basename(study.content_file)), 'utf8');
   const blocks = markdown.trim().split(/\n\s*\n/);
+  const referencesIndex = blocks.findIndex((block) => block.trim() === '**References**');
   const series = study.series || 'The Institutional Machine';
   const articleNumber = String(study.series_number || 1).padStart(2, '0');
   const readingMinutes = estimateReadingMinutes(markdown, study.title);
@@ -168,13 +178,14 @@ export default function ResearchEssay({ study }: { study: Study }) {
             const heading = block.match(/^\*\*(.+)\*\*$/);
             if (heading) {
               const label = heading[1].replace(/[.!?]+$/, '');
+              const isReferencesHeading = label === 'References';
               return (
-                <h2 key={index} id={headingId(label)} className="pt-8 text-3xl font-bold text-ink">
+                <h2 key={index} id={headingId(label)} className={`${isReferencesHeading ? 'mt-12 border-t border-ink/20 pt-8' : 'pt-8'} text-3xl font-bold text-ink`}>
                   {label}
                 </h2>
               );
             }
-            return <p key={index}>{inlineMarkdown(block.replace(/\n/g, ' '))}</p>;
+            return <p key={index} className={referencesIndex >= 0 && index > referencesIndex ? 'text-base leading-relaxed' : undefined}>{inlineMarkdown(block.replace(/\n/g, ' '))}</p>;
           })}
         </div>
       </article>
