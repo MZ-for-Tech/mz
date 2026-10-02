@@ -76,7 +76,7 @@ export default function ResearchEssayShell({
           {keywords?.length ? <p className="research-essay-keywords mt-3 max-w-4xl text-sm leading-relaxed text-ink/60"><span className="font-semibold text-ink/75">{isArabic ? 'كلمات مفتاحية:' : 'Keywords:'}</span> {keywords.join(' · ')}</p> : null}
         </header>
 
-        {heroImage && <figure className="relative mb-12 aspect-[16/9] overflow-hidden border border-ink/10 bg-ink/[0.04]"><Image src={heroImage} alt={heroImageAlt || title} fill sizes="(min-width: 896px) 896px, calc(100vw - 40px)" className={`research-image-paper-tone research-image-paper-tone-hero ${heroImageToneClass || ''} object-cover`} /></figure>}
+        {heroImage && <figure className="relative m-0 mb-12 aspect-[16/9] w-full overflow-hidden border border-ink/10 bg-ink/[0.04]"><Image src={heroImage} alt={heroImageAlt || title} fill sizes="(min-width: 896px) 896px, calc(100vw - 40px)" className={`research-image-paper-tone research-image-paper-tone-hero ${heroImageToneClass || ''} object-cover`} /></figure>}
         {translationNotice}
         <ResearchContentsSidebar items={contents} locale={locale} />
         {children}
