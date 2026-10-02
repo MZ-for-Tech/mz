@@ -60,9 +60,7 @@ export default function BenchmaxxingLeaderboard() {
       figureCaption={{ number: 3, text: 'The leaderboard moves Model A upward as its benchmark score rises, while its simulated broader capability stays fixed.' }}
     >
       <div className="relative z-10 space-y-5 p-4 md:p-6">
-        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-ink/10 pb-3">
-          <h3 className="font-mono text-xs uppercase tracking-[0.15em] text-tertiary">Benchmark optimization</h3>
-          <span className="font-mono text-xs uppercase tracking-wider text-secondary">Round {String(round).padStart(2, '0')} of {MAX_ROUNDS}</span>
+        <div className="flex flex-wrap items-center justify-end gap-3 border-b border-ink/10 pb-3">
           <button
             type="button"
             onClick={togglePlayback}
@@ -78,7 +76,6 @@ export default function BenchmaxxingLeaderboard() {
           <section aria-label="Benchmark leaderboard" className="min-w-0">
             <div className="mb-3 flex items-center justify-between">
               <div className="flex items-baseline gap-2.5">
-                <span className="font-mono text-xs tabular-nums text-accent">01</span>
                 <h3 className="font-latex text-xl text-ink">Leaderboard</h3>
               </div>
               <Trophy className="h-4 w-4 text-accent" aria-hidden="true" />
@@ -108,7 +105,6 @@ export default function BenchmaxxingLeaderboard() {
                       <div className="min-w-0">
                         <div className="mb-1 flex items-center justify-between gap-2">
                           <span className={`truncate font-mono text-xs uppercase tracking-wider ${featured ? 'text-ink' : 'text-secondary'}`}>{model.name}</span>
-                          {featured && <span className="font-mono text-xs uppercase tracking-wider text-accent">optimizing</span>}
                         </div>
                         <div className="h-1.5 overflow-hidden bg-ink/[0.07]">
                           <motion.div
@@ -138,7 +134,6 @@ export default function BenchmaxxingLeaderboard() {
           <section aria-label="Benchmark score compared with broader capability" className="border-t border-ink/10 pt-4 md:border-l md:border-t-0 md:ps-5 md:pt-0">
             <div className="mb-3 flex items-center justify-between gap-2">
               <div className="flex items-baseline gap-2.5">
-                <span className="font-mono text-xs tabular-nums text-accent">02</span>
                 <h3 className="font-latex text-xl leading-tight text-ink">Model A: score and capability</h3>
               </div>
             </div>

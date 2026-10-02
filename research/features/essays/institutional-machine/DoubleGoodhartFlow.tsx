@@ -2,13 +2,13 @@
 
 import { useEffect, useId, useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
-import { Pause, Play, UserRound, BrainCircuit, Sparkles } from 'lucide-react';
+import { Pause, Play } from 'lucide-react';
 import { EditorialPlate } from '@/research/features/studies/applied-stats-in-ai/VizPrimitives';
 
 const stages = [
-  { title: 'Human intent', icon: UserRound, x: 104 },
-  { title: 'Reward model', icon: BrainCircuit, x: 400 },
-  { title: 'LLM policy', icon: Sparkles, x: 696 },
+  { x: 104 },
+  { x: 400 },
+  { x: 696 },
 ];
 
 const baselineY = 132;
@@ -56,8 +56,7 @@ export default function DoubleGoodhartFlow() {
       figureCaption={{ number: 2, text: 'The reward model first imperfectly represents human intent. Then the language model is optimized against that proxy, widening the gap between high reward and genuinely helpful answers.' }}
     >
       <div className="relative z-10 space-y-5 p-4 md:p-6">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <p className="font-mono text-xs uppercase tracking-[0.15em] text-tertiary">Human intent → reward proxy → optimized behavior</p>
+        <div className="flex flex-wrap items-center justify-end gap-3">
           <button
             type="button"
             onClick={runOptimization}
@@ -67,15 +66,6 @@ export default function DoubleGoodhartFlow() {
             {isRunning ? <Pause className="h-3.5 w-3.5" aria-hidden="true" /> : <Play className="h-3.5 w-3.5" aria-hidden="true" />}
             {isRunning ? 'Pause' : pressure >= 100 ? 'Replay' : 'Run'}
           </button>
-        </div>
-
-        <div className="grid grid-cols-3 gap-1 sm:gap-3">
-          {stages.map(({ title, icon: Icon }) => (
-            <div key={title} className="flex items-center gap-2 border-b border-ink/10 pb-2 font-mono text-xs uppercase tracking-wide text-secondary sm:gap-2.5">
-              <Icon className="h-3.5 w-3.5 shrink-0 text-accent sm:h-4 sm:w-4" aria-hidden="true" />
-              <span>{title}</span>
-            </div>
-          ))}
         </div>
 
         <svg
@@ -131,13 +121,22 @@ export default function DoubleGoodhartFlow() {
         </svg>
 
         <div className="grid grid-cols-3 gap-2 border-y border-ink/10 py-3 sm:gap-4">
-          <p className="font-serif text-sm leading-snug text-ink sm:text-base">Help me solve this accurately.</p>
-          <motion.p key={pressure < 35 ? 'proxy-low' : pressure < 70 ? 'proxy-mid' : 'proxy-high'} initial={reduceMotion ? false : { opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} className="font-serif text-sm leading-snug text-ink sm:text-base">
-            {pressure < 35 ? 'Learn what people tend to prefer.' : pressure < 70 ? 'Prefer answers that sound helpful.' : 'Confidence becomes the signal.'}
-          </motion.p>
-          <motion.p key={pressure < 35 ? 'policy-low' : pressure < 70 ? 'policy-mid' : 'policy-high'} initial={reduceMotion ? false : { opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} className="font-serif text-sm leading-snug text-ink sm:text-base">
-            {pressure < 35 ? 'Answer with useful evidence.' : pressure < 70 ? 'Make the answer sound helpful.' : 'Sound certain, even without evidence.'}
-          </motion.p>
+          <div>
+            <p className="mb-1 font-mono text-[0.65rem] uppercase tracking-wider text-tertiary">Human intent</p>
+            <p className="font-serif text-sm leading-snug text-ink sm:text-base">Help me solve this accurately.</p>
+          </div>
+          <div>
+            <p className="mb-1 font-mono text-[0.65rem] uppercase tracking-wider text-tertiary">Reward model</p>
+            <motion.p key={pressure < 35 ? 'proxy-low' : pressure < 70 ? 'proxy-mid' : 'proxy-high'} initial={reduceMotion ? false : { opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} className="font-serif text-sm leading-snug text-ink sm:text-base">
+              {pressure < 35 ? 'Learn what people tend to prefer.' : pressure < 70 ? 'Prefer answers that sound helpful.' : 'Confidence becomes the signal.'}
+            </motion.p>
+          </div>
+          <div>
+            <p className="mb-1 font-mono text-[0.65rem] uppercase tracking-wider text-tertiary">LLM policy</p>
+            <motion.p key={pressure < 35 ? 'policy-low' : pressure < 70 ? 'policy-mid' : 'policy-high'} initial={reduceMotion ? false : { opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} className="font-serif text-sm leading-snug text-ink sm:text-base">
+              {pressure < 35 ? 'Answer with useful evidence.' : pressure < 70 ? 'Make the answer sound helpful.' : 'Sound certain, even without evidence.'}
+            </motion.p>
+          </div>
         </div>
 
         <div>

@@ -121,9 +121,6 @@ export default function R2InflationDemo() {
               aria-label="Add noise predictors to the regression model"
               className="h-1 w-full cursor-pointer appearance-none bg-ink/10 accent-accent"
             />
-            <div className="mt-1 flex justify-between font-mono text-xs uppercase tracking-wider text-tertiary">
-              <span>Signal only</span><span>12 terms</span>
-            </div>
           </div>
         </div>
 

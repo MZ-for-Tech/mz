@@ -94,7 +94,7 @@ export default function ResearchEssay({ study }: { study: Study }) {
   };
 
   return (
-    <div className="research-content" lang="en" dir="ltr">
+    <div className="research-content" data-reading-progress lang="en" dir="ltr">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{

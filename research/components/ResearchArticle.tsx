@@ -27,15 +27,26 @@ export function researchArticleMetadata(locale: 'en' | 'ar', slug: string): Meta
         ? { en: getResearchArticlePath(project, 'en'), ar: getResearchArticlePath(project, 'ar') }
         : { en: getResearchArticlePath(project, 'en') };
 
-    return {
-        ...pageMetadata({
+    const metadata = pageMetadata({
             title,
             description,
             path,
             locale: locale === 'ar' ? 'ar_EG' : 'en_US',
             languages,
             type: 'article',
-        }),
+        });
+    return {
+        ...metadata,
+        ...(project.social_image ? {
+            openGraph: {
+                ...metadata.openGraph,
+                images: [{ url: project.social_image, alt: title, width: 1672, height: 941 }],
+            },
+            twitter: {
+                ...metadata.twitter,
+                images: [project.social_image],
+            },
+        } : {}),
         authors: project.authors?.map((author) => ({ name: author.name })),
     };
 }
@@ -105,7 +116,7 @@ export default function ResearchArticle({ locale = 'en', slug }: { locale?: 'en'
     };
 
     return (
-        <div className="research-content" lang={locale} dir={locale === 'ar' ? 'rtl' : 'ltr'}>
+        <div className="research-content" data-reading-progress lang={locale} dir={locale === 'ar' ? 'rtl' : 'ltr'}>
             <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{

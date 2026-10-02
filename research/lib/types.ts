@@ -29,6 +29,7 @@ export interface Study extends BaseEditorialMetadata {
   thumbnail_alt?: string;
   hero_image?: string;
   hero_image_alt?: string;
+  social_image?: string;
 }
 
 export type StudyWithContent = Study & {
