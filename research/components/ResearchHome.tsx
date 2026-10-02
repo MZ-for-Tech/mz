@@ -8,6 +8,7 @@ export default function ResearchHome({ locale = 'en' }: { locale?: 'en' | 'ar' }
   const essays = CUSTOM_STUDIES.filter((study) =>
     study.published
     && study.article_type === 'essay'
+    && (!isArabic || study.arabic_translation_status !== 'draft')
     && (!isArabic || hasArabicStudyMetadata(study)),
   );
   const featuredEssay = essays.find((essay) => essay.is_featured) || essays[0];

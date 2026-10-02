@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "translate:research-draft": "node scripts/translate-research-markdown.mjs"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",
@@ -36,6 +37,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9.39.4",
     "eslint-config-next": "16.2.10",
+    "google-translate-api-x": "^10.7.3",
     "tailwindcss": "^4.3.3",
     "typescript": "^5.9.3"
   },

@@ -15,7 +15,8 @@ const models = [
 const scoreAt = (model: typeof models[number], round: number) => model.base + model.gain * round;
 const capability = 60;
 
-export default function BenchmaxxingLeaderboard() {
+export default function BenchmaxxingLeaderboard({ locale = 'en' }: { locale?: 'en' | 'ar' }) {
+  const isArabic = locale === 'ar';
   const [round, setRound] = useState(0);
   const [playing, setPlaying] = useState(false);
   const sliderId = useId();
@@ -57,26 +58,36 @@ export default function BenchmaxxingLeaderboard() {
   return (
     <EditorialPlate
       compact
-      figureCaption={{ number: 3, text: 'The leaderboard moves Model A upward as its benchmark score rises, while its simulated broader capability stays fixed.' }}
+      figureCaption={{
+        number: 3,
+        label: isArabic ? 'الشكل' : 'Figure',
+        text: isArabic
+          ? 'يصعد النموذج A في لوحة الترتيب مع ارتفاع درجته المعيارية، بينما تظل قدرته العامة المحاكية ثابتة.'
+          : 'The leaderboard moves Model A upward as its benchmark score rises, while its simulated broader capability stays fixed.',
+      }}
     >
       <div className="relative z-10 space-y-5 p-4 md:p-6">
         <div className="flex flex-wrap items-center justify-end gap-3 border-b border-ink/10 pb-3">
           <button
             type="button"
             onClick={togglePlayback}
-            aria-label={isPlaying ? 'Pause optimization rounds' : round >= MAX_ROUNDS ? 'Replay optimization rounds' : 'Play optimization rounds'}
+            aria-label={isPlaying
+              ? (isArabic ? 'إيقاف جولات التحسين مؤقتًا' : 'Pause optimization rounds')
+              : round >= MAX_ROUNDS
+                ? (isArabic ? 'إعادة جولات التحسين' : 'Replay optimization rounds')
+                : (isArabic ? 'تشغيل جولات التحسين' : 'Play optimization rounds')}
             className="inline-flex items-center gap-2 border border-ink/15 px-3 py-2 font-mono text-xs uppercase tracking-wider text-ink transition-colors hover:border-accent hover:text-accent motion-reduce:transition-none"
           >
             {isPlaying ? <Pause className="h-3.5 w-3.5" aria-hidden="true" /> : round >= MAX_ROUNDS ? <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" /> : <Play className="h-3.5 w-3.5" aria-hidden="true" />}
-            {isPlaying ? 'Pause' : round >= MAX_ROUNDS ? 'Replay' : 'Run rounds'}
+            {isPlaying ? (isArabic ? 'إيقاف' : 'Pause') : round >= MAX_ROUNDS ? (isArabic ? 'إعادة' : 'Replay') : (isArabic ? 'تشغيل الجولات' : 'Run rounds')}
           </button>
         </div>
 
         <div className="grid gap-5 md:grid-cols-[1.1fr_0.9fr] md:gap-6">
-          <section aria-label="Benchmark leaderboard" className="min-w-0">
+          <section aria-label={isArabic ? 'لوحة ترتيب المعيار' : 'Benchmark leaderboard'} className="min-w-0">
             <div className="mb-3 flex items-center justify-between">
               <div className="flex items-baseline gap-2.5">
-                <h3 className="font-latex text-xl text-ink">Leaderboard</h3>
+                <h3 className="font-latex text-xl text-ink">{isArabic ? 'لوحة الترتيب' : 'Leaderboard'}</h3>
               </div>
               <Trophy className="h-4 w-4 text-accent" aria-hidden="true" />
             </div>
@@ -104,7 +115,7 @@ export default function BenchmaxxingLeaderboard() {
                       </motion.span>
                       <div className="min-w-0">
                         <div className="mb-1 flex items-center justify-between gap-2">
-                          <span className={`truncate font-mono text-xs uppercase tracking-wider ${featured ? 'text-ink' : 'text-secondary'}`}>{model.name}</span>
+                          <span className={`truncate font-mono text-xs uppercase tracking-wider ${featured ? 'text-ink' : 'text-secondary'}`}>{isArabic ? `النموذج ${model.name.slice(-1)}` : model.name}</span>
                         </div>
                         <div className="h-1.5 overflow-hidden bg-ink/[0.07]">
                           <motion.div
@@ -131,15 +142,15 @@ export default function BenchmaxxingLeaderboard() {
             </div>
           </section>
 
-          <section aria-label="Benchmark score compared with broader capability" className="border-t border-ink/10 pt-4 md:border-l md:border-t-0 md:ps-5 md:pt-0">
+          <section aria-label={isArabic ? 'مقارنة الدرجة المعيارية بالقدرة العامة' : 'Benchmark score compared with broader capability'} className="border-t border-ink/10 pt-4 md:border-l md:border-t-0 md:ps-5 md:pt-0">
             <div className="mb-3 flex items-center justify-between gap-2">
               <div className="flex items-baseline gap-2.5">
-                <h3 className="font-latex text-xl leading-tight text-ink">Model A: score and capability</h3>
+                <h3 className="font-latex text-xl leading-tight text-ink">{isArabic ? 'النموذج A: الدرجة والقدرة' : 'Model A: score and capability'}</h3>
               </div>
             </div>
             <div className="grid grid-cols-2 gap-2">
               <div className="border border-accent/25 bg-accent/[0.04] p-3">
-                <span className="block min-h-8 font-mono text-xs uppercase leading-snug tracking-wider text-secondary">Benchmark score</span>
+                <span className="block min-h-8 font-mono text-xs uppercase leading-snug tracking-wider text-secondary">{isArabic ? 'الدرجة المعيارية' : 'Benchmark score'}</span>
                 <AnimatePresence mode="popLayout" initial={false}>
                   <motion.strong
                     key={`score-${round}`}
@@ -157,7 +168,7 @@ export default function BenchmaxxingLeaderboard() {
                 </div>
               </div>
               <div className="border border-ink/10 p-3">
-                <span className="block min-h-8 font-mono text-xs uppercase leading-snug tracking-wider text-secondary">Broader capability</span>
+                <span className="block min-h-8 font-mono text-xs uppercase leading-snug tracking-wider text-secondary">{isArabic ? 'القدرة العامة' : 'Broader capability'}</span>
                 <strong className="mt-1 block font-latex text-4xl font-normal tabular-nums text-ink">{capability}</strong>
                 <div className="mt-3 h-2 overflow-hidden bg-ink/[0.08]">
                   <div className="h-full bg-ink/50" style={{ width: `${capability}%` }} />
@@ -172,20 +183,22 @@ export default function BenchmaxxingLeaderboard() {
                 exit={reduceMotion ? undefined : { opacity: 0, y: -4 }}
                 className="mt-3 flex min-h-10 items-center justify-between gap-2 border-t border-ink/10 pt-3 font-mono text-xs uppercase tracking-wide"
               >
-                <span className="text-tertiary">Score lead over capability</span>
-                <span className={scoreGap > 0 ? 'font-semibold text-accent' : 'text-secondary'}>{scoreGap > 0 ? '+' : ''}{scoreGap} pts</span>
+                <span className="text-tertiary">{isArabic ? 'تقدّم الدرجة على القدرة' : 'Score lead over capability'}</span>
+                <span className={scoreGap > 0 ? 'font-semibold text-accent' : 'text-secondary'}>{scoreGap > 0 ? '+' : ''}{scoreGap} {isArabic ? 'نقطة' : 'pts'}</span>
               </motion.div>
             </AnimatePresence>
           </section>
         </div>
 
         <p className="sr-only" aria-live="polite">
-          Round {round} of {MAX_ROUNDS}. Model A is ranked {featuredRank}, with benchmark score {featuredScore.toFixed(0)} and broader capability held at {capability}.
+          {isArabic
+            ? `الجولة ${round} من ${MAX_ROUNDS}. ترتيب النموذج A هو ${featuredRank}، ودرجته المعيارية ${featuredScore.toFixed(0)}، بينما تظل قدرته العامة عند ${capability}.`
+            : `Round ${round} of ${MAX_ROUNDS}. Model A is ranked ${featuredRank}, with benchmark score ${featuredScore.toFixed(0)} and broader capability held at ${capability}.`}
         </p>
 
         <div className="border-t border-ink/10 pt-3">
           <div className="mb-2 flex items-center justify-between gap-4">
-            <label htmlFor={sliderId} className="font-mono text-xs uppercase tracking-[0.15em] text-tertiary">Optimization rounds</label>
+            <label htmlFor={sliderId} className="font-mono text-xs uppercase tracking-[0.15em] text-tertiary">{isArabic ? 'جولات التحسين' : 'Optimization rounds'}</label>
             <output htmlFor={sliderId} className="font-mono text-xs tabular-nums text-accent">{round} / {MAX_ROUNDS}</output>
           </div>
           <input
@@ -196,7 +209,7 @@ export default function BenchmaxxingLeaderboard() {
             step={1}
             value={round}
             onChange={(event) => setManually(Number(event.target.value))}
-            aria-label="Set optimization round"
+            aria-label={isArabic ? 'تحديد جولة التحسين' : 'Set optimization round'}
             className="h-1 w-full cursor-pointer appearance-none bg-ink/10 accent-accent"
           />
         </div>

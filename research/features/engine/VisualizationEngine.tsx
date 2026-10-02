@@ -6,10 +6,11 @@ import { VISUALIZATION_COMPONENTS, VisualizationId } from "@/research/lib/regist
 interface VisualizationEngineProps {
   id: VisualizationId;
   config?: Record<string, unknown>;
+  locale?: 'en' | 'ar';
 }
 
-export function VisualizationEngine({ id, config }: VisualizationEngineProps) {
-  const Component = VISUALIZATION_COMPONENTS[id] as React.ComponentType<Record<string, unknown>>;
+export function VisualizationEngine({ id, config, locale = 'en' }: VisualizationEngineProps) {
+  const Component = VISUALIZATION_COMPONENTS[id] as React.ComponentType<{ locale?: 'en' | 'ar' } & Record<string, unknown>>;
 
   if (!Component) {
     console.warn(`Visualization with id "${id}" not found in registry.`);
@@ -18,7 +19,7 @@ export function VisualizationEngine({ id, config }: VisualizationEngineProps) {
 
   return (
     <div className="w-full">
-      <Component {...config} />
+      <Component {...config} locale={locale} />
     </div>
   );
 }

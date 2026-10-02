@@ -29,6 +29,14 @@
 }
 
 @font-face {
+  font-family: "Amiri";
+  src: url("/fonts/amiri/amiri-regular.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
   font-family: "CMU Serif";
   font-style: italic;
   font-weight: 500;
@@ -194,6 +202,11 @@
   backdrop-filter: blur(10px);
 }
 
+.tnh-site:has(.research-main[dir="rtl"]) .research-navbar,
+.tnh-site:has(.research-content[dir="rtl"]) .research-navbar {
+  direction: rtl;
+}
+
 .research-reading-progress {
   position: absolute;
   top: 0;
@@ -290,7 +303,6 @@
   width: 14rem;
   border: 1px solid var(--border-val);
   background: var(--paper-val);
-  box-shadow: 0 12px 30px rgb(0 0 0 / 12%);
   color: var(--ink-val);
   text-transform: none;
   letter-spacing: normal;
@@ -384,6 +396,7 @@
 .research-content h1,
 .research-content h2,
 .research-content h3 { font-family: "CMU Serif", "Cormorant Garamond", serif; }
+.research-essay-title[lang="ar"] { font-family: "Amiri", serif; font-weight: 400; line-height: 1.2; }
 .research-content .latex-prose { font-family: "CMU Serif", "Cormorant Garamond", serif; font-size: var(--text-xl); font-feature-settings: "kern" 1, "liga" 1; line-height: 1.8; }
 .research-content .latex-prose p { margin: 0 0 1rem; }
 .research-content .breakout { position: absolute; right: -10rem; width: 9rem; }

@@ -6,19 +6,19 @@
 
 **1. From In-Sample Fit to Held-Out Prediction**
 
-Traditional statisticians almost always rejected the idea of a “one measure fits all”. Take R2 in regression modeling for example. It was introduced because there was a need for a concrete number that’d tell how much of the variance in the target variable was explained by the model.
+Traditional statisticians almost always rejected the idea of a “one measure fits all”. Take $R^2$ in regression modeling for example. It was introduced because there was a need for a concrete number that’d tell how much of the variance in the target variable was explained by the model.
 
-Then came the realization that it’s easily inflatable, as adding predictors can only maintain or increase in-sample R2, even when those predictors contribute little genuine explanatory value.
+Then came the realization that it’s easily inflatable, as adding predictors can only maintain or increase in-sample $R^2$, even when those predictors contribute little genuine explanatory value.
 
 <!-- visual:r2-inflation -->
 
 Thus they decided to get the harshest statistical weapon: degrees of freedom. Should one introduce an irrelevant feature, DOF makes unnecessary complexity harder to reward. It became a more conservative measure of fit, but still lacked generalizability outside of the dataset.
 
-AIC, BIC, and cross-validated R2 approached the broader problem from different directions, each attempting to distinguish meaningful model performance from fit that exists only in the data at hand (Akaike, 1974; Schwarz, 1978).
+AIC, BIC, and cross-validated $R^2$ approached the broader problem from different directions, each attempting to distinguish meaningful model performance from fit that exists only in the data at hand (Akaike, 1974; Schwarz, 1978).
 
 When machine learning came to be, it shifted much of the emphasis from estimating and interpreting relationships toward optimizing out-of-sample predictive performance.
 
-Consider a business trying to understand what drives sales: p-values and confidence intervals help with that inferential question. But if the business wants to know where sales will be by Q4, a predictive model may be more useful. A data scientist asked to model those sales might fit a linear regression model if it’s suitable. If the task is only to predict sales from specific variables, the R2 problem becomes less relevant per se.
+Consider a business trying to understand what drives sales: $p$-values and confidence intervals help with that inferential question. But if the business wants to know where sales will be by Q4, a predictive model may be more useful. A data scientist asked to model those sales might fit a linear regression model if it’s suitable. If the task is only to predict sales from specific variables, the $R^2$ problem becomes less relevant per se.
 
 They split the data into training and testing and validation. At a small scale, that separation helps protect us from fooling ourselves.
 
@@ -46,7 +46,7 @@ You create a held-out test set because training performance is gameable.
 
 But once the same benchmark is reused across papers, architectures, and research decisions for years, researchers begin indirectly optimizing against it too. Eventually the benchmark itself indirectly becomes part of the development process.
 
-In the era of Large Language Models (LLMs), this problem acquired a very unserious name for a serious problem: Benchmaxxing. Whichever benchmark becomes the leading star, it also becomes the target to optimize for—just like R2 before it.
+In the era of Large Language Models (LLMs), this problem acquired a very unserious name for a serious problem: Benchmaxxing. Whichever benchmark becomes the leading star, it also becomes the target to optimize for—just like $R^2$ before it.
 
 The result could be a model that looks more competent than it actually is. MMLU, HumanEval, GSM8K, SWE-bench, or whatever benchmark happens to dominate the current leaderboard becomes commercially important.
 

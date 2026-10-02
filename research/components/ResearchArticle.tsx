@@ -24,7 +24,8 @@ export function researchArticleMetadata(locale: 'en' | 'ar', slug: string): Meta
         ? project.description_ar!
         : project.description || project.tagline || '';
     const path = getResearchArticlePath(project, locale);
-    const languages: Record<string, string> = hasArabicStudyMetadata(project)
+    const hasPublishedArabic = hasArabicStudyMetadata(project) && project.arabic_translation_status !== 'draft';
+    const languages: Record<string, string> = hasPublishedArabic
         ? { en: getResearchArticlePath(project, 'en'), ar: getResearchArticlePath(project, 'ar') }
         : { en: getResearchArticlePath(project, 'en') };
 
@@ -38,6 +39,9 @@ export function researchArticleMetadata(locale: 'en' | 'ar', slug: string): Meta
         });
     return {
         ...metadata,
+        ...(locale === 'ar' && project.arabic_translation_status === 'draft'
+            ? { robots: { index: false, follow: true } }
+            : {}),
         ...(project.social_image ? {
             openGraph: {
                 ...metadata.openGraph,
@@ -78,7 +82,7 @@ export default function ResearchArticle({ locale = 'en', slug }: { locale?: 'en'
     const project = CUSTOM_STUDIES.find((item) => item.slug === slug && item.published);
 
     if (!project) return <div className="p-8 text-semantic-error">Page Not Found</div>;
-    if (project.article_type === 'essay') return <ResearchEssay study={project} />;
+    if (project.article_type === 'essay') return <ResearchEssay study={project} locale={locale} />;
 
     const title = (locale === 'ar' && project?.title_ar) ? project.title_ar : project?.title;
     const tagline = (locale === 'ar' && project?.tagline_ar) ? project.tagline_ar : project?.tagline;

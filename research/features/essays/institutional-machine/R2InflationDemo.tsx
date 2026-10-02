@@ -3,8 +3,8 @@
 import { useId, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { EditorialPlate } from '@/research/features/studies/applied-stats-in-ai/VizPrimitives';
-import { RESEARCH_CHART_FONT_SIZE } from '@/research/lib/typography';
 import SafeLatex from '@/research/components/SafeLatex';
+import { RESEARCH_CHART_FONT_SIZE } from '@/research/lib/typography';
 
 const SAMPLE_SIZE = 64;
 const MAX_NOISE_PREDICTORS = 12;
@@ -45,7 +45,8 @@ function percent(value: number) {
   return `${(value * 100).toFixed(1)}%`;
 }
 
-export default function R2InflationDemo() {
+export default function R2InflationDemo({ locale = 'en' }: { locale?: 'en' | 'ar' }) {
+  const isArabic = locale === 'ar';
   const [noisePredictors, setNoisePredictors] = useState(0);
   const inputId = useId();
   const titleId = useId();
@@ -57,14 +58,22 @@ export default function R2InflationDemo() {
   return (
     <EditorialPlate
       compact
-      figureCaption={{ number: 1, text: 'R² rises as noise predictors are added, while adjusted R² eventually falls under the added complexity.' }}
+      figureCaption={{
+        number: 1,
+        label: isArabic ? 'الشكل' : 'Figure',
+        text: isArabic
+          ? 'يرتفع R² كلما أُضيفت متغيرات ضوضاء، بينما يبدأ R² المعدّل بالانخفاض مع تراكم التعقيد.'
+          : 'R² rises as noise predictors are added, while adjusted R² eventually falls under the added complexity.',
+      }}
     >
       <div className="relative z-10 grid gap-5 p-4 md:grid-cols-[12.5rem_minmax(0,1fr)] md:items-center md:gap-6 md:p-6">
         <div className="space-y-4">
           <div>
-            <p className="font-mono text-xs uppercase tracking-[0.15em] text-tertiary">Regression model</p>
+            <p className="font-mono text-xs uppercase tracking-[0.15em] text-tertiary">{isArabic ? 'نموذج الانحدار' : 'Regression model'}</p>
             <p className="mt-1 font-latex text-base leading-snug text-ink">
-              1 signal <span className="text-tertiary">+</span> {noisePredictors} noise {noisePredictors === 1 ? 'predictor' : 'predictors'}
+              {isArabic
+                ? <>إشارة واحدة <span className="text-tertiary">+</span> {noisePredictors} متغيرات ضوضاء</>
+                : <>1 signal <span className="text-tertiary">+</span> {noisePredictors} noise {noisePredictors === 1 ? 'predictor' : 'predictors'}</>}
             </p>
           </div>
 
@@ -88,7 +97,7 @@ export default function R2InflationDemo() {
             </div>
             <div className="flex items-center justify-between gap-2 border border-accent/30 bg-accent/[0.035] px-3 py-2">
               <div>
-                <span className="block font-mono text-xs uppercase tracking-wider text-accent">Adjusted R²</span>
+                <span className="block font-mono text-xs uppercase tracking-wider text-accent">{isArabic ? 'R² المعدّل' : 'Adjusted R²'}</span>
               </div>
               <AnimatePresence mode="popLayout" initial={false}>
                 <motion.strong
@@ -107,7 +116,7 @@ export default function R2InflationDemo() {
 
           <div className="border-t border-ink/10 pt-3">
             <div className="mb-2 flex items-center justify-between gap-2">
-              <label htmlFor={inputId} className="font-mono text-xs uppercase tracking-wider text-tertiary">Noise predictors</label>
+              <label htmlFor={inputId} className="font-mono text-xs uppercase tracking-wider text-tertiary">{isArabic ? 'متغيرات الضوضاء' : 'Noise predictors'}</label>
               <output htmlFor={inputId} className="font-mono text-xs tabular-nums text-accent">{noisePredictors} / {MAX_NOISE_PREDICTORS}</output>
             </div>
             <input
@@ -118,7 +127,7 @@ export default function R2InflationDemo() {
               step={1}
               value={noisePredictors}
               onChange={(event) => setNoisePredictors(Number(event.target.value))}
-              aria-label="Add noise predictors to the regression model"
+              aria-label={isArabic ? 'إضافة متغيرات ضوضاء إلى نموذج الانحدار' : 'Add noise predictors to the regression model'}
               className="h-1 w-full cursor-pointer appearance-none bg-ink/10 accent-accent"
             />
           </div>
@@ -126,20 +135,22 @@ export default function R2InflationDemo() {
 
         <div className="min-w-0">
           <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
-            <span className="font-mono text-sm uppercase tracking-wider text-tertiary">Model fit</span>
+            <span className="font-mono text-sm uppercase tracking-wider text-tertiary">{isArabic ? 'ملاءمة النموذج' : 'Model fit'}</span>
             <div className="flex flex-wrap gap-x-4 gap-y-1 font-mono text-sm uppercase tracking-wider text-secondary">
               <span className="flex items-center gap-2"><i className="h-[2px] w-4 bg-ink" />R²</span>
-              <span className="flex items-center gap-2"><i className="h-[2px] w-4 bg-accent" />Adjusted R²</span>
+              <span className="flex items-center gap-2"><i className="h-[2px] w-4 bg-accent" />{isArabic ? 'R² المعدّل' : 'Adjusted R²'}</span>
             </div>
           </div>
           <svg
             className="block h-auto w-full"
             viewBox={`0 0 ${chart.width} ${chart.height}`}
+            direction="ltr"
             role="img"
             aria-labelledby={`${titleId} ${descriptionId}`}
+            lang={locale}
           >
-            <title id={titleId}>R-squared and adjusted R-squared as noise predictors are added</title>
-            <desc id={descriptionId}>R-squared rises at every step. Adjusted R-squared falls as the accidental gain becomes too small to offset the complexity penalty.</desc>
+            <title id={titleId}>{isArabic ? 'R² وR² المعدّل مع إضافة متغيرات الضوضاء' : 'R-squared and adjusted R-squared as noise predictors are added'}</title>
+            <desc id={descriptionId}>{isArabic ? 'يرتفع R² في كل خطوة، وينخفض R² المعدّل عندما يصبح المكسب العرضي أصغر من أن يعوّض عقوبة التعقيد.' : 'R-squared rises at every step. Adjusted R-squared falls as the accidental gain becomes too small to offset the complexity penalty.'}</desc>
             {[0.55, 0.60, 0.65, 0.70].map((tick) => (
               <g key={tick}>
                 <line x1={chart.left} x2={chart.width - chart.right} y1={yAt(tick)} y2={yAt(tick)} stroke="var(--ink-val)" strokeOpacity="0.10" strokeDasharray="3 5" />
@@ -154,8 +165,8 @@ export default function R2InflationDemo() {
             ))}
             <line x1={chart.left} x2={chart.left} y1={chart.top} y2={chart.height - chart.bottom} stroke="var(--ink-val)" strokeOpacity="0.28" />
             <line x1={chart.left} x2={chart.width - chart.right} y1={chart.height - chart.bottom} y2={chart.height - chart.bottom} stroke="var(--ink-val)" strokeOpacity="0.28" />
-            <text x="17" y={(chart.top + chart.height - chart.bottom) / 2} transform={`rotate(-90 17 ${(chart.top + chart.height - chart.bottom) / 2})`} textAnchor="middle" fill="var(--pencil-val)" fontSize={svgFontSize} fontFamily="var(--font-code), monospace">R² STATISTIC (%)</text>
-            <text x={(chart.left + chart.width - chart.right) / 2} y={chart.height - 9} textAnchor="middle" fill="var(--pencil-val)" fontSize={svgFontSize} fontFamily="var(--font-code), monospace">NOISE PREDICTORS ADDED</text>
+            <text x="17" y={(chart.top + chart.height - chart.bottom) / 2} transform={`rotate(-90 17 ${(chart.top + chart.height - chart.bottom) / 2})`} textAnchor="middle" fill="var(--pencil-val)" fontSize={svgFontSize} fontFamily="var(--font-code), monospace" direction={isArabic ? 'rtl' : 'ltr'}>{isArabic ? 'إحصاء R² (%)' : 'R² STATISTIC (%)'}</text>
+            <text x={(chart.left + chart.width - chart.right) / 2} y={chart.height - 9} textAnchor="middle" fill="var(--pencil-val)" fontSize={svgFontSize} fontFamily="var(--font-code), monospace" direction={isArabic ? 'rtl' : 'ltr'}>{isArabic ? 'متغيرات الضوضاء المضافة' : 'NOISE PREDICTORS ADDED'}</text>
             <polygon points={divergenceArea} fill="var(--accent-val)" fillOpacity="0.07" />
             <polyline points={rSquaredPoints} fill="none" stroke="var(--ink-val)" strokeWidth="3" strokeOpacity="1" strokeLinejoin="round" strokeLinecap="round" />
             <polyline points={adjustedPoints} fill="none" stroke="var(--accent-val)" strokeWidth="3" strokeOpacity="1" strokeLinejoin="round" strokeLinecap="round" />
@@ -175,8 +186,8 @@ export default function R2InflationDemo() {
           </svg>
 
           <details className="mt-2 border-t border-ink/10 pt-2 text-sm leading-relaxed text-tertiary">
-            <summary className="cursor-pointer font-mono text-xs uppercase tracking-wider">Simulation details</summary>
-            <p className="mt-2">Weak accidental correlations, n = {SAMPLE_SIZE}; p counts predictors.</p>
+            <summary className="cursor-pointer font-mono text-xs uppercase tracking-wider">{isArabic ? 'تفاصيل المحاكاة' : 'Simulation details'}</summary>
+            <p className="mt-2">{isArabic ? 'ارتباطات عرضية ضعيفة،' : 'Weak accidental correlations,'} <SafeLatex content={`$n = ${SAMPLE_SIZE}$`} />{isArabic ? '؛ ويمثّل' : ';'} <SafeLatex content="$p$" /> {isArabic ? 'عدد المتغيرات.' : 'counts predictors.'}</p>
             <SafeLatex content="$$R^2_{\mathrm{adj}} = 1 - \frac{(1 - R^2)(n - 1)}{n - p - 1}$$" />
           </details>
         </div>

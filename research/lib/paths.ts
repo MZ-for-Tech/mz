@@ -8,3 +8,7 @@ export function getResearchArticlePath(
   const localeSegment = locale === 'ar' ? '/ar' : '';
   return `/research${localeSegment}/${typeSegment}/${article.slug}`;
 }
+
+export function getResearchSeriesPath(slug: string) {
+  return `/research/series/${slug}`;
+}

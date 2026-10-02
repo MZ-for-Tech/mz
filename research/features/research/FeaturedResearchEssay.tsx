@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import type { Study } from '@/research/lib/types';
-import { getResearchArticlePath } from '@/research/lib/paths';
+import { getResearchArticlePath, getResearchSeriesPath } from '@/research/lib/paths';
 
 export default function FeaturedResearchEssay({
   article,
@@ -31,7 +31,12 @@ export default function FeaturedResearchEssay({
             {isArabic ? 'مقال مختار' : 'Featured essay'}
           </p>
           <p className="mt-5 font-mono text-xs uppercase tracking-[0.14em] text-ink/50">
-            {[series, isArabic ? `المقال ${number}` : `Article ${number}`, year].filter(Boolean).join(' · ')}
+            {article.series_slug ? (
+              <Link href={getResearchSeriesPath(article.series_slug)} className="transition-colors hover:text-accent">
+                {series}
+              </Link>
+            ) : series}
+            {' · '}{isArabic ? `المقال ${number}` : `Article ${number}`}{year ? ` · ${year}` : ''}
           </p>
           <h1 id="research-featured-title" className="mt-4 max-w-2xl font-latex text-4xl leading-[1.04] tracking-tight text-ink sm:text-5xl lg:text-6xl">
             {title}

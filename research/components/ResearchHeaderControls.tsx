@@ -91,11 +91,11 @@ export default function ResearchHeaderControls() {
           <div className="research-control-dropdown research-language-dropdown">
             <span className="research-dropdown-heading">Select Language</span>
             <Link href={alternateLocalePath(pathname, 'en')} onClick={() => setLanguageOpen(false)}>
-              <span><strong>English</strong><small>ENGLISH</small></span>
+              <span><strong>English</strong></span>
               {locale === 'en' && <Check aria-label="Current language" />}
             </Link>
             <Link href={alternateLocalePath(pathname, 'ar')} onClick={() => setLanguageOpen(false)}>
-              <span><strong>العربية</strong><small>ARABIC</small></span>
+              <span><strong>العربية</strong></span>
               {locale === 'ar' && <Check aria-label="Current language" />}
             </Link>
           </div>

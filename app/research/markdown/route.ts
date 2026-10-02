@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { readFileSync } from 'node:fs';
-import { basename, join } from 'node:path';
 import { CUSTOM_STUDIES, hasArabicStudyMetadata } from '@/research/data/studies';
 import { getResearchArticlePath } from '@/research/lib/paths';
+import { readResearchContent } from '@/research/lib/content';
 
 export async function GET(request: NextRequest) {
   const url = new URL(request.url);
@@ -52,7 +51,7 @@ export async function GET(request: NextRequest) {
         'Interactive visualizations are available on the web page.',
       ];
   const essayBlocks = requestedStudy?.content_file
-    ? readFileSync(join(process.cwd(), 'research', 'content', basename(requestedStudy.content_file)), 'utf8').trim().split(/\n\s*\n/)
+    ? readResearchContent(requestedStudy.content_file).trim().split(/\n\s*\n/)
     : [];
   if (essayBlocks[0] === `**${title}**`) essayBlocks.shift();
   const essayText = essayBlocks

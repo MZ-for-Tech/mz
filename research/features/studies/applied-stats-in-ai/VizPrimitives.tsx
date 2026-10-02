@@ -350,7 +350,7 @@ interface EditorialPlateProps {
   className?: string;
   spineColor?: string;
   compact?: boolean;
-  figureCaption?: { number: number; text: string };
+  figureCaption?: { number: number; text: string; label?: string };
 }
 
 export function EditorialPlate({
@@ -400,8 +400,8 @@ export function EditorialPlate({
         </div>
       </div>
       {figureCaption && (
-        <figcaption className="mt-3 w-full text-left font-serif text-base leading-relaxed text-secondary">
-          <span className="font-bold text-ink">Figure {figureCaption.number}:</span> {figureCaption.text}
+        <figcaption className="mt-3 w-full text-start font-serif text-base leading-relaxed text-secondary">
+          <span className="font-bold text-ink">{figureCaption.label || 'Figure'} {figureCaption.number}:</span> {figureCaption.text}
         </figcaption>
       )}
     </PlateWrapper>
