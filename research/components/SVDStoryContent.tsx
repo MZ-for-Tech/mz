@@ -34,7 +34,7 @@ function mathHtml(source: string, display = false) {
 }
 
 function displayMath(source: string, key: string): ReactNode {
-  const boxedText = source.trim().match(/^\\boxed\{\s*\\text\{([\s\S]+)\}\s*\}$/);
+  const boxedText = source.trim().match(/^\\boxed\{\s*\\text\{([^{}]*)\}\s*\}$/);
   if (boxedText) return <div key={key} className="svd-question-box">{boxedText[1]}</div>;
   return <div key={key} className="svd-display-math" dir="ltr" dangerouslySetInnerHTML={{ __html: mathHtml(source, true) }} />;
 }
