@@ -110,7 +110,7 @@ export default function ResearchEssay({ study, locale = 'en' }: { study: Study; 
   };
 
   return (
-    <div className="research-content" data-reading-progress lang={locale} dir={isArabic ? 'rtl' : 'ltr'}>
+    <div id="main-content" className="research-content" data-reading-progress lang={locale} dir={isArabic ? 'rtl' : 'ltr'}>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{

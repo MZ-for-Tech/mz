@@ -1,5 +1,9 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { CUSTOM_STUDIES, hasArabicStudyMetadata } from '@/research/data/studies';
+import { getResearchArticlePath } from '@/research/lib/paths';
+import { SERVICE_PAGES } from '@/lib/service-pages';
+import { localeForPath } from '@/lib/localization';
 
 const MARKDOWN_PAGES = new Set([
   '/',
@@ -29,9 +33,12 @@ function acceptsMarkdown(acceptHeader: string | null) {
 
 export function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
-  const isResearchArticlePath = pathname.startsWith('/research/') && pathname !== '/research/markdown';
-  const isNegotiablePage = MARKDOWN_PAGES.has(pathname) || isResearchArticlePath;
-  if (!isNegotiablePage) return NextResponse.next();
+  const forwarded = new Headers(request.headers);
+  forwarded.set('x-mz-locale', localeForPath(pathname));
+  const continueRequest = () => NextResponse.next({ request: { headers: forwarded } });
+  const isResearchArticlePath = CUSTOM_STUDIES.some(study => study.published && (pathname === getResearchArticlePath(study, 'en') || hasArabicStudyMetadata(study) && study.arabic_translation_status !== 'draft' && pathname === getResearchArticlePath(study, 'ar')));
+  const isNegotiablePage = MARKDOWN_PAGES.has(pathname) || isResearchArticlePath || SERVICE_PAGES.some(service => pathname === `/services/${service.slug}`);
+  if (!isNegotiablePage) return continueRequest();
 
   if (request.method === 'GET' && acceptsMarkdown(request.headers.get('accept'))) {
     const destination = pathname.startsWith('/research')
@@ -51,7 +58,7 @@ export function proxy(request: NextRequest) {
     return response;
   }
 
-  return NextResponse.next();
+  return continueRequest();
 }
 
 export const config = {

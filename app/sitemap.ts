@@ -2,19 +2,20 @@ import type { MetadataRoute } from "next";
 import { CUSTOM_STUDIES, hasArabicStudyMetadata } from "@/research/data/studies";
 import { RESEARCH_SERIES } from "@/research/data/series";
 import { getResearchArticlePath, getResearchSeriesPath } from "@/research/lib/paths";
+import { SERVICE_PAGES } from '@/lib/service-pages';
 
 const SITE = "https://www.mzfortech.com";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const staticPages = [
     "/",
-    "/home",
     "/work",
     "/work/nested-united",
     "/services",
     "/intel",
     "/contact",
     "/privacy",
+    ...SERVICE_PAGES.map(service => `/services/${service.slug}`),
   ];
 
   const pages: MetadataRoute.Sitemap = staticPages.map((path) => ({

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 // Extend navigator type to include experimental modelContext
 declare global {
@@ -12,6 +13,7 @@ declare global {
 }
 
 export default function WebMCP() {
+  const router = useRouter();
   useEffect(() => {
     // Check if the browser supports WebMCP API
     if (typeof navigator !== "undefined" && navigator.modelContext?.provideContext) {
@@ -33,7 +35,7 @@ export default function WebMCP() {
                 required: ["projectType"]
               },
               execute: async () => {
-                window.location.href = "/contact";
+                router.push("/contact");
                 return { success: true, message: "Redirected user to project initiation." };
               }
             }
@@ -43,7 +45,7 @@ export default function WebMCP() {
         console.error("Failed to register WebMCP tools:", error);
       }
     }
-  }, []);
+  }, [router]);
 
   return null; // This component doesn't render anything visually
 }

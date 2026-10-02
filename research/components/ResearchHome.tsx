@@ -14,8 +14,9 @@ export default function ResearchHome({ locale = 'en' }: { locale?: 'en' | 'ar' }
   const featuredEssay = essays.find((essay) => essay.is_featured) || essays[0];
 
   return (
-    <main className="research-main" lang={locale} dir={isArabic ? 'rtl' : 'ltr'}>
+    <main id="main-content" className="research-main" lang={locale} dir={isArabic ? 'rtl' : 'ltr'}>
       <div className="research-home research-home-editorial">
+        <h1 className="font-latex text-3xl mb-8">{isArabic ? 'الفرضية الصفرية' : 'The Null Hypothesis'}</h1>
         {featuredEssay && <FeaturedResearchEssay article={featuredEssay} locale={locale} />}
 
         <section className="research-brand-intro" aria-labelledby="research-brand-title">
@@ -43,7 +44,7 @@ export default function ResearchHome({ locale = 'en' }: { locale?: 'en' | 'ar' }
             studies={CUSTOM_STUDIES.filter((study) =>
               study.published
               && study.article_type === 'paper'
-              && (!isArabic || hasArabicStudyMetadata(study)),
+              && (!isArabic || hasArabicStudyMetadata(study) && study.arabic_translation_status !== 'draft'),
             )}
             locale={locale}
           />

@@ -48,7 +48,7 @@ const caseStudyStructuredData = {
 };
 
 export const metadata = pageMetadata({
-  title: "Nested United Case Study",
+  title: "Nested United Website Case Study | MZ for Tech",
   description: caseStudyDescription,
   path: "/work/nested-united",
 });
@@ -56,7 +56,7 @@ export const metadata = pageMetadata({
 export default function NestedUnitedWorld() {
 
   return (
-    <div className={`${styles.worldContainer} ${redHatDisplay.variable}`}>
+    <main id="main-content" className={`${styles.worldContainer} ${redHatDisplay.variable}`}>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -89,7 +89,7 @@ export default function NestedUnitedWorld() {
             />
           </div>
 
-          <h1 className={styles.heroSubtitle}>Nested United website case study</h1>
+          <h1 className={styles.heroSubtitle}>Nested United: a unified multi-brand website.</h1>
         </div>
 
         {/* The Animated SVG Collage natively embedded in the hero */}
@@ -133,7 +133,7 @@ export default function NestedUnitedWorld() {
           <div className={styles.writeupTextContainer}>
             <h2 className={styles.writeupTitle}>The Outcome</h2>
             <p className={styles.writeupText}>
-              Nested United now has a digital home that lives up to the scale of their ambitions. Five brands, one coherent identity. The animations — which weren&apos;t part of the original brief — ended up being what people respond to most. A platform that started as a design file is now something people genuinely remember.
+              Nested United now has a digital home that lives up to the scale of their ambitions. Five brands, one coherent identity. The delivered interface includes reusable components and a motion layer. The screenshots below show the website experience; no measured traffic or commercial outcome is claimed.
             </p>
           </div>
           <div className={styles.writeupVisual}>
@@ -157,7 +157,7 @@ export default function NestedUnitedWorld() {
           <div className={`${styles.bentoCard} ${styles.cardPerformance}`}>
             <div className={styles.cardContent}>
               <h3 className={styles.featureTitle}>High Performance</h3>
-              <p className={styles.featureText}>Engineered for speed. The platform delivers instant load times and maintains a flawless 60 FPS across all devices.</p>
+              <p className={styles.featureText}>The website uses responsive interfaces and a reusable motion layer. Runtime performance varies with device, connection and page content.</p>
             </div>
             <div className={styles.cardVisual}>
               <div className={styles.scrollMockup}>
@@ -179,11 +179,11 @@ export default function NestedUnitedWorld() {
             </div>
           </div>
 
-          {/* 2. Perfect SEO */}
+          {/* 2. Search-friendly structure */}
           <div className={`${styles.bentoCard} ${styles.cardSEO}`}>
             <div className={styles.cardContent}>
-              <h3 className={styles.featureTitle}>Perfect SEO</h3>
-              <p className={styles.featureText}>Optimized for visibility. The architecture achieves perfect technical SEO scores to secure top search rankings.</p>
+              <h3 className={styles.featureTitle}>Search-friendly structure</h3>
+              <p className={styles.featureText}>The website organizes its brands and pages into a navigable structure. Search rankings and indexing remain decisions made by search engines.</p>
             </div>
             <div className={styles.cardVisual}>
               <div className={styles.serpMockup}>
@@ -195,7 +195,7 @@ export default function NestedUnitedWorld() {
                   <div className={styles.serpTitle}>Nested United - Where Ideas Take Shape</div>
                   <div className={styles.serpDesc}>A cohesive ecosystem for scalable operations and sustainable growth...</div>
                 </a>
-                <div className={styles.serpResultDim}>
+                <div className={styles.serpResultDim} aria-hidden="true">
                   <div className={styles.serpUrl}>https://example.com</div>
                   <div className={styles.serpTitle}>Competitor Platform - Generic Real Estate</div>
                   <div className={styles.serpDesc}>Lorem ipsum dolor sit amet consectetur adipiscing elit...</div>
@@ -208,41 +208,10 @@ export default function NestedUnitedWorld() {
           <div className={`${styles.bentoCard} ${styles.cardAgentic}`}>
             <div className={styles.cardContent}>
               <h3 className={styles.featureTitle}>Agentic Compatibility</h3>
-              <p className={styles.featureText}>Built for the future. Clean semantic structures allow flawless parsing by both human users and AI agents.</p>
+              <p className={styles.featureText}>Readable content and semantic structures help people and automated tools understand the website. Retrieval and citations are external outcomes.</p>
             </div>
             <div className={styles.cardVisual}>
-              <div className={styles.agentScoreCard}>
-                <div className={styles.scoreCircle}>
-                  <svg viewBox="0 0 100 50" className={styles.scoreArc}>
-                    <path d="M 10 45 A 40 40 0 0 1 90 45" fill="none" stroke="#22c55e" strokeWidth="8" strokeLinecap="round" />
-                  </svg>
-                  <span className={styles.scoreValue}>100</span>
-                </div>
-                <div className={styles.scoreLabel}>LEVEL 5</div>
-                <div className={styles.scoreTitle}>Agent-Native</div>
-                <div className={styles.metricsGrid}>
-                  <div className={styles.metricItem}>
-                    <div className={styles.metricRing}>100</div>
-                    <span>Discoverability</span>
-                  </div>
-                  <div className={styles.metricItem}>
-                    <div className={styles.metricRing}>100</div>
-                    <span>Content</span>
-                  </div>
-                  <div className={styles.metricItem}>
-                    <div className={styles.metricRing}>100</div>
-                    <span>Bot Access</span>
-                  </div>
-                  <div className={styles.metricItem}>
-                    <div className={styles.metricRing}>100</div>
-                    <span>API & MCP</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* 4. Bilingual Support */}
+              <p className={styles.featureText}>Readable pages · ordinary links · semantic structure</p></div></div>{/* 4. Bilingual Support */}
           <div className={`${styles.bentoCard} ${styles.cardBilingual}`}>
             <div className={styles.cardContent}>
               <h3 className={styles.featureTitle}>Bilingual Support</h3>
@@ -382,6 +351,6 @@ export default function NestedUnitedWorld() {
           Privacy Policy
         </TransitionLink>
       </div>
-    </div>
+    </main>
   );
 }

@@ -1,0 +1,22 @@
+
+> mz@0.1.0 test
+> node --test scripts/contact.test.mjs
+
+(node:16344) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///D:/Projects/mz/lib/contact.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to D:\Projects\mz\package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ invalid input and honeypot do not send or report success (89.2271ms)
+✔ oversized attachment is rejected before delivery (29.8159ms)
+✔ missing configuration returns useful email fallback (1.133ms)
+✔ SMTP rejection and failure do not falsely report success (1.3643ms)
+✔ successful delivery preserves brief and sanitizes attachment name (7.4712ms)
+✔ STARTTLS configuration on port 587 (3.535ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 430.7454

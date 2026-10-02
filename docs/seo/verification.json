@@ -1,0 +1,456 @@
+{
+  "recordedAt": "2026-10-02T21:10:46.601Z",
+  "checks": [
+    {
+      "name": "/: rendered page, metadata and headings",
+      "passed": true
+    },
+    {
+      "name": "/: Organization JSON-LD",
+      "passed": true
+    },
+    {
+      "name": "/: WebSite JSON-LD",
+      "passed": true
+    },
+    {
+      "name": "/work: rendered page, metadata and headings",
+      "passed": true
+    },
+    {
+      "name": "/work/nested-united: rendered page, metadata and headings",
+      "passed": true
+    },
+    {
+      "name": "/work/nested-united: CreativeWork JSON-LD",
+      "passed": true
+    },
+    {
+      "name": "/services: rendered page, metadata and headings",
+      "passed": true
+    },
+    {
+      "name": "/services: Service JSON-LD",
+      "passed": true
+    },
+    {
+      "name": "/services: Service JSON-LD",
+      "passed": true
+    },
+    {
+      "name": "/services: Service JSON-LD",
+      "passed": true
+    },
+    {
+      "name": "/intel: rendered page, metadata and headings",
+      "passed": true
+    },
+    {
+      "name": "/contact: rendered page, metadata and headings",
+      "passed": true
+    },
+    {
+      "name": "/privacy: rendered page, metadata and headings",
+      "passed": true
+    },
+    {
+      "name": "/services/custom-software-development: rendered page, metadata and headings",
+      "passed": true
+    },
+    {
+      "name": "/services/custom-software-development: Service JSON-LD",
+      "passed": true
+    },
+    {
+      "name": "/services/custom-software-development: BreadcrumbList JSON-LD",
+      "passed": true
+    },
+    {
+      "name": "/services/web-development: rendered page, metadata and headings",
+      "passed": true
+    },
+    {
+      "name": "/services/web-development: Service JSON-LD",
+      "passed": true
+    },
+    {
+      "name": "/services/web-development: BreadcrumbList JSON-LD",
+      "passed": true
+    },
+    {
+      "name": "/services/erp-internal-systems: rendered page, metadata and headings",
+      "passed": true
+    },
+    {
+      "name": "/services/erp-internal-systems: Service JSON-LD",
+      "passed": true
+    },
+    {
+      "name": "/services/erp-internal-systems: BreadcrumbList JSON-LD",
+      "passed": true
+    },
+    {
+      "name": "/services/ai-development: rendered page, metadata and headings",
+      "passed": true
+    },
+    {
+      "name": "/services/ai-development: Service JSON-LD",
+      "passed": true
+    },
+    {
+      "name": "/services/ai-development: BreadcrumbList JSON-LD",
+      "passed": true
+    },
+    {
+      "name": "/services/model-optimization: rendered page, metadata and headings",
+      "passed": true
+    },
+    {
+      "name": "/services/model-optimization: Service JSON-LD",
+      "passed": true
+    },
+    {
+      "name": "/services/model-optimization: BreadcrumbList JSON-LD",
+      "passed": true
+    },
+    {
+      "name": "/services/knowledge-transfer: rendered page, metadata and headings",
+      "passed": true
+    },
+    {
+      "name": "/services/knowledge-transfer: Service JSON-LD",
+      "passed": true
+    },
+    {
+      "name": "/services/knowledge-transfer: BreadcrumbList JSON-LD",
+      "passed": true
+    },
+    {
+      "name": "/research/essays/the-measure-and-the-target: rendered page, metadata and headings",
+      "passed": true
+    },
+    {
+      "name": "/research/essays/the-measure-and-the-target: Article JSON-LD",
+      "passed": true
+    },
+    {
+      "name": "/research/papers/vgg19-bloodmnist-compression: rendered page, metadata and headings",
+      "passed": true
+    },
+    {
+      "name": "/research/papers/vgg19-bloodmnist-compression: ScholarlyArticle JSON-LD",
+      "passed": true
+    },
+    {
+      "name": "/research/ar/papers/vgg19-bloodmnist-compression: rendered page, metadata and headings",
+      "passed": true
+    },
+    {
+      "name": "/research/ar/papers/vgg19-bloodmnist-compression: ScholarlyArticle JSON-LD",
+      "passed": true
+    },
+    {
+      "name": "/research/series/institutional-machine: rendered page, metadata and headings",
+      "passed": true
+    },
+    {
+      "name": "/research: rendered page, metadata and headings",
+      "passed": true
+    },
+    {
+      "name": "/research/ar: rendered page, metadata and headings",
+      "passed": true
+    },
+    {
+      "name": "homepage consolidation and unknown routes",
+      "passed": true
+    },
+    {
+      "name": "no duplicate public titles or descriptions",
+      "passed": true
+    },
+    {
+      "name": "Googlebot: simulated fetch",
+      "passed": true
+    },
+    {
+      "name": "Twitterbot: simulated fetch",
+      "passed": true
+    },
+    {
+      "name": "OAI-SearchBot: simulated fetch",
+      "passed": true
+    },
+    {
+      "name": "internal links resolve directly",
+      "passed": true
+    },
+    {
+      "name": "all actual page social images are accessible",
+      "passed": true
+    },
+    {
+      "name": "/robots.txt: public resource",
+      "passed": true
+    },
+    {
+      "name": "/llms.txt: public resource",
+      "passed": true
+    },
+    {
+      "name": "/content.md: public resource",
+      "passed": true
+    },
+    {
+      "name": "/research-applied-stats-in-ai.pdf: public resource",
+      "passed": true
+    },
+    {
+      "name": "/og?title=MZ&path=/: public resource",
+      "passed": true
+    },
+    {
+      "name": "/og?title=MZ&locale=ar_EG&path=/research/ar: public resource",
+      "passed": true
+    },
+    {
+      "name": "Markdown negotiation respects publication and errors",
+      "passed": true
+    },
+    {
+      "name": "contact endpoint rejects invalid request",
+      "passed": true
+    }
+  ],
+  "links": [
+    {
+      "path": "/",
+      "status": 200
+    },
+    {
+      "path": "/work",
+      "status": 200
+    },
+    {
+      "path": "/services",
+      "status": 200
+    },
+    {
+      "path": "/intel",
+      "status": 200
+    },
+    {
+      "path": "/contact",
+      "status": 200
+    },
+    {
+      "path": "/privacy",
+      "status": 200
+    },
+    {
+      "path": "/services/custom-software-development",
+      "status": 200
+    },
+    {
+      "path": "/services/web-development",
+      "status": 200
+    },
+    {
+      "path": "/services/erp-internal-systems",
+      "status": 200
+    },
+    {
+      "path": "/services/ai-development",
+      "status": 200
+    },
+    {
+      "path": "/services/model-optimization",
+      "status": 200
+    },
+    {
+      "path": "/services/knowledge-transfer",
+      "status": 200
+    },
+    {
+      "path": "/work/nested-united",
+      "status": 200
+    },
+    {
+      "path": "/research",
+      "status": 200
+    },
+    {
+      "path": "/research/essays/the-measure-and-the-target",
+      "status": 200
+    },
+    {
+      "path": "/research/papers/vgg19-bloodmnist-compression",
+      "status": 200
+    },
+    {
+      "path": "/research/ar",
+      "status": 200
+    },
+    {
+      "path": "/research/series/institutional-machine",
+      "status": 200
+    },
+    {
+      "path": "/research-applied-stats-in-ai.pdf",
+      "status": 200
+    },
+    {
+      "path": "/research/ar/papers/vgg19-bloodmnist-compression",
+      "status": 200
+    }
+  ],
+  "images": [
+    {
+      "image": "https://www.mzfortech.com/og?title=Software+%26+AI+Development+in+Cairo+%7C+MZ+for+Tech&description=MZ+for+Tech+builds+custom+software%2C+websites%2C+business+systems+and+applied+AI+in+Cairo%2C+with+training+that+helps+your+team%E2%80%A6&path=%2F&locale=en_US",
+      "status": 200,
+      "contentType": "image/png",
+      "bytes": 90658
+    },
+    {
+      "image": "https://www.mzfortech.com/og?title=Software+Projects+%26+Case+Studies+%7C+MZ+for+Tech&description=Explore+MZ%27s+client+work%2C+software+products+and+development+demos%2C+with+clear+project+scope+and+delivery+context.&path=%2Fwork&locale=en_US",
+      "status": 200,
+      "contentType": "image/png",
+      "bytes": 99518
+    },
+    {
+      "image": "https://www.mzfortech.com/og?title=Nested+United+Website+Case+Study+%7C+MZ+for+Tech&description=How+MZ+designed+and+built+a+digital+platform+for+Nested+United%2C+bringing+five+specialist+brands+into+one+coherent+web%E2%80%A6&path=%2Fwork%2Fnested-united&locale=en_US",
+      "status": 200,
+      "contentType": "image/png",
+      "bytes": 98775
+    },
+    {
+      "image": "https://www.mzfortech.com/og?title=Software%2C+AI+%26+Training+Services+%7C+MZ+for+Tech&description=Explore+MZ%27s+software+engineering%2C+web+development%2C+internal+business+systems%2C+applied+AI+and+team+training+services.&path=%2Fservices&locale=en_US",
+      "status": 200,
+      "contentType": "image/png",
+      "bytes": 98495
+    },
+    {
+      "image": "https://www.mzfortech.com/og?title=About+MZ+for+Tech+%7C+Software+%26+AI+in+Cairo&description=Learn+about+MZ%2C+a+Cairo-based+software+and+AI+company+building+custom+systems+and+training+teams+to+run+them%2C+informed+by%E2%80%A6&path=%2Fintel&locale=en_US",
+      "status": 200,
+      "contentType": "image/png",
+      "bytes": 99536
+    },
+    {
+      "image": "https://www.mzfortech.com/og?title=Contact+MZ+for+Tech+%7C+Discuss+Your+Project&description=Tell+MZ+about+your+software%2C+website%2C+business-system%2C+AI+or+training+project.+Contact+our+Cairo-based+team+to+discuss%E2%80%A6&path=%2Fcontact&locale=en_US",
+      "status": 200,
+      "contentType": "image/png",
+      "bytes": 99059
+    },
+    {
+      "image": "https://www.mzfortech.com/og?title=Privacy+Policy+%7C+MZ+for+Tech&description=Read+how+MZ+handles+information+submitted+through+its+website+and+how+to+contact+the+team+with+privacy+questions.&path=%2Fprivacy&locale=en_US",
+      "status": 200,
+      "contentType": "image/png",
+      "bytes": 91071
+    },
+    {
+      "image": "https://www.mzfortech.com/og?title=Custom+Software+Development+%7C+MZ+for+Tech&description=Custom+applications+and+internal+platforms+from+MZ+for+Tech+in+Cairo%2C+with+discovery%2C+implementation%2C+documentation+and%E2%80%A6&path=%2Fservices%2Fcustom-software-development&locale=en_US",
+      "status": 200,
+      "contentType": "image/png",
+      "bytes": 99493
+    },
+    {
+      "image": "https://www.mzfortech.com/og?title=Website+%26+Web+App+Development+%7C+MZ+for+Tech&description=MZ+for+Tech+builds+business+websites%2C+e-commerce+storefronts+and+web+applications+with+useful+content%2C+responsive%E2%80%A6&path=%2Fservices%2Fweb-development&locale=en_US",
+      "status": 200,
+      "contentType": "image/png",
+      "bytes": 100017
+    },
+    {
+      "image": "https://www.mzfortech.com/og?title=ERP+%26+Internal+Business+Systems+%7C+MZ+for+Tech&description=Scope+ERP+and+internal+operations+systems+with+MZ+for+Tech%3A+workflows%2C+permissions%2C+reporting%2C+integrations+and+practical%E2%80%A6&path=%2Fservices%2Ferp-internal-systems&locale=en_US",
+      "status": 200,
+      "contentType": "image/png",
+      "bytes": 96503
+    },
+    {
+      "image": "https://www.mzfortech.com/og?title=Applied+AI+Development+%7C+MZ+for+Tech&description=Apply+AI+to+product+and+operational+problems+with+MZ+for+Tech%2C+including+task+evaluation%2C+specialized+models+and+local%E2%80%A6&path=%2Fservices%2Fai-development&locale=en_US",
+      "status": 200,
+      "contentType": "image/png",
+      "bytes": 95942
+    },
+    {
+      "image": "https://www.mzfortech.com/og?title=Model+Optimization+%26+Local+Inference+%7C+MZ+for+Tech&description=Explore+model+compression+and+local+inference+with+MZ+for+Tech%2C+using+measured+quality%2C+memory+and+runtime+tradeoffs+for%E2%80%A6&path=%2Fservices%2Fmodel-optimization&locale=en_US",
+      "status": 200,
+      "contentType": "image/png",
+      "bytes": 96178
+    },
+    {
+      "image": "https://www.mzfortech.com/og?title=Team+Training+%26+Knowledge+Transfer+%7C+MZ+for+Tech&description=MZ+for+Tech+provides+project+handover%2C+practical+workshops%2C+statistical+thinking+and+data+literacy+training+tailored+to%E2%80%A6&path=%2Fservices%2Fknowledge-transfer&locale=en_US",
+      "status": 200,
+      "contentType": "image/png",
+      "bytes": 95643
+    },
+    {
+      "image": "https://www.mzfortech.com/research/images/institutional-machine/01-social-cover.webp",
+      "status": 200,
+      "contentType": "image/webp",
+      "bytes": 142576
+    },
+    {
+      "image": "https://www.mzfortech.com/og?title=VGG19+Compression+on+BloodMNIST+%7C+MZ+Research&description=An+exploration+of+model+compression+through+L1+regularization%2C+structured+L0+gates%2C+and+low-rank+SVD+to+reduce+VGG19%E2%80%A6&path=%2Fresearch%2Fpapers%2Fvgg19-bloodmnist-compression&locale=en_US",
+      "status": 200,
+      "contentType": "image/png",
+      "bytes": 100336
+    },
+    {
+      "image": "https://www.mzfortech.com/og?title=%D8%B6%D8%BA%D8%B7+%D9%86%D9%85%D9%88%D8%B0%D8%AC+VGG19+%D8%B9%D9%84%D9%89+BloodMNIST+%7C+%D8%A3%D8%A8%D8%AD%D8%A7%D8%AB+MZ&description=%D8%AA%D8%B3%D8%AA%D9%83%D8%B4%D9%81+%D8%A7%D9%84%D8%AF%D8%B1%D8%A7%D8%B3%D8%A9+%D8%B6%D8%BA%D8%B7+%D8%A7%D9%84%D9%86%D9%85%D8%A7%D8%B0%D8%AC+%D8%A8%D8%A7%D8%B3%D8%AA%D8%AE%D8%AF%D8%A7%D9%85+%D8%AA%D9%86%D8%B8%D9%8A%D9%85+L1+%D9%88%D8%A8%D9%88%D8%A7%D8%A8%D8%A7%D8%AA+L0+%D8%A7%D9%84%D9%85%D9%87%D9%8A%D9%83%D9%84%D8%A9+%D9%88%D8%AA%D8%AD%D9%84%D9%8A%D9%84+SVD+%D9%85%D9%86%D8%AE%D9%81%D8%B6+%D8%A7%D9%84%D8%B1%D8%AA%D8%A8%D8%A9%D8%8C+%D9%84%D8%AA%D9%82%D9%84%D9%8A%D9%84+%D9%85%D8%B9%D8%A7%D9%85%D9%84%D8%A7%D8%AA+VGG19+%D9%85%D8%B9+%D8%A7%D9%84%D8%AD%D9%81%D8%A7%D8%B8%E2%80%A6&path=%2Fresearch%2Far%2Fpapers%2Fvgg19-bloodmnist-compression&locale=ar_EG",
+      "status": 200,
+      "contentType": "image/png",
+      "bytes": 76235
+    },
+    {
+      "image": "https://www.mzfortech.com/og?title=The+Institutional+Machine+%7C+MZ+Research&description=A+series+about+measurement%2C+incentives%2C+information%2C+and+control%E2%80%94and+how+powerful+systems+reshape+the+things+we+use+to%E2%80%A6&path=%2Fresearch%2Fseries%2Finstitutional-machine&locale=en_US",
+      "status": 200,
+      "contentType": "image/png",
+      "bytes": 97990
+    },
+    {
+      "image": "https://www.mzfortech.com/og?title=The+Null+Hypothesis%3A+Applied+Research+%7C+MZ&description=The+Null+Hypothesis+follows+MZ+research+from+question+to+product%2C+making+the+ideas+and+methods+behind+what+we+build%E2%80%A6&path=%2Fresearch&locale=en_US",
+      "status": 200,
+      "contentType": "image/png",
+      "bytes": 98923
+    },
+    {
+      "image": "https://www.mzfortech.com/og?title=%D8%A7%D9%84%D9%81%D8%B1%D8%B6%D9%8A%D8%A9+%D8%A7%D9%84%D8%B5%D9%81%D8%B1%D9%8A%D8%A9%3A+%D8%A3%D8%A8%D8%AD%D8%A7%D8%AB+%D8%AA%D8%B7%D8%A8%D9%8A%D9%82%D9%8A%D8%A9+%7C+MZ&description=%D8%A3%D8%A8%D8%AD%D8%A7%D8%AB+MZ+%D9%85%D9%86+%D8%A7%D9%84%D8%B3%D8%A4%D8%A7%D9%84+%D8%A5%D9%84%D9%89+%D8%A7%D9%84%D9%85%D9%86%D8%AA%D8%AC%D8%8C+%D9%85%D8%B9+%D8%A3%D9%81%D9%83%D8%A7%D8%B1+%D9%88%D8%A3%D8%B3%D8%A7%D9%84%D9%8A%D8%A8+%D8%AA%D9%81%D8%A7%D8%B9%D9%84%D9%8A%D8%A9.&path=%2Fresearch%2Far&locale=ar_EG",
+      "status": 200,
+      "contentType": "image/png",
+      "bytes": 62199
+    }
+  ],
+  "negotiation": [
+    {
+      "path": "/",
+      "status": 307,
+      "location": "/content.md"
+    },
+    {
+      "path": "/services/ai-development",
+      "status": 307,
+      "location": "/content.md"
+    },
+    {
+      "path": "/research/ar",
+      "status": 307,
+      "location": "/research/markdown?path=%2Fresearch%2Far"
+    },
+    {
+      "path": "/research/ar/essays/the-measure-and-the-target",
+      "status": 404,
+      "location": null
+    },
+    {
+      "path": "/research/unknown",
+      "status": 404,
+      "location": null
+    },
+    {
+      "path": "/services/unknown",
+      "status": 404,
+      "location": null
+    }
+  ],
+  "note": "JSON parsing and application assertions, not an external Schema.org or rich-results validator. Bot agents are simulated."
+}

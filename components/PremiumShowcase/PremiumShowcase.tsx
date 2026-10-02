@@ -9,7 +9,7 @@ export default function PremiumShowcase() {
     <div className={styles.sectionContainer}>
       <div className={styles.wrapper}>
         <div className={styles.leftCopy}>
-          <h1>MZ builds software and AI systems in Cairo.</h1>
+          <h1>Research-informed software and AI engineering.</h1>
           <p>We train client teams to run what we build, informed by applied research.</p>
         </div>
 

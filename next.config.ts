@@ -9,6 +9,10 @@ const SITE = "https://www.mzfortech.com";
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  trailingSlash: false,
+  async redirects() {
+    return [{ source: '/home', destination: '/', permanent: true }];
+  },
   allowedDevOrigins: ["192.168.1.18", "192.168.1.*", "localhost"],
   // Only ship the drei modules the page actually imports (it exports hundreds).
   experimental: {
@@ -18,6 +22,7 @@ const nextConfig: NextConfig = {
     root: process.cwd(),
   },
   outputFileTracingIncludes: {
+    '/og': ['./public/mz.svg', './public/og/*.png', './public/fonts/og/*.ttf', './node_modules/next/dist/compiled/@vercel/og/Geist-Regular.ttf'],
     "/research/\\[slug\\]": ["./research/content/the-measure-and-the-target.md"],
     "/research/essays/\\[slug\\]": ["./research/content/the-measure-and-the-target.md"],
     "/research/markdown": ["./research/content/the-measure-and-the-target.md"],
@@ -57,8 +62,7 @@ const nextConfig: NextConfig = {
           { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
 
           // ── Public discovery resources ──
-          { key: "Link", value: `<${SITE}/sitemap.xml>; rel="sitemap"; type="application/xml"` },
-          { key: "Link", value: `<${SITE}/llms.txt>; rel="describedby"; type="text/plain"` },
+          { key: "Link", value: `<${SITE}/sitemap.xml>; rel="sitemap"; type="application/xml", <${SITE}/llms.txt>; rel="describedby"; type="text/plain"` },
         ],
       },
       {

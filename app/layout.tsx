@@ -2,6 +2,9 @@ import type { Metadata, Viewport } from "next";
 import { Geist, JetBrains_Mono, Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
 import { SmoothScrolling } from "@/components/SmoothScrolling/SmoothScrolling";
+import { headers } from 'next/headers';
+import DocumentLanguage from '@/components/DocumentLanguage';
+import Measurement from '@/components/Measurement';
 
 const geistSans = Geist({
   variable: "--font-geist",
@@ -28,7 +31,7 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://www.mzfortech.com"),
   title: {
     default: "Model Zero for Technology Solutions",
-    template: "%s | MZ",
+    template: "%s | MZ for Tech",
   },
   applicationName: "MZ",
   description:
@@ -42,6 +45,8 @@ export const metadata: Metadata = {
     type: "website",
   },
   twitter: { card: "summary_large_image", images: ["/og.webp"] },
+  robots: { index: true, follow: true, googleBot: { index: true, follow: true, 'max-image-preview': 'large', 'max-snippet': -1, 'max-video-preview': -1 } },
+  icons: { apple: [{ url: '/apple-icon.png', sizes: '180x180', type: 'image/png' }] },
 };
 
 export const viewport: Viewport = {
@@ -57,20 +62,27 @@ import SiteBackground from "@/components/SiteBackground/SiteBackground";
 import GamepadNavigation from "@/components/GamepadNavigation/GamepadNavigation";
 import KonamiArcade from "@/components/KonamiArcade/KonamiArcade";
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Existing URLs have locale below /research rather than a root [lang] segment.
+  // The proxy sets this trusted path-derived header for the initial document.
+  const locale = (await headers()).get('x-mz-locale') === 'ar' ? 'ar' : 'en';
   return (
     <html
-      lang="en"
+      lang={locale}
+      dir={locale === 'ar' ? 'rtl' : 'ltr'}
       className={`${geistSans.variable} ${jetbrainsMono.variable} ${cormorant.variable}`}
       data-theme="dark"
     >
       <head>
       </head>
       <body>
+        <DocumentLanguage />
+        <Measurement />
+        <a className="skip-link" href="#main-content">{locale === 'ar' ? 'انتقل إلى المحتوى' : 'Skip to content'}</a>
         <SiteBackground />
         <GamepadNavigation />
         <KonamiArcade />

@@ -4,7 +4,7 @@ import { CUSTOM_STUDIES, hasArabicStudyMetadata } from '@/research/data/studies'
 import { getResearchArticlePath } from '@/research/lib/paths';
 
 export function generateStaticParams() {
-  return CUSTOM_STUDIES.filter((study) => study.published && hasArabicStudyMetadata(study))
+  return CUSTOM_STUDIES.filter((study) => study.published && hasArabicStudyMetadata(study) && study.arabic_translation_status !== 'draft')
     .map((study) => ({ slug: study.slug }));
 }
 

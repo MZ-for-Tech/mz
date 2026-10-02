@@ -24,7 +24,7 @@ import ObfuscatedEmail from "@/components/ObfuscatedEmail/ObfuscatedEmail";
  * as "9/26/2026" for some visitors and "26 September 2026" for others is
  * noise in a legal document.
  */
-const LAST_UPDATED = "26 September 2026";
+const LAST_UPDATED = "2 October 2026";
 
 export const metadata = pageMetadata({
   title: "Privacy Policy",
@@ -56,13 +56,13 @@ export default function PrivacyPolicyPage() {
             white type and nothing moving. A policy document should be the
             quietest thing on the site. */}
 
-        <main className={styles.main}>
+        <main id="main-content" className={styles.main}>
           <h1 className={styles.title}>Privacy Policy</h1>
           <div className={styles.content}>
             <p>Last updated: {LAST_UPDATED}</p>
 
             <h2>1. Information We Collect</h2>
-            <p>We collect information you provide directly to us when you use our services, such as when you submit a project brief or contact us. This may include your name, email address, and project details.</p>
+            <p>The project brief collects your email address, project description, selected expertise, optional budget, timeline and discovery source, and an optional attachment. Please avoid submitting sensitive personal or confidential operational records in an initial inquiry.</p>
 
             <h2>2. How We Use Your Information</h2>
             <p>We use the information we collect to communicate with you about your projects, provide our services, and improve our website experience. We do not sell your personal information to third parties.</p>
@@ -71,7 +71,9 @@ export default function PrivacyPolicyPage() {
             <p>We implement appropriate technical and organizational measures to protect the security of your personal information. However, please note that no method of transmission over the Internet is 100% secure.</p>
 
             <h2>4. Third-Party Services</h2>
-            <p>We may use third-party services that collect, monitor and analyze information to improve our services functionality. These third-party service providers have their own privacy policies addressing how they use such information.</p>
+            <p>The website is hosted on Vercel. When contact delivery is configured, project briefs are sent through Zoho Mail SMTP to the company inbox. These providers process data needed for hosting and email delivery under their own policies. If delivery is unavailable, the form shows an error and you can email us directly.</p>
+            <p>The website code includes local measurement events for page views, contact actions and delivery status, using page paths and service or product identifiers. It does not send inquiry text, email addresses, attachments, budgets or other form contents in those events. No third-party analytics destination is configured by these events.</p>
+            <p>For questions about access, correction or deletion of an inquiry, contact the address below. Any account-specific retention arrangements must be confirmed with the team.</p>
 
             <h2>5. Contact Us</h2>
             <p>If you have any questions about this Privacy Policy, please contact us at <ObfuscatedEmail user="hello" domain="mzfortech.com" />.</p>
@@ -79,7 +81,7 @@ export default function PrivacyPolicyPage() {
         </main>
 
         <div className={styles.backRow}>
-          <TransitionLink href="/home" className={styles.backLink}>
+          <TransitionLink href="/" className={styles.backLink}>
             ← Back to menu
           </TransitionLink>
         </div>

@@ -138,7 +138,7 @@ export default function SVDImageReconstructor() {
             <div>
               <span className="text-xs font-mono uppercase tracking-widest text-ink/60 mb-2 block">Audit Objective</span>
               <p className="text-xs text-secondary leading-relaxed latex-prose italic border-s-2 border-ink/10 ps-4">
-                The previous section proved that <strong>weights</strong> are redundant. This section proves that the <strong>diagnostic data itself</strong> is low-rank, allowing the network to discard high-frequency &quot;noise&quot; without losing the cell&apos;s nucleus structure.
+                This interactive illustration uses simulated block reconstruction and visual effects to explain rank and detail. It does not compute an SVD of this image or establish diagnostic validity. Measured model results are reported separately in the study.
               </p>
             </div>
 

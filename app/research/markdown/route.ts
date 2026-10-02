@@ -9,11 +9,16 @@ export async function GET(request: NextRequest) {
   const requestedPath = originalPath || '/research';
   const locale = requestedPath.startsWith('/research/ar') ? 'ar' : 'en';
   const isResearchIndex = requestedPath === '/research' || requestedPath === '/research/ar';
+  if (isResearchIndex) {
+    const studies = CUSTOM_STUDIES.filter(item => item.published && (locale !== 'ar' || hasArabicStudyMetadata(item) && item.arabic_translation_status !== 'draft'));
+    const content = [locale === 'ar' ? '# الفرضية الصفرية — أبحاث MZ' : '# The Null Hypothesis — MZ Research', '', ...studies.map(item => `- [${locale === 'ar' ? item.title_ar : item.title}](https://www.mzfortech.com${getResearchArticlePath(item, locale)}) — ${locale === 'ar' ? item.description_ar : item.description}`)].join('\n');
+    return new NextResponse(content, { headers: { 'Content-Type': 'text/markdown; charset=utf-8', 'X-Robots-Tag': 'noindex, follow' } });
+  }
   const articleMatch = requestedPath.match(/^\/research\/(?:ar\/)?(papers|essays)\/([^/]+)\/?$/);
   const requestedType = articleMatch?.[1] === 'essays' ? 'essay' : 'paper';
   const requestedSlug = articleMatch?.[2];
   const requestedStudy = CUSTOM_STUDIES.find(
-    (item) => item.published && item.slug === requestedSlug && item.article_type === requestedType,
+    (item) => item.published && item.slug === requestedSlug && item.article_type === requestedType && (locale !== 'ar' || item.arabic_translation_status !== 'draft'),
   );
   const study = isResearchIndex
     ? CUSTOM_STUDIES.find((item) => item.published)

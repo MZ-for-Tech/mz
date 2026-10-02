@@ -1,0 +1,2212 @@
+{
+  "origin": "https://www.mzfortech.com",
+  "recordedAt": "2026-10-02T19:55:07.383Z",
+  "sitemapStatus": 200,
+  "results": [
+    {
+      "path": "/",
+      "status": 200,
+      "redirect": null,
+      "canonical": [
+        "https://www.mzfortech.com"
+      ],
+      "title": [
+        "Model Zero for Technology Solutions"
+      ],
+      "description": [
+        "Model Zero for Technology Solutions (MZ) builds software and AI in Cairo, then trains teams to run it. Applied research informs the work."
+      ],
+      "h1": [
+        "RESEARCH.RESEARCH.SOFTWARE.SOFTWARE.KNOWLEDGE.KNOWLEDGE."
+      ],
+      "language": {
+        "lang": "en",
+        "class": "geist_26bacada-module__-BgxVa__variable jetbrains_mono_74b4137b-module__1widkq__variable cormorant_garamond_910cbffa-module__mGtGQq__variable",
+        "data-theme": "dark"
+      },
+      "robots": [],
+      "robotsHeader": null,
+      "alternates": [],
+      "social": [
+        {
+          "property": "og:title",
+          "content": "Model Zero for Technology Solutions"
+        },
+        {
+          "property": "og:description",
+          "content": "Model Zero for Technology Solutions (MZ) builds software and AI in Cairo, then trains teams to run it. Applied research…"
+        },
+        {
+          "property": "og:url",
+          "content": "https://www.mzfortech.com"
+        },
+        {
+          "property": "og:site_name",
+          "content": "MZ"
+        },
+        {
+          "property": "og:locale",
+          "content": "en_US"
+        },
+        {
+          "property": "og:image",
+          "content": "https://www.mzfortech.com/og?title=Model+Zero+for+Technology+Solutions&description=Model+Zero+for+Technology+Solutions+%28MZ%29+builds+software+and+AI+in+Cairo%2C+then+trains+teams+to+run+it.+Applied+research%E2%80%A6&path=%2F&locale=en_US"
+        },
+        {
+          "property": "og:image:width",
+          "content": "1200"
+        },
+        {
+          "property": "og:image:height",
+          "content": "630"
+        },
+        {
+          "property": "og:image:alt",
+          "content": "Model Zero for Technology Solutions"
+        },
+        {
+          "property": "og:type",
+          "content": "website"
+        },
+        {
+          "name": "twitter:card",
+          "content": "summary_large_image"
+        },
+        {
+          "name": "twitter:title",
+          "content": "Model Zero for Technology Solutions"
+        },
+        {
+          "name": "twitter:description",
+          "content": "Model Zero for Technology Solutions (MZ) builds software and AI in Cairo, then trains teams to run it. Applied research…"
+        },
+        {
+          "name": "twitter:image",
+          "content": "https://www.mzfortech.com/og?title=Model+Zero+for+Technology+Solutions&description=Model+Zero+for+Technology+Solutions+%28MZ%29+builds+software+and+AI+in+Cairo%2C+then+trains+teams+to+run+it.+Applied+research%E2%80%A6&path=%2F&locale=en_US"
+        }
+      ],
+      "schemas": [
+        {
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "Organization",
+              "@id": "https://www.mzfortech.com/#organization",
+              "name": "Model Zero for Technology Solutions",
+              "alternateName": "MZ",
+              "url": "https://www.mzfortech.com/",
+              "logo": "https://www.mzfortech.com/mz.svg",
+              "email": "hello@mzfortech.com",
+              "description": "Model Zero for Technology Solutions (MZ) builds software and AI in Cairo, then trains teams to run it. Applied research informs the work.",
+              "address": {
+                "@type": "PostalAddress",
+                "addressLocality": "Cairo",
+                "addressCountry": "EG"
+              }
+            },
+            {
+              "@type": "WebSite",
+              "@id": "https://www.mzfortech.com/#website",
+              "url": "https://www.mzfortech.com/",
+              "name": "Model Zero for Technology Solutions",
+              "inLanguage": "en",
+              "publisher": {
+                "@id": "https://www.mzfortech.com/#organization"
+              }
+            }
+          ]
+        }
+      ],
+      "internalLinks": [
+        "/",
+        "/research",
+        "/home"
+      ],
+      "bytes": 25595,
+      "responseMs": 408,
+      "sitemap": true
+    },
+    {
+      "path": "/home",
+      "status": 200,
+      "redirect": null,
+      "canonical": [
+        "https://www.mzfortech.com/home"
+      ],
+      "title": [
+        "Software, AI & Knowledge Transfer"
+      ],
+      "description": [
+        "MZ is a Cairo-based software and AI company building custom systems and training teams to run them. Explore our work and applied research."
+      ],
+      "h1": [],
+      "language": {
+        "lang": "en",
+        "class": "geist_26bacada-module__-BgxVa__variable jetbrains_mono_74b4137b-module__1widkq__variable cormorant_garamond_910cbffa-module__mGtGQq__variable",
+        "data-theme": "dark"
+      },
+      "robots": [],
+      "robotsHeader": null,
+      "alternates": [],
+      "social": [
+        {
+          "property": "og:title",
+          "content": "Software, AI & Knowledge Transfer"
+        },
+        {
+          "property": "og:description",
+          "content": "MZ is a Cairo-based software and AI company building custom systems and training teams to run them. Explore our work and…"
+        },
+        {
+          "property": "og:url",
+          "content": "https://www.mzfortech.com/home"
+        },
+        {
+          "property": "og:site_name",
+          "content": "MZ"
+        },
+        {
+          "property": "og:locale",
+          "content": "en_US"
+        },
+        {
+          "property": "og:image",
+          "content": "https://www.mzfortech.com/og?title=Software%2C+AI+%26+Knowledge+Transfer&description=MZ+is+a+Cairo-based+software+and+AI+company+building+custom+systems+and+training+teams+to+run+them.+Explore+our+work+and%E2%80%A6&path=%2Fhome&locale=en_US"
+        },
+        {
+          "property": "og:image:width",
+          "content": "1200"
+        },
+        {
+          "property": "og:image:height",
+          "content": "630"
+        },
+        {
+          "property": "og:image:alt",
+          "content": "Software, AI & Knowledge Transfer"
+        },
+        {
+          "property": "og:type",
+          "content": "website"
+        },
+        {
+          "name": "twitter:card",
+          "content": "summary_large_image"
+        },
+        {
+          "name": "twitter:title",
+          "content": "Software, AI & Knowledge Transfer"
+        },
+        {
+          "name": "twitter:description",
+          "content": "MZ is a Cairo-based software and AI company building custom systems and training teams to run them. Explore our work and…"
+        },
+        {
+          "name": "twitter:image",
+          "content": "https://www.mzfortech.com/og?title=Software%2C+AI+%26+Knowledge+Transfer&description=MZ+is+a+Cairo-based+software+and+AI+company+building+custom+systems+and+training+teams+to+run+them.+Explore+our+work+and%E2%80%A6&path=%2Fhome&locale=en_US"
+        }
+      ],
+      "schemas": [],
+      "internalLinks": [
+        "/",
+        "/home",
+        "/work",
+        "/services",
+        "/intel",
+        "/contact",
+        "/privacy",
+        "/work/nested-united",
+        "/research"
+      ],
+      "bytes": 43586,
+      "responseMs": 408,
+      "sitemap": true
+    },
+    {
+      "path": "/work",
+      "status": 200,
+      "redirect": null,
+      "canonical": [
+        "https://www.mzfortech.com/work"
+      ],
+      "title": [
+        "Software Projects and Case Studies"
+      ],
+      "description": [
+        "Explore MZ software projects, client platforms, and proprietary products, including the Nested United digital platform and selected client work."
+      ],
+      "h1": [],
+      "language": {
+        "lang": "en",
+        "class": "geist_26bacada-module__-BgxVa__variable jetbrains_mono_74b4137b-module__1widkq__variable cormorant_garamond_910cbffa-module__mGtGQq__variable",
+        "data-theme": "dark"
+      },
+      "robots": [],
+      "robotsHeader": null,
+      "alternates": [],
+      "social": [
+        {
+          "property": "og:title",
+          "content": "Software Projects and Case Studies"
+        },
+        {
+          "property": "og:description",
+          "content": "Explore MZ software projects, client platforms, and proprietary products, including the Nested United digital platform and…"
+        },
+        {
+          "property": "og:url",
+          "content": "https://www.mzfortech.com/work"
+        },
+        {
+          "property": "og:site_name",
+          "content": "MZ"
+        },
+        {
+          "property": "og:locale",
+          "content": "en_US"
+        },
+        {
+          "property": "og:image",
+          "content": "https://www.mzfortech.com/og?title=Software+Projects+and+Case+Studies&description=Explore+MZ+software+projects%2C+client+platforms%2C+and+proprietary+products%2C+including+the+Nested+United+digital+platform+and%E2%80%A6&path=%2Fwork&locale=en_US"
+        },
+        {
+          "property": "og:image:width",
+          "content": "1200"
+        },
+        {
+          "property": "og:image:height",
+          "content": "630"
+        },
+        {
+          "property": "og:image:alt",
+          "content": "Software Projects and Case Studies"
+        },
+        {
+          "property": "og:type",
+          "content": "website"
+        },
+        {
+          "name": "twitter:card",
+          "content": "summary_large_image"
+        },
+        {
+          "name": "twitter:title",
+          "content": "Software Projects and Case Studies"
+        },
+        {
+          "name": "twitter:description",
+          "content": "Explore MZ software projects, client platforms, and proprietary products, including the Nested United digital platform and…"
+        },
+        {
+          "name": "twitter:image",
+          "content": "https://www.mzfortech.com/og?title=Software+Projects+and+Case+Studies&description=Explore+MZ+software+projects%2C+client+platforms%2C+and+proprietary+products%2C+including+the+Nested+United+digital+platform+and%E2%80%A6&path=%2Fwork&locale=en_US"
+        }
+      ],
+      "schemas": [],
+      "internalLinks": [
+        "/",
+        "/home",
+        "/work",
+        "/services",
+        "/intel",
+        "/contact",
+        "/privacy"
+      ],
+      "bytes": 38412,
+      "responseMs": 3871,
+      "sitemap": true
+    },
+    {
+      "path": "/work/nested-united",
+      "status": 200,
+      "redirect": null,
+      "canonical": [
+        "https://www.mzfortech.com/work/nested-united"
+      ],
+      "title": [
+        "Nested United Case Study | MZ"
+      ],
+      "description": [
+        "How MZ designed and built a digital platform for Nested United, bringing five specialist brands into one coherent web experience. A unified digital…"
+      ],
+      "h1": [
+        "Nested United website case study"
+      ],
+      "language": {
+        "lang": "en",
+        "class": "geist_26bacada-module__-BgxVa__variable jetbrains_mono_74b4137b-module__1widkq__variable cormorant_garamond_910cbffa-module__mGtGQq__variable",
+        "data-theme": "dark"
+      },
+      "robots": [],
+      "robotsHeader": null,
+      "alternates": [],
+      "social": [
+        {
+          "property": "og:title",
+          "content": "Nested United Case Study"
+        },
+        {
+          "property": "og:description",
+          "content": "How MZ designed and built a digital platform for Nested United, bringing five specialist brands into one coherent web…"
+        },
+        {
+          "property": "og:url",
+          "content": "https://www.mzfortech.com/work/nested-united"
+        },
+        {
+          "property": "og:site_name",
+          "content": "MZ"
+        },
+        {
+          "property": "og:locale",
+          "content": "en_US"
+        },
+        {
+          "property": "og:image",
+          "content": "https://www.mzfortech.com/og?title=Nested+United+Case+Study&description=How+MZ+designed+and+built+a+digital+platform+for+Nested+United%2C+bringing+five+specialist+brands+into+one+coherent+web%E2%80%A6&path=%2Fwork%2Fnested-united&locale=en_US"
+        },
+        {
+          "property": "og:image:width",
+          "content": "1200"
+        },
+        {
+          "property": "og:image:height",
+          "content": "630"
+        },
+        {
+          "property": "og:image:alt",
+          "content": "Nested United Case Study"
+        },
+        {
+          "property": "og:type",
+          "content": "website"
+        },
+        {
+          "name": "twitter:card",
+          "content": "summary_large_image"
+        },
+        {
+          "name": "twitter:title",
+          "content": "Nested United Case Study"
+        },
+        {
+          "name": "twitter:description",
+          "content": "How MZ designed and built a digital platform for Nested United, bringing five specialist brands into one coherent web…"
+        },
+        {
+          "name": "twitter:image",
+          "content": "https://www.mzfortech.com/og?title=Nested+United+Case+Study&description=How+MZ+designed+and+built+a+digital+platform+for+Nested+United%2C+bringing+five+specialist+brands+into+one+coherent+web%E2%80%A6&path=%2Fwork%2Fnested-united&locale=en_US"
+        }
+      ],
+      "schemas": [
+        {
+          "@context": "https://schema.org",
+          "@type": "CreativeWork",
+          "@id": "https://www.mzfortech.com/work/nested-united#case-study",
+          "name": "Nested United website case study",
+          "headline": "Nested United website case study",
+          "description": "How MZ designed and built a digital platform for Nested United, bringing five specialist brands into one coherent web experience. A unified digital presence engineered for real estate transparency & institutional scale.",
+          "inLanguage": "en",
+          "genre": "Digital platform case study",
+          "image": "https://www.mzfortech.com/nested/screenshots/desktop.webp",
+          "author": {
+            "@id": "https://www.mzfortech.com/#organization"
+          },
+          "publisher": {
+            "@id": "https://www.mzfortech.com/#organization"
+          },
+          "about": {
+            "@type": "Organization",
+            "name": "Nested United",
+            "url": "https://nestedunited.com/"
+          },
+          "mainEntityOfPage": "https://www.mzfortech.com/work/nested-united",
+          "url": "https://www.mzfortech.com/work/nested-united"
+        }
+      ],
+      "internalLinks": [
+        "/",
+        "/work",
+        "/contact",
+        "/privacy"
+      ],
+      "bytes": 191763,
+      "responseMs": 2244,
+      "sitemap": true
+    },
+    {
+      "path": "/services",
+      "status": 200,
+      "redirect": null,
+      "canonical": [
+        "https://www.mzfortech.com/services"
+      ],
+      "title": [
+        "Software Engineering Services"
+      ],
+      "description": [
+        "MZ helps organizations build and deploy software systems, then transfers the knowledge teams need to operate them."
+      ],
+      "h1": [
+        "Services"
+      ],
+      "language": {
+        "lang": "en",
+        "class": "geist_26bacada-module__-BgxVa__variable jetbrains_mono_74b4137b-module__1widkq__variable cormorant_garamond_910cbffa-module__mGtGQq__variable",
+        "data-theme": "dark"
+      },
+      "robots": [],
+      "robotsHeader": null,
+      "alternates": [],
+      "social": [
+        {
+          "property": "og:title",
+          "content": "Software Engineering Services"
+        },
+        {
+          "property": "og:description",
+          "content": "MZ helps organizations build and deploy software systems, then transfers the knowledge teams need to operate them."
+        },
+        {
+          "property": "og:url",
+          "content": "https://www.mzfortech.com/services"
+        },
+        {
+          "property": "og:site_name",
+          "content": "MZ"
+        },
+        {
+          "property": "og:locale",
+          "content": "en_US"
+        },
+        {
+          "property": "og:image",
+          "content": "https://www.mzfortech.com/og?title=Software+Engineering+Services&description=MZ+helps+organizations+build+and+deploy+software+systems%2C+then+transfers+the+knowledge+teams+need+to+operate+them.&path=%2Fservices&locale=en_US"
+        },
+        {
+          "property": "og:image:width",
+          "content": "1200"
+        },
+        {
+          "property": "og:image:height",
+          "content": "630"
+        },
+        {
+          "property": "og:image:alt",
+          "content": "Software Engineering Services"
+        },
+        {
+          "property": "og:type",
+          "content": "website"
+        },
+        {
+          "name": "twitter:card",
+          "content": "summary_large_image"
+        },
+        {
+          "name": "twitter:title",
+          "content": "Software Engineering Services"
+        },
+        {
+          "name": "twitter:description",
+          "content": "MZ helps organizations build and deploy software systems, then transfers the knowledge teams need to operate them."
+        },
+        {
+          "name": "twitter:image",
+          "content": "https://www.mzfortech.com/og?title=Software+Engineering+Services&description=MZ+helps+organizations+build+and+deploy+software+systems%2C+then+transfers+the+knowledge+teams+need+to+operate+them.&path=%2Fservices&locale=en_US"
+        }
+      ],
+      "schemas": [
+        {
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "Service",
+              "@id": "https://www.mzfortech.com/services#01",
+              "name": "Software",
+              "serviceType": "BUILD",
+              "description": "We make systems that work. Custom websites & landing pages. E-commerce & digital storefronts. ERP & internal operations systems.",
+              "provider": {
+                "@id": "https://www.mzfortech.com/#organization"
+              },
+              "url": "https://www.mzfortech.com/services"
+            },
+            {
+              "@type": "Service",
+              "@id": "https://www.mzfortech.com/services#02",
+              "name": "Artificial Intelligence",
+              "serviceType": "DEPLOY",
+              "description": "We give machines judgment. Custom specialized models. Model fine-tuning & pruning. Cost-optimized local inference.",
+              "provider": {
+                "@id": "https://www.mzfortech.com/#organization"
+              },
+              "url": "https://www.mzfortech.com/services"
+            },
+            {
+              "@type": "Service",
+              "@id": "https://www.mzfortech.com/services#03",
+              "name": "Knowledge Transfer",
+              "serviceType": "TEACH",
+              "description": "We make expertise replicable. Premium institutional workshops. Statistical thinking & data literacy. Digital-first educational content.",
+              "provider": {
+                "@id": "https://www.mzfortech.com/#organization"
+              },
+              "url": "https://www.mzfortech.com/services"
+            }
+          ]
+        }
+      ],
+      "internalLinks": [
+        "/",
+        "/home",
+        "/work",
+        "/services",
+        "/intel",
+        "/contact",
+        "/privacy"
+      ],
+      "bytes": 42586,
+      "responseMs": 329,
+      "sitemap": true
+    },
+    {
+      "path": "/intel",
+      "status": 200,
+      "redirect": null,
+      "canonical": [
+        "https://www.mzfortech.com/intel"
+      ],
+      "title": [
+        "About MZ"
+      ],
+      "description": [
+        "Learn about MZ, a Cairo-based software and AI company building custom systems and training teams to run them, informed by applied research."
+      ],
+      "h1": [
+        "MZ builds software and AI systems in Cairo."
+      ],
+      "language": {
+        "lang": "en",
+        "class": "geist_26bacada-module__-BgxVa__variable jetbrains_mono_74b4137b-module__1widkq__variable cormorant_garamond_910cbffa-module__mGtGQq__variable",
+        "data-theme": "dark"
+      },
+      "robots": [],
+      "robotsHeader": null,
+      "alternates": [],
+      "social": [
+        {
+          "property": "og:title",
+          "content": "About MZ"
+        },
+        {
+          "property": "og:description",
+          "content": "Learn about MZ, a Cairo-based software and AI company building custom systems and training teams to run them, informed by…"
+        },
+        {
+          "property": "og:url",
+          "content": "https://www.mzfortech.com/intel"
+        },
+        {
+          "property": "og:site_name",
+          "content": "MZ"
+        },
+        {
+          "property": "og:locale",
+          "content": "en_US"
+        },
+        {
+          "property": "og:image",
+          "content": "https://www.mzfortech.com/og?title=About+MZ&description=Learn+about+MZ%2C+a+Cairo-based+software+and+AI+company+building+custom+systems+and+training+teams+to+run+them%2C+informed+by%E2%80%A6&path=%2Fintel&locale=en_US"
+        },
+        {
+          "property": "og:image:width",
+          "content": "1200"
+        },
+        {
+          "property": "og:image:height",
+          "content": "630"
+        },
+        {
+          "property": "og:image:alt",
+          "content": "About MZ"
+        },
+        {
+          "property": "og:type",
+          "content": "website"
+        },
+        {
+          "name": "twitter:card",
+          "content": "summary_large_image"
+        },
+        {
+          "name": "twitter:title",
+          "content": "About MZ"
+        },
+        {
+          "name": "twitter:description",
+          "content": "Learn about MZ, a Cairo-based software and AI company building custom systems and training teams to run them, informed by…"
+        },
+        {
+          "name": "twitter:image",
+          "content": "https://www.mzfortech.com/og?title=About+MZ&description=Learn+about+MZ%2C+a+Cairo-based+software+and+AI+company+building+custom+systems+and+training+teams+to+run+them%2C+informed+by%E2%80%A6&path=%2Fintel&locale=en_US"
+        }
+      ],
+      "schemas": [],
+      "internalLinks": [
+        "/",
+        "/home",
+        "/work",
+        "/services",
+        "/intel",
+        "/contact",
+        "/privacy"
+      ],
+      "bytes": 35411,
+      "responseMs": 379,
+      "sitemap": true
+    },
+    {
+      "path": "/contact",
+      "status": 200,
+      "redirect": null,
+      "canonical": [
+        "https://www.mzfortech.com/contact"
+      ],
+      "title": [
+        "Contact MZ"
+      ],
+      "description": [
+        "Contact Model Zero for Technology Solutions in Cairo about custom software, AI deployment, or Arabic OCR."
+      ],
+      "h1": [
+        "So.What do you wanna talk about?"
+      ],
+      "language": {
+        "lang": "en",
+        "class": "geist_26bacada-module__-BgxVa__variable jetbrains_mono_74b4137b-module__1widkq__variable cormorant_garamond_910cbffa-module__mGtGQq__variable",
+        "data-theme": "dark"
+      },
+      "robots": [],
+      "robotsHeader": null,
+      "alternates": [],
+      "social": [
+        {
+          "property": "og:title",
+          "content": "Contact MZ"
+        },
+        {
+          "property": "og:description",
+          "content": "Contact Model Zero for Technology Solutions in Cairo about custom software, AI deployment, or Arabic OCR."
+        },
+        {
+          "property": "og:url",
+          "content": "https://www.mzfortech.com/contact"
+        },
+        {
+          "property": "og:site_name",
+          "content": "MZ"
+        },
+        {
+          "property": "og:locale",
+          "content": "en_US"
+        },
+        {
+          "property": "og:image",
+          "content": "https://www.mzfortech.com/og?title=Contact+MZ&description=Contact+Model+Zero+for+Technology+Solutions+in+Cairo+about+custom+software%2C+AI+deployment%2C+or+Arabic+OCR.&path=%2Fcontact&locale=en_US"
+        },
+        {
+          "property": "og:image:width",
+          "content": "1200"
+        },
+        {
+          "property": "og:image:height",
+          "content": "630"
+        },
+        {
+          "property": "og:image:alt",
+          "content": "Contact MZ"
+        },
+        {
+          "property": "og:type",
+          "content": "website"
+        },
+        {
+          "name": "twitter:card",
+          "content": "summary_large_image"
+        },
+        {
+          "name": "twitter:title",
+          "content": "Contact MZ"
+        },
+        {
+          "name": "twitter:description",
+          "content": "Contact Model Zero for Technology Solutions in Cairo about custom software, AI deployment, or Arabic OCR."
+        },
+        {
+          "name": "twitter:image",
+          "content": "https://www.mzfortech.com/og?title=Contact+MZ&description=Contact+Model+Zero+for+Technology+Solutions+in+Cairo+about+custom+software%2C+AI+deployment%2C+or+Arabic+OCR.&path=%2Fcontact&locale=en_US"
+        }
+      ],
+      "schemas": [],
+      "internalLinks": [
+        "/",
+        "/home",
+        "/work",
+        "/services",
+        "/intel",
+        "/contact",
+        "/privacy"
+      ],
+      "bytes": 41241,
+      "responseMs": 494,
+      "sitemap": true
+    },
+    {
+      "path": "/privacy",
+      "status": 200,
+      "redirect": null,
+      "canonical": [
+        "https://www.mzfortech.com/privacy"
+      ],
+      "title": [
+        "Privacy Policy | MZ"
+      ],
+      "description": [
+        "Read how MZ handles information submitted through its website and how to contact the team with privacy questions."
+      ],
+      "h1": [
+        "Privacy Policy"
+      ],
+      "language": {
+        "lang": "en",
+        "class": "geist_26bacada-module__-BgxVa__variable jetbrains_mono_74b4137b-module__1widkq__variable cormorant_garamond_910cbffa-module__mGtGQq__variable",
+        "data-theme": "dark"
+      },
+      "robots": [],
+      "robotsHeader": null,
+      "alternates": [],
+      "social": [
+        {
+          "property": "og:title",
+          "content": "Privacy Policy"
+        },
+        {
+          "property": "og:description",
+          "content": "Read how MZ handles information submitted through its website and how to contact the team with privacy questions."
+        },
+        {
+          "property": "og:url",
+          "content": "https://www.mzfortech.com/privacy"
+        },
+        {
+          "property": "og:site_name",
+          "content": "MZ"
+        },
+        {
+          "property": "og:locale",
+          "content": "en_US"
+        },
+        {
+          "property": "og:image",
+          "content": "https://www.mzfortech.com/og?title=Privacy+Policy&description=Read+how+MZ+handles+information+submitted+through+its+website+and+how+to+contact+the+team+with+privacy+questions.&path=%2Fprivacy&locale=en_US"
+        },
+        {
+          "property": "og:image:width",
+          "content": "1200"
+        },
+        {
+          "property": "og:image:height",
+          "content": "630"
+        },
+        {
+          "property": "og:image:alt",
+          "content": "Privacy Policy"
+        },
+        {
+          "property": "og:type",
+          "content": "website"
+        },
+        {
+          "name": "twitter:card",
+          "content": "summary_large_image"
+        },
+        {
+          "name": "twitter:title",
+          "content": "Privacy Policy"
+        },
+        {
+          "name": "twitter:description",
+          "content": "Read how MZ handles information submitted through its website and how to contact the team with privacy questions."
+        },
+        {
+          "name": "twitter:image",
+          "content": "https://www.mzfortech.com/og?title=Privacy+Policy&description=Read+how+MZ+handles+information+submitted+through+its+website+and+how+to+contact+the+team+with+privacy+questions.&path=%2Fprivacy&locale=en_US"
+        }
+      ],
+      "schemas": [],
+      "internalLinks": [
+        "/",
+        "/home"
+      ],
+      "bytes": 21589,
+      "responseMs": 999,
+      "sitemap": true
+    },
+    {
+      "path": "/research/essays/the-measure-and-the-target",
+      "status": 200,
+      "redirect": null,
+      "canonical": [
+        "https://www.mzfortech.com/research/essays/the-measure-and-the-target"
+      ],
+      "title": [
+        "The Measure and the Target | MZ"
+      ],
+      "description": [
+        "The first article in The Institutional Machine, a series about measurement, incentives, information, and control. It follows Goodhart’s law from…"
+      ],
+      "h1": [
+        "The Measure and the Target"
+      ],
+      "language": {
+        "lang": "en",
+        "class": "geist_26bacada-module__-BgxVa__variable jetbrains_mono_74b4137b-module__1widkq__variable cormorant_garamond_910cbffa-module__mGtGQq__variable",
+        "data-theme": "dark"
+      },
+      "robots": [],
+      "robotsHeader": null,
+      "alternates": [],
+      "social": [
+        {
+          "property": "og:title",
+          "content": "The Measure and the Target"
+        },
+        {
+          "property": "og:description",
+          "content": "The first article in The Institutional Machine, a series about measurement, incentives, information, and control. It…"
+        },
+        {
+          "property": "og:url",
+          "content": "https://www.mzfortech.com/research/essays/the-measure-and-the-target"
+        },
+        {
+          "property": "og:site_name",
+          "content": "MZ"
+        },
+        {
+          "property": "og:locale",
+          "content": "en_US"
+        },
+        {
+          "property": "og:image",
+          "content": "https://www.mzfortech.com/research/images/institutional-machine/01-social-cover.webp"
+        },
+        {
+          "property": "og:image:width",
+          "content": "1672"
+        },
+        {
+          "property": "og:image:height",
+          "content": "941"
+        },
+        {
+          "property": "og:image:alt",
+          "content": "The Measure and the Target"
+        },
+        {
+          "property": "og:type",
+          "content": "article"
+        },
+        {
+          "name": "twitter:card",
+          "content": "summary_large_image"
+        },
+        {
+          "name": "twitter:title",
+          "content": "The Measure and the Target"
+        },
+        {
+          "name": "twitter:description",
+          "content": "The first article in The Institutional Machine, a series about measurement, incentives, information, and control. It…"
+        },
+        {
+          "name": "twitter:image",
+          "content": "https://www.mzfortech.com/research/images/institutional-machine/01-social-cover.webp"
+        }
+      ],
+      "schemas": [
+        {
+          "@context": "https://schema.org",
+          "@type": "Article",
+          "headline": "The Measure and the Target",
+          "description": "The first article in The Institutional Machine, a series about measurement, incentives, information, and control. It follows Goodhart’s law from statistical model selection to reinforcement learning from human feedback and benchmark optimization.",
+          "keywords": [
+            "Goodhart’s law",
+            "statistical measurement",
+            "reward models",
+            "reinforcement learning from human feedback",
+            "benchmark optimization"
+          ],
+          "inLanguage": "en",
+          "author": [
+            {
+              "@type": "Person",
+              "name": "Ezz Eldin Ahmed"
+            }
+          ],
+          "datePublished": "2026-10-02T00:00:00+00:00",
+          "dateModified": "2026-10-02T00:00:00+00:00",
+          "isPartOf": {
+            "@type": "CreativeWorkSeries",
+            "name": "The Institutional Machine",
+            "position": 1,
+            "url": "https://www.mzfortech.com/research/series/institutional-machine"
+          },
+          "publisher": {
+            "@type": "Organization",
+            "@id": "https://www.mzfortech.com/#organization",
+            "name": "MZ",
+            "url": "https://www.mzfortech.com/"
+          },
+          "mainEntityOfPage": "https://www.mzfortech.com/research/essays/the-measure-and-the-target",
+          "url": "https://www.mzfortech.com/research/essays/the-measure-and-the-target"
+        }
+      ],
+      "internalLinks": [
+        "/",
+        "/research",
+        "/home",
+        "/research/series/institutional-machine"
+      ],
+      "bytes": 160809,
+      "responseMs": 3911,
+      "sitemap": true
+    },
+    {
+      "path": "/research/papers/vgg19-bloodmnist-compression",
+      "status": 200,
+      "redirect": null,
+      "canonical": [
+        "https://www.mzfortech.com/research/papers/vgg19-bloodmnist-compression"
+      ],
+      "title": [
+        "Statistical Compression of VGG19 for Blood-Cell Image Classification on BloodMNIST | MZ"
+      ],
+      "description": [
+        "An exploration of model compression through L1 regularization, structured L0 gates, and low-rank SVD to reduce VGG19 parameters while preserving…"
+      ],
+      "h1": [
+        "Statistical Compression of VGG19 for Blood-Cell Image Classification on BloodMNIST"
+      ],
+      "language": {
+        "lang": "en",
+        "class": "geist_26bacada-module__-BgxVa__variable jetbrains_mono_74b4137b-module__1widkq__variable cormorant_garamond_910cbffa-module__mGtGQq__variable",
+        "data-theme": "dark"
+      },
+      "robots": [],
+      "robotsHeader": null,
+      "alternates": [],
+      "social": [
+        {
+          "property": "og:title",
+          "content": "Statistical Compression of VGG19 for Blood-Cell Image Classification on BloodMNIST"
+        },
+        {
+          "property": "og:description",
+          "content": "An exploration of model compression through L1 regularization, structured L0 gates, and low-rank SVD to reduce VGG19…"
+        },
+        {
+          "property": "og:url",
+          "content": "https://www.mzfortech.com/research/papers/vgg19-bloodmnist-compression"
+        },
+        {
+          "property": "og:site_name",
+          "content": "MZ"
+        },
+        {
+          "property": "og:locale",
+          "content": "en_US"
+        },
+        {
+          "property": "og:image",
+          "content": "https://www.mzfortech.com/og?title=Statistical+Compression+of+VGG19+for+Blood-Cell+Image+Classification+on+BloodMNIST&description=An+exploration+of+model+compression+through+L1+regularization%2C+structured+L0+gates%2C+and+low-rank+SVD+to+reduce+VGG19%E2%80%A6&path=%2Fresearch%2Fpapers%2Fvgg19-bloodmnist-compression&locale=en_US"
+        },
+        {
+          "property": "og:image:width",
+          "content": "1200"
+        },
+        {
+          "property": "og:image:height",
+          "content": "630"
+        },
+        {
+          "property": "og:image:alt",
+          "content": "Statistical Compression of VGG19 for Blood-Cell Image Classification on BloodMNIST"
+        },
+        {
+          "property": "og:type",
+          "content": "article"
+        },
+        {
+          "name": "twitter:card",
+          "content": "summary_large_image"
+        },
+        {
+          "name": "twitter:title",
+          "content": "Statistical Compression of VGG19 for Blood-Cell Image Classification on BloodMNIST"
+        },
+        {
+          "name": "twitter:description",
+          "content": "An exploration of model compression through L1 regularization, structured L0 gates, and low-rank SVD to reduce VGG19…"
+        },
+        {
+          "name": "twitter:image",
+          "content": "https://www.mzfortech.com/og?title=Statistical+Compression+of+VGG19+for+Blood-Cell+Image+Classification+on+BloodMNIST&description=An+exploration+of+model+compression+through+L1+regularization%2C+structured+L0+gates%2C+and+low-rank+SVD+to+reduce+VGG19%E2%80%A6&path=%2Fresearch%2Fpapers%2Fvgg19-bloodmnist-compression&locale=en_US"
+        }
+      ],
+      "schemas": [
+        {
+          "@context": "https://schema.org",
+          "@type": "ScholarlyArticle",
+          "headline": "Statistical Compression of VGG19 for Blood-Cell Image Classification on BloodMNIST",
+          "description": "An exploration of model compression through L1 regularization, structured L0 gates, and low-rank SVD to reduce VGG19 parameters while preserving diagnostic accuracy in hematological imaging.",
+          "alternativeHeadline": "How we reduced deep learning parameters in hematological imaging while maintaining 98.4% accuracy.",
+          "genre": "Deep Learning",
+          "inLanguage": "en",
+          "datePublished": "2026-05-08T00:00:00+00:00",
+          "dateModified": "2026-05-08T00:00:00+00:00",
+          "author": [
+            {
+              "@type": "Person",
+              "name": "Ezz Eldin Ahmed"
+            },
+            {
+              "@type": "Person",
+              "name": "Abdulrahman Mostafa Kamel"
+            },
+            {
+              "@type": "Person",
+              "name": "Masty Ahmed"
+            },
+            {
+              "@type": "Person",
+              "name": "Mohamed Amir"
+            }
+          ],
+          "publisher": {
+            "@type": "Organization",
+            "@id": "https://www.mzfortech.com/#organization",
+            "name": "MZ",
+            "url": "https://www.mzfortech.com/"
+          },
+          "mainEntityOfPage": "https://www.mzfortech.com/research/papers/vgg19-bloodmnist-compression",
+          "url": "https://www.mzfortech.com/research/papers/vgg19-bloodmnist-compression",
+          "isPartOf": {
+            "@type": "CreativeWorkSeries",
+            "name": "The Null Hypothesis",
+            "url": "https://www.mzfortech.com/research"
+          }
+        }
+      ],
+      "internalLinks": [
+        "/",
+        "/research",
+        "/home",
+        "/research-applied-stats-in-ai.pdf"
+      ],
+      "bytes": 369380,
+      "responseMs": 3374,
+      "sitemap": true
+    },
+    {
+      "path": "/research/ar/papers/vgg19-bloodmnist-compression",
+      "status": 200,
+      "redirect": null,
+      "canonical": [
+        "https://www.mzfortech.com/research/ar/papers/vgg19-bloodmnist-compression"
+      ],
+      "title": [
+        "الضغط الإحصائي لشبكة VGG19 لتصنيف صور خلايا الدم باستخدام BloodMNIST | MZ"
+      ],
+      "description": [
+        "تستكشف الدراسة ضغط النماذج باستخدام تنظيم L1 وبوابات L0 المهيكلة وتحليل SVD منخفض الرتبة، لتقليل معاملات VGG19 مع الحفاظ على دقة التصنيف في الصور الطبية…"
+      ],
+      "h1": [
+        "الضغط الإحصائي لشبكة VGG19 لتصنيف صور خلايا الدم باستخدام BloodMNIST"
+      ],
+      "language": {
+        "lang": "en",
+        "class": "geist_26bacada-module__-BgxVa__variable jetbrains_mono_74b4137b-module__1widkq__variable cormorant_garamond_910cbffa-module__mGtGQq__variable",
+        "data-theme": "dark"
+      },
+      "robots": [],
+      "robotsHeader": null,
+      "alternates": [],
+      "social": [
+        {
+          "property": "og:title",
+          "content": "الضغط الإحصائي لشبكة VGG19 لتصنيف صور خلايا الدم باستخدام BloodMNIST"
+        },
+        {
+          "property": "og:description",
+          "content": "تستكشف الدراسة ضغط النماذج باستخدام تنظيم L1 وبوابات L0 المهيكلة وتحليل SVD منخفض الرتبة، لتقليل معاملات VGG19 مع الحفاظ…"
+        },
+        {
+          "property": "og:url",
+          "content": "https://www.mzfortech.com/research/ar/papers/vgg19-bloodmnist-compression"
+        },
+        {
+          "property": "og:site_name",
+          "content": "MZ"
+        },
+        {
+          "property": "og:locale",
+          "content": "ar_EG"
+        },
+        {
+          "property": "og:image",
+          "content": "https://www.mzfortech.com/og?title=%D8%A7%D9%84%D8%B6%D8%BA%D8%B7+%D8%A7%D9%84%D8%A5%D8%AD%D8%B5%D8%A7%D8%A6%D9%8A+%D9%84%D8%B4%D8%A8%D9%83%D8%A9+VGG19+%D9%84%D8%AA%D8%B5%D9%86%D9%8A%D9%81+%D8%B5%D9%88%D8%B1+%D8%AE%D9%84%D8%A7%D9%8A%D8%A7+%D8%A7%D9%84%D8%AF%D9%85+%D8%A8%D8%A7%D8%B3%D8%AA%D8%AE%D8%AF%D8%A7%D9%85+BloodMNIST&description=%D8%AA%D8%B3%D8%AA%D9%83%D8%B4%D9%81+%D8%A7%D9%84%D8%AF%D8%B1%D8%A7%D8%B3%D8%A9+%D8%B6%D8%BA%D8%B7+%D8%A7%D9%84%D9%86%D9%85%D8%A7%D8%B0%D8%AC+%D8%A8%D8%A7%D8%B3%D8%AA%D8%AE%D8%AF%D8%A7%D9%85+%D8%AA%D9%86%D8%B8%D9%8A%D9%85+L1+%D9%88%D8%A8%D9%88%D8%A7%D8%A8%D8%A7%D8%AA+L0+%D8%A7%D9%84%D9%85%D9%87%D9%8A%D9%83%D9%84%D8%A9+%D9%88%D8%AA%D8%AD%D9%84%D9%8A%D9%84+SVD+%D9%85%D9%86%D8%AE%D9%81%D8%B6+%D8%A7%D9%84%D8%B1%D8%AA%D8%A8%D8%A9%D8%8C+%D9%84%D8%AA%D9%82%D9%84%D9%8A%D9%84+%D9%85%D8%B9%D8%A7%D9%85%D9%84%D8%A7%D8%AA+VGG19+%D9%85%D8%B9+%D8%A7%D9%84%D8%AD%D9%81%D8%A7%D8%B8%E2%80%A6&path=%2Fresearch%2Far%2Fpapers%2Fvgg19-bloodmnist-compression&locale=ar_EG"
+        },
+        {
+          "property": "og:image:width",
+          "content": "1200"
+        },
+        {
+          "property": "og:image:height",
+          "content": "630"
+        },
+        {
+          "property": "og:image:alt",
+          "content": "الضغط الإحصائي لشبكة VGG19 لتصنيف صور خلايا الدم باستخدام BloodMNIST"
+        },
+        {
+          "property": "og:type",
+          "content": "article"
+        },
+        {
+          "name": "twitter:card",
+          "content": "summary_large_image"
+        },
+        {
+          "name": "twitter:title",
+          "content": "الضغط الإحصائي لشبكة VGG19 لتصنيف صور خلايا الدم باستخدام BloodMNIST"
+        },
+        {
+          "name": "twitter:description",
+          "content": "تستكشف الدراسة ضغط النماذج باستخدام تنظيم L1 وبوابات L0 المهيكلة وتحليل SVD منخفض الرتبة، لتقليل معاملات VGG19 مع الحفاظ…"
+        },
+        {
+          "name": "twitter:image",
+          "content": "https://www.mzfortech.com/og?title=%D8%A7%D9%84%D8%B6%D8%BA%D8%B7+%D8%A7%D9%84%D8%A5%D8%AD%D8%B5%D8%A7%D8%A6%D9%8A+%D9%84%D8%B4%D8%A8%D9%83%D8%A9+VGG19+%D9%84%D8%AA%D8%B5%D9%86%D9%8A%D9%81+%D8%B5%D9%88%D8%B1+%D8%AE%D9%84%D8%A7%D9%8A%D8%A7+%D8%A7%D9%84%D8%AF%D9%85+%D8%A8%D8%A7%D8%B3%D8%AA%D8%AE%D8%AF%D8%A7%D9%85+BloodMNIST&description=%D8%AA%D8%B3%D8%AA%D9%83%D8%B4%D9%81+%D8%A7%D9%84%D8%AF%D8%B1%D8%A7%D8%B3%D8%A9+%D8%B6%D8%BA%D8%B7+%D8%A7%D9%84%D9%86%D9%85%D8%A7%D8%B0%D8%AC+%D8%A8%D8%A7%D8%B3%D8%AA%D8%AE%D8%AF%D8%A7%D9%85+%D8%AA%D9%86%D8%B8%D9%8A%D9%85+L1+%D9%88%D8%A8%D9%88%D8%A7%D8%A8%D8%A7%D8%AA+L0+%D8%A7%D9%84%D9%85%D9%87%D9%8A%D9%83%D9%84%D8%A9+%D9%88%D8%AA%D8%AD%D9%84%D9%8A%D9%84+SVD+%D9%85%D9%86%D8%AE%D9%81%D8%B6+%D8%A7%D9%84%D8%B1%D8%AA%D8%A8%D8%A9%D8%8C+%D9%84%D8%AA%D9%82%D9%84%D9%8A%D9%84+%D9%85%D8%B9%D8%A7%D9%85%D9%84%D8%A7%D8%AA+VGG19+%D9%85%D8%B9+%D8%A7%D9%84%D8%AD%D9%81%D8%A7%D8%B8%E2%80%A6&path=%2Fresearch%2Far%2Fpapers%2Fvgg19-bloodmnist-compression&locale=ar_EG"
+        }
+      ],
+      "schemas": [
+        {
+          "@context": "https://schema.org",
+          "@type": "ScholarlyArticle",
+          "headline": "الضغط الإحصائي لشبكة VGG19 لتصنيف صور خلايا الدم باستخدام BloodMNIST",
+          "description": "تستكشف الدراسة ضغط النماذج باستخدام تنظيم L1 وبوابات L0 المهيكلة وتحليل SVD منخفض الرتبة، لتقليل معاملات VGG19 مع الحفاظ على دقة التصنيف في الصور الطبية الدموية.",
+          "alternativeHeadline": "كيف خفّضنا معاملات نموذج التعلم العميق في تصوير خلايا الدم مع الحفاظ على دقة بلغت 98.4٪.",
+          "genre": "التعلم العميق",
+          "inLanguage": "ar",
+          "datePublished": "2026-05-08T00:00:00+00:00",
+          "dateModified": "2026-05-08T00:00:00+00:00",
+          "author": [
+            {
+              "@type": "Person",
+              "name": "Ezz Eldin Ahmed"
+            },
+            {
+              "@type": "Person",
+              "name": "Abdulrahman Mostafa Kamel"
+            },
+            {
+              "@type": "Person",
+              "name": "Masty Ahmed"
+            },
+            {
+              "@type": "Person",
+              "name": "Mohamed Amir"
+            }
+          ],
+          "publisher": {
+            "@type": "Organization",
+            "@id": "https://www.mzfortech.com/#organization",
+            "name": "MZ",
+            "url": "https://www.mzfortech.com/"
+          },
+          "mainEntityOfPage": "https://www.mzfortech.com/research/ar/papers/vgg19-bloodmnist-compression",
+          "url": "https://www.mzfortech.com/research/ar/papers/vgg19-bloodmnist-compression",
+          "isPartOf": {
+            "@type": "CreativeWorkSeries",
+            "name": "الفرضية الصفرية",
+            "url": "https://www.mzfortech.com/research/ar"
+          }
+        }
+      ],
+      "internalLinks": [
+        "/",
+        "/research",
+        "/home",
+        "/research/ar",
+        "/research-applied-stats-in-ai.pdf"
+      ],
+      "bytes": 377691,
+      "responseMs": 5254,
+      "sitemap": true
+    },
+    {
+      "path": "/research/series/institutional-machine",
+      "status": 200,
+      "redirect": null,
+      "canonical": [
+        "https://www.mzfortech.com/research/series/institutional-machine"
+      ],
+      "title": [
+        "The Institutional Machine | MZ"
+      ],
+      "description": [
+        "A series about measurement, incentives, information, and control—and how powerful systems reshape the things we use to understand them."
+      ],
+      "h1": [
+        "The Institutional Machine"
+      ],
+      "language": {
+        "lang": "en",
+        "class": "geist_26bacada-module__-BgxVa__variable jetbrains_mono_74b4137b-module__1widkq__variable cormorant_garamond_910cbffa-module__mGtGQq__variable",
+        "data-theme": "dark"
+      },
+      "robots": [],
+      "robotsHeader": null,
+      "alternates": [],
+      "social": [
+        {
+          "property": "og:title",
+          "content": "The Institutional Machine"
+        },
+        {
+          "property": "og:description",
+          "content": "A series about measurement, incentives, information, and control—and how powerful systems reshape the things we use to…"
+        },
+        {
+          "property": "og:url",
+          "content": "https://www.mzfortech.com/research/series/institutional-machine"
+        },
+        {
+          "property": "og:site_name",
+          "content": "MZ"
+        },
+        {
+          "property": "og:locale",
+          "content": "en_US"
+        },
+        {
+          "property": "og:image",
+          "content": "https://www.mzfortech.com/og?title=The+Institutional+Machine&description=A+series+about+measurement%2C+incentives%2C+information%2C+and+control%E2%80%94and+how+powerful+systems+reshape+the+things+we+use+to%E2%80%A6&path=%2Fresearch%2Fseries%2Finstitutional-machine&locale=en_US"
+        },
+        {
+          "property": "og:image:width",
+          "content": "1200"
+        },
+        {
+          "property": "og:image:height",
+          "content": "630"
+        },
+        {
+          "property": "og:image:alt",
+          "content": "The Institutional Machine"
+        },
+        {
+          "property": "og:type",
+          "content": "website"
+        },
+        {
+          "name": "twitter:card",
+          "content": "summary_large_image"
+        },
+        {
+          "name": "twitter:title",
+          "content": "The Institutional Machine"
+        },
+        {
+          "name": "twitter:description",
+          "content": "A series about measurement, incentives, information, and control—and how powerful systems reshape the things we use to…"
+        },
+        {
+          "name": "twitter:image",
+          "content": "https://www.mzfortech.com/og?title=The+Institutional+Machine&description=A+series+about+measurement%2C+incentives%2C+information%2C+and+control%E2%80%94and+how+powerful+systems+reshape+the+things+we+use+to%E2%80%A6&path=%2Fresearch%2Fseries%2Finstitutional-machine&locale=en_US"
+        }
+      ],
+      "schemas": [],
+      "internalLinks": [
+        "/",
+        "/research",
+        "/home",
+        "/research/essays/the-measure-and-the-target"
+      ],
+      "bytes": 83893,
+      "responseMs": 564,
+      "sitemap": true
+    },
+    {
+      "path": "/research",
+      "status": 200,
+      "redirect": null,
+      "canonical": [
+        "https://www.mzfortech.com/research"
+      ],
+      "title": [
+        "The Null Hypothesis | MZ"
+      ],
+      "description": [
+        "The Null Hypothesis follows MZ research from question to product, making the ideas and methods behind what we build explorable through interactive work."
+      ],
+      "h1": [
+        "The Measure and the Target"
+      ],
+      "language": {
+        "lang": "en",
+        "class": "geist_26bacada-module__-BgxVa__variable jetbrains_mono_74b4137b-module__1widkq__variable cormorant_garamond_910cbffa-module__mGtGQq__variable",
+        "data-theme": "dark"
+      },
+      "robots": [],
+      "robotsHeader": null,
+      "alternates": [],
+      "social": [
+        {
+          "property": "og:title",
+          "content": "The Null Hypothesis"
+        },
+        {
+          "property": "og:description",
+          "content": "The Null Hypothesis follows MZ research from question to product, making the ideas and methods behind what we build…"
+        },
+        {
+          "property": "og:url",
+          "content": "https://www.mzfortech.com/research"
+        },
+        {
+          "property": "og:site_name",
+          "content": "MZ"
+        },
+        {
+          "property": "og:locale",
+          "content": "en_US"
+        },
+        {
+          "property": "og:image",
+          "content": "https://www.mzfortech.com/og?title=The+Null+Hypothesis&description=The+Null+Hypothesis+follows+MZ+research+from+question+to+product%2C+making+the+ideas+and+methods+behind+what+we+build%E2%80%A6&path=%2Fresearch&locale=en_US"
+        },
+        {
+          "property": "og:image:width",
+          "content": "1200"
+        },
+        {
+          "property": "og:image:height",
+          "content": "630"
+        },
+        {
+          "property": "og:image:alt",
+          "content": "The Null Hypothesis"
+        },
+        {
+          "property": "og:type",
+          "content": "website"
+        },
+        {
+          "name": "twitter:card",
+          "content": "summary_large_image"
+        },
+        {
+          "name": "twitter:title",
+          "content": "The Null Hypothesis"
+        },
+        {
+          "name": "twitter:description",
+          "content": "The Null Hypothesis follows MZ research from question to product, making the ideas and methods behind what we build…"
+        },
+        {
+          "name": "twitter:image",
+          "content": "https://www.mzfortech.com/og?title=The+Null+Hypothesis&description=The+Null+Hypothesis+follows+MZ+research+from+question+to+product%2C+making+the+ideas+and+methods+behind+what+we+build%E2%80%A6&path=%2Fresearch&locale=en_US"
+        }
+      ],
+      "schemas": [],
+      "internalLinks": [
+        "/",
+        "/research",
+        "/home",
+        "/research/series/institutional-machine",
+        "/research/essays/the-measure-and-the-target",
+        "/research/papers/vgg19-bloodmnist-compression"
+      ],
+      "bytes": 96713,
+      "responseMs": 223,
+      "sitemap": true
+    },
+    {
+      "path": "/research/ar",
+      "status": 200,
+      "redirect": null,
+      "canonical": [
+        "https://www.mzfortech.com/research/ar"
+      ],
+      "title": [
+        "الفرضية الصفرية | MZ"
+      ],
+      "description": [
+        "أبحاث MZ من السؤال إلى المنتج، مع أفكار وأساليب تفاعلية."
+      ],
+      "h1": [],
+      "language": {
+        "lang": "en",
+        "class": "geist_26bacada-module__-BgxVa__variable jetbrains_mono_74b4137b-module__1widkq__variable cormorant_garamond_910cbffa-module__mGtGQq__variable",
+        "data-theme": "dark"
+      },
+      "robots": [],
+      "robotsHeader": null,
+      "alternates": [],
+      "social": [
+        {
+          "property": "og:title",
+          "content": "الفرضية الصفرية"
+        },
+        {
+          "property": "og:description",
+          "content": "أبحاث MZ من السؤال إلى المنتج، مع أفكار وأساليب تفاعلية."
+        },
+        {
+          "property": "og:url",
+          "content": "https://www.mzfortech.com/research/ar"
+        },
+        {
+          "property": "og:site_name",
+          "content": "MZ"
+        },
+        {
+          "property": "og:locale",
+          "content": "ar_EG"
+        },
+        {
+          "property": "og:image",
+          "content": "https://www.mzfortech.com/og?title=%D8%A7%D9%84%D9%81%D8%B1%D8%B6%D9%8A%D8%A9+%D8%A7%D9%84%D8%B5%D9%81%D8%B1%D9%8A%D8%A9&description=%D8%A3%D8%A8%D8%AD%D8%A7%D8%AB+MZ+%D9%85%D9%86+%D8%A7%D9%84%D8%B3%D8%A4%D8%A7%D9%84+%D8%A5%D9%84%D9%89+%D8%A7%D9%84%D9%85%D9%86%D8%AA%D8%AC%D8%8C+%D9%85%D8%B9+%D8%A3%D9%81%D9%83%D8%A7%D8%B1+%D9%88%D8%A3%D8%B3%D8%A7%D9%84%D9%8A%D8%A8+%D8%AA%D9%81%D8%A7%D8%B9%D9%84%D9%8A%D8%A9.&path=%2Fresearch%2Far&locale=ar_EG"
+        },
+        {
+          "property": "og:image:width",
+          "content": "1200"
+        },
+        {
+          "property": "og:image:height",
+          "content": "630"
+        },
+        {
+          "property": "og:image:alt",
+          "content": "الفرضية الصفرية"
+        },
+        {
+          "property": "og:type",
+          "content": "website"
+        },
+        {
+          "name": "twitter:card",
+          "content": "summary_large_image"
+        },
+        {
+          "name": "twitter:title",
+          "content": "الفرضية الصفرية"
+        },
+        {
+          "name": "twitter:description",
+          "content": "أبحاث MZ من السؤال إلى المنتج، مع أفكار وأساليب تفاعلية."
+        },
+        {
+          "name": "twitter:image",
+          "content": "https://www.mzfortech.com/og?title=%D8%A7%D9%84%D9%81%D8%B1%D8%B6%D9%8A%D8%A9+%D8%A7%D9%84%D8%B5%D9%81%D8%B1%D9%8A%D8%A9&description=%D8%A3%D8%A8%D8%AD%D8%A7%D8%AB+MZ+%D9%85%D9%86+%D8%A7%D9%84%D8%B3%D8%A4%D8%A7%D9%84+%D8%A5%D9%84%D9%89+%D8%A7%D9%84%D9%85%D9%86%D8%AA%D8%AC%D8%8C+%D9%85%D8%B9+%D8%A3%D9%81%D9%83%D8%A7%D8%B1+%D9%88%D8%A3%D8%B3%D8%A7%D9%84%D9%8A%D8%A8+%D8%AA%D9%81%D8%A7%D8%B9%D9%84%D9%8A%D8%A9.&path=%2Fresearch%2Far&locale=ar_EG"
+        }
+      ],
+      "schemas": [],
+      "internalLinks": [
+        "/",
+        "/research",
+        "/home",
+        "/research/ar/papers/vgg19-bloodmnist-compression"
+      ],
+      "bytes": 86443,
+      "responseMs": 638,
+      "sitemap": true
+    },
+    {
+      "path": "/home?utm_source=audit",
+      "status": 200,
+      "redirect": null,
+      "canonical": [
+        "https://www.mzfortech.com/home"
+      ],
+      "title": [
+        "Software, AI & Knowledge Transfer"
+      ],
+      "description": [
+        "MZ is a Cairo-based software and AI company building custom systems and training teams to run them. Explore our work and applied research."
+      ],
+      "h1": [],
+      "language": {
+        "lang": "en",
+        "class": "geist_26bacada-module__-BgxVa__variable jetbrains_mono_74b4137b-module__1widkq__variable cormorant_garamond_910cbffa-module__mGtGQq__variable",
+        "data-theme": "dark"
+      },
+      "robots": [],
+      "robotsHeader": null,
+      "alternates": [],
+      "social": [
+        {
+          "property": "og:title",
+          "content": "Software, AI & Knowledge Transfer"
+        },
+        {
+          "property": "og:description",
+          "content": "MZ is a Cairo-based software and AI company building custom systems and training teams to run them. Explore our work and…"
+        },
+        {
+          "property": "og:url",
+          "content": "https://www.mzfortech.com/home"
+        },
+        {
+          "property": "og:site_name",
+          "content": "MZ"
+        },
+        {
+          "property": "og:locale",
+          "content": "en_US"
+        },
+        {
+          "property": "og:image",
+          "content": "https://www.mzfortech.com/og?title=Software%2C+AI+%26+Knowledge+Transfer&description=MZ+is+a+Cairo-based+software+and+AI+company+building+custom+systems+and+training+teams+to+run+them.+Explore+our+work+and%E2%80%A6&path=%2Fhome&locale=en_US"
+        },
+        {
+          "property": "og:image:width",
+          "content": "1200"
+        },
+        {
+          "property": "og:image:height",
+          "content": "630"
+        },
+        {
+          "property": "og:image:alt",
+          "content": "Software, AI & Knowledge Transfer"
+        },
+        {
+          "property": "og:type",
+          "content": "website"
+        },
+        {
+          "name": "twitter:card",
+          "content": "summary_large_image"
+        },
+        {
+          "name": "twitter:title",
+          "content": "Software, AI & Knowledge Transfer"
+        },
+        {
+          "name": "twitter:description",
+          "content": "MZ is a Cairo-based software and AI company building custom systems and training teams to run them. Explore our work and…"
+        },
+        {
+          "name": "twitter:image",
+          "content": "https://www.mzfortech.com/og?title=Software%2C+AI+%26+Knowledge+Transfer&description=MZ+is+a+Cairo-based+software+and+AI+company+building+custom+systems+and+training+teams+to+run+them.+Explore+our+work+and%E2%80%A6&path=%2Fhome&locale=en_US"
+        }
+      ],
+      "schemas": [],
+      "internalLinks": [
+        "/",
+        "/home",
+        "/work",
+        "/services",
+        "/intel",
+        "/contact",
+        "/privacy",
+        "/work/nested-united",
+        "/research"
+      ],
+      "bytes": 43586,
+      "responseMs": 142,
+      "sitemap": false
+    },
+    {
+      "path": "/services/unknown",
+      "status": 404,
+      "redirect": null,
+      "canonical": [],
+      "title": [
+        "Model Zero for Technology Solutions"
+      ],
+      "description": [
+        "Model Zero for Technology Solutions (MZ) is a Cairo-based software and AI company that builds custom systems and trains teams to run them."
+      ],
+      "h1": [
+        "404"
+      ],
+      "language": {
+        "lang": "en",
+        "class": "geist_26bacada-module__-BgxVa__variable jetbrains_mono_74b4137b-module__1widkq__variable cormorant_garamond_910cbffa-module__mGtGQq__variable",
+        "data-theme": "dark"
+      },
+      "robots": [
+        {
+          "name": "robots",
+          "content": "noindex"
+        }
+      ],
+      "robotsHeader": null,
+      "alternates": [],
+      "social": [
+        {
+          "property": "og:title",
+          "content": "Model Zero for Technology Solutions"
+        },
+        {
+          "property": "og:description",
+          "content": "Model Zero for Technology Solutions (MZ) is a Cairo-based software and AI company that builds custom systems and trains teams to run them."
+        },
+        {
+          "property": "og:site_name",
+          "content": "MZ"
+        },
+        {
+          "property": "og:locale",
+          "content": "en_US"
+        },
+        {
+          "property": "og:image",
+          "content": "https://www.mzfortech.com/og.webp"
+        },
+        {
+          "property": "og:image:width",
+          "content": "1200"
+        },
+        {
+          "property": "og:image:height",
+          "content": "630"
+        },
+        {
+          "property": "og:type",
+          "content": "website"
+        },
+        {
+          "name": "twitter:card",
+          "content": "summary_large_image"
+        },
+        {
+          "name": "twitter:title",
+          "content": "Model Zero for Technology Solutions"
+        },
+        {
+          "name": "twitter:description",
+          "content": "Model Zero for Technology Solutions (MZ) is a Cairo-based software and AI company that builds custom systems and trains teams to run them."
+        },
+        {
+          "name": "twitter:image",
+          "content": "https://www.mzfortech.com/og.webp"
+        }
+      ],
+      "schemas": [],
+      "internalLinks": [
+        "/"
+      ],
+      "bytes": 17147,
+      "responseMs": 376,
+      "sitemap": false
+    },
+    {
+      "path": "/unknown-audit-path",
+      "status": 404,
+      "redirect": null,
+      "canonical": [],
+      "title": [
+        "Model Zero for Technology Solutions"
+      ],
+      "description": [
+        "Model Zero for Technology Solutions (MZ) is a Cairo-based software and AI company that builds custom systems and trains teams to run them."
+      ],
+      "h1": [
+        "404"
+      ],
+      "language": {
+        "lang": "en",
+        "class": "geist_26bacada-module__-BgxVa__variable jetbrains_mono_74b4137b-module__1widkq__variable cormorant_garamond_910cbffa-module__mGtGQq__variable",
+        "data-theme": "dark"
+      },
+      "robots": [
+        {
+          "name": "robots",
+          "content": "noindex"
+        }
+      ],
+      "robotsHeader": null,
+      "alternates": [],
+      "social": [
+        {
+          "property": "og:title",
+          "content": "Model Zero for Technology Solutions"
+        },
+        {
+          "property": "og:description",
+          "content": "Model Zero for Technology Solutions (MZ) is a Cairo-based software and AI company that builds custom systems and trains teams to run them."
+        },
+        {
+          "property": "og:site_name",
+          "content": "MZ"
+        },
+        {
+          "property": "og:locale",
+          "content": "en_US"
+        },
+        {
+          "property": "og:image",
+          "content": "https://www.mzfortech.com/og.webp"
+        },
+        {
+          "property": "og:image:width",
+          "content": "1200"
+        },
+        {
+          "property": "og:image:height",
+          "content": "630"
+        },
+        {
+          "property": "og:type",
+          "content": "website"
+        },
+        {
+          "name": "twitter:card",
+          "content": "summary_large_image"
+        },
+        {
+          "name": "twitter:title",
+          "content": "Model Zero for Technology Solutions"
+        },
+        {
+          "name": "twitter:description",
+          "content": "Model Zero for Technology Solutions (MZ) is a Cairo-based software and AI company that builds custom systems and trains teams to run them."
+        },
+        {
+          "name": "twitter:image",
+          "content": "https://www.mzfortech.com/og.webp"
+        }
+      ],
+      "schemas": [],
+      "internalLinks": [
+        "/"
+      ],
+      "bytes": 17147,
+      "responseMs": 159,
+      "sitemap": false
+    }
+  ],
+  "resources": [
+    {
+      "path": "/robots.txt",
+      "status": 200,
+      "contentType": "text/plain; charset=utf-8",
+      "bytes": 71
+    },
+    {
+      "path": "/llms.txt",
+      "status": 200,
+      "contentType": "text/plain; charset=utf-8",
+      "bytes": 2156
+    },
+    {
+      "path": "/content.md",
+      "status": 200,
+      "contentType": "text/markdown; charset=utf-8",
+      "bytes": 1966
+    },
+    {
+      "path": "/research-applied-stats-in-ai.pdf",
+      "error": "TimeoutError: The operation was aborted due to timeout"
+    },
+    {
+      "path": "/og?title=MZ&path=/",
+      "status": 200,
+      "contentType": "image/png",
+      "bytes": 76417
+    },
+    {
+      "path": "/og?title=MZ&locale=ar_EG&path=/research/ar",
+      "status": 200,
+      "contentType": "image/png",
+      "bytes": 80239
+    }
+  ],
+  "bots": [
+    {
+      "agent": "Googlebot",
+      "path": "/",
+      "status": 200,
+      "redirect": null,
+      "canonical": [
+        "https://www.mzfortech.com"
+      ],
+      "title": [
+        "Model Zero for Technology Solutions"
+      ],
+      "description": [
+        "Model Zero for Technology Solutions (MZ) builds software and AI in Cairo, then trains teams to run it. Applied research informs the work."
+      ],
+      "h1": [
+        "RESEARCH.RESEARCH.SOFTWARE.SOFTWARE.KNOWLEDGE.KNOWLEDGE."
+      ],
+      "language": {
+        "lang": "en",
+        "class": "geist_26bacada-module__-BgxVa__variable jetbrains_mono_74b4137b-module__1widkq__variable cormorant_garamond_910cbffa-module__mGtGQq__variable",
+        "data-theme": "dark"
+      },
+      "robots": [],
+      "robotsHeader": null,
+      "alternates": [],
+      "social": [
+        {
+          "property": "og:title",
+          "content": "Model Zero for Technology Solutions"
+        },
+        {
+          "property": "og:description",
+          "content": "Model Zero for Technology Solutions (MZ) builds software and AI in Cairo, then trains teams to run it. Applied research…"
+        },
+        {
+          "property": "og:url",
+          "content": "https://www.mzfortech.com"
+        },
+        {
+          "property": "og:site_name",
+          "content": "MZ"
+        },
+        {
+          "property": "og:locale",
+          "content": "en_US"
+        },
+        {
+          "property": "og:image",
+          "content": "https://www.mzfortech.com/og?title=Model+Zero+for+Technology+Solutions&description=Model+Zero+for+Technology+Solutions+%28MZ%29+builds+software+and+AI+in+Cairo%2C+then+trains+teams+to+run+it.+Applied+research%E2%80%A6&path=%2F&locale=en_US"
+        },
+        {
+          "property": "og:image:width",
+          "content": "1200"
+        },
+        {
+          "property": "og:image:height",
+          "content": "630"
+        },
+        {
+          "property": "og:image:alt",
+          "content": "Model Zero for Technology Solutions"
+        },
+        {
+          "property": "og:type",
+          "content": "website"
+        },
+        {
+          "name": "twitter:card",
+          "content": "summary_large_image"
+        },
+        {
+          "name": "twitter:title",
+          "content": "Model Zero for Technology Solutions"
+        },
+        {
+          "name": "twitter:description",
+          "content": "Model Zero for Technology Solutions (MZ) builds software and AI in Cairo, then trains teams to run it. Applied research…"
+        },
+        {
+          "name": "twitter:image",
+          "content": "https://www.mzfortech.com/og?title=Model+Zero+for+Technology+Solutions&description=Model+Zero+for+Technology+Solutions+%28MZ%29+builds+software+and+AI+in+Cairo%2C+then+trains+teams+to+run+it.+Applied+research%E2%80%A6&path=%2F&locale=en_US"
+        }
+      ],
+      "schemas": [
+        {
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "Organization",
+              "@id": "https://www.mzfortech.com/#organization",
+              "name": "Model Zero for Technology Solutions",
+              "alternateName": "MZ",
+              "url": "https://www.mzfortech.com/",
+              "logo": "https://www.mzfortech.com/mz.svg",
+              "email": "hello@mzfortech.com",
+              "description": "Model Zero for Technology Solutions (MZ) builds software and AI in Cairo, then trains teams to run it. Applied research informs the work.",
+              "address": {
+                "@type": "PostalAddress",
+                "addressLocality": "Cairo",
+                "addressCountry": "EG"
+              }
+            },
+            {
+              "@type": "WebSite",
+              "@id": "https://www.mzfortech.com/#website",
+              "url": "https://www.mzfortech.com/",
+              "name": "Model Zero for Technology Solutions",
+              "inLanguage": "en",
+              "publisher": {
+                "@id": "https://www.mzfortech.com/#organization"
+              }
+            }
+          ]
+        }
+      ],
+      "internalLinks": [
+        "/",
+        "/research",
+        "/home"
+      ],
+      "bytes": 25595,
+      "responseMs": 363
+    },
+    {
+      "agent": "Twitterbot",
+      "path": "/",
+      "status": 200,
+      "redirect": null,
+      "canonical": [
+        "https://www.mzfortech.com"
+      ],
+      "title": [
+        "Model Zero for Technology Solutions"
+      ],
+      "description": [
+        "Model Zero for Technology Solutions (MZ) builds software and AI in Cairo, then trains teams to run it. Applied research informs the work."
+      ],
+      "h1": [
+        "RESEARCH.RESEARCH.SOFTWARE.SOFTWARE.KNOWLEDGE.KNOWLEDGE."
+      ],
+      "language": {
+        "lang": "en",
+        "class": "geist_26bacada-module__-BgxVa__variable jetbrains_mono_74b4137b-module__1widkq__variable cormorant_garamond_910cbffa-module__mGtGQq__variable",
+        "data-theme": "dark"
+      },
+      "robots": [],
+      "robotsHeader": null,
+      "alternates": [],
+      "social": [
+        {
+          "property": "og:title",
+          "content": "Model Zero for Technology Solutions"
+        },
+        {
+          "property": "og:description",
+          "content": "Model Zero for Technology Solutions (MZ) builds software and AI in Cairo, then trains teams to run it. Applied research…"
+        },
+        {
+          "property": "og:url",
+          "content": "https://www.mzfortech.com"
+        },
+        {
+          "property": "og:site_name",
+          "content": "MZ"
+        },
+        {
+          "property": "og:locale",
+          "content": "en_US"
+        },
+        {
+          "property": "og:image",
+          "content": "https://www.mzfortech.com/og?title=Model+Zero+for+Technology+Solutions&description=Model+Zero+for+Technology+Solutions+%28MZ%29+builds+software+and+AI+in+Cairo%2C+then+trains+teams+to+run+it.+Applied+research%E2%80%A6&path=%2F&locale=en_US"
+        },
+        {
+          "property": "og:image:width",
+          "content": "1200"
+        },
+        {
+          "property": "og:image:height",
+          "content": "630"
+        },
+        {
+          "property": "og:image:alt",
+          "content": "Model Zero for Technology Solutions"
+        },
+        {
+          "property": "og:type",
+          "content": "website"
+        },
+        {
+          "name": "twitter:card",
+          "content": "summary_large_image"
+        },
+        {
+          "name": "twitter:title",
+          "content": "Model Zero for Technology Solutions"
+        },
+        {
+          "name": "twitter:description",
+          "content": "Model Zero for Technology Solutions (MZ) builds software and AI in Cairo, then trains teams to run it. Applied research…"
+        },
+        {
+          "name": "twitter:image",
+          "content": "https://www.mzfortech.com/og?title=Model+Zero+for+Technology+Solutions&description=Model+Zero+for+Technology+Solutions+%28MZ%29+builds+software+and+AI+in+Cairo%2C+then+trains+teams+to+run+it.+Applied+research%E2%80%A6&path=%2F&locale=en_US"
+        }
+      ],
+      "schemas": [
+        {
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "Organization",
+              "@id": "https://www.mzfortech.com/#organization",
+              "name": "Model Zero for Technology Solutions",
+              "alternateName": "MZ",
+              "url": "https://www.mzfortech.com/",
+              "logo": "https://www.mzfortech.com/mz.svg",
+              "email": "hello@mzfortech.com",
+              "description": "Model Zero for Technology Solutions (MZ) builds software and AI in Cairo, then trains teams to run it. Applied research informs the work.",
+              "address": {
+                "@type": "PostalAddress",
+                "addressLocality": "Cairo",
+                "addressCountry": "EG"
+              }
+            },
+            {
+              "@type": "WebSite",
+              "@id": "https://www.mzfortech.com/#website",
+              "url": "https://www.mzfortech.com/",
+              "name": "Model Zero for Technology Solutions",
+              "inLanguage": "en",
+              "publisher": {
+                "@id": "https://www.mzfortech.com/#organization"
+              }
+            }
+          ]
+        }
+      ],
+      "internalLinks": [
+        "/",
+        "/research",
+        "/home"
+      ],
+      "bytes": 25595,
+      "responseMs": 329
+    },
+    {
+      "agent": "OAI-SearchBot",
+      "path": "/",
+      "status": 200,
+      "redirect": null,
+      "canonical": [
+        "https://www.mzfortech.com"
+      ],
+      "title": [
+        "Model Zero for Technology Solutions"
+      ],
+      "description": [
+        "Model Zero for Technology Solutions (MZ) builds software and AI in Cairo, then trains teams to run it. Applied research informs the work."
+      ],
+      "h1": [
+        "RESEARCH.RESEARCH.SOFTWARE.SOFTWARE.KNOWLEDGE.KNOWLEDGE."
+      ],
+      "language": {
+        "lang": "en",
+        "class": "geist_26bacada-module__-BgxVa__variable jetbrains_mono_74b4137b-module__1widkq__variable cormorant_garamond_910cbffa-module__mGtGQq__variable",
+        "data-theme": "dark"
+      },
+      "robots": [],
+      "robotsHeader": null,
+      "alternates": [],
+      "social": [
+        {
+          "property": "og:title",
+          "content": "Model Zero for Technology Solutions"
+        },
+        {
+          "property": "og:description",
+          "content": "Model Zero for Technology Solutions (MZ) builds software and AI in Cairo, then trains teams to run it. Applied research…"
+        },
+        {
+          "property": "og:url",
+          "content": "https://www.mzfortech.com"
+        },
+        {
+          "property": "og:site_name",
+          "content": "MZ"
+        },
+        {
+          "property": "og:locale",
+          "content": "en_US"
+        },
+        {
+          "property": "og:image",
+          "content": "https://www.mzfortech.com/og?title=Model+Zero+for+Technology+Solutions&description=Model+Zero+for+Technology+Solutions+%28MZ%29+builds+software+and+AI+in+Cairo%2C+then+trains+teams+to+run+it.+Applied+research%E2%80%A6&path=%2F&locale=en_US"
+        },
+        {
+          "property": "og:image:width",
+          "content": "1200"
+        },
+        {
+          "property": "og:image:height",
+          "content": "630"
+        },
+        {
+          "property": "og:image:alt",
+          "content": "Model Zero for Technology Solutions"
+        },
+        {
+          "property": "og:type",
+          "content": "website"
+        },
+        {
+          "name": "twitter:card",
+          "content": "summary_large_image"
+        },
+        {
+          "name": "twitter:title",
+          "content": "Model Zero for Technology Solutions"
+        },
+        {
+          "name": "twitter:description",
+          "content": "Model Zero for Technology Solutions (MZ) builds software and AI in Cairo, then trains teams to run it. Applied research…"
+        },
+        {
+          "name": "twitter:image",
+          "content": "https://www.mzfortech.com/og?title=Model+Zero+for+Technology+Solutions&description=Model+Zero+for+Technology+Solutions+%28MZ%29+builds+software+and+AI+in+Cairo%2C+then+trains+teams+to+run+it.+Applied+research%E2%80%A6&path=%2F&locale=en_US"
+        }
+      ],
+      "schemas": [
+        {
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "Organization",
+              "@id": "https://www.mzfortech.com/#organization",
+              "name": "Model Zero for Technology Solutions",
+              "alternateName": "MZ",
+              "url": "https://www.mzfortech.com/",
+              "logo": "https://www.mzfortech.com/mz.svg",
+              "email": "hello@mzfortech.com",
+              "description": "Model Zero for Technology Solutions (MZ) builds software and AI in Cairo, then trains teams to run it. Applied research informs the work.",
+              "address": {
+                "@type": "PostalAddress",
+                "addressLocality": "Cairo",
+                "addressCountry": "EG"
+              }
+            },
+            {
+              "@type": "WebSite",
+              "@id": "https://www.mzfortech.com/#website",
+              "url": "https://www.mzfortech.com/",
+              "name": "Model Zero for Technology Solutions",
+              "inLanguage": "en",
+              "publisher": {
+                "@id": "https://www.mzfortech.com/#organization"
+              }
+            }
+          ]
+        }
+      ],
+      "internalLinks": [
+        "/",
+        "/research",
+        "/home"
+      ],
+      "bytes": 25595,
+      "responseMs": 137
+    }
+  ],
+  "note": "Simulated user agents do not verify real crawler or WAF access. Response timings are fetch diagnostics, not Core Web Vitals."
+}

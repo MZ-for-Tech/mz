@@ -1,0 +1,52 @@
+{
+  "recordedAt": "2026-10-02T20:46:42.505Z",
+  "results": [
+    {
+      "url": "http://mzfortech.com/",
+      "status": 308,
+      "location": "https://mzfortech.com/",
+      "contentType": "text/plain"
+    },
+    {
+      "url": "https://mzfortech.com/",
+      "status": 308,
+      "location": "https://www.mzfortech.com/",
+      "contentType": "text/plain"
+    },
+    {
+      "url": "http://www.mzfortech.com/",
+      "status": 308,
+      "location": "https://www.mzfortech.com/",
+      "contentType": "text/plain"
+    },
+    {
+      "url": "https://www.mzfortech.com/research-applied-stats-in-ai.pdf",
+      "status": 200,
+      "location": null,
+      "contentType": "application/pdf"
+    },
+    {
+      "url": "https://github.com/MZ-for-Tech/vgg19-compression",
+      "status": 404,
+      "location": null,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "url": "https://misura.mzfortech.com/",
+      "error": "TypeError: fetch failed"
+    },
+    {
+      "url": "https://zstore.mzfortech.com/",
+      "status": 200,
+      "location": null,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "url": "https://nestedunited.com/",
+      "status": 200,
+      "location": null,
+      "contentType": "text/html; charset=utf-8"
+    }
+  ],
+  "note": "Public HEAD requests only. No product code, accounts or infrastructure changed."
+}

@@ -28,27 +28,28 @@ export function pageMetadata({
   languages,
   type = "website",
 }: PageMetadataOptions): Metadata {
+  const fullTitle = title.includes(' | ') ? title : `${title} | ${path.startsWith('/research') ? 'MZ Research' : 'MZ for Tech'}`;
   const metaDescription = fitDescription(description, 155);
   const socialDescription = fitDescription(description, 125);
-  const imageParams = new URLSearchParams({ title, description: socialDescription, path, locale });
+  const imageParams = new URLSearchParams({ title: fullTitle, description: socialDescription, path, locale });
   const imageUrl = `/og?${imageParams.toString()}`;
 
   return {
-    title,
+    title: { absolute: fullTitle },
     description: metaDescription,
-    alternates: { canonical: path, ...(languages ? { languages } : {}) },
+    alternates: { canonical: `https://www.mzfortech.com${path}`, ...(languages ? { languages } : {}) },
     openGraph: {
-      title,
+      title: fullTitle,
       description: socialDescription,
       url: path,
-      siteName: "MZ",
+      siteName: "MZ for Tech",
       images: [{ url: imageUrl, alt: title, width: 1200, height: 630 }],
       locale,
       type,
     },
     twitter: {
       card: "summary_large_image",
-      title,
+      title: fullTitle,
       description: socialDescription,
       images: [imageUrl],
     },

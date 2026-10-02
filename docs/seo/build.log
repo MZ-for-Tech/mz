@@ -1,0 +1,61 @@
+
+> mz@0.1.0 build
+> next build
+
+▲ Next.js 16.3.8 (Turbopack)
+✓ Running next.config.ts took 36ms
+- Experiments (use with caution):
+  · optimizePackageImports
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 3.8s
+  Running TypeScript ...
+  Finished TypeScript in 8.6s ...
+  Collecting page data using 11 workers ...
+  Generating static pages using 11 workers (0/39) ...
+  Generating static pages using 11 workers (9/39)
+  Generating static pages using 11 workers (19/39)
+  Generating static pages using 11 workers (29/39)
+✓ Generating static pages using 11 workers (39/39) in 1383ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ƒ /
+├ ƒ /_not-found
+├ ƒ /api/contact
+├ ƒ /contact
+├ ○ /content.md
+├ ƒ /home
+├ ƒ /intel
+├ ○ /llms.txt
+├ ƒ /logo
+├ ƒ /menu
+├ ƒ /menu/contact
+├ ƒ /menu/intel
+├ ƒ /menu/services
+├ ƒ /menu/work
+├ ƒ /og
+├ ƒ /privacy
+├ ƒ /research
+├ ƒ /research/[slug]
+├ ƒ /research/ar
+├ ƒ /research/ar/[slug]
+├ ● /research/ar/essays/[slug]
+├ ƒ /research/ar/papers/[slug]
+├ ƒ /research/essays/[slug]
+├ ƒ /research/markdown
+├ ƒ /research/papers/[slug]
+├ ƒ /research/series/[slug]
+├ ƒ /services
+├ ƒ /services/[slug]
+├ ○ /sitemap.xml
+├ ƒ /start
+├ ƒ /work
+└ ƒ /work/nested-united
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+●  (SSG)      prerendered as static HTML (uses generateStaticParams)
+ƒ  (Dynamic)  server-rendered on demand
