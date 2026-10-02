@@ -18,17 +18,13 @@ AIC, BIC, and cross-validated R2 approached the broader problem from different d
 
 When machine learning came to be, it shifted much of the emphasis from estimating and interpreting relationships toward optimizing out-of-sample predictive performance.
 
-A business will benefit from knowing p-values and confidence intervals to deeply understand which variables drive sales, but sometimes the question could be “where will our business be in a year?” So if the business looks at their sales numbers and wants an idea of what that will look like by Q4, it might be more useful to use a predictive model rather than an inferential one.
-
-A data scientist is asked to model sales, they might decide to fit a linear regression model if it’s suitable. Since they’re not asked for more than prediction of sales figures given specific variables, the whole R2 problem becomes less relevant per se.
+Consider a business trying to understand what drives sales: p-values and confidence intervals help with that inferential question. But if the business wants to know where sales will be by Q4, a predictive model may be more useful. A data scientist asked to model those sales might fit a linear regression model if it’s suitable. If the task is only to predict sales from specific variables, the R2 problem becomes less relevant per se.
 
 They split the data into training and testing and validation. At a small scale, that separation helps protect us from fooling ourselves.
 
 **2. Two Proxy Layers in RLHF**
 
-But what happens when you put this problem onto a large scale? Attention Is All You Need changed the architecture of the field in 2017 (Vaswani et al., 2017).
-
-2017 especially was a pivotal year for the AI field. Google-owned DeepMind and a small, non-profit research laboratory called OpenAI raised the question: How can we communicate goals to an AI system when writing the correct reward function ourselves is difficult? The outcome of that collaboration was a paper titled “Deep Reinforcement Learning from Human Preferences”. The paper that would become a fundamental step toward the technique of “Reinforcement Learning from Human Feedback” (Christiano et al., 2017).
+But what happens when you put this problem onto a large scale? Attention Is All You Need changed the architecture of the field in 2017 (Vaswani et al., 2017), a pivotal year for AI. Google-owned DeepMind and a small, non-profit research laboratory called OpenAI raised the question: How can we communicate goals to an AI system when writing the correct reward function ourselves is difficult? The outcome of that collaboration was a paper titled “Deep Reinforcement Learning from Human Preferences.” It would become a fundamental step toward the technique of “Reinforcement Learning from Human Feedback” (Christiano et al., 2017).
 
 By 2022, ChatGPT had brought large language models to mass audiences, and Goodhart's law became even more critical (OpenAI, 2022).
 

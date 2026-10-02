@@ -104,7 +104,7 @@ export default function ResearchEssay({ study }: { study: Study }) {
       <article className="mx-auto max-w-4xl px-5 pt-8 pb-16 md:px-8 md:pt-10 md:pb-24">
         <header className="mb-12">
           <Link href="/research" className="font-mono text-xs uppercase tracking-widest text-ink/55 hover:text-accent">
-            ← Back to research
+            ← Back to essays
           </Link>
           <p className="mt-8 border-t-[3px] border-ink py-3 font-mono text-xs uppercase tracking-widest text-accent">
             {series} · Article {articleNumber}
