@@ -25,6 +25,7 @@ export interface Study extends BaseEditorialMetadata {
   toc_ar?: { id: string; label: string }[];
   authors?: { name: string; role?: string }[];
   article_type?: 'paper' | 'essay';
+  essay_renderer?: 'svd-story';
   series?: string;
   series_ar?: string;
   series_slug?: string;

@@ -14,7 +14,7 @@ export default function FeaturedResearchEssay({
   const title = isArabic ? article.title_ar || article.title : article.title;
   const tagline = isArabic ? article.tagline_ar || article.tagline : article.tagline;
   const series = isArabic ? article.category_ar || article.category : article.series || article.category;
-  const number = String(article.series_number || 1).padStart(2, '0');
+  const number = article.series_slug ? String(article.series_number || 1).padStart(2, '0') : null;
   const author = article.authors?.[0]?.name;
   const year = article.published_at?.slice(0, 4);
 
@@ -36,7 +36,8 @@ export default function FeaturedResearchEssay({
                 {series}
               </Link>
             ) : series}
-            {' · '}{isArabic ? `المقال ${number}` : `Article ${number}`}{year ? ` · ${year}` : ''}
+            {number && <> · {isArabic ? `المقال ${number}` : `Article ${number}`}</>}
+            {year && <> · {year}</>}
           </p>
           <h1 id="research-featured-title" className="mt-4 max-w-2xl font-latex text-4xl leading-[1.04] tracking-tight text-ink sm:text-5xl lg:text-6xl">
             {title}
@@ -59,7 +60,7 @@ export default function FeaturedResearchEssay({
           className="group order-1 block focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent md:order-2"
           aria-label={`${title} — ${isArabic ? 'اقرأ المقال' : 'read article'}`}
         >
-          <div className="relative aspect-[16/10] overflow-hidden border border-ink/10 bg-ink/[0.04]">
+          <div className="relative aspect-[16/9] overflow-hidden border border-ink/10 bg-ink/[0.04]">
             {article.hero_image || article.thumbnail ? (
               <Image
                 src={article.hero_image || article.thumbnail!}
@@ -67,10 +68,10 @@ export default function FeaturedResearchEssay({
                 fill
                 priority
                 sizes="(min-width: 768px) 46vw, 100vw"
-                className="research-image-paper-tone research-image-paper-tone-hero object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+                className={`${article.essay_renderer === 'svd-story' ? 'research-image-paper-tone-svd ' : ''}research-image-paper-tone research-image-paper-tone-hero object-cover transition-transform duration-500 group-hover:scale-[1.02]`}
               />
             ) : (
-              <div className="flex h-full items-end justify-end p-6 font-latex text-8xl text-ink/15">{number}</div>
+              <div className="flex h-full items-end justify-end p-6 font-latex text-8xl text-ink/15">{number || '∑'}</div>
             )}
           </div>
         </Link>

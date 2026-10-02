@@ -29,7 +29,7 @@ export default function ResearchArticleCards({
           const title = isArabic ? article.title_ar || article.title : article.title;
           const tagline = isArabic ? article.tagline_ar || article.tagline : article.tagline;
           const series = isArabic ? article.category_ar || article.category : article.series || article.category;
-          const number = String(article.series_number || 1).padStart(2, '0');
+          const number = article.series_number ? String(article.series_number).padStart(2, '0') : null;
           const year = article.published_at?.slice(0, 4);
 
           return (
@@ -51,7 +51,7 @@ export default function ResearchArticleCards({
                       alt={article.thumbnail_alt || title}
                       fill
                       sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-                      className="research-image-paper-tone object-cover"
+                      className={`${article.essay_renderer === 'svd-story' ? 'research-image-paper-tone-svd ' : ''}research-image-paper-tone object-cover`}
                     />
                   )}
                   {!article.thumbnail && (
@@ -60,17 +60,17 @@ export default function ResearchArticleCards({
                         {series || 'MZ Research'}
                       </span>
                       <span className="self-end font-latex text-7xl leading-none tracking-tight text-ink/15 sm:text-8xl">
-                        {number}
+                        {number || '∑'}
                       </span>
                     </div>
                   )}
                 </div>
 
                 <div className="mt-5 flex items-center justify-between gap-4 font-mono text-xs uppercase tracking-[0.13em] text-ink/45">
-                  <span>{series || (isArabic ? 'بحث MZ' : 'MZ Research')} · {isArabic ? `المقال ${number}` : `No. ${number}`}</span>
+                  <span>{series || (isArabic ? 'بحث MZ' : 'MZ Research')}{number ? ` · ${isArabic ? `المقال ${number}` : `No. ${number}`}` : ''}</span>
                   {year && <span>{year}</span>}
                 </div>
-                <h2 className="mt-3 font-latex text-2xl leading-tight tracking-tight text-ink transition-colors group-hover:text-accent">
+                <h2 lang={locale} className="research-article-card-title mt-3 font-latex text-2xl leading-tight tracking-tight text-ink transition-colors group-hover:text-accent">
                   {title}
                 </h2>
                 {tagline && <p className="mt-3 text-sm leading-relaxed text-ink/60">{tagline}</p>}

@@ -4,6 +4,7 @@ import { useEffect, useId, useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { Pause, Play } from 'lucide-react';
 import { EditorialPlate } from '@/research/features/studies/applied-stats-in-ai/VizPrimitives';
+import { researchMotionTransition } from '@/research/lib/motion';
 
 const baselineY = 132;
 
@@ -103,7 +104,7 @@ export default function DoubleGoodhartFlow({ locale = 'en' }: { locale?: 'en' | 
             strokeWidth="3"
             strokeLinecap="round"
             animate={{ d: firstPath }}
-            transition={reduceMotion ? { duration: 0 } : { type: 'spring', stiffness: 90, damping: 22 }}
+            transition={researchMotionTransition(reduceMotion)}
           />
           <motion.path
             d={secondPath}
@@ -113,15 +114,15 @@ export default function DoubleGoodhartFlow({ locale = 'en' }: { locale?: 'en' | 
             strokeWidth="3"
             strokeLinecap="round"
             animate={{ d: secondPath }}
-            transition={reduceMotion ? { duration: 0 } : { type: 'spring', stiffness: 90, damping: 22 }}
+            transition={researchMotionTransition(reduceMotion)}
           />
 
           <line x1={stages[1].x} x2={stages[1].x} y1={rewardY} y2={baselineY} stroke="var(--accent-val)" strokeOpacity="0.38" strokeDasharray="3 4" />
           <line x1={stages[2].x} x2={stages[2].x} y1={policyY} y2={baselineY} stroke="var(--accent-val)" strokeOpacity="0.38" strokeDasharray="3 4" />
 
           <circle cx={stages[0].x} cy={baselineY} r="9" fill="var(--paper-val)" stroke="var(--ink-val)" strokeWidth="3" />
-          <motion.circle cx={stages[1].x} cy={rewardY} r="9" fill="var(--accent-val)" stroke="var(--paper-val)" strokeWidth="3" animate={{ cy: rewardY }} transition={reduceMotion ? { duration: 0 } : { type: 'spring', stiffness: 90, damping: 22 }} />
-          <motion.circle cx={stages[2].x} cy={policyY} r="9" fill="var(--accent-val)" stroke="var(--paper-val)" strokeWidth="3" animate={{ cy: policyY }} transition={reduceMotion ? { duration: 0 } : { type: 'spring', stiffness: 90, damping: 22 }} />
+          <motion.circle cx={stages[1].x} cy={rewardY} r="9" fill="var(--accent-val)" stroke="var(--paper-val)" strokeWidth="3" animate={{ cy: rewardY }} transition={researchMotionTransition(reduceMotion)} />
+          <motion.circle cx={stages[2].x} cy={policyY} r="9" fill="var(--accent-val)" stroke="var(--paper-val)" strokeWidth="3" animate={{ cy: policyY }} transition={researchMotionTransition(reduceMotion)} />
 
           {!reduceMotion && (
             <>
@@ -130,7 +131,7 @@ export default function DoubleGoodhartFlow({ locale = 'en' }: { locale?: 'en' | 
             </>
           )}
 
-          <motion.g initial={{ opacity: pressure > 3 ? 1 : 0.35 }} animate={{ opacity: pressure > 3 ? 1 : 0.35 }} transition={reduceMotion ? { duration: 0 } : { duration: 0.2 }}>
+          <motion.g initial={{ opacity: pressure > 3 ? 1 : 0.35 }} animate={{ opacity: pressure > 3 ? 1 : 0.35 }} transition={researchMotionTransition(reduceMotion)}>
             <text x={preferenceProxyX} y={(rewardY + baselineY) / 2 + 4} textAnchor="middle" fill="var(--accent-val)" fontSize="13" fontFamily="var(--font-code), monospace" direction={isArabic ? 'rtl' : 'ltr'}>{isArabic ? 'وكيل التفضيلات' : 'PREFERENCE PROXY'}</text>
             <text x={optimizationGapX} y={(policyY + baselineY) / 2 + 4} textAnchor="middle" fill="var(--accent-val)" fontSize="13" fontFamily="var(--font-code), monospace" direction={isArabic ? 'rtl' : 'ltr'}>{isArabic ? 'فجوة التحسين' : 'OPTIMIZATION GAP'}</text>
           </motion.g>
@@ -143,7 +144,7 @@ export default function DoubleGoodhartFlow({ locale = 'en' }: { locale?: 'en' | 
           </div>
           <div>
             <p className="mb-1 font-mono text-xs uppercase tracking-wider text-tertiary">{isArabic ? 'نموذج المكافأة' : 'Reward model'}</p>
-            <motion.p key={pressure < 35 ? 'proxy-low' : pressure < 70 ? 'proxy-mid' : 'proxy-high'} initial={reduceMotion ? false : { opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} className="font-serif text-sm leading-snug text-ink sm:text-base">
+            <motion.p key={pressure < 35 ? 'proxy-low' : pressure < 70 ? 'proxy-mid' : 'proxy-high'} initial={reduceMotion ? false : { opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} transition={researchMotionTransition(reduceMotion)} className="font-serif text-sm leading-snug text-ink sm:text-base">
               {pressure < 35
                 ? (isArabic ? 'يتعلّم ما يفضله الناس عادةً.' : 'Learn what people tend to prefer.')
                 : pressure < 70
@@ -153,7 +154,7 @@ export default function DoubleGoodhartFlow({ locale = 'en' }: { locale?: 'en' | 
           </div>
           <div>
             <p className="mb-1 font-mono text-xs uppercase tracking-wider text-tertiary">{isArabic ? 'سياسة LLM' : 'LLM policy'}</p>
-            <motion.p key={pressure < 35 ? 'policy-low' : pressure < 70 ? 'policy-mid' : 'policy-high'} initial={reduceMotion ? false : { opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} className="font-serif text-sm leading-snug text-ink sm:text-base">
+            <motion.p key={pressure < 35 ? 'policy-low' : pressure < 70 ? 'policy-mid' : 'policy-high'} initial={reduceMotion ? false : { opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} transition={researchMotionTransition(reduceMotion)} className="font-serif text-sm leading-snug text-ink sm:text-base">
               {pressure < 35
                 ? (isArabic ? 'يجيب بأدلة مفيدة.' : 'Answer with useful evidence.')
                 : pressure < 70

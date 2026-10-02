@@ -4,6 +4,7 @@ import React from "react";
 import { Play, Pause, RotateCcw, AlertTriangle, type LucideIcon } from "lucide-react";
 import { cn } from "@/research/lib/utils";
 import { animate } from "framer-motion";
+import ResearchFigure, { ResearchFigurePanel } from "@/research/components/ResearchFigure";
 
 // --- SLIDER ---
 interface VizSliderProps {
@@ -363,10 +364,8 @@ export function EditorialPlate({
   compact = false,
   figureCaption,
 }: EditorialPlateProps) {
-  const PlateWrapper = figureCaption ? "figure" : "div";
-
-  return (
-    <PlateWrapper className={cn("w-full border-y border-ink/10", compact ? "my-8 py-7" : "my-12 py-12", figureCaption && "mx-auto max-w-3xl", className)}>
+  const plate = (
+    <div className={cn("w-full border-y border-ink/10", figureCaption ? (compact ? "py-7" : "py-12") : (compact ? "my-8 py-7" : "my-12 py-12"), className)}>
       <div className={cn("relative", compact ? "ps-0" : "ps-8")}>
         {!compact && (
           <div
@@ -393,18 +392,24 @@ export function EditorialPlate({
             )}
           </div>
         )}
-        <div className="bg-paper border border-ink/10 rounded-sm overflow-hidden relative">
-          <div className="absolute inset-0 opacity-[0.03] pointer-events-none" 
-               style={{ backgroundImage: 'radial-gradient(var(--color-ink) 0.5px, transparent 0.5px)', backgroundSize: '20px 20px' }} />
+        <ResearchFigurePanel>
           {children}
-        </div>
+        </ResearchFigurePanel>
       </div>
-      {figureCaption && (
-        <figcaption className="mt-3 w-full text-start font-serif text-base leading-relaxed text-secondary">
-          <span className="font-bold text-ink">{figureCaption.label || 'Figure'} {figureCaption.number}:</span> {figureCaption.text}
-        </figcaption>
-      )}
-    </PlateWrapper>
+    </div>
+  );
+
+  if (!figureCaption) return plate;
+
+  return (
+    <ResearchFigure
+      number={figureCaption.number}
+      caption={figureCaption.text}
+      locale={figureCaption.label === 'الشكل' ? 'ar' : 'en'}
+      className="mx-auto max-w-3xl"
+    >
+      {plate}
+    </ResearchFigure>
   );
 }
 

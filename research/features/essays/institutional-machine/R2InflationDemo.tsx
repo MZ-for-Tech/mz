@@ -5,6 +5,7 @@ import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { EditorialPlate } from '@/research/features/studies/applied-stats-in-ai/VizPrimitives';
 import SafeLatex from '@/research/components/SafeLatex';
 import { RESEARCH_CHART_FONT_SIZE } from '@/research/lib/typography';
+import { researchMotionTransition } from '@/research/lib/motion';
 
 const SAMPLE_SIZE = 64;
 const MAX_NOISE_PREDICTORS = 12;
@@ -53,7 +54,7 @@ export default function R2InflationDemo({ locale = 'en' }: { locale?: 'en' | 'ar
   const descriptionId = useId();
   const reduceMotion = useReducedMotion();
   const fit = fits[noisePredictors];
-  const markerTransition = reduceMotion ? { duration: 0 } : { type: 'spring' as const, stiffness: 120, damping: 24 };
+  const markerTransition = researchMotionTransition(reduceMotion);
 
   return (
     <EditorialPlate
@@ -88,7 +89,7 @@ export default function R2InflationDemo({ locale = 'en' }: { locale?: 'en' | 'ar
                   initial={reduceMotion ? false : { opacity: 0, y: 6 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={reduceMotion ? undefined : { opacity: 0, y: -5 }}
-                  transition={reduceMotion ? { duration: 0 } : { duration: 0.16 }}
+                  transition={markerTransition}
                   className="font-latex text-2xl font-normal tabular-nums text-ink"
                 >
                   {percent(fit.rSquared)}
@@ -105,7 +106,7 @@ export default function R2InflationDemo({ locale = 'en' }: { locale?: 'en' | 'ar
                   initial={reduceMotion ? false : { opacity: 0, y: 6 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={reduceMotion ? undefined : { opacity: 0, y: -5 }}
-                  transition={reduceMotion ? { duration: 0 } : { duration: 0.16 }}
+                  transition={markerTransition}
                   className="font-latex text-2xl font-normal tabular-nums text-accent"
                 >
                   {percent(fit.adjustedRSquared)}

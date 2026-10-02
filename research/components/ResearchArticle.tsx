@@ -39,6 +39,7 @@ export function researchArticleMetadata(locale: 'en' | 'ar', slug: string): Meta
         });
     return {
         ...metadata,
+        ...(locale === 'ar' ? (project.keywords_ar?.length ? { keywords: project.keywords_ar } : {}) : (project.keywords?.length ? { keywords: project.keywords } : {})),
         ...(locale === 'ar' && project.arabic_translation_status === 'draft'
             ? { robots: { index: false, follow: true } }
             : {}),

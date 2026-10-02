@@ -4,6 +4,7 @@ import { useEffect, useId, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { Pause, Play, RotateCcw, Trophy } from 'lucide-react';
 import { EditorialPlate } from '@/research/features/studies/applied-stats-in-ai/VizPrimitives';
+import { RESEARCH_LAYOUT_SPRING, researchMotionTransition } from '@/research/lib/motion';
 
 const MAX_ROUNDS = 10;
 const models = [
@@ -102,13 +103,14 @@ export default function BenchmaxxingLeaderboard({ locale = 'en' }: { locale?: 'e
                       initial={reduceMotion ? false : { opacity: 0, y: 8 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={reduceMotion ? undefined : { opacity: 0, y: -8 }}
-                      transition={reduceMotion ? { duration: 0 } : { layout: { type: 'spring', stiffness: 300, damping: 28 }, duration: 0.25 }}
+                      transition={researchMotionTransition(reduceMotion, { layout: RESEARCH_LAYOUT_SPRING, duration: 0.25 })}
                       className={`grid grid-cols-[2rem_minmax(0,1fr)_3.4rem] items-center gap-2 border px-2.5 py-2.5 ${featured ? 'border-accent/35 bg-accent/[0.04]' : 'border-ink/8 bg-paper/70'}`}
                     >
                       <motion.span
                         key={`${model.name}-rank-${index}`}
                         initial={reduceMotion ? false : { scale: 0.7, opacity: 0.5 }}
                         animate={{ scale: 1, opacity: 1 }}
+                        transition={researchMotionTransition(reduceMotion)}
                         className={`font-mono text-sm tabular-nums ${featured ? 'text-accent' : 'text-tertiary'}`}
                       >
                         {String(index + 1).padStart(2, '0')}
@@ -123,7 +125,7 @@ export default function BenchmaxxingLeaderboard({ locale = 'en' }: { locale?: 'e
                             style={{ backgroundColor: model.color }}
                             initial={false}
                             animate={{ width: `${model.score}%` }}
-                            transition={reduceMotion ? { duration: 0 } : { type: 'spring', stiffness: 100, damping: 20 }}
+                            transition={researchMotionTransition(reduceMotion)}
                           />
                         </div>
                       </div>
@@ -131,6 +133,7 @@ export default function BenchmaxxingLeaderboard({ locale = 'en' }: { locale?: 'e
                         key={`${model.name}-score-${round}`}
                         initial={reduceMotion ? false : { opacity: 0.3, y: 5 }}
                         animate={{ opacity: 1, y: 0 }}
+                        transition={researchMotionTransition(reduceMotion)}
                         className={`text-right font-mono text-sm tabular-nums ${featured ? 'text-accent' : 'text-secondary'}`}
                       >
                         {model.score.toFixed(0)}
@@ -157,14 +160,14 @@ export default function BenchmaxxingLeaderboard({ locale = 'en' }: { locale?: 'e
                     initial={reduceMotion ? false : { opacity: 0, y: 9 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={reduceMotion ? undefined : { opacity: 0, y: -8 }}
-                    transition={reduceMotion ? { duration: 0 } : { duration: 0.2 }}
+                    transition={researchMotionTransition(reduceMotion)}
                     className="mt-1 block font-latex text-4xl font-normal tabular-nums text-accent"
                   >
                     {featuredScore.toFixed(0)}
                   </motion.strong>
                 </AnimatePresence>
                 <div className="mt-3 h-2 overflow-hidden bg-ink/[0.08]">
-                  <motion.div className="h-full bg-accent" animate={{ width: `${featuredScore}%` }} transition={reduceMotion ? { duration: 0 } : { type: 'spring', stiffness: 90, damping: 20 }} />
+                  <motion.div className="h-full bg-accent" animate={{ width: `${featuredScore}%` }} transition={researchMotionTransition(reduceMotion)} />
                 </div>
               </div>
               <div className="border border-ink/10 p-3">
@@ -181,6 +184,7 @@ export default function BenchmaxxingLeaderboard({ locale = 'en' }: { locale?: 'e
                 initial={reduceMotion ? false : { opacity: 0, y: 4 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={reduceMotion ? undefined : { opacity: 0, y: -4 }}
+                transition={researchMotionTransition(reduceMotion)}
                 className="mt-3 flex min-h-10 items-center justify-between gap-2 border-t border-ink/10 pt-3 font-mono text-xs uppercase tracking-wide"
               >
                 <span className="text-tertiary">{isArabic ? 'تقدّم الدرجة على القدرة' : 'Score lead over capability'}</span>
