@@ -89,12 +89,12 @@ export async function GET(request: NextRequest) {
         `${locale === 'ar' ? 'تنزيل ملف PDF' : 'Download the PDF'}: https://www.mzfortech.com/research-applied-stats-in-ai.pdf`,
       ].join('\n')
     : [
-        locale === 'ar' ? '# الفرضية الصفرية — أبحاث MZ' : '# The Null Hypothesis — MZ Research',
+        locale === 'ar' ? '# The Null Hypothesis — أبحاث MZ' : '# The Null Hypothesis — MZ Research',
         '',
         locale === 'ar' ? 'النظرية تأتي أولاً.' : 'Theory comes first.',
         '',
         locale === 'ar'
-          ? 'يتتبع منشور الفرضية الصفرية أبحاث MZ من السؤال إلى المنتج، ويتيح استكشاف الأفكار والأساليب وراء ما نبنيه من خلال تجارب تفاعلية.'
+          ? 'يتتبع The Null Hypothesis أبحاث MZ من السؤال إلى المنتج، ويتيح استكشاف الأفكار والأساليب وراء ما نبنيه من خلال تجارب تفاعلية.'
           : 'The Null Hypothesis follows MZ research from question to product, making the ideas and methods behind what we build explorable through interactive work.',
         '',
         locale === 'ar' ? '## بحث مختار' : '## Featured research',

@@ -20,7 +20,7 @@ export default function ResearchHome({ locale = 'en' }: { locale?: 'en' | 'ar' }
 
         <section className="research-brand-intro" aria-labelledby="research-brand-title">
           <div className="research-brand-layout">
-            <h2 id="research-brand-title" className="research-brand-title font-latex">
+            <h2 id="research-brand-title" className={`research-brand-title ${isArabic ? '' : 'font-latex'}`}>
               {isArabic ? (
                 <><span>{'النظرية'}</span><span className="research-brand-emphasis">تأتي أولاً.</span></>
               ) : (
@@ -29,7 +29,7 @@ export default function ResearchHome({ locale = 'en' }: { locale?: 'en' | 'ar' }
             </h2>
             <p className="research-brand-copy">
               {isArabic
-                ? 'يتتبع منشور الفرضية الصفرية أبحاث MZ من السؤال إلى المنتج، ويتيح استكشاف الأفكار والأساليب وراء ما نبنيه من خلال تجارب تفاعلية.'
+                ? 'يتتبع The Null Hypothesis أبحاث MZ من السؤال إلى المنتج، ويتيح استكشاف الأفكار والأساليب وراء ما نبنيه من خلال تجارب تفاعلية.'
                 : 'The Null Hypothesis follows MZ research from question to product, making the ideas and methods behind what we build explorable through interactive work.'}
             </p>
           </div>

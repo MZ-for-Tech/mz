@@ -116,7 +116,7 @@ export default function ResearchArticle({ locale = 'en', slug }: { locale?: 'en'
         url: canonicalUrl,
         isPartOf: {
             '@type': 'CreativeWorkSeries',
-            name: locale === 'ar' ? 'الفرضية الصفرية' : 'The Null Hypothesis',
+            name: 'The Null Hypothesis',
             url: `https://www.mzfortech.com/${locale === 'ar' ? 'research/ar' : 'research'}`,
         },
     };

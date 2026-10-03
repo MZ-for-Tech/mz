@@ -70,7 +70,7 @@ export default function ResearchArticleCards({
                   <span>{series || (isArabic ? 'بحث MZ' : 'MZ Research')}{number ? ` · ${isArabic ? `المقال ${number}` : `No. ${number}`}` : ''}</span>
                   {year && <span>{year}</span>}
                 </div>
-                <h2 lang={locale} className="research-article-card-title mt-3 font-latex text-2xl leading-tight tracking-tight text-ink transition-colors group-hover:text-accent">
+                <h2 lang={locale} className={`research-article-card-title mt-3 text-2xl text-ink transition-colors group-hover:text-accent ${isArabic ? '' : 'font-latex leading-tight tracking-tight'}`}>
                   {title}
                 </h2>
                 {tagline && <p className="mt-3 text-sm leading-relaxed text-ink/60">{tagline}</p>}
