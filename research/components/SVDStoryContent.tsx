@@ -79,7 +79,7 @@ function inline(text: string, glossary: Record<string, Term>, seen: Set<string>,
 function renderMarkdown(markdown: string, locale: 'en' | 'ar', lesson: Lesson) {
   const lines = markdown.replace(/\r/g, '').split('\n');
   const result: ReactNode[] = []; const seen = new Set<string>();
-  let paragraph: string[] = []; let list: string[] = []; let listType: 'ul' | 'ol' = 'ul'; let code: string[] = []; let language = ''; let inCode = false; let heading = 0; let inMath = false; let math: string[] = []; let inReferences = false; let showedCodeSessionNote = false;
+  let paragraph: string[] = []; let list: string[] = []; let listType: 'ul' | 'ol' = 'ul'; let code: string[] = []; let language = ''; let inCode = false; let heading = 0; let inMath = false; let math: string[] = []; let inReferences = false;
   const flushParagraph = () => { if (paragraph.length) { result.push(<p key={`p-${result.length}`} className={inReferences ? 'research-essay-reference-entry' : undefined} dir={inReferences ? 'ltr' : undefined} lang={inReferences ? 'en' : undefined}>{inline(paragraph.join(' '), lesson.glossary, seen, `p-${result.length}`)}</p>); paragraph = []; } };
   const flushList = () => { if (list.length) { const ListTag = listType; result.push(<ListTag key={`list-${result.length}`}>{list.map((line, i) => <li key={i}>{inline(line.replace(/^\s*(?:[-*+]\s+|\d+\.\s+)/, ''), lesson.glossary, seen, `li-${result.length}-${i}`)}</li>)}</ListTag>); list = []; } };
   for (let i = 0; i < lines.length; i++) {
@@ -87,9 +87,7 @@ function renderMarkdown(markdown: string, locale: 'en' | 'ar', lesson: Lesson) {
     if (line.startsWith('```')) {
       flushParagraph(); flushList();
       if (inCode) {
-        const isFirstPythonBlock = language.toLowerCase() === 'python' && !showedCodeSessionNote;
-        if (isFirstPythonBlock) showedCodeSessionNote = true;
-        result.push(<ResearchCodeBlock key={`code-${result.length}`} code={code.join('\n')} language={language || 'code'} locale={locale} sessionNote={isFirstPythonBlock} />);
+        result.push(<ResearchCodeBlock key={`code-${result.length}`} code={code.join('\n')} language={language || 'code'} locale={locale} />);
         code = []; inCode = false;
       } else { inCode = true; language = line.slice(3).trim(); }
       continue;

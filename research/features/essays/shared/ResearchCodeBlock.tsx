@@ -67,7 +67,7 @@ function tokenizePython(line: string): Token[] {
   return tokens;
 }
 
-export default function ResearchCodeBlock({ code, language = 'python', locale = 'en', sessionNote = false }: { code: string; language?: string; locale?: 'en' | 'ar'; sessionNote?: boolean }) {
+export default function ResearchCodeBlock({ code, language = 'python', locale = 'en' }: { code: string; language?: string; locale?: 'en' | 'ar' }) {
   const [copied, setCopied] = useState(false);
   const [running, setRunning] = useState(false);
   const [codeExpanded, setCodeExpanded] = useState(false);
@@ -130,7 +130,6 @@ export default function ResearchCodeBlock({ code, language = 'python', locale = 
           </button>}
         </div>
       </figcaption>
-      {sessionNote && <p className="research-code-session-note">{locale === 'ar' ? 'تستخدم الأمثلة جلسة Python مشتركة؛ شغّلها بالترتيب.' : 'Examples share one Python session; run them in order.'}</p>}
       <div id={isPython ? codePanelId : undefined} hidden={isPython && !codeExpanded}>
         <pre className="research-code-pre"><code>{lines.map((line, index) => (
           <span className="research-code-line" key={index}>

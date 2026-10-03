@@ -18,7 +18,7 @@ const fmt = (value: number) => Number(value.toFixed(2)).toString();
 function Heatmap({ matrix, reduceMotion }: { matrix: Matrix; reduceMotion: boolean }) {
   const max = Math.max(1e-8, ...matrix.flat().map(Math.abs));
   return <div className="svd-heatmap svd-layer-heatmap" style={{ gridTemplateColumns: `repeat(${matrix[0]?.length || 1}, minmax(2.25rem, 1fr))` }}>
-    {matrix.flat().map((value, index) => <motion.span key={index} title={fmt(value)} initial={false} animate={{ backgroundColor: value >= 0 ? `rgba(153, 61, 43, ${0.1 + .78 * Math.abs(value) / max})` : `rgba(50, 85, 120, ${0.1 + .78 * Math.abs(value) / max})` }} transition={{ duration: reduceMotion ? 0 : 0.28 }}>
+    {matrix.flat().map((value, index) => <motion.span key={index} title={fmt(value)} initial={false} animate={{ backgroundColor: value >= 0 ? `rgba(153, 61, 43, ${0.06 + .34 * Math.abs(value) / max})` : `rgba(50, 85, 120, ${0.06 + .34 * Math.abs(value) / max})` }} transition={{ duration: reduceMotion ? 0 : 0.28 }}>
       {fmt(value)}
     </motion.span>)}
   </div>;

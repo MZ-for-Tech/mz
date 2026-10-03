@@ -130,7 +130,11 @@ print(np.allclose(A, L @ L.T))
 With SciPy:
 
 ```python
+import numpy as np
 from scipy.linalg import lu, schur, polar
+
+A = np.array([[4., 2.],
+              [2., 3.]])
 
 P, L, U_lu = lu(A)
 T, Z = schur(A)
@@ -200,6 +204,10 @@ print("error =", np.linalg.norm(A - A_reconstructed))
 For a rectangular matrix, use
 
 ```python
+import numpy as np
+
+A = np.array([[3., 1.],
+              [1., 2.]])
 U, s, Vt = np.linalg.svd(A, full_matrices=False)
 ```
 
@@ -1326,12 +1334,15 @@ Use the same visualization as a sequence: begin with the original matrix \(A\), 
 ```python
 import numpy as np
 
+A = np.array([
+    [5., 4., 3., 2., 1.],
+    [4., 3.2, 2.4, 1.6, 0.8],
+    [3., 2.4, 1.8, 1.2, 0.6],
+    [2., 1.6, 1.2, 0.8, 0.4],
+    [1., 0.8, 0.6, 0.4, 0.2],
+])
 U, s, Vt = np.linalg.svd(A, full_matrices=False)
-
-layers = []
-for i in range(len(s)):
-    layer_i = s[i] * np.outer(U[:, i], Vt[i, :])
-    layers.append(layer_i)
+layers = [s[i] * np.outer(U[:, i], Vt[i, :]) for i in range(len(s))]
 
 # Exact reconstruction
 A_again = sum(layers)
@@ -1344,9 +1355,20 @@ To visualize a layer:
 
 ```python
 import matplotlib.pyplot as plt
+import numpy as np
+
+A = np.array([
+    [5., 4., 3., 2., 1.],
+    [4., 3.2, 2.4, 1.6, 0.8],
+    [3., 2.4, 1.8, 1.2, 0.6],
+    [2., 1.6, 1.2, 0.8, 0.4],
+    [1., 0.8, 0.6, 0.4, 0.2],
+])
+U, s, Vt = np.linalg.svd(A, full_matrices=False)
+first_layer = s[0] * np.outer(U[:, 0], Vt[0, :])
 
 plt.figure()
-plt.imshow(layers[0], aspect="auto")
+plt.imshow(first_layer, aspect="auto")
 plt.colorbar()
 plt.title("First rank-1 SVD layer")
 plt.show()
@@ -1585,21 +1607,33 @@ So the singular values do not merely order components; they tell us exactly how 
 
 ```python
 import numpy as np
-import matplotlib.pyplot as plt
 
+A = np.array([[3., 1.],
+              [0., 2.],
+              [2., 2.]])
 U, s, Vt = np.linalg.svd(A, full_matrices=False)
 
-plt.figure()
-plt.plot(np.arange(1, len(s)+1), s, marker="o")
-plt.xlabel("component")
-plt.ylabel("singular value")
-plt.title("Singular-value spectrum")
-plt.show()
+k = 3
+A_k = (U[:, :k] * s[:k]) @ Vt[:k, :]
+
+error = np.linalg.norm(A - A_k, ord="fro")
+tail_error = np.sqrt(np.sum(s[k:]**2))
+
+print("Frobenius error:", error)
+print("tail singular-value formula:", tail_error)
 ```
 
 Optimal rank-\(k\) Frobenius error:
 
 ```python
+import numpy as np
+import matplotlib.pyplot as plt
+
+A = np.array([[3., 1.],
+              [0., 2.],
+              [2., 2.]])
+s = np.linalg.svd(A, compute_uv=False)
+
 errors = []
 for k in range(len(s) + 1):
     errors.append(np.sqrt(np.sum(s[k:]**2)))
@@ -2081,6 +2115,18 @@ This is the same low-rank approximation viewed through statistics rather than ma
 Reduce to \(k\) components:
 
 ```python
+import numpy as np
+
+X = np.array([
+    [2.5, 2.4], [0.5, 0.7], [2.2, 2.9], [1.9, 2.2], [3.1, 3.0],
+    [2.3, 2.7], [2.0, 1.6], [1.0, 1.1], [1.5, 1.6], [1.1, 0.9],
+])
+mean = X.mean(axis=0, keepdims=True)
+Xc = X - mean
+U, s, Vt = np.linalg.svd(Xc, full_matrices=False)
+components = Vt
+scores = Xc @ components.T
+
 k = 1
 Z = scores[:, :k]                  # compressed coordinates
 Xc_reconstructed = Z @ components[:k, :]
@@ -2095,7 +2141,16 @@ For two-dimensional data:
 import matplotlib.pyplot as plt
 import numpy as np
 
-# Xc is centered data, components is V^T
+X = np.array([
+    [2.5, 2.4], [0.5, 0.7], [2.2, 2.9], [1.9, 2.2], [3.1, 3.0],
+    [2.3, 2.7], [2.0, 1.6], [1.0, 1.1], [1.5, 1.6], [1.1, 0.9],
+])
+mean = X.mean(axis=0, keepdims=True)
+Xc = X - mean
+U, s, Vt = np.linalg.svd(Xc, full_matrices=False)
+components = Vt
+explained_variance = s**2 / (X.shape[0] - 1)
+
 plt.figure(figsize=(6, 6))
 plt.scatter(Xc[:, 0], Xc[:, 1], alpha=0.5)
 
@@ -2288,7 +2343,7 @@ One detail matters: if the two factors are replacing one linear map, do **not** 
 
 This also explains the connection to PCA. PCA asks whether the activations really need all their directions; SVD on the weights asks whether the weight matrix itself needs all of its directions.
 
-The uploaded VGG19 compression report uses exactly this bridge: PCA to inspect activation-space redundancy, then truncated SVD on dense classifier weights, replacing a large matrix with two smaller linear factors. We stop here on purpose. The rest belongs to the compression story, not this mountain.
+The uploaded VGG19 compression report uses exactly this bridge: PCA to inspect activation-space redundancy, then truncated SVD on dense classifier weights, replacing a large matrix with two smaller linear factors (Ahmed et al., 2026). We stop here on purpose. The rest belongs to the compression story, not this mountain.
 
 ---
 
@@ -2668,7 +2723,7 @@ Andrews, H. C., & Patterson, C. L. (1976). Singular value decomposition (SVD) im
 
 Brain Station Advanced. (n.d.). *No one taught SVD (singular value decomposition) like this* [Video]. YouTube. [https://youtu.be/llisH02KLrE](https://youtu.be/llisH02KLrE)
 
-Cairo University. (2026). *Statistical compression of VGG19 for blood-cell image classification on BloodMNIST* [Unpublished project report].
+Ahmed, E. E., Kamel, A. M., Ahmed, M., & Amir, M. (2026). *Statistical compression of VGG19 for blood-cell image classification on BloodMNIST* [Unpublished project report]. Cairo University.
 
 Denton, E. L., Zaremba, W., Bruna, J., LeCun, Y., & Fergus, R. (2014). Exploiting linear structure within convolutional networks for efficient evaluation. In *Advances in neural information processing systems* (Vol. 27, pp. 1269–1277). [https://proceedings.neurips.cc/paper/2014/hash/1adaeb993eba95859121a43ea61bd858-Abstract.html](https://proceedings.neurips.cc/paper/2014/hash/1adaeb993eba95859121a43ea61bd858-Abstract.html)
 

@@ -365,7 +365,7 @@ export function EditorialPlate({
   figureCaption,
 }: EditorialPlateProps) {
   const plate = (
-    <div className={cn("w-full border-y border-ink/10", figureCaption ? (compact ? "py-7" : "py-12") : (compact ? "my-8 py-7" : "my-12 py-12"), className)}>
+    <div className={cn("w-full", !figureCaption && "border-y border-ink/10", figureCaption ? (compact ? "py-7" : "py-12") : (compact ? "my-8 py-7" : "my-12 py-12"), className)}>
       <div className={cn("relative", compact ? "ps-0" : "ps-8")}>
         {!compact && (
           <div

@@ -80,7 +80,7 @@ export default function ResearchHeaderControls() {
             setLanguageOpen((open) => !open);
             setThemeOpen(false);
           }}
-          aria-label="Switch language"
+          aria-label={locale === 'ar' ? 'تغيير اللغة' : 'Switch language'}
           aria-expanded={languageOpen}
         >
           <Languages aria-hidden="true" />
@@ -88,14 +88,14 @@ export default function ResearchHeaderControls() {
           <ChevronDown aria-hidden="true" className={languageOpen ? 'is-open' : ''} />
         </button>
         {languageOpen && (
-          <div className="research-control-dropdown research-language-dropdown">
-            <span className="research-dropdown-heading">Select Language</span>
+          <div className="research-control-dropdown research-language-dropdown" lang={locale} dir={locale === 'ar' ? 'rtl' : 'ltr'}>
+            <span className="research-dropdown-heading" lang={locale}>{locale === 'ar' ? 'اختر اللغة' : 'Select Language'}</span>
             <Link href={alternateLocalePath(pathname, 'en')} onClick={() => setLanguageOpen(false)}>
               <span><strong>English</strong></span>
               {locale === 'en' && <Check aria-label="Current language" />}
             </Link>
             <Link href={alternateLocalePath(pathname, 'ar')} onClick={() => setLanguageOpen(false)}>
-              <span><strong>العربية</strong></span>
+              <span><strong lang="ar">العربية</strong></span>
               {locale === 'ar' && <Check aria-label="Current language" />}
             </Link>
           </div>

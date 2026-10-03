@@ -95,7 +95,8 @@ plt.show = _research_capture_show
 `);
   }
 
-  await pyodide.runPythonAsync(code);
+  const isolatedCode = `exec(compile(${JSON.stringify(code)}, "<research-cell>", "exec"), {"__name__": "__main__"})`;
+  await pyodide.runPythonAsync(isolatedCode);
   const savedPaths = [...code.matchAll(/\.save\(\s*["']([^"']+\.(?:png|jpe?g|csv))["']/gi)].map((match) => match[1]);
   for (const path of savedPaths) {
     try {
