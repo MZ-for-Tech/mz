@@ -38,9 +38,8 @@ export const metadata = pageMetadata({
  *
  * A server component now, where it used to be a client one. The only reason
  * it was a client component was the date above, and with that gone there is
- * no state, no effect and no hook left in the file — its two interactive
- * children (TransitionLink, ObfuscatedEmail) carry their own "use client"
- * and work fine imported by a server parent.
+ * no state, no effect and no hook left in the file. TransitionLink carries
+ * its own "use client" directive and works fine imported by a server parent.
  *
  * The Footer used to close this page. It no longer does: a footer implies the
  * page ends, and this site has a fixed tab bar that is always present. The
