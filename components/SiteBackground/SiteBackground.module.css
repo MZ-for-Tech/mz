@@ -22,6 +22,49 @@
   opacity: 1;
 }
 
+/* The shader is shared by the start screen and the app, so its atmospheric
+   finish lives here too. A restrained green wash and a small amount of blur
+   soften the gold wave without hiding its shape. */
+.background[data-visible]::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 51% 52%, rgba(10, 73, 38, 0.3), transparent 43%),
+    linear-gradient(110deg, rgba(1, 9, 5, 0.42), rgba(2, 13, 7, 0.34) 50%, rgba(0, 7, 4, 0.46));
+  -webkit-backdrop-filter: blur(2px) saturate(0.84);
+  backdrop-filter: blur(2px) saturate(0.84);
+}
+
+.background[data-visible]::after {
+  content: "";
+  position: absolute;
+  inset: -8%;
+  z-index: 2;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 49% 38%, rgba(203, 211, 195, 0.2) 0, rgba(161, 183, 156, 0.09) 1.4%, transparent 5.5%),
+    radial-gradient(circle at 43% 43%, rgba(185, 201, 179, 0.18) 0, rgba(129, 165, 132, 0.08) 1.8%, transparent 7%),
+    radial-gradient(circle at 57% 43%, rgba(185, 201, 179, 0.17) 0, rgba(129, 165, 132, 0.08) 1.8%, transparent 7%),
+    radial-gradient(ellipse at 51% 52%, rgba(7, 74, 39, 0.2), transparent 27%);
+  filter: blur(10px);
+  opacity: 0.68;
+  animation: atmosphereBreathe 16s ease-in-out infinite alternate;
+}
+
+@keyframes atmosphereBreathe {
+  from { opacity: 0.62; transform: scale(0.99); }
+  to { opacity: 0.84; transform: scale(1.025); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .background[data-visible]::after {
+    animation: none;
+  }
+}
+
 /* A route that opts out of the shader gets a flat ground of its own, so the
    page does not depend on `body`'s background propagating to the canvas for
    its contrast. `--color-bg` is the same near-black the shader sits on, so
