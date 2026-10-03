@@ -2,11 +2,12 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useEffect, useState, useSyncExternalStore } from 'react';
+import { useEffect, useLayoutEffect, useState, useSyncExternalStore } from 'react';
 import { Check, ChevronDown, Languages, Moon, Sun } from 'lucide-react';
 
 type Locale = 'en' | 'ar';
 type Theme = 'light' | 'dark' | 'modern-light' | 'modern-dark';
+const localeScrollKey = 'research-locale-scroll-position';
 const themeChangeEvent = 'research-theme-change';
 const validThemes: Theme[] = ['light', 'dark', 'modern-light', 'modern-dark'];
 
@@ -44,12 +45,68 @@ function alternateLocalePath(pathname: string, locale: Locale) {
   return locale === 'ar' ? `/research/ar/${relativePath}` : `/research/${relativePath}`;
 }
 
+function saveLocaleScrollPosition(targetPath: string) {
+  const article = document.querySelector<HTMLElement>('[data-reading-progress]');
+  let progress: number;
+
+  if (article) {
+    const bounds = article.getBoundingClientRect();
+    const articleTop = bounds.top + window.scrollY;
+    const scrollRange = bounds.height - window.innerHeight;
+    progress = scrollRange > 0 ? (window.scrollY - articleTop) / scrollRange : 0;
+  } else {
+    const scrollRange = document.documentElement.scrollHeight - window.innerHeight;
+    progress = scrollRange > 0 ? window.scrollY / scrollRange : 0;
+  }
+
+  try {
+    sessionStorage.setItem(localeScrollKey, JSON.stringify({ targetPath, progress: Math.min(1, Math.max(0, progress)) }));
+  } catch {
+    // Navigation still works if session storage is unavailable.
+  }
+}
+
 export default function ResearchHeaderControls() {
   const pathname = usePathname();
   const locale: Locale = pathname === '/research/ar' || pathname.startsWith('/research/ar/') ? 'ar' : 'en';
   const [languageOpen, setLanguageOpen] = useState(false);
   const [themeOpen, setThemeOpen] = useState(false);
   const theme = useSyncExternalStore(subscribeToResearchTheme, getResearchTheme, getServerResearchTheme);
+
+  useLayoutEffect(() => {
+    let saved: string | null = null;
+    try {
+      saved = sessionStorage.getItem(localeScrollKey);
+      if (!saved) return;
+      const position = JSON.parse(saved) as { targetPath?: string; progress?: number };
+      if (position.targetPath !== pathname || typeof position.progress !== 'number') {
+        sessionStorage.removeItem(localeScrollKey);
+        return;
+      }
+      sessionStorage.removeItem(localeScrollKey);
+      const progress = position.progress;
+
+      const frame = window.requestAnimationFrame(() => {
+        const article = document.querySelector<HTMLElement>('[data-reading-progress]');
+        if (article) {
+          const bounds = article.getBoundingClientRect();
+          const articleTop = bounds.top + window.scrollY;
+          const scrollRange = Math.max(0, bounds.height - window.innerHeight);
+          window.scrollTo(0, articleTop + scrollRange * progress);
+        } else {
+          const scrollRange = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+          window.scrollTo(0, scrollRange * progress);
+        }
+      });
+      return () => window.cancelAnimationFrame(frame);
+    } catch {
+      try {
+        sessionStorage.removeItem(localeScrollKey);
+      } catch {
+        // Ignore unavailable session storage.
+      }
+    }
+  }, [pathname]);
 
   useEffect(() => {
     const site = document.querySelector<HTMLElement>('.tnh-site');
@@ -90,11 +147,11 @@ export default function ResearchHeaderControls() {
         {languageOpen && (
           <div className="research-control-dropdown research-language-dropdown" lang={locale} dir={locale === 'ar' ? 'rtl' : 'ltr'}>
             <span className="research-dropdown-heading" lang={locale}>{locale === 'ar' ? 'اختر اللغة' : 'Select Language'}</span>
-            <Link href={alternateLocalePath(pathname, 'en')} onClick={() => setLanguageOpen(false)}>
+            <Link href={alternateLocalePath(pathname, 'en')} scroll={false} onClick={() => { saveLocaleScrollPosition(alternateLocalePath(pathname, 'en')); setLanguageOpen(false); }}>
               <span><strong>English</strong></span>
               {locale === 'en' && <Check aria-label="Current language" />}
             </Link>
-            <Link href={alternateLocalePath(pathname, 'ar')} onClick={() => setLanguageOpen(false)}>
+            <Link href={alternateLocalePath(pathname, 'ar')} scroll={false} onClick={() => { saveLocaleScrollPosition(alternateLocalePath(pathname, 'ar')); setLanguageOpen(false); }}>
               <span><strong lang="ar">العربية</strong></span>
               {locale === 'ar' && <Check aria-label="Current language" />}
             </Link>

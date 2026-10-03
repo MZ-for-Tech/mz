@@ -264,13 +264,7 @@ Finally, \(U\) places those scaled components into their output directions.
 Remember the story rather than the letters:
 
 \[
-\boxed{
-V^T:\text{ analyze the input}
-\quad\longrightarrow\quad
-\Sigma:\text{ stretch or shrink}
-\quad\longrightarrow\quad
-U:\text{ orient the output}
-}
+\boxed{\text{Vᵀ: analyze the input → Σ: stretch or shrink → U: orient the output}}
 \]
 
 And one equation carries the whole idea:
@@ -1173,65 +1167,21 @@ Thus every matrix possesses a singular value decomposition.
 
 # The Proof in One Breath
 
-If the details begin to blur, remember the skeleton:
+If the details begin to blur, remember the argument. Start with \(A\) and place it inside the Hermitian block matrix
 
 \[
-A
+W=\begin{bmatrix}0&A\\A^*&0\end{bmatrix}.
 \]
 
-\[
-\downarrow
-\]
-
-build
-
-\[
-W=\begin{bmatrix}0&A\\A^*&0\end{bmatrix}
-\]
-
-\[
-\downarrow
-\]
-
-\(W\) is Hermitian
-
-\[
-\downarrow
-\]
-
-spectral theorem gives orthonormal eigenvectors
-
-\[
-\downarrow
-\]
-
-split each eigenvector into
-
-\[
-\begin{bmatrix}x_i\\y_i\end{bmatrix}
-\]
-
-\[
-\downarrow
-\]
-
-obtain
+The spectral theorem gives \(W\) an orthonormal eigenbasis. Split each eigenvector into two parts, \(x_i\) and \(y_i\); the eigenvalue equations then give
 
 \[
 Ay_i=\sigma_i x_i,
 \qquad
-A^*x_i=\sigma_i y_i
+A^*x_i=\sigma_i y_i.
 \]
 
-\[
-\downarrow
-\]
-
-collect \(x_i,y_i,\sigma_i\)
-
-\[
-\downarrow
-\]
+Collect the \(x_i\) and \(y_i\) as columns of \(X\) and \(Y\), and place the singular values in \(\Sigma_r\). Together, these pieces recover
 
 \[
 \boxed{A=X\Sigma_rY^*.}
@@ -1670,7 +1620,7 @@ the truncated SVD satisfies
 
 So \(A_k\) is not merely convenient.
 
-It is the **best possible rank-\(k\) approximation** in Frobenius norm.
+It is the **best possible rank-k approximation** in Frobenius norm.
 
 No clever alternative rank-\(k\) matrix can produce a smaller Frobenius error.
 
@@ -2477,17 +2427,17 @@ These are not three separate theories. They are three readings of the same algeb
 
 # The Whole Map
 
-The entire story can be compressed into this chain:
-
 [[interactive:concept-map]]
+
+The whole journey can be compressed into one sequence:
 
 \[
 \boxed{
-\text{composition}
+\text{Composition}
 \rightarrow
-\text{decomposition}
+\text{Decomposition}
 \rightarrow
-\text{structured factors}
+\text{Structured factors}
 }
 \]
 
@@ -2495,11 +2445,11 @@ then
 
 \[
 \boxed{
-\text{column space}
-\rightarrow
-\text{rank}
+\text{Rank}
 \rightarrow
 \text{rank-1 pieces}
+\rightarrow
+A=\sum_i\sigma_i u_iv_i^T
 }
 \]
 
@@ -2513,52 +2463,13 @@ Av_i=\sigma_i u_i
 }
 \]
 
-then
+then we keep the strongest directions:
 
 \[
-\boxed{
-A=
-\sum_i\sigma_i u_iv_i^T
-}
+\boxed{A_k=U_k\Sigma_kV_k^T.}
 \]
 
-then
-
-\[
-\boxed{
-\text{keep top }k
-\rightarrow
-A_k=U_k\Sigma_kV_k^T
-}
-\]
-
-then
-
-\[
-\boxed{
-A_k
-=\text{best rank-}k\text{ approximation}
-}
-\]
-
-and finally, for centered data,
-
-\[
-\boxed{
-\text{PCA directions}=\text{right singular vectors}
-}
-\]
-
-with
-
-\[
-\boxed{
-\text{explained variance}_i
-=\frac{\sigma_i^2}{n-1}.
-}
-\]
-
----
+The Eckart–Young theorem makes this the best rank-k approximation, and the same right singular directions become the PCA directions for centered data.
 
 # If One Sentence Survives
 
