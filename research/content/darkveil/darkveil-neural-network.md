@@ -62,13 +62,15 @@ The mathematical reason the output looks organic rather than geometric. Sigmoid 
 
 The same coordinates, weights, and fixed time across all four panels — only the activation function changes. ReLU kills any negative activation entirely; with weights optimized for sigmoid, most intermediate values go negative and the network collapses to black. Gaussian amplifies mid-range values and suppresses extremes, but without weights tuned for that behavior, the result is unpredictable chaos. Sine oscillates rapidly across the weight range, producing dense high-frequency texture that looks like static noise.
 
-Then we have
+Then we have:
 
 ```glsl
 vec4 cppn_fn(vec2 coordinate, float in0, float in1, float in2){
 ```
 
 As the entire neural network declared as a function. It takes a 2D coordinate (a single pixel’s position in space) alongside three floats (the time signals), and outputs a color.
+
+<!-- visual:darkveil-function-signature -->
 
 Everything that follows is the forward pass.
 
@@ -81,7 +83,7 @@ buf[7]=vec4(0.14+in2, sqrt(coordinate.x*coordinate.x+coordinate.y*coordinate.y),
 
 `coordinate.x` and `coordinate.y` are the pixel’s position. `in0`, `in1`, and `in2` are the time signals, slowly changing values that will later be responsible for the animation.
 
-Then there is
+Then there is:
 
 ```glsl
 sqrt(coordinate.x*coordinate.x+coordinate.y*coordinate.y)
@@ -166,9 +168,7 @@ Three sine waves, each at a different frequency. `0.3, 0.69,` and `0.44` respect
 
 Because they move at different speeds, they drift relative to one another instead of changing in perfect synchronization. The values entering the network therefore change continuously over time.
 
-The network is still doing the same forward pass.
-
-The only difference is that its inputs are no longer completely fixed.
+The network is still doing the same forward pass, with the only difference is that its inputs are no longer completely fixed.
 
 But DarkVeil also changes time in another place.
 

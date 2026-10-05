@@ -18,7 +18,7 @@ export default function ResearchArticleCards({
 
   return (
     <section
-      className="mt-16 border-t border-ink/15 pt-8"
+      className="research-article-cards mt-16 border-t border-ink/15 pt-8"
       aria-labelledby="research-articles-label"
       lang={locale}
       dir={isArabic ? 'rtl' : 'ltr'}

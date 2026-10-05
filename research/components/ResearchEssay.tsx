@@ -8,6 +8,7 @@ import SafeLatex from '@/research/components/SafeLatex';
 import ResearchCodeBlock from '@/research/features/essays/shared/ResearchCodeBlock';
 import ResearchTable from '@/research/components/ResearchTable';
 import DarkVeilEssayVisual from '@/research/features/essays/darkveil/DarkVeilEssayVisual';
+import DarkVeilFunctionSignature from '@/research/features/essays/darkveil/DarkVeilFunctionSignature';
 import DarkVeilActivationComparison from '@/research/features/essays/darkveil/DarkVeilActivationComparison';
 import DarkVeilRadialFunction from '@/research/features/essays/darkveil/DarkVeilRadialFunction';
 import DarkVeilTimeDiagram from '@/research/features/essays/darkveil/DarkVeilTimeDiagram';
@@ -163,6 +164,9 @@ export default function ResearchEssay({ study, locale = 'en' }: { study: Study; 
             }
             if (visualMarker?.[1] === 'darkveil-activation-comparison') {
               return <DarkVeilActivationComparison key={index} locale={locale} />;
+            }
+            if (visualMarker?.[1] === 'darkveil-function-signature') {
+              return <DarkVeilFunctionSignature key={index} locale={locale} />;
             }
             if (visualMarker?.[1] === 'darkveil-radial-function') {
               return <DarkVeilRadialFunction key={index} locale={locale} />;

@@ -132,7 +132,7 @@ export default function DarkVeilTimeDiagram({ locale }: { locale: 'en' | 'ar' })
 
   return (
     <ResearchFigure
-      number={4}
+      number={5}
       caption={isArabic
         ? 'تُظهر الإشارات الثلاث المتحركة مدخلات الشبكة؛ وتبيّن الشبكة كيف يمكن للوقت إزاحة إحداثيات البكسل.'
         : 'The moving traces show the network’s time inputs; the grid shows how time can shift a pixel’s coordinates.'}

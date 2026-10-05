@@ -1,0 +1,122 @@
+.research-figure.darkveil-signature-figure { max-width: 58rem; }
+
+.darkveil-signature-panel {
+  overflow: hidden;
+  background: var(--paper-val);
+  color: var(--ink-val);
+}
+
+.darkveil-signature-diagram-wrap {
+  width: 100%;
+  overflow: hidden;
+  background-color: color-mix(in srgb, var(--paper-val), var(--ink-val) 1.5%);
+}
+
+.darkveil-signature-diagram {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.darkveil-network-grid-line {
+  fill: none;
+  stroke: color-mix(in srgb, var(--ink-val) 4%, transparent);
+  stroke-width: 1;
+}
+
+.darkveil-network-connection {
+  fill: none;
+  stroke-width: 0.8;
+  opacity: 0.15;
+}
+
+.darkveil-network-connection-sage { stroke: #5e756b; }
+.darkveil-network-connection-blue { stroke: #5e6b75; }
+.darkveil-network-connection-violet { stroke: #6b5e75; }
+.darkveil-network-connection-rust { stroke: #8b5e5e; }
+
+.darkveil-network-layer { --layer-tone: #5e756b; }
+.darkveil-network-layer-blue { --layer-tone: #5e6b75; }
+.darkveil-network-layer-violet { --layer-tone: #6b5e75; }
+.darkveil-network-layer-rust { --layer-tone: #8b5e5e; }
+
+.darkveil-network-layer-top {
+  fill: color-mix(in srgb, var(--layer-tone) 45%, var(--paper-val));
+  stroke: color-mix(in srgb, var(--layer-tone) 70%, var(--border-val));
+  stroke-width: 1;
+}
+
+.darkveil-network-layer-side {
+  fill: color-mix(in srgb, var(--layer-tone) 25%, var(--paper-val));
+  stroke: color-mix(in srgb, var(--layer-tone) 70%, var(--border-val));
+  stroke-width: 1;
+}
+
+.darkveil-network-layer-front {
+  fill: color-mix(in srgb, var(--layer-tone) 9%, var(--paper-val));
+  stroke: color-mix(in srgb, var(--layer-tone) 70%, var(--border-val));
+  stroke-width: 1.2;
+}
+
+.darkveil-network-stage-label,
+.darkveil-network-section-label {
+  fill: var(--pencil-val);
+  font: 600 var(--text-xs) var(--font-mono), monospace;
+  letter-spacing: 1.2px;
+}
+
+.darkveil-network-layer-rule {
+  stroke: color-mix(in srgb, var(--layer-tone) 30%, var(--border-val));
+  stroke-width: 1;
+}
+
+.darkveil-network-buffer-label,
+.darkveil-network-code-label {
+  fill: var(--ink-val);
+  font: var(--text-xs) var(--font-mono), monospace;
+}
+
+.darkveil-network-neuron {
+  fill: var(--paper-val);
+  stroke: var(--layer-tone);
+  stroke-width: 1.8;
+}
+
+.darkveil-network-operation,
+.darkveil-network-small-label,
+.darkveil-network-channel-label {
+  fill: var(--pencil-val);
+  font: var(--text-xs) var(--font-mono), monospace;
+}
+
+.darkveil-network-input-frame,
+.darkveil-network-output-frame {
+  fill: var(--paper-val);
+  stroke: var(--border-val);
+  stroke-width: 1.2;
+}
+
+.darkveil-network-pixel-grid line {
+  stroke: color-mix(in srgb, var(--ink-val) 20%, transparent);
+  stroke-width: 0.8;
+}
+
+.darkveil-network-picked-pixel {
+  fill: color-mix(in srgb, var(--accent-val) 30%, var(--paper-val));
+  stroke: var(--accent-val);
+  stroke-width: 1.5;
+}
+
+.darkveil-network-input-node {
+  fill: var(--accent-val);
+  stroke: var(--paper-val);
+  stroke-width: 1.5;
+}
+
+.darkveil-network-output-node { stroke: var(--paper-val); stroke-width: 1.5; }
+.darkveil-network-output-node-0 { fill: #c7504b; }
+.darkveil-network-output-node-1 { fill: #66945c; }
+.darkveil-network-output-node-2 { fill: #4e75ae; }
+.darkveil-network-output-node-3 { fill: var(--pencil-val); }
+
+.research-content[lang="ar"] .darkveil-signature-panel { direction: ltr; }

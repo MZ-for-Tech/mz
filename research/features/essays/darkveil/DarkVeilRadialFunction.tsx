@@ -97,7 +97,7 @@ export default function DarkVeilRadialFunction({ locale }: { locale: 'en' | 'ar'
 
   return (
     <ResearchFigure
-      number={3}
+      number={4}
       caption={caption}
       locale={locale}
       className="darkveil-radial-figure"

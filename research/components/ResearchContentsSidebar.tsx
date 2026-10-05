@@ -51,7 +51,7 @@ export default function ResearchContentsSidebar({
       </details>
 
       <aside
-        className="fixed right-0 top-1/2 z-40 hidden -translate-y-1/2 items-stretch md:flex"
+        className="research-contents-sidebar fixed right-0 top-1/2 z-40 hidden -translate-y-1/2 items-stretch md:flex"
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
         onBlurCapture={(event) => {
