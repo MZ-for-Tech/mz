@@ -45,9 +45,10 @@ function prepareBlock(block) {
   let value = block;
   value = value.replace(/<!--[\s\S]*?-->/g, protect);
   for (const title of workTitles) value = value.replaceAll(title, protect(title));
+  value = value.replace(/`[^`\n]+`/g, protect);
   value = value.replace(/\$[^$\n]+\$/g, protect);
   value = value.replace(/https?:\/\/[^\s)]+/g, protect);
-  value = value.replace(/\([^()\n]*\b(?:19|20)\d{2}[a-z]?[^()\n]*\)/g, protect);
+  value = value.replace(/\([^()\n]*(?:\b(?:19|20)\d{2}[a-z]?|n\.d\.)[^()\n]*\)/gi, protect);
   value = value.replace(/^[ \t]*> ?/gm, (prefix) => protect(prefix));
   value = value.replace(/\*\*/g, () => protect('**'));
   value = value.replace(/(?<!\*)\*(?!\*)/g, () => protect('*'));
@@ -56,6 +57,7 @@ function prepareBlock(block) {
 
 const translatable = blocks.map((block, index) => {
   if (referencesIndex >= 0 && index >= referencesIndex) return null;
+  if (/^```[\w+#.-]*\n[\s\S]*\n```$/.test(block.trim())) return null;
   if (/^<!--\s*visual:[a-z0-9-]+\s*-->$/.test(block.trim())) return null;
   return prepareBlock(block);
 });

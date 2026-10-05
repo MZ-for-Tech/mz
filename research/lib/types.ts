@@ -13,6 +13,12 @@ export interface BaseEditorialMetadata {
   keywords?: string[];
 }
 
+export interface StudyAuthor {
+  name: string;
+  name_ar?: string;
+  role?: string;
+}
+
 export interface Study extends BaseEditorialMetadata {
   id: string;
   slug: string;
@@ -23,7 +29,7 @@ export interface Study extends BaseEditorialMetadata {
   updated_at: string;
   toc?: { id: string; label: string }[];
   toc_ar?: { id: string; label: string }[];
-  authors?: { name: string; role?: string }[];
+  authors?: StudyAuthor[];
   article_type?: 'paper' | 'essay';
   essay_renderer?: 'svd-story';
   series?: string;

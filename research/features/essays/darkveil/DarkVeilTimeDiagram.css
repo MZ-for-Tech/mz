@@ -1,0 +1,213 @@
+.darkveil-time-figure { max-width: 48rem; }
+
+.darkveil-time-panel {
+  display: grid;
+  justify-items: center;
+  gap: 0.8rem;
+  padding: 1rem;
+  background: var(--paper-val);
+  color: var(--ink-val);
+}
+
+.darkveil-time-header {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  border: 1px solid var(--border-val);
+  background: color-mix(in srgb, var(--paper-val), var(--ink-val) 3%);
+  padding: 0.4rem 0.75rem;
+  font: var(--text-sm)/1.3 var(--font-mono), monospace;
+}
+
+.darkveil-time-header > span,
+.darkveil-time-header output { color: var(--pencil-val); }
+.darkveil-time-header code { color: var(--accent-val); }
+
+.darkveil-time-visuals {
+  display: grid;
+  width: 100%;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.8rem;
+}
+
+.darkveil-time-card {
+  position: relative;
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 0.45rem;
+  border: 1px solid var(--border-val);
+  background: color-mix(in srgb, var(--paper-val), var(--ink-val) 1.5%);
+  padding: 0.7rem;
+}
+
+.darkveil-time-card-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.4rem;
+}
+
+.darkveil-time-card-heading h3 {
+  margin: 0;
+  color: var(--ink-val);
+  font: 600 var(--text-sm)/1.3 var(--font-mono), monospace;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.darkveil-time-card-heading > span,
+.darkveil-time-card-heading label {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: var(--pencil-val);
+  font: var(--text-xs)/1.3 var(--font-mono), monospace;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.darkveil-time-card-heading output { color: var(--accent-val); }
+
+.darkveil-time-card p {
+  margin: 0;
+  color: var(--pencil-val);
+  font: var(--text-sm)/1.5 var(--font-serif), serif;
+}
+
+.darkveil-time-signal-chart,
+.darkveil-time-coordinate-field {
+  display: block;
+  width: 100%;
+  overflow: visible;
+}
+
+.darkveil-time-signal-chart { height: 10rem; }
+.darkveil-time-coordinate-field { height: 10rem; }
+
+.darkveil-time-signal-axis {
+  stroke: color-mix(in srgb, var(--ink-val) 16%, transparent);
+  stroke-dasharray: 2 4;
+  stroke-width: 1;
+}
+
+.darkveil-time-signal-line { fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2.5; }
+.darkveil-time-signal-dot { fill: currentColor; stroke: var(--paper-val); stroke-width: 2; }
+.darkveil-time-signal-a { color: #c36c4a; }
+.darkveil-time-signal-b { color: #477f9f; }
+.darkveil-time-signal-c { color: #6e8c67; }
+
+.darkveil-time-signal-label,
+.darkveil-time-signal-value,
+.darkveil-time-chart-start,
+.darkveil-time-chart-now {
+  fill: var(--pencil-val);
+  font-family: var(--font-mono), monospace;
+  font-size: var(--text-base);
+}
+
+.darkveil-time-signal-label { fill: currentColor; font-weight: 600; }
+.darkveil-time-signal-value { text-anchor: end; }
+.darkveil-time-playhead { stroke: var(--accent-val); stroke-width: 1.5; }
+
+.darkveil-time-gridline {
+  fill: none;
+  stroke: color-mix(in srgb, var(--ink-val) 25%, transparent);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+.darkveil-time-coordinate-axis { stroke: color-mix(in srgb, var(--ink-val) 38%, transparent); stroke-width: 1; }
+.darkveil-time-displacement { stroke: var(--accent-val); stroke-dasharray: 3 3; stroke-width: 1.5; }
+.darkveil-time-original-point { fill: var(--paper-val); stroke: var(--pencil-val); stroke-width: 2; }
+.darkveil-time-warped-point { fill: var(--accent-val); stroke: var(--paper-val); stroke-width: 2; }
+.darkveil-time-point-label { fill: var(--ink-val); font: var(--text-base) var(--font-mono), monospace; }
+
+.darkveil-time-warp-slider {
+  width: 100%;
+  height: 1rem;
+  accent-color: var(--accent-val);
+  cursor: ew-resize;
+}
+
+.darkveil-time-warp-slider:focus-visible { outline: 2px solid var(--accent-val); outline-offset: 3px; }
+
+.darkveil-time-merge {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  width: 100%;
+  padding-top: 0.85rem;
+}
+
+.darkveil-time-merge-bracket {
+  position: absolute;
+  top: 0.1rem;
+  left: 25%;
+  right: 25%;
+  height: 0.55rem;
+  border-top: 1px solid var(--border-val);
+}
+
+.darkveil-time-merge-bracket::before,
+.darkveil-time-merge-bracket::after {
+  position: absolute;
+  top: -1px;
+  width: 0.55rem;
+  height: 0.55rem;
+  border-top: 1px solid var(--border-val);
+  content: '';
+}
+
+.darkveil-time-merge-bracket::before { left: 0; border-left: 1px solid var(--border-val); }
+.darkveil-time-merge-bracket::after { right: 0; border-right: 1px solid var(--border-val); }
+.darkveil-time-merge-arrow { position: absolute; top: 0.32rem; color: var(--pencil-val); font: 1rem/1 var(--font-mono), monospace; }
+
+.darkveil-time-network {
+  display: flex;
+  min-height: 3.1rem;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.2rem;
+  border: 1px solid color-mix(in srgb, var(--accent-val) 42%, var(--border-val));
+  background: color-mix(in srgb, var(--accent-val) 7%, var(--paper-val));
+  padding: 0.4rem 0.8rem;
+}
+
+.darkveil-time-network span,
+.darkveil-time-rgb span {
+  color: var(--pencil-val);
+  font: var(--text-xs)/1.3 var(--font-mono), monospace;
+  letter-spacing: 0.06em;
+}
+
+.darkveil-time-network code { color: var(--accent-val); font: var(--text-xs)/1.4 var(--font-mono), monospace; }
+.darkveil-time-output-arrow { color: var(--pencil-val); font: 1.1rem/1 var(--font-mono), monospace; }
+
+.darkveil-time-rgb {
+  display: grid;
+  grid-template-columns: repeat(3, 0.55rem) auto;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.darkveil-time-rgb i { width: 0.55rem; height: 0.8rem; }
+.darkveil-time-rgb i:nth-child(1) { background: #c7504b; }
+.darkveil-time-rgb i:nth-child(2) { background: #66945c; }
+.darkveil-time-rgb i:nth-child(3) { background: #4e75ae; }
+.darkveil-time-rgb span { margin-inline-start: 0.2rem; }
+
+@media (max-width: 650px) {
+  .darkveil-time-panel { gap: 0.6rem; padding: 0.65rem; }
+  .darkveil-time-visuals { grid-template-columns: 1fr; gap: 0.6rem; }
+  .darkveil-time-signal-chart, .darkveil-time-coordinate-field { height: 9rem; }
+  .darkveil-time-merge-bracket { display: none; }
+  .darkveil-time-merge { gap: 0.45rem; padding-top: 0.4rem; }
+  .darkveil-time-merge-arrow { display: none; }
+  .darkveil-time-network { padding-inline: 0.45rem; }
+  .darkveil-time-rgb { grid-template-columns: repeat(3, 0.4rem) auto; gap: 0.15rem; }
+  .darkveil-time-rgb i { width: 0.4rem; }
+}

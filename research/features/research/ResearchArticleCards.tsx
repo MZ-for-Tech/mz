@@ -2,13 +2,16 @@ import Link from 'next/link';
 import Image from 'next/image';
 import type { Study } from '@/research/lib/types';
 import { getResearchArticlePath } from '@/research/lib/paths';
+import { getStudyReadingMinutes } from '@/research/lib/readingTime';
 
 export default function ResearchArticleCards({
   articles,
   locale,
+  label,
 }: {
   articles: Study[];
   locale: 'en' | 'ar';
+  label?: string;
 }) {
   if (!articles.length) return null;
   const isArabic = locale === 'ar';
@@ -21,7 +24,7 @@ export default function ResearchArticleCards({
       dir={isArabic ? 'rtl' : 'ltr'}
     >
       <p id="research-articles-label" className="font-mono text-xs uppercase tracking-[0.16em] text-ink/45">
-        {isArabic ? 'مقالات وأفكار' : 'Articles & essays'}
+        {label || (isArabic ? 'مقالات وأفكار' : 'Articles & essays')}
       </p>
 
       <div className="mt-8 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
@@ -30,7 +33,7 @@ export default function ResearchArticleCards({
           const tagline = isArabic ? article.tagline_ar || article.tagline : article.tagline;
           const series = isArabic ? article.category_ar || article.category : article.series || article.category;
           const number = article.series_number ? String(article.series_number).padStart(2, '0') : null;
-          const year = article.published_at?.slice(0, 4);
+          const readTime = getStudyReadingMinutes(article, locale);
 
           return (
             <article key={article.slug}>
@@ -68,7 +71,7 @@ export default function ResearchArticleCards({
 
                 <div className="mt-5 flex items-center justify-between gap-4 font-mono text-xs uppercase tracking-[0.13em] text-ink/45">
                   <span>{series || (isArabic ? 'بحث MZ' : 'MZ Research')}{number ? ` · ${isArabic ? `المقال ${number}` : `No. ${number}`}` : ''}</span>
-                  {year && <span>{year}</span>}
+                  {readTime !== null && <span className="shrink-0">{isArabic ? `${readTime} دقائق للقراءة` : `${readTime} min read`}</span>}
                 </div>
                 <h2 lang={locale} className={`research-article-card-title mt-3 text-2xl text-ink transition-colors group-hover:text-accent ${isArabic ? '' : 'font-latex leading-tight tracking-tight'}`}>
                   {title}

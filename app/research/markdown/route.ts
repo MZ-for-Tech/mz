@@ -77,7 +77,7 @@ export async function GET(request: NextRequest) {
         '',
         tagline,
         '',
-        `${locale === 'ar' ? 'إعداد' : 'By'} ${study.authors?.map((author) => author.name).join(', ') || 'MZ Research'}`,
+        `${locale === 'ar' ? 'إعداد' : 'By'} ${study.authors?.map((author) => locale === 'ar' ? author.name_ar || author.name : author.name).join(', ') || 'MZ Research'}`,
         '',
         description,
         '',

@@ -15,7 +15,8 @@ export default function FeaturedResearchEssay({
   const tagline = isArabic ? article.tagline_ar || article.tagline : article.tagline;
   const series = isArabic ? article.category_ar || article.category : article.series || article.category;
   const number = article.series_slug ? String(article.series_number || 1).padStart(2, '0') : null;
-  const author = article.authors?.[0]?.name;
+  const featuredAuthor = article.authors?.[0];
+  const author = featuredAuthor && (isArabic ? featuredAuthor.name_ar || featuredAuthor.name : featuredAuthor.name);
   const year = article.published_at?.slice(0, 4);
 
   return (

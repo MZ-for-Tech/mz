@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, JetBrains_Mono, Cormorant_Garamond } from "next/font/google";
+import { Geist, JetBrains_Mono, Cormorant_Garamond, Newsreader } from "next/font/google";
 import "./globals.css";
 import { SmoothScrolling } from "@/components/SmoothScrolling/SmoothScrolling";
 
@@ -20,6 +20,14 @@ const cormorant = Cormorant_Garamond({
   variable: "--font-serif",
   weight: ["400", "600"],
   subsets: ["latin"],
+  display: "swap",
+  preload: false,
+});
+
+const newsreader = Newsreader({
+  variable: "--font-newsreader",
+  subsets: ["latin"],
+  style: ["normal", "italic"],
   display: "swap",
   preload: false,
 });
@@ -65,7 +73,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${jetbrainsMono.variable} ${cormorant.variable}`}
+      className={`${geistSans.variable} ${jetbrainsMono.variable} ${cormorant.variable} ${newsreader.variable}`}
       data-theme="dark"
     >
       <head>

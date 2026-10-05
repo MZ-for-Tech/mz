@@ -1,0 +1,125 @@
+.darkveil-radial-figure {
+  max-width: 34rem;
+}
+
+.darkveil-radial-shell {
+  overflow: hidden;
+  padding: 0;
+  background: var(--paper-val);
+  color: var(--ink-val);
+}
+
+.darkveil-radial-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: 3.25rem;
+  padding: 0.55rem 0.75rem;
+  border-bottom: 1px solid var(--border-val);
+  color: var(--ink-val);
+}
+
+.darkveil-radial-header code {
+  color: var(--ink-val);
+  font-family: var(--font-mono), monospace;
+  font-size: 0.76rem;
+}
+
+.darkveil-radial-toggle {
+  display: flex;
+  flex: 0 0 auto;
+  padding: 2px;
+  border: 1px solid var(--border-val);
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--paper-val), var(--ink-val) 3%);
+}
+
+.darkveil-radial-toggle button {
+  padding: 0.38rem 0.55rem;
+  border: 0;
+  background: transparent;
+  color: var(--pencil-val);
+  cursor: pointer;
+  font-family: var(--font-mono), monospace;
+  font-size: 0.56rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  transition: color 160ms ease, background-color 160ms ease;
+}
+
+.darkveil-radial-toggle button[aria-pressed="true"] {
+  background: color-mix(in srgb, var(--accent-val), var(--paper-val) 87%);
+  color: var(--accent-val);
+}
+
+.darkveil-radial-toggle button:focus-visible {
+  outline: 2px solid var(--accent-val);
+  outline-offset: 2px;
+}
+
+.darkveil-radial-viewport {
+  position: relative;
+  height: clamp(18rem, 34vw, 24rem);
+  overflow: hidden;
+  background: var(--paper-val);
+}
+
+.darkveil-radial-contours {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.darkveil-radial-contour {
+  stroke: rgb(48 40 48 / 36%);
+  stroke-width: 1;
+}
+
+.darkveil-radial-gridline {
+  stroke: rgb(48 40 48 / 22%);
+  stroke-width: 1;
+}
+
+.darkveil-radial-axis {
+  stroke: rgb(40 33 43 / 82%);
+  stroke-width: 1.5;
+}
+
+.darkveil-radial-origin { fill: #fffaf0; stroke: #28212b; stroke-width: 1.5; }
+
+.darkveil-radial-axis-label,
+.darkveil-radial-center-label {
+  fill: #fffaf0;
+  paint-order: stroke;
+  stroke: #28212b;
+  stroke-linejoin: round;
+  stroke-width: 2px;
+  font-family: var(--font-mono), monospace;
+  font-size: 13px;
+}
+
+.darkveil-radial-center-label { font-size: 10px; }
+
+.darkveil-radial-hint {
+  margin: 0;
+  padding: 0.55rem 0.75rem;
+  border-top: 1px solid var(--border-val);
+  color: var(--pencil-val);
+  font-family: var(--font-mono), monospace;
+  font-size: 0.58rem;
+  letter-spacing: 0.02em;
+}
+
+.darkveil-radial-loading {
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(ellipse at 50% 45%, color-mix(in srgb, var(--accent-val) 14%, transparent), transparent 60%), var(--paper-val);
+}
+
+@media (max-width: 520px) {
+  .darkveil-radial-header { align-items: flex-start; flex-direction: column; gap: 0.5rem; }
+  .darkveil-radial-toggle { align-self: stretch; }
+  .darkveil-radial-toggle button { flex: 1; }
+  .darkveil-radial-viewport { height: 67vw; min-height: 15rem; }
+}

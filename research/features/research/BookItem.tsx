@@ -15,7 +15,7 @@ export default function BookItem({ study, locale }: BookItemProps) {
     ? `${study.series || 'THE NULL HYPOTHESIS'} · ${String(study.series_number).padStart(2, '0')}`
     : 'THE NULL HYPOTHESIS · MZ';
   const authors = study.authors
-    ?.map((author) => author.name)
+    ?.map((author) => locale === 'ar' ? author.name_ar || author.name : author.name)
     .sort((a, b) => a.localeCompare(b)) || ['MZ Research'];
   const year = study.published_at?.slice(0, 4);
   return (

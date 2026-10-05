@@ -2,6 +2,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import type { ReactNode } from 'react';
 import ResearchContentsSidebar from '@/research/components/ResearchContentsSidebar';
+import ResearchArticleCards from '@/research/features/research/ResearchArticleCards';
+import type { Study, StudyAuthor } from '@/research/lib/types';
 
 type Locale = 'en' | 'ar';
 type ContentsItem = { id: string; label: string };
@@ -14,13 +16,14 @@ export type ResearchEssayShellProps = {
   seriesHref?: string;
   articleNumber?: number;
   publishedAt?: string;
-  authors?: { name: string }[];
+  authors?: StudyAuthor[];
   readTimeMinutes: number;
   keywords?: string[];
   heroImage?: string;
   heroImageAlt?: string;
   heroImageToneClass?: string;
   contents?: ContentsItem[];
+  relatedArticles?: Study[];
   translationNotice?: ReactNode;
   articleSchema: Record<string, unknown>;
   children: ReactNode;
@@ -41,6 +44,7 @@ export default function ResearchEssayShell({
   heroImageAlt,
   heroImageToneClass,
   contents = [],
+  relatedArticles = [],
   translationNotice,
   articleSchema,
   children,
@@ -69,7 +73,10 @@ export default function ResearchEssayShell({
           <div className="research-essay-metadata mt-6 flex flex-wrap items-center gap-x-2 gap-y-1 border-y border-ink/15 py-3 font-mono text-xs uppercase tracking-widest text-ink/55">
             <span>{isArabic ? 'مقال' : 'Essay'}</span>
             {publicationDate && <><span aria-hidden="true">·</span><time dateTime={publishedAt}>{publicationDate}</time></>}
-            {authors.map((author) => <span key={author.name} className="contents"><span aria-hidden="true">·</span><span>{isArabic ? author.name : `By ${author.name}`}</span></span>)}
+            {authors.map((author) => {
+              const name = isArabic ? author.name_ar || author.name : author.name;
+              return <span key={author.name} className="contents"><span aria-hidden="true">·</span><span>{isArabic ? name : `By ${name}`}</span></span>;
+            })}
             <span aria-hidden="true">·</span>
             <span>{isArabic ? `${readTimeMinutes} دقائق للقراءة` : `${readTimeMinutes} min read`}</span>
           </div>
@@ -80,6 +87,7 @@ export default function ResearchEssayShell({
         {translationNotice}
         <ResearchContentsSidebar items={contents} locale={locale} />
         {children}
+        <ResearchArticleCards articles={relatedArticles} locale={locale} label={isArabic ? 'اقرأ المزيد' : 'Read more'} />
         {seriesHref && <footer className="mt-16 border-t border-ink/15 pt-6"><Link href={seriesHref} className="font-serif text-lg text-ink/65 underline decoration-ink/25 underline-offset-4 transition-colors hover:text-accent hover:decoration-accent">{isArabic ? `اكتشف السلسلة: ${seriesLabel}` : `Explore the series: ${seriesLabel}`}</Link></footer>}
       </article>
     </div>

@@ -53,7 +53,7 @@ export function researchArticleMetadata(locale: 'en' | 'ar', slug: string): Meta
                 images: [project.social_image],
             },
         } : {}),
-        authors: project.authors?.map((author) => ({ name: author.name })),
+        authors: project.authors?.map((author) => ({ name: locale === 'ar' ? author.name_ar || author.name : author.name })),
     };
 }
 
@@ -105,7 +105,7 @@ export default function ResearchArticle({ locale = 'en', slug }: { locale?: 'en'
         inLanguage: locale === 'ar' ? 'ar' : 'en',
         datePublished: project.published_at,
         dateModified: project.updated_at || project.published_at,
-        author: project.authors?.map((author) => ({ '@type': 'Person', name: author.name })),
+        author: project.authors?.map((author) => ({ '@type': 'Person', name: locale === 'ar' ? author.name_ar || author.name : author.name })),
         publisher: {
             '@type': 'Organization',
             '@id': 'https://www.mzfortech.com/#organization',
@@ -156,9 +156,9 @@ export default function ResearchArticle({ locale = 'en', slug }: { locale?: 'en'
                             <Users className="w-3 h-3" /> {locale === 'ar' ? 'فريق البحث' : 'Research Team'}
                         </div>
                         <div className="flex flex-wrap gap-x-6 gap-y-2">
-                            {project.authors?.map((author: { name: string; role?: string }) => (
+                            {project.authors?.map((author) => (
                                 <div key={author.name}>
-                                    <span className="block text-sm font-bold text-ink">{author.name}</span>
+                                    <span className="block text-sm font-bold text-ink">{locale === 'ar' ? author.name_ar || author.name : author.name}</span>
                             <span className="text-xs font-mono uppercase text-tertiary">
                                 {locale === 'ar'
                                     ? author.role === 'Researcher' || !author.role ? 'باحث' : author.role
