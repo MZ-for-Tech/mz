@@ -11,13 +11,60 @@ const HEIGHT = 225;
 const FIXED_TIME = 2.5;
 
 const ACTIVATIONS = [
-  { id: 'sigmoid', name: 'Sigmoid', formula: '1 / (1 + e⁻ˣ)', glsl: '1.0 / (1.0 + exp(-x))' },
-  { id: 'relu', name: 'ReLU', formula: 'max(0, x)', glsl: 'max(x, vec4(0.0))' },
-  { id: 'gaussian', name: 'Gaussian', formula: 'exp(−x²)', glsl: 'exp(-(x * x))' },
-  { id: 'sine', name: 'Sine', formula: 'sin(x)', glsl: 'sin(x)' },
+  {
+    id: 'sigmoid', name: 'Sigmoid', formula: '1 / (1 + e⁻ˣ)', glsl: '1.0 / (1.0 + exp(-x))',
+    xMin: -6, xMax: 6, yMin: -0.1, yMax: 1.1,
+    evaluate: (x: number) => 1 / (1 + Math.exp(-x)),
+  },
+  {
+    id: 'relu', name: 'ReLU', formula: 'max(0, x)', glsl: 'max(x, vec4(0.0))',
+    xMin: -2.5, xMax: 2.5, yMin: -0.25, yMax: 2.5,
+    evaluate: (x: number) => Math.max(0, x),
+  },
+  {
+    id: 'gaussian', name: 'Gaussian', formula: 'exp(−x²)', glsl: 'exp(-(x * x))',
+    xMin: -2.5, xMax: 2.5, yMin: -0.1, yMax: 1.1,
+    evaluate: (x: number) => Math.exp(-(x * x)),
+  },
+  {
+    id: 'sine', name: 'Sine', formula: 'sin(x)', glsl: 'sin(x)',
+    xMin: -2 * Math.PI, xMax: 2 * Math.PI, yMin: -1.2, yMax: 1.2,
+    evaluate: (x: number) => Math.sin(x),
+  },
 ] as const;
 
 type Activation = (typeof ACTIVATIONS)[number];
+
+function ActivationCurve({ activation, locale }: { activation: Activation; locale: 'en' | 'ar' }) {
+  const plot = { left: 8, right: 172, top: 5, bottom: 43 };
+  const toX = (x: number) => plot.left + ((x - activation.xMin) / (activation.xMax - activation.xMin)) * (plot.right - plot.left);
+  const toY = (y: number) => plot.bottom - ((y - activation.yMin) / (activation.yMax - activation.yMin)) * (plot.bottom - plot.top);
+  const path = Array.from({ length: 96 }, (_, index) => {
+    const x = activation.xMin + (index / 95) * (activation.xMax - activation.xMin);
+    return `${index === 0 ? 'M' : 'L'}${toX(x).toFixed(2)} ${toY(activation.evaluate(x)).toFixed(2)}`;
+  }).join(' ');
+  const zeroY = toY(0);
+  const zeroX = toX(0);
+  const curveDescriptions = {
+    sigmoid: locale === 'ar' ? 'منحنى السيني، ينتقل بسلاسة من صفر إلى واحد' : 'Sigmoid curve, smoothly rising from zero to one',
+    relu: locale === 'ar' ? 'منحنى ري إل يو، يساوي صفرًا للقيم السالبة ثم يرتفع خطيًا' : 'ReLU curve, zero for negative values then rising linearly',
+    gaussian: locale === 'ar' ? 'منحنى غاوسي، قمة وسطية تتلاشى عند الطرفين' : 'Gaussian curve, a central peak that falls off at both ends',
+    sine: locale === 'ar' ? 'منحنى جيبي دوري' : 'Periodic sine curve',
+  };
+
+  return (
+    <svg
+      className="darkveil-activation-curve"
+      viewBox="0 0 180 48"
+      role="img"
+      aria-label={curveDescriptions[activation.id]}
+    >
+      <line x1={plot.left} y1={zeroY} x2={plot.right} y2={zeroY} className="darkveil-activation-axis" />
+      <line x1={zeroX} y1={plot.top} x2={zeroX} y2={plot.bottom} className="darkveil-activation-axis" />
+      <path d={path} className="darkveil-activation-curve-line" />
+    </svg>
+  );
+}
 
 function activationFragment(glsl: string) {
   const renamed = fragment.replaceAll('sigmoid(', 'activation(');
@@ -66,7 +113,9 @@ export default function DarkVeilActivationComparison({ locale }: { locale: 'en' 
   return (
     <ResearchFigure
       number={2}
-      caption={isArabic ? 'مخرجات الشبكة نفسها مع أربع دوال تنشيط.' : 'The same network’s output with four activation functions.'}
+      caption={isArabic
+        ? 'يوضح كل منحنى دالة التنشيط، وتوضح كل صورة ما تنتجه داخل الشبكة نفسها.'
+        : 'Each curve shows an activation function; each image shows what it produces in the same network.'}
       locale={locale}
       className="darkveil-activation-figure"
       dataInteractive="darkveil-activation-comparison"
@@ -79,6 +128,9 @@ export default function DarkVeilActivationComparison({ locale }: { locale: 'en' 
                 <h3>{activation.name}</h3>
               </div>
               <code>{activation.formula}</code>
+            </div>
+            <div className="darkveil-activation-curve-wrap">
+              <ActivationCurve activation={activation} locale={locale} />
             </div>
             <div className="darkveil-activation-preview">
               <ActivationCanvas activation={activation} />

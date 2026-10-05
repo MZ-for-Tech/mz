@@ -47,6 +47,37 @@
   white-space: nowrap;
 }
 
+.darkveil-activation-curve-wrap {
+  display: flex;
+  height: 3.1rem;
+  align-items: center;
+  border-bottom: 1px solid var(--border-val);
+  background: color-mix(in srgb, var(--paper-val), var(--ink-val) 1.5%);
+  padding: 0.2rem 0.45rem;
+}
+
+.darkveil-activation-curve {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.darkveil-activation-axis {
+  stroke: color-mix(in srgb, var(--pencil-val) 42%, transparent);
+  stroke-width: 0.8;
+  vector-effect: non-scaling-stroke;
+}
+
+.darkveil-activation-curve-line {
+  fill: none;
+  stroke: var(--accent-val);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2;
+  vector-effect: non-scaling-stroke;
+}
+
 .darkveil-activation-preview {
   aspect-ratio: 8 / 5;
   overflow: hidden;

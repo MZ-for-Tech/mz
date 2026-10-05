@@ -1,6 +1,6 @@
 **DarkVeil: There's a Neural Network Running Behind This Page**
 
-The beautiful shape you’re seeing is **DarkVeil**. A React component created by David Haz, creator and founder of ReactBits.dev. DarkVeil is an animated background component, meant to look organic and fluid. David describes it as “Subtle dark background with a smooth animation and postprocessing” (React Bits, n.d.).
+The beautiful shape you’re seeing is **DarkVeil**. A React component created by David Haz, creator and founder of ReactBits. DarkVeil is an animated background component, meant to look organic and fluid. David describes it as “Subtle dark background with a smooth animation and postprocessing” (React Bits, n.d.).
 
 <!-- visual:darkveil -->
 
