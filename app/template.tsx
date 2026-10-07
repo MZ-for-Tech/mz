@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { gsap } from "@/lib/gsap";
 
 import { prefersReducedMotion } from "@/lib/useReducedMotion";
-import { takeWipeDecision } from "@/lib/mzNav";
+import { takeWipeDecision, wantsWipe } from "@/lib/mzNav";
 
 const COLUMNS = 5;
 const WIPE_DURATION = 0.9; // seconds — must match transition below
@@ -16,6 +16,10 @@ export default function Template({ children }: { children: React.ReactNode }) {
   const columns = COLUMNS;
   const containerRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
+  // Research owns its own loader. Keep the shared wipe out of its server HTML
+  // so a cold visit does not briefly show a blank, covered screen before this
+  // component hydrates and decides there is no wipe to play.
+  const initialDisplay = wantsWipe(null, pathname) ? "flex" : "none";
 
   // Remove any exit overlay injected by TransitionLink. useLayoutEffect fires
   // synchronously before the browser paints, so our columns (initial y:0%)
@@ -123,7 +127,7 @@ export default function Template({ children }: { children: React.ReactNode }) {
           height: "100vh",
           pointerEvents: "none",
           zIndex: 99999,
-          display: "flex",
+          display: initialDisplay,
         }}
       >
         {Array.from({ length: columns }).map((_, i) => (

@@ -111,6 +111,7 @@ export default function ResearchEssay({ study, locale = 'en' }: { study: Study; 
     headline: title,
     description,
     keywords,
+    image: `https://www.mzfortech.com${study.hero_image || study.thumbnail}`,
     inLanguage: locale,
     author: study.authors?.map((author) => ({
       '@type': 'Person',

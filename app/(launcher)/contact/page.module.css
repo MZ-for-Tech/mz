@@ -1,7 +1,7 @@
 /* ═══════════════════════════════════════════════════════════════════════
    Contact panel
 
-   The brief, at the scale and restraint of the original /start page.
+   The brief, at the scale and restraint of its original standalone page.
 
    WHAT CHANGED WHEN THIS MOVED INTO THE LAUNCHER
 
@@ -77,7 +77,7 @@
 }
 
 /* ── Intro column ──────────────────────────────────────────────────────
-   Sticky, and this is the effect the original /start page was built around:
+   Sticky, and this is the effect the original brief page was built around:
    the title and the address hold still in the left margin while a visitor
    works down a brief that is ~1900px tall, so the question they are
    answering never scrolls out of reach.

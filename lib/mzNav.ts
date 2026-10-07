@@ -21,9 +21,9 @@ import { LAUNCHER_ROOT } from "@/lib/nav";
  *
  * THE LAUNCHER LIST IS ENUMERATED, NOT GUESSED
  *
- * The obvious version of this is `pathname !== "/privacy"`, or a check for a
- * `/menu` prefix — both of which were the shape of the bug. `/work` means two
- * different things in two different worlds: the shelf (launcher) and
+ * The obvious version of this is `pathname !== "/privacy"`, or a broad
+ * segment-prefix check — both of which were the shape of the bug. `/work` means
+ * two different things in two different worlds: the shelf (launcher) and
  * /work/nested-united (legacy, its own chrome and its own wipe). A prefix test
  * cannot tell those apart, and guessing would hand the case study the
  * launcher's crossfade — the transition it never had.

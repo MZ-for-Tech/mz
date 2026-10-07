@@ -911,7 +911,7 @@ The page wipe runs 1060ms (`template.tsx:9`), then hero text fades in over 1.4s 
 }
 ```
 
-**6. The "Products" section shows one product in a carousel.** `page.tsx:324` — `{[1].map(...)}`. A snap-scroll carousel containing a single item reads as unfinished. Either present Occhio as a full-bleed feature, or ship a second product.
+**6. The "Products" section shows one product in a carousel.** `page.tsx:324` — `{[1].map(...)}`. A snap-scroll carousel containing a single item reads as unfinished. Either present the product as a full-bleed feature, or ship a second product.
 
 **7. Commented-out sections left in source.** `page.tsx:146-158` (partners animation) and `page.tsx:365-380` (partners section) are dead commented blocks. A judge will not see these — but they signal a site mid-construction, and `.partnersSection` CSS is still shipping in the bundle.
 
@@ -1158,4 +1158,3 @@ The rewrite is good — framer-motion gone, `matchMedia` hoisted to `:80`, per-l
 **~1.8 hours total**, none of it interdependent, none of it touching the 3D logo.
 
 After A1 lands, re-measure LCP before anything else — it is the only remaining change in this list that moves a Core Web Vital, and with `DarkVeil` now properly gated the measurement will finally be clean signal rather than GPU-contention noise.
-

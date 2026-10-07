@@ -126,11 +126,8 @@ type Props = {
 };
 
 /**
- * The site-wide DarkVeil look — hero colors + wave motion. Shared by all
- * four mount sites (hero, footer, /start, /privacy) so the glow reads as
- * one consistent identity instead of per-page variants (the others used a
- * greener hueShift −170 and /start + /privacy also ran the static default
- * variant).
+ * The site-wide DarkVeil look — hero colors and wave motion — kept consistent
+ * through one shared theme instead of per-page variants.
  */
 export const DARKVEIL_THEME = {
   hueShift: 198,

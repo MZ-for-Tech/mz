@@ -252,11 +252,8 @@ export default function MenuShell({ children }: { children: React.ReactNode }) {
           <ul className={styles.tabList}>
             {MENU_TABS.map((tab) => {
               /* The launcher home is an exact match, like every other tab.
-               * The `startsWith` arm used to exist because `/menu` was both a
-               * page and a prefix (`/menu/work`), so an equality test made
-               * Home light up on every panel. With flat routes no tab is a
-               * prefix of another, so one rule covers all five and Home
-               * cannot match by accident. */
+               * With flat routes no tab is a prefix of another, so one rule
+               * covers all five and Home cannot match by accident. */
               const active =
                 tab.href === LAUNCHER_ROOT
                   ? pathname === LAUNCHER_ROOT

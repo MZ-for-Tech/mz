@@ -17,13 +17,13 @@ import { requestDeviceTilt } from "@/components/Logo/useDeviceTilt";
  *
  * This is the only thing left of the old scrolling homepage — everything
  * below the hero (manifesto, services, products, work, research, CTA) was
- * retired into the /menu panels.
+ * retired into the launcher panels.
  *
  * The screen itself does not scroll, and the nav pill that used to sit in its
  * corner is gone: this is a cinematic splash with one job, so a competing
  * navigation surface on it was pure noise. Clicking anywhere on it — or
  * pressing SPACE/ENTER — plays `launch()`: the hero elements leave, the
- * unified background stays, and the launcher converges in on /menu. See
+ * unified background stays, and the launcher converges in on /home. See
  * lib/mzNav for why no wipe plays.
  */
 

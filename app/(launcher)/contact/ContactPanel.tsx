@@ -8,9 +8,8 @@ import styles from "./page.module.css";
 /**
  * The brief, as a launcher panel.
  *
- * The fields are unchanged from the original /start page — they were
- * carried over verbatim when the brief moved into the shell. What did not
- * survive the move was the page's SCALE, and that is what this restores.
+ * The form keeps the original fields and restores the brief's intended scale
+ * inside the launcher shell.
  *
  * A 1600px measure, 80px between the columns and between the sections,
  * pills at 16px/32px and 1.1rem, inputs at 1.1rem, a submit plate at
@@ -296,8 +295,8 @@ export default function ContactPanel() {
             What do you wanna talk about?
           </h1>
 
-          {/* The address sits straight on the page, as it did on /start. A
-              bordered card around one email turns a piece of information
+          {/* The address sits straight on the page, as it did on the original
+              brief page. A bordered card around one email turns information
               into a component, and at 1.8rem the type is already large
               enough to be found without a frame pointing at it.
 
