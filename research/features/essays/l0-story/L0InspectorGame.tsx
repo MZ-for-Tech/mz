@@ -23,7 +23,7 @@ function copyArticleFonts(frame: HTMLIFrameElement) {
     }
 
     for (const rule of Array.from(rules)) {
-      if (rule.type !== CSSRule.FONT_FACE) continue;
+      if (rule.type !== CSSRule.FONT_FACE_RULE) continue;
       const fontRule = rule as CSSFontFaceRule;
       const family = fontRule.style.getPropertyValue('font-family').replaceAll('"', '').replaceAll("'", '').trim();
       if (family !== 'Newsreader' && family !== 'Amiri') continue;

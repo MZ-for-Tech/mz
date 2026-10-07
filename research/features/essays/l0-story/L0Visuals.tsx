@@ -75,7 +75,7 @@ export default function L0Visuals({ figure = "all", locale = "en" }: L0VisualsPr
         <span className="l0v-vector-label">θ =</span>
         {weights.map((w, i) => <span className={`l0v-vector-value ${i === 0 ? "active" : ""}`} key={i}>{w.toFixed(2)}</span>)}
       </div>
-      <svg className="l0v-plot" dir="ltr" viewBox="0 0 640 228" role="img" aria-label={ar ? "مساهمة الوزن في L0 تقفز عند الصفر بينما تزداد مساهمته في L1 بسلاسة مع المقدار" : "The weight’s L0 contribution jumps at zero while its L1 contribution changes continuously with magnitude"}>
+      <svg className="l0v-plot" style={{ direction: "ltr" }} viewBox="0 0 640 228" role="img" aria-label={ar ? "مساهمة الوزن في L0 تقفز عند الصفر بينما تزداد مساهمته في L1 بسلاسة مع المقدار" : "The weight’s L0 contribution jumps at zero while its L1 contribution changes continuously with magnitude"}>
         <text className="measure-label" x="76" y="20">L₀</text>
         <text x="105" y="20">{ar ? "مساهمة الوزن" : "weight contribution"}</text>
         <line className="guide" x1="72" y1="42" x2="572" y2="42" />
@@ -122,7 +122,7 @@ export default function L0Visuals({ figure = "all", locale = "en" }: L0VisualsPr
         <span className="l0v-vector-value">s = {raw.toFixed(2)}</span>
         <span className="l0v-vector-value active">z = {clipped.toFixed(2)}</span>
       </div>
-      <svg className="l0v-plot l0v-clip-plot" dir="ltr" viewBox="0 0 640 248" role="img" aria-label={ar ? "دالة القص تثبت القيم خارج المجال بين صفر وواحد، وتبقي القيمة كما هي داخل المجال" : "The clipping function fixes values outside zero to one and preserves values inside the interval"}>
+      <svg className="l0v-plot l0v-clip-plot" style={{ direction: "ltr" }} viewBox="0 0 640 248" role="img" aria-label={ar ? "دالة القص تثبت القيم خارج المجال بين صفر وواحد، وتبقي القيمة كما هي داخل المجال" : "The clipping function fixes values outside zero to one and preserves values inside the interval"}>
         <rect className="l0v-clip-zone" x="80" y="34" width="120" height="156" />
         <rect className="l0v-clip-zone" x="440" y="34" width="120" height="156" />
         <text className="measure-label" x="80" y="20">z = clip(s, 0, 1)</text>
@@ -208,7 +208,7 @@ export default function L0Visuals({ figure = "all", locale = "en" }: L0VisualsPr
         <span className="l0v-vector-value">σ = {sigma.toFixed(2)}</span>
         <span className="l0v-vector-value active">P(z &gt; 0) = Φ(m/σ) = {(pActive * 100).toFixed(1)}%</span>
       </div>
-      <svg className="l0v-plot l0v-gaussian-plot" dir="ltr" viewBox="0 0 640 244" role="img" aria-label={ar ? "منحنى التوزيع الغاوسي مع تظليل المساحة الواقعة يمين الصفر، وهي احتمال نشاط البوابة" : "A Gaussian curve with the area right of zero shaded as the gate activity probability"}>
+      <svg className="l0v-plot l0v-gaussian-plot" style={{ direction: "ltr" }} viewBox="0 0 640 244" role="img" aria-label={ar ? "منحنى التوزيع الغاوسي مع تظليل المساحة الواقعة يمين الصفر، وهي احتمال نشاط البوابة" : "A Gaussian curve with the area right of zero shaded as the gate activity probability"}>
         <line className="guide" x1="80" y1="42" x2="560" y2="42" />
         <line className="guide" x1="80" y1="112" x2="560" y2="112" />
         <line className="guide" x1="80" y1="188" x2="560" y2="188" />
