@@ -15,13 +15,7 @@
 W=ABC.
 \]
 
-هذه هي الفكرة في أبسط صورة: نعرف القطع، نجمعها، فيظهر شيء جديد. وإذا دخل متجه \(x\) إلى هذه السلسلة فإن العمل يبدأ من اليمين:
-
-\[
-Wx=ABCx=A(B(Cx)),
-\]
-
-أي
+هذه هي الفكرة في أبسط صورة: نعرف القطع، نجمعها، فيظهر شيء جديد. وإذا دخل متجه \(x\) إلى هذه السلسلة فإن العمل يبدأ من اليمين: \(Wx=ABCx=A(B(Cx))\)، أي
 
 \[
 x\xrightarrow{C}Cx\xrightarrow{B}BCx\xrightarrow{A}ABCx.
@@ -85,9 +79,7 @@ print(W)
 
 هنا **تلمس التجميع** بدل أن تقرأ تعريفه فقط. غيّر \(x\)، واضغط على المصفوفات، وراقب كيف تمر المتجهة من \(C\) إلى \(B\) ثم إلى \(A\).
 
-والآن اقلب السؤال.
-
-بدل أن أعطيك القطع، أضع أمامك مصفوفة واحدة اسمها \(D\). نرى صفوفها وأعمدتها، ونستطيع أن نحسب رتبتها وكل ما يظهر لنا منها. ثم أقول لك: **افتحها. أرني البنية التي تختبئ في داخلها.**
+والآن اقلب السؤال: بدل أن أعطيك القطع، أضع أمامك مصفوفة واحدة اسمها \(D\). نرى صفوفها وأعمدتها، ونستطيع أن نحسب رتبتها وكل ما يظهر لنا منها. ثم أقول لك: **افتحها. أرني البنية التي تختبئ في داخلها.**
 
 لو لم تكن لدينا أدوات، لاستطعنا التخمين حتى تحترق النجوم. لكن هذا بالضبط هو السبب الذي جعل علماء الجبر الخطي يبنون نظريات الـdecomposition: لا نريد أي عوامل عشوائية؛ نريد قطعًا لها معنى وبنية نستطيع الاستفادة منها.
 
@@ -151,13 +143,7 @@ print(np.allclose(A, Qp @ H))
 
 # الجوهر فقط
 
-لأي مصفوفة حقيقية
-
-\[
-A\in\mathbb R^{m\times n},
-\]
-
-يمكننا كتابة
+لأي مصفوفة حقيقية \(A\in\mathbb R^{m\times n}\)، يمكننا كتابة
 
 \[
 \boxed{A=U\Sigma V^T}.
@@ -217,19 +203,9 @@ U, s, Vt = np.linalg.svd(A, full_matrices=False)
 
 # من اليمين تبدأ الحكاية
 
-إذا أدخلنا متجهة \(x\)، فلدينا
+إذا أدخلنا متجهة \(x\)، فلدينا \(Ax=U\Sigma V^Tx\).
 
-\[
-Ax=U\Sigma V^Tx.
-\]
-
-ابدأ من \(V^T\). هذه القطعة لا “تشوّه” المتجهة كيفما اتفق؛ هي تسأل: كم تحتوي \(x\) من كل اتجاه خاص \(v_i\)؟ فعلًا، إذا كتبنا
-
-\[
-V=[v_1\ v_2\ \cdots\ v_n],
-\]
-
-فإن
+ابدأ من \(V^T\). هذه القطعة لا “تشوّه” المتجهة كيفما اتفق؛ هي تسأل: كم تحتوي \(x\) من كل اتجاه خاص \(v_i\)؟ فعلًا، إذا كتبنا \(V=[v_1\ v_2\ \cdots\ v_n]\)، فإن
 
 \[
 V^Tx=
@@ -291,13 +267,7 @@ Av=\lambda v
 
 تحتاج أن يعيش \(v\) و\(Av\) في الفضاء نفسه.
 
-لكن إذا كانت
-
-\[
-A:\mathbb R^n\to\mathbb R^m
-\]
-
-و\(m\neq n\)، فليس هناك سبب لأن يكون فضاء المدخل هو فضاء الخرج.
+لكن إذا كانت \(A:\mathbb R^n\to\mathbb R^m\) و\(m\neq n\)، فليس هناك سبب لأن يكون فضاء المدخل هو فضاء الخرج.
 
 SVD لا يحاول إجبار الفضاءين على أن يكونا واحدًا. يعطي المدخل أساسه الخاص \(V\)، ويعطي الخرج أساسه الخاص \(U\). هذا ليس حلًا التفافيًا للمشكلة؛ هذه هي الفكرة التي تجعل SVD طبيعيًا للمصفوفات المستطيلة.
 
@@ -347,15 +317,7 @@ plt.show()
 
 # من أين تأتي هذه القطع؟
 
-الآن وصلنا إلى سؤال مهم: هل اخترعنا هذه الاتجاهات لأنها تبدو جميلة؟
-
-لا.
-
-ابدأ من المعادلة
-
-\[
-Av_i=\sigma_i u_i.
-\]
+الآن وصلنا إلى سؤال مهم: هل اخترعنا هذه الاتجاهات لأنها تبدو جميلة؟ لا. ابدأ من المعادلة \(Av_i=\sigma_i u_i\).
 
 اضرب من اليسار بـ\(A^T\):
 
@@ -363,33 +325,13 @@ Av_i=\sigma_i u_i.
 A^TAv_i=\sigma_i A^Tu_i.
 \]
 
-وفي SVD نحصل أيضًا على
-
-\[
-A^Tu_i=\sigma_i v_i.
-\]
-
-إذن
-
-\[
-\boxed{A^TAv_i=\sigma_i^2v_i.}
-\]
+وفي SVD نحصل أيضًا على \(A^Tu_i=\sigma_i v_i\)، إذن \(A^TAv_i=\sigma_i^2v_i\).
 
 ها هو السر: الـright singular vectors هي eigenvectors للمصفوفة \(A^TA\)، ومربعات singular values هي eigenvalues لها.
 
-وبالمثل
+وبالمثل \(AA^Tu_i=\sigma_i^2u_i\)، فتكون left singular vectors eigenvectors لـ\(AA^T\).
 
-\[
-\boxed{AA^Tu_i=\sigma_i^2u_i,}
-\]
-
-فتكون left singular vectors eigenvectors لـ\(AA^T\).
-
-وهذا يفسر لماذا القيم المفردة غير سالبة: \(A^TA\) موجبة شبه محددة، وبالتالي eigenvalues الخاصة بها غير سالبة، ثم نأخذ الجذر:
-
-\[
-\sigma_i=\sqrt{\lambda_i}.
-\]
+وهذا يفسر لماذا القيم المفردة غير سالبة: \(A^TA\) موجبة شبه محددة، وبالتالي eigenvalues الخاصة بها غير سالبة، ثم نأخذ الجذر \(\sigma_i=\sqrt{\lambda_i}\).
 
 ---
 
@@ -453,13 +395,7 @@ def svd_from_ata(A, tol=1e-12):
 
 حتى الآن عرفنا كيف نفهم SVD وكيف نبنيه بطريقة تعليمية. لكن تبقى قفزة مهمة: لماذا نضمن أن كل مصفوفة تملك SVD أصلًا؟
 
-لنفترض
-
-\[
-A\in\mathbb C^{m\times n},
-\qquad
-r=\operatorname{rank}(A).
-\]
+لنفترض \(A\in\mathbb C^{m\times n}\)، و\(r=\operatorname{rank}(A)\).
 
 نريد أن نثبت وجود صيغة condensed SVD:
 
@@ -502,13 +438,7 @@ A^*&0
 }
 \]
 
-حجمها \((m+n)\times(m+n)\)، فهي مربعة. والأهم:
-
-\[
-W^*=W.
-\]
-
-إذن \(W\) Hermitian، وبالتالي spectral theorem مفتوح لنا.
+حجمها \((m+n)\times(m+n)\)، فهي مربعة. والأهم أن \(W^*=W\)، إذن \(W\) Hermitian، وبالتالي spectral theorem مفتوح لنا.
 
 خذ eigenvector لـ\(W\) واكتبه على قطعتين:
 
@@ -533,13 +463,7 @@ Ay\\A^*x
 \end{bmatrix}.
 \]
 
-أي
-
-\[
-\boxed{Ay=\sigma x},
-\qquad
-\boxed{A^*x=\sigma y}.
-\]
+أي \(Ay=\sigma x\) و\(A^*x=\sigma y\).
 
 انظر إلى أول معادلة. إنها تقريبًا التعريف الذي كنا نبحث عنه: \(y\) يتصرف كـright singular vector، و\(x\) كـleft singular vector، و\(\sigma\) كـsingular value.
 
@@ -630,19 +554,11 @@ z_i=
 \begin{bmatrix}x_i\\y_i\end{bmatrix}
 \]
 
-بحيث يكون
-
-\[
-z_i^*z_i=2.
-\]
+بحيث يكون \(z_i^*z_i=2\).
 
 قد يبدو الرقم 2 غريبًا، لكنه مقصود: نريد في النهاية أن يكون لكل من \(x_i\) و\(y_i\) طول يساوي 1.
 
-لدينا
-
-\[
-x_i^*x_i+y_i^*y_i=2.
-\]
+لدينا \(x_i^*x_i+y_i^*y_i=2\).
 
 ومن تعامد eigenvector المرتبط بـ\(+\sigma_i\) مع النظير المرتبط بـ\(-\sigma_i\) نحصل على
 
@@ -660,11 +576,7 @@ X=[x_1\ \cdots\ x_r],
 Y=[y_1\ \cdots\ y_r],
 \]
 
-ونضع القيم المفردة في
-
-\[
-\Sigma_r=\operatorname{diag}(\sigma_1,\ldots,\sigma_r).
-\]
+ونضع القيم المفردة في \(\Sigma_r=\operatorname{diag}(\sigma_1,\ldots,\sigma_r)\).
 
 وباستخدام spectral decomposition للمصفوفة \(W\)، ثم ضرب الكتل ومقارنة الجزء العلوي الأيمن، نحصل على ما أردناه:
 
@@ -690,29 +602,7 @@ x_i^*x_j+y_i^*y_j=0.
 x_i^*x_j-y_i^*y_j=0.
 \]
 
-اجمع المعادلتين:
-
-\[
-2x_i^*x_j=0
-\quad\Longrightarrow\quad
-x_i^*x_j=0.
-\]
-
-واطرحهما:
-
-\[
-2y_i^*y_j=0
-\quad\Longrightarrow\quad
-y_i^*y_j=0.
-\]
-
-وهكذا
-
-\[
-\boxed{X^*X=I_r},
-\qquad
-\boxed{Y^*Y=I_r}.
-\]
+اجمع المعادلتين: \(2x_i^*x_j=0 \Longrightarrow x_i^*x_j=0\). واطرحهما: \(2y_i^*y_j=0 \Longrightarrow y_i^*y_j=0\). وهكذا \(X^*X=I_r\) و\(Y^*Y=I_r\).
 
 لم نعد نملك حدسًا فقط. لقد أثبتنا وجود الـcondensed SVD.
 
@@ -751,15 +641,7 @@ A^*x_i=\sigma_i y_i.
 
 # من حاصل ضرب إلى طبقات
 
-حتى الآن رأينا SVD كآلة من ثلاث مراحل. الآن سنديرها قليلًا لنرى صورة ثانية لا تقل أهمية.
-
-اكتب
-
-\[
-U=[u_1\ u_2\ \cdots],
-\qquad
-V=[v_1\ v_2\ \cdots].
-\]
+حتى الآن رأينا SVD كآلة من ثلاث مراحل. الآن سنديرها قليلًا لنرى صورة ثانية لا تقل أهمية. اكتب \(U=[u_1\ u_2\ \cdots]\) و\(V=[v_1\ v_2\ \cdots]\).
 
 لأن \(\Sigma\) قطرية، يمكن فتح حاصل الضرب إلى مجموع:
 
@@ -771,13 +653,7 @@ A=
 }
 \]
 
-كل
-
-\[
-u_iv_i^T
-\]
-
-مصفوفة rank-1، لأن كل أعمدتها مضاعفات عددية من \(u_i\).
+كل \(u_iv_i^T\) مصفوفة rank-1، لأن كل أعمدتها مضاعفات عددية من \(u_i\).
 
 إذن SVD يقول شيئًا مدهشًا وبسيطًا في الوقت نفسه:
 
@@ -946,11 +822,7 @@ print("tail singular-value formula:", tail_error)
 
 
 
-ما الذي خسرناه؟ الفرق هو
-
-\[
-A-A_k.
-\]
+ما الذي خسرناه؟ الفرق هو \(A-A_k\).
 
 ولقياس حجمه نستعمل Frobenius norm:
 
@@ -979,13 +851,7 @@ A-A_k.
 
 هنا تأتي واحدة من أجمل نتائج القصة. truncated SVD ليس مجرد طريقة معقولة لاختيار rank-\(k\) approximation. إنه الأفضل في Frobenius norm.
 
-إذا كان \(B\) أي مصفوفة تحقق
-
-\[
-\operatorname{rank}(B)\le k,
-\]
-
-فإن
+إذا كان \(B\) أي مصفوفة تحقق \(\operatorname{rank}(B)\le k\)، فإن
 
 \[
 \boxed{
@@ -1299,9 +1165,9 @@ Image.fromarray(A_k).save("compressed_rank_40.png")
 
 جرّب عدة قيم لـ\(k\)، ثم قارن جودة الصورة بصريًا مع Frobenius error.
 
-# تلميح لأحداث مستقبلية — SVD داخل الشبكات العصبية
+# SVD داخل الشبكات العصبية
 
-لن نحوّل هذا التقرير إلى فصل كامل عن neural-network compression. لكن هناك جسرًا واحدًا يستحق أن نفتحه لأن الرياضيات هي نفسها تمامًا.
+ضغط الشبكات العصبية موضوع أوسع بكثير، لكن هناك جسرًا واحدًا يستحق أن نفتحه لأن الرياضيات هي نفسها تمامًا.
 
 [[interactive:neural-network-svd]]
 
@@ -1351,25 +1217,11 @@ k(m+n).
 
 وهنا يظهر اتصال جميل مع PCA. PCA تسأل: هل activations تحتاج فعلًا كل هذه الاتجاهات؟ أما SVD على weights فتسأل: هل weight matrix نفسها تحتاج كل هذه الاتجاهات؟
 
-التقرير المرفوع عن ضغط VGG19 يستخدم هذا الجسر تحديدًا: PCA كفحص لوجود redundancy في فضاء activations، ثم truncated SVD للمصفوفات الكثيفة في classifier، مع استبدال المصفوفة بعاملين خطيين أصغر من دون nonlinearity بينهما (Ahmed et al., 2026). نتوقف هنا عمدًا؛ الباقي ينتمي إلى تقرير ضغط الشبكات لا إلى هذا الجبل.
-
 ---
 
 # استكشاف عددي
 
-الصيغتان
-
-\[
-\sigma_i=\sqrt{\lambda_i(A^TA)}
-\]
-
-and
-
-\[
-u_i=\frac{Av_i}{\sigma_i}
-\]
-
-ممتازتان للفهم.
+الصيغتان \(\sigma_i=\sqrt{\lambda_i(A^TA)}\) and \(u_i=\frac{Av_i}{\sigma_i}\) ممتازتان للفهم.
 
 لكن في البرمجيات العددية قد يؤدي تكوين \(A^TA\) صراحةً إلى سوء أكبر في conditioning لأن condition number يُربّع عمليًا. لذلك تستخدم مكتبات SVD الموثوقة خوارزميات أكثر استقرارًا بدل تنفيذ الفكرة النظرية حرفيًا.
 
@@ -1381,21 +1233,7 @@ u_i=\frac{Av_i}{\sigma_i}
 
 # إشارات صغيرة لا تغيّر القصة
 
-حتى بعد أن نجد SVD، لا يعني ذلك أن كل حرف فيها فريد بالطريقة التي قد نتوقعها. إذا غيرنا
-
-\[
-u_i\to -u_i,
-\qquad
-v_i\to -v_i,
-\]
-
-فإن
-
-\[
-\sigma_i(-u_i)(-v_i)^T
-=
-\sigma_i u_iv_i^T.
-\]
+حتى بعد أن نجد SVD، لا يعني ذلك أن كل حرف فيها فريد بالطريقة التي قد نتوقعها. فإذا غيّرنا إشارة \(u_i\) و\(v_i\) معًا، فإن \(\sigma_i(-u_i)(-v_i)^T=\sigma_i u_iv_i^T\).
 
 إذن الإشارة يمكن أن تنقلب في الزوج معًا دون أن تتغير المصفوفة.
 
@@ -1435,19 +1273,7 @@ v_i\to -v_i,
 
 # ماذا تحمل كل طبقة؟
 
-القطعة
-
-\[
-\sigma_i u_i v_i^T
-\]
-
-يمكن قراءتها بثلاث لهجات مختلفة من نفس اللغة.
-
-كـtransformation تقول
-
-\[
-v_i\xrightarrow{A}\sigma_i u_i.
-\]
+القطعة \(\sigma_i u_i v_i^T\) يمكن قراءتها بثلاث لهجات مختلفة من نفس اللغة. كـtransformation تقول \(v_i\xrightarrow{A}\sigma_i u_i\).
 
 كـrank-1 layer هي لبنة واحدة داخل المصفوفة. وكـdata component، فإن \(v_i\) اتجاه على جهة features، بينما \(u_i\sigma_i\) يحمل scores على جهة observations، و\(\sigma_i^2\) يتحول — بعد scaling الخاص بالـcovariance — إلى مقدار variance الذي تشرحه هذه الجهة في PCA.
 
@@ -1551,8 +1377,6 @@ H=V\Sigma V^T.
 Andrews, H. C., & Patterson, C. L. (1976). Singular value decomposition (SVD) image coding. *IEEE Transactions on Communications, 24*(4), 425–432. [https://doi.org/10.1109/TCOM.1976.1093309](https://doi.org/10.1109/TCOM.1976.1093309)
 
 Brain Station Advanced. (n.d.). *No one taught SVD (singular value decomposition) like this* [Video]. YouTube. [https://youtu.be/llisH02KLrE](https://youtu.be/llisH02KLrE)
-
-Ahmed, E. E., Kamel, A. M., Ahmed, M., & Amir, M. (2026). *Statistical compression of VGG19 for blood-cell image classification on BloodMNIST* [Unpublished project report]. Cairo University.
 
 Denton, E. L., Zaremba, W., Bruna, J., LeCun, Y., & Fergus, R. (2014). Exploiting linear structure within convolutional networks for efficient evaluation. In *Advances in neural information processing systems* (Vol. 27, pp. 1269–1277). [https://proceedings.neurips.cc/paper/2014/hash/1adaeb993eba95859121a43ea61bd858-Abstract.html](https://proceedings.neurips.cc/paper/2014/hash/1adaeb993eba95859121a43ea61bd858-Abstract.html)
 

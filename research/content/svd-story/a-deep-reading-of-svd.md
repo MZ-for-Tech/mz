@@ -287,13 +287,7 @@ Av=\lambda v
 
 requires \(Av\) and \(v\) to live in the same vector space.
 
-If
-
-\[
-A:\mathbb R^n\rightarrow\mathbb R^m
-\]
-
-with \(m\neq n\), that is not true in general.
+If \(A:\mathbb R^n\rightarrow\mathbb R^m\) with \(m\neq n\), that is not true in general.
 
 SVD avoids the problem by using **two different orthonormal coordinate systems**:
 
@@ -492,12 +486,7 @@ Whenever \(\sigma_i\neq0\), send \(v_i\) through \(A\) and normalize the result:
 u_i=\frac{Av_i}{\sigma_i}.
 \]
 
-So the three parts are not pulled from a hat: \(A^TA\) chooses the important input directions, the eigenvalues determine how strongly they are stretched, and \(A\) itself shows us where those directions land.
-Then
-
-\[
-Av_i=\sigma_i u_i.
-\]
+So the three parts are not pulled from a hat: \(A^TA\) chooses the important input directions, the eigenvalues determine how strongly they are stretched, and \(A\) itself shows us where those directions land. Then \(Av_i=\sigma_i u_i\).
 
 Why are the \(u_i\) unit vectors?
 
@@ -1213,13 +1202,7 @@ A=
 }
 \]
 
-Each outer product
-
-\[
-u_i v_i^T
-\]
-
-has rank 1.
+Each outer product \(u_i v_i^T\) has rank 1.
 
 Why?
 
@@ -1330,13 +1313,7 @@ plt.show()
 
 This connects SVD with the deeper meaning of matrix rank.
 
-If
-
-\[
-\operatorname{rank}(A)=r,
-\]
-
-then \(A\) can be written as a sum of \(r\) rank-1 matrices:
+If \(\operatorname{rank}(A)=r\), then \(A\) can be written as a sum of \(r\) rank-1 matrices:
 
 \[
 A=R_1+\cdots+R_r.
@@ -1358,14 +1335,7 @@ Because rank is subadditive:
 \operatorname{rank}(B)+\operatorname{rank}(C).
 \]
 
-If \(A\) were a sum of only \(r-1\) rank-1 matrices, then
-
-\[
-\operatorname{rank}(A)
-\le r-1,
-\]
-
-contradicting \(\operatorname{rank}(A)=r\).
+If \(A\) were a sum of only \(r-1\) rank-1 matrices, then \(\operatorname{rank}(A)\le r-1\), contradicting \(\operatorname{rank}(A)=r\).
 
 Therefore
 
@@ -2241,9 +2211,9 @@ Image.fromarray(A_k).save("compressed_rank_40.png")
 
 Try several values of \(k\) and compare visual quality with the Frobenius error.
 
-# Foreshadowing — SVD Inside Neural Networks
+# SVD Inside Neural Networks
 
-This report will not become a chapter on neural-network compression. But one bridge is worth opening because the mathematics is exactly the same.
+Neural-network compression is a much larger subject, but one bridge is worth opening because the mathematics is exactly the same.
 
 [[interactive:neural-network-svd]]
 
@@ -2292,8 +2262,6 @@ When \(k\ll m,n\), the difference can be large.
 One detail matters: if the two factors are replacing one linear map, do **not** place a nonlinearity between them, or the product is no longer the same rank-\(k\) linear approximation.
 
 This also explains the connection to PCA. PCA asks whether the activations really need all their directions; SVD on the weights asks whether the weight matrix itself needs all of its directions.
-
-The uploaded VGG19 compression report uses exactly this bridge: PCA to inspect activation-space redundancy, then truncated SVD on dense classifier weights, replacing a large matrix with two smaller linear factors (Ahmed et al., 2026). We stop here on purpose. The rest belongs to the compression story, not this mountain.
 
 ---
 
@@ -2483,7 +2451,7 @@ That sentence contains the geometry, the rank-1 decomposition, low-rank approxim
 
 # The Neighbors We Passed
 
-The main report concentrates on SVD, but the broader decomposition notes contain several useful neighboring constructions.
+SVD is one of several useful matrix decompositions; a few close neighbors help place it in context.
 
 ## LU
 
@@ -2633,8 +2601,6 @@ But the summit hides the path that built it. We began with pieces we knew and co
 Andrews, H. C., & Patterson, C. L. (1976). Singular value decomposition (SVD) image coding. *IEEE Transactions on Communications, 24*(4), 425–432. [https://doi.org/10.1109/TCOM.1976.1093309](https://doi.org/10.1109/TCOM.1976.1093309)
 
 Brain Station Advanced. (n.d.). *No one taught SVD (singular value decomposition) like this* [Video]. YouTube. [https://youtu.be/llisH02KLrE](https://youtu.be/llisH02KLrE)
-
-Ahmed, E. E., Kamel, A. M., Ahmed, M., & Amir, M. (2026). *Statistical compression of VGG19 for blood-cell image classification on BloodMNIST* [Unpublished project report]. Cairo University.
 
 Denton, E. L., Zaremba, W., Bruna, J., LeCun, Y., & Fergus, R. (2014). Exploiting linear structure within convolutional networks for efficient evaluation. In *Advances in neural information processing systems* (Vol. 27, pp. 1269–1277). [https://proceedings.neurips.cc/paper/2014/hash/1adaeb993eba95859121a43ea61bd858-Abstract.html](https://proceedings.neurips.cc/paper/2014/hash/1adaeb993eba95859121a43ea61bd858-Abstract.html)
 

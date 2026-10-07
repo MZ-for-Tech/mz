@@ -4,9 +4,11 @@ import { readResearchContent } from '@/research/lib/content';
 import { VisualizationEngine } from '@/research/features/engine/VisualizationEngine';
 import ResearchEssayShell from '@/research/components/ResearchEssayShell';
 import SVDStoryContent, { getSVDStoryContents } from '@/research/components/SVDStoryContent';
+import L0StoryContent, { getL0StoryContents } from '@/research/components/L0StoryContent';
 import SafeLatex from '@/research/components/SafeLatex';
 import ResearchCodeBlock from '@/research/features/essays/shared/ResearchCodeBlock';
 import ResearchTable from '@/research/components/ResearchTable';
+import ResearchReferences from '@/research/components/ResearchReferences';
 import DarkVeilEssayVisual from '@/research/features/essays/darkveil/DarkVeilEssayVisual';
 import DarkVeilFunctionSignature from '@/research/features/essays/darkveil/DarkVeilFunctionSignature';
 import DarkVeilActivationComparison from '@/research/features/essays/darkveil/DarkVeilActivationComparison';
@@ -98,7 +100,9 @@ export default function ResearchEssay({ study, locale = 'en' }: { study: Study; 
   const referencesLabel = isArabic ? 'المراجع' : 'References';
   const referencesIndex = blocks.findIndex((block) => block.trim() === `**${referencesLabel}**`);
   const series = (isArabic && study.series_ar) || study.series || (isArabic && study.category_ar) || study.category;
-  const contents = study.essay_renderer === 'svd-story' ? getSVDStoryContents(locale) : toc;
+  const contents = study.essay_renderer === 'svd-story'
+    ? getSVDStoryContents(locale)
+    : study.essay_renderer === 'l0-story' ? getL0StoryContents(locale) : toc;
   const readingMinutes = estimateReadingMinutes(markdown, title);
   const canonicalUrl = `https://www.mzfortech.com${getResearchArticlePath(study, locale)}`;
   const articleSchema = {
@@ -150,8 +154,9 @@ export default function ResearchEssay({ study, locale = 'en' }: { study: Study; 
       relatedArticles={relatedArticles}
       articleSchema={articleSchema}
     >
-        {study.essay_renderer === 'svd-story' ? <SVDStoryContent study={study} locale={locale} /> : <div className="latex-prose research-essay-prose">
+        {study.essay_renderer === 'svd-story' ? <SVDStoryContent study={study} locale={locale} /> : study.essay_renderer === 'l0-story' ? <L0StoryContent study={study} locale={locale} /> : <div className="latex-prose research-essay-prose">
           {blocks.map((block, index) => {
+            if (referencesIndex >= 0 && index > referencesIndex) return null;
             if (index === 0 && block.trim() === `**${title}**`) return null;
             const codeBlock = block.match(/^```([\w+#.-]*)\n([\s\S]*?)\n```$/);
             if (codeBlock) {
@@ -229,22 +234,18 @@ export default function ResearchEssay({ study, locale = 'en' }: { study: Study; 
                 .slice(0, index)
                 .filter((candidate) => /^\*\*.+\*\*$/.test(candidate.trim()) && candidate.trim() !== `**${title}**`).length;
               const id = toc?.[headingIndex]?.id || headingId(label);
+              if (isReferencesHeading) {
+                const entries = blocks.slice(index + 1).filter(Boolean).map((entry) => inlineMarkdown(entry.replace(/\n/g, ' ')));
+                return <ResearchReferences key={index} id={id} title={label} entries={entries} />;
+              }
               return (
-                <h2 key={index} id={id} className={isReferencesHeading ? 'research-essay-references-heading' : undefined}>
+                <h2 key={index} id={id}>
                   {inlineMarkdown(label)}
                 </h2>
               );
             }
-            const isReferenceEntry = referencesIndex >= 0 && index > referencesIndex;
             return (
-              <p
-                key={index}
-                dir={isArabic && isReferenceEntry ? 'ltr' : undefined}
-                lang={isArabic && isReferenceEntry ? 'en' : undefined}
-                className={isReferenceEntry ? 'research-essay-reference-entry' : undefined}
-              >
-                {inlineMarkdown(block.replace(/\n/g, ' '))}
-              </p>
+              <p key={index}>{inlineMarkdown(block.replace(/\n/g, ' '))}</p>
             );
           })}
         </div>}

@@ -488,6 +488,26 @@
 
 /* SVD-specific math, code, and interactive figure details. */
 .svd-article-body { overflow-wrap: anywhere; }
+.l0-article-body { overflow-wrap: anywhere; }
+.l0-inspector-game { margin: 1.75rem 0 2.5rem; border: 1px solid var(--border-val); background: color-mix(in srgb, var(--paper-val), var(--ink-val) 2%); }
+.l0-inspector-game summary { padding: 1rem 1.25rem; color: var(--ink-val); font: 600 var(--text-sm)/1.5 var(--font-mono), monospace; cursor: pointer; list-style: none; }
+.l0-inspector-game summary::-webkit-details-marker { display: none; }
+.l0-inspector-game summary::after { content: "+"; float: inline-end; color: var(--accent-val); font-size: 1.15rem; }
+.l0-inspector-game[open] summary { border-bottom: 1px solid var(--border-val); }
+.l0-inspector-game[open] summary::after { content: "−"; }
+.l0-inspector-game summary:focus-visible { outline: 2px solid var(--accent-val); outline-offset: 3px; }
+.l0-inspector-game-frame { display: block; width: 100%; min-height: 680px; border: 0; background: #f7f5ef; }
+.l0-display-math { display: block; overflow-x: auto; margin: 1.5rem 0; text-align: center; direction: ltr; }
+.l0-question-box { box-sizing: border-box; width: min(100%, 52rem); min-width: 0; margin: 1.5rem auto; border: 1px solid var(--ink-val); padding: 0.75em clamp(1rem, 4vw, 2rem); font-size: clamp(var(--text-base), 1.6vw, var(--text-2xl)); line-height: 1.45; overflow-wrap: anywhere; text-align: center; white-space: normal; }
+.research-content[lang="ar"] .l0-article-body { line-height: 1.65; }
+.research-content[lang="ar"] .l0-article-body p { margin-bottom: 0.65rem; }
+.research-content[lang="ar"] .l0-article-body blockquote { margin-block: 1rem; }
+.research-content[lang="ar"] .l0-article-body .l0-display-math { margin-block: 0.75rem; }
+.l0-inline-math { direction: ltr; unicode-bidi: isolate; }
+.l0-article-body .l0v { font-family: var(--font-serif), serif; }
+.l0-article-body .l0v p { margin-block: 0.75rem; }
+.research-content[dir="rtl"] .l0-article-body { text-align: right; }
+.research-content[dir="rtl"] .l0-article-body .l0-display-math { text-align: center; }
 .research-code-block { position: relative; z-index: 1; direction: ltr; overflow: hidden; margin: 1.75rem 0 2.25rem; border: 1px solid var(--border-val); border-radius: 2px; background: var(--code-bg); color: var(--code-plain); text-align: left; font-family: var(--font-mono), monospace; }
 .research-code-header { display: flex; min-height: 2.7rem; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border-val); background: var(--code-header-bg); padding: 0.45rem 1rem; color: var(--pencil-val); font-size: var(--text-xs); letter-spacing: 0.12em; text-transform: uppercase; }
 .research-code-actions { display: flex; align-items: center; gap: 0.35rem; }

@@ -5,6 +5,7 @@ import { readResearchContent } from '@/research/lib/content';
 import SVDInteractive from '@/research/features/essays/svd-story/SVDInteractive';
 import GlossaryTerm from '@/research/features/essays/svd-story/GlossaryTerm';
 import ResearchCodeBlock from '@/research/features/essays/shared/ResearchCodeBlock';
+import ResearchReferences from '@/research/components/ResearchReferences';
 
 type Term = { label: string; aliases?: string[]; short: string; visual?: Record<string, unknown> };
 type Interaction = { id: string; type: string; title: string; instruction?: string; data: Record<string, unknown> };
@@ -78,9 +79,9 @@ function inline(text: string, glossary: Record<string, Term>, seen: Set<string>,
 
 function renderMarkdown(markdown: string, locale: 'en' | 'ar', lesson: Lesson) {
   const lines = markdown.replace(/\r/g, '').split('\n');
-  const result: ReactNode[] = []; const seen = new Set<string>();
-  let paragraph: string[] = []; let list: string[] = []; let listType: 'ul' | 'ol' = 'ul'; let code: string[] = []; let language = ''; let inCode = false; let heading = 0; let inMath = false; let math: string[] = []; let inReferences = false;
-  const flushParagraph = () => { if (paragraph.length) { result.push(<p key={`p-${result.length}`} className={inReferences ? 'research-essay-reference-entry' : undefined} dir={inReferences ? 'ltr' : undefined} lang={inReferences ? 'en' : undefined}>{inline(paragraph.join(' '), lesson.glossary, seen, `p-${result.length}`)}</p>); paragraph = []; } };
+  const result: ReactNode[] = []; const seen = new Set<string>(); const references: ReactNode[] = [];
+  let paragraph: string[] = []; let list: string[] = []; let listType: 'ul' | 'ol' = 'ul'; let code: string[] = []; let language = ''; let inCode = false; let heading = 0; let inMath = false; let math: string[] = []; let inReferences = false; let referencesId = '';
+  const flushParagraph = () => { if (paragraph.length) { const content = inline(paragraph.join(' '), lesson.glossary, seen, `p-${result.length}`); if (inReferences) references.push(content); else result.push(<p key={`p-${result.length}`}>{content}</p>); paragraph = []; } };
   const flushList = () => { if (list.length) { const ListTag = listType; result.push(<ListTag key={`list-${result.length}`}>{list.map((line, i) => <li key={i}>{inline(line.replace(/^\s*(?:[-*+]\s+|\d+\.\s+)/, ''), lesson.glossary, seen, `li-${result.length}-${i}`)}</li>)}</ListTag>); list = []; } };
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
@@ -101,7 +102,7 @@ function renderMarkdown(markdown: string, locale: 'en' | 'ar', lesson: Lesson) {
     if (headingMatch) {
       flushParagraph(); flushList();
       if (headingMatch[1].length === 1 && headingMatch[2] === (locale === 'ar' ? 'قراءة معمقة في SVD' : 'A Deep Reading of SVD')) continue;
-      if (headingMatch[1].length === 1) { heading++; const id = `svd-section-${heading}`; inReferences = /^(?:references|المراجع)$/i.test(headingMatch[2]); result.push(<h2 id={id} key={id} className={inReferences ? 'research-essay-references-heading' : undefined}>{inline(headingMatch[2], lesson.glossary, seen, id)}</h2>); }
+      if (headingMatch[1].length === 1) { heading++; const id = `svd-section-${heading}`; inReferences = /^(?:references|المراجع)$/i.test(headingMatch[2]); if (inReferences) referencesId = id; else result.push(<h2 id={id} key={id}>{inline(headingMatch[2], lesson.glossary, seen, id)}</h2>); }
       else if (headingMatch[1].length === 2 && heading === 0) result.push(<h2 id="svd-opening" key="svd-opening">{inline(headingMatch[2], lesson.glossary, seen, 'svd-opening')}</h2>);
       else if (headingMatch[1].length === 2) result.push(<h3 key={`h3-${result.length}`}>{inline(headingMatch[2], lesson.glossary, seen, `h3-${result.length}`)}</h3>);
       else result.push(<h4 key={`h4-${result.length}`}>{inline(headingMatch[2], lesson.glossary, seen, `h4-${result.length}`)}</h4>);
@@ -125,6 +126,7 @@ function renderMarkdown(markdown: string, locale: 'en' | 'ar', lesson: Lesson) {
     paragraph.push(line.trim());
   }
   flushParagraph(); flushList();
+  if (referencesId) result.push(<ResearchReferences key={referencesId} id={referencesId} title={locale === 'ar' ? 'المراجع' : 'References'} entries={references} />);
   return result;
 }
 

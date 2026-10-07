@@ -1,8 +1,42 @@
 'use client';
 
-import { useId, useRef, useState } from 'react';
+import { useId, useRef, useState, type ReactNode } from 'react';
+import katex from 'katex';
 
 type ContentsItem = { id: string; label: string };
+
+function renderContentsLabel(label: string): ReactNode[] {
+  const mathSyntax = /(\\\([\s\S]+?\\\)|\\\[[\s\S]+?\\\]|\$[^$\n]+\$)/g;
+  const output: ReactNode[] = [];
+  let lastIndex = 0;
+  let match: RegExpExecArray | null;
+  let part = 0;
+
+  while ((match = mathSyntax.exec(label))) {
+    if (match.index > lastIndex) output.push(label.slice(lastIndex, match.index));
+    const token = match[0];
+    const display = token.startsWith('\\[');
+    const source = display ? token.slice(2, -2) : token.startsWith('\\(') ? token.slice(2, -2) : token.slice(1, -1);
+    let html = source;
+    try {
+      html = katex.renderToString(source, { displayMode: false, throwOnError: false, trust: false });
+    } catch {
+      // Keep the source visible if KaTeX cannot render a heading fragment.
+    }
+    output.push(
+      <span
+        key={`math-${part++}`}
+        className="toc-inline-math"
+        dir="ltr"
+        dangerouslySetInnerHTML={{ __html: html }}
+      />,
+    );
+    lastIndex = mathSyntax.lastIndex;
+  }
+
+  if (lastIndex < label.length) output.push(label.slice(lastIndex));
+  return output.length ? output : [label];
+}
 
 export default function ResearchContentsSidebar({
   items,
@@ -35,7 +69,7 @@ export default function ResearchContentsSidebar({
       }}
       className="block rounded-sm px-3 py-2 font-latex text-base leading-snug text-ink/75 transition-colors hover:bg-ink/[0.05] hover:text-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
     >
-      {item.label}
+      {renderContentsLabel(item.label)}
     </a>
   ));
 

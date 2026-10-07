@@ -2,6 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import type { Study } from '@/research/lib/types';
 import { getResearchArticlePath, getResearchSeriesPath } from '@/research/lib/paths';
+import { getStudyReadingMinutes } from '@/research/lib/readingTime';
 
 export default function FeaturedResearchEssay({
   article,
@@ -17,7 +18,7 @@ export default function FeaturedResearchEssay({
   const number = article.series_slug ? String(article.series_number || 1).padStart(2, '0') : null;
   const featuredAuthor = article.authors?.[0];
   const author = featuredAuthor && (isArabic ? featuredAuthor.name_ar || featuredAuthor.name : featuredAuthor.name);
-  const year = article.published_at?.slice(0, 4);
+  const readTime = getStudyReadingMinutes(article, locale);
 
   return (
     <section
@@ -38,7 +39,7 @@ export default function FeaturedResearchEssay({
               </Link>
             ) : series}
             {number && <> · {isArabic ? `المقال ${number}` : `Article ${number}`}</>}
-            {year && <> · {year}</>}
+            {readTime !== null && <> · {isArabic ? `${readTime} دقائق للقراءة` : `${readTime} min read`}</>}
           </p>
           <h1 id="research-featured-title" className={`mt-4 max-w-2xl text-4xl text-ink sm:text-5xl lg:text-6xl ${isArabic ? '' : 'font-latex leading-[1.04] tracking-tight'}`}>
             {title}

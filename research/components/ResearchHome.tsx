@@ -49,7 +49,10 @@ export default function ResearchHome({ locale = 'en' }: { locale?: 'en' | 'ar' }
           />
         </section>
 
-        <ResearchArticleCards articles={essays} locale={locale} />
+        <ResearchArticleCards
+          articles={essays.filter((essay) => essay.slug !== featuredEssay?.slug)}
+          locale={locale}
+        />
       </div>
     </main>
   );
