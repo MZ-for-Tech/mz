@@ -1,0 +1,105 @@
+{
+  "schemaVersion": "1.0",
+  "id": "14_singular_shrinkage",
+  "title": {
+    "ar": "تقليص القيم المفردة",
+    "en": "Singular-value shrinkage"
+  },
+  "renderer": "singular",
+  "source": {
+    "pdf": "L1_21_Chapters_Illustrated_Study_Edition(1).pdf",
+    "physicalPages": [
+      39
+    ],
+    "additionalResearchFigure": false
+  },
+  "caption": {
+    "ar": "يقلص التقليل الناعم كل قيمة مفردة باقية بمقدار τ؛ أما اقتطاع الرتبة الأولى فيبقي الأكبر كما هي.",
+    "en": "Soft thresholding reduces every surviving singular value by τ; rank-1 truncation keeps the largest one unchanged."
+  },
+  "controls": [
+    {
+      "key": "tau",
+      "type": "range",
+      "label": {
+        "ar": "العتبة τ",
+        "en": "Threshold τ"
+      },
+      "default": 0.7,
+      "min": 0,
+      "max": 3.5,
+      "step": 0.02
+    }
+  ],
+  "data": {
+    "matrix": [
+      [
+        3,
+        1
+      ],
+      [
+        0,
+        0.4
+      ]
+    ],
+    "singularValues": [
+      3.1648433423853466,
+      0.37916568694852315
+    ],
+    "U": [
+      [
+        0.9991775074612106,
+        -0.04055007501352788
+      ],
+      [
+        0.04055007501352788,
+        0.9991775074612106
+      ]
+    ],
+    "Vt": [
+      [
+        0.9471345650001073,
+        0.32083658734947523
+      ],
+      [
+        -0.32083658734947523,
+        0.9471345650001073
+      ]
+    ]
+  },
+  "theme": {
+    "source": "https://www.mzfortech.com/research",
+    "verified_on": "2026-10-10",
+    "source_selector": ".tnh-site",
+    "light": {
+      "paper": "#f5f2ed",
+      "ink": "#111111",
+      "accent": "#8b3a2b",
+      "pencil": "#756b5e",
+      "secondary": "#484039"
+    },
+    "dark": {
+      "paper": "#1e1b18",
+      "ink": "#e6ded3",
+      "accent": "#d96c5b",
+      "pencil": "#b8a691",
+      "secondary": "#e6ded3"
+    },
+    "additional_plot_color": {
+      "olive": "#5a7a0a",
+      "gold": "#d4a820"
+    },
+    "evidence": "Research CSS .tnh-site and .tnh-site[data-theme=dark]; olive/gold from site :root."
+  },
+  "framerMotion": {
+    "library": "framer-motion",
+    "duration": 0.22,
+    "ease": "easeOut",
+    "reducedMotion": "user"
+  },
+  "accessibility": {
+    "keyboardControls": true,
+    "bilingualLabels": true,
+    "textualReadout": true
+  }
+}

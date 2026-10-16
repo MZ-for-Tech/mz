@@ -14,19 +14,23 @@ import DarkVeilFunctionSignature from '@/research/features/essays/darkveil/DarkV
 import DarkVeilActivationComparison from '@/research/features/essays/darkveil/DarkVeilActivationComparison';
 import DarkVeilRadialFunction from '@/research/features/essays/darkveil/DarkVeilRadialFunction';
 import DarkVeilTimeDiagram from '@/research/features/essays/darkveil/DarkVeilTimeDiagram';
+import { ChangingUncertaintyMixture, ForecastCalibration } from '@/research/features/essays/changing-uncertainty/ChangingUncertaintyVisuals';
+import L1Visuals from '@/research/features/essays/l1-story/L1Visuals';
 import { CUSTOM_STUDIES, hasArabicStudyMetadata } from '@/research/data/studies';
 import { estimateReadingMinutes } from '@/research/lib/readingTime';
 
 function inlineMarkdown(text: string) {
-  const pieces = text.split(/(\[[^\]]+\]\(https?:\/\/[^)\s]+\)|\$[^$]+\$|`[^`]+`|\*\*[^*]+\*\*|\*[^*]+\*)/g);
+  const pieces = text.split(/(\$\$[\s\S]+?\$\$|\[[^\]]+\]\([^)\s]+\)|\$[^$\n]+\$|`[^`]+`|\*\*[^*]+\*\*|\*[^*]+\*)/g);
   return pieces.map((piece, index) => {
     if (piece.startsWith('$') && piece.endsWith('$')) {
       return <SafeLatex key={index} content={piece} />;
     }
-    const link = piece.match(/^\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)$/);
+    const link = piece.match(/^\[([^\]]+)\]\(([^)\s]+)\)$/);
     if (link) {
+      const isExternal = /^https?:\/\//.test(link[2]);
+      if (!isExternal && (!link[2].startsWith('/') || link[2].startsWith('//'))) return piece;
       return (
-        <a key={index} href={link[2]} target="_blank" rel="noreferrer" className="text-accent underline decoration-accent/40 underline-offset-4 hover:decoration-accent">
+        <a key={index} href={link[2]} {...(isExternal ? { target: '_blank', rel: 'noreferrer' } : {})} className="text-accent underline decoration-accent/40 underline-offset-4 hover:decoration-accent">
           {inlineMarkdown(link[1])}
         </a>
       );
@@ -79,6 +83,23 @@ const essayVisuals = {
   benchmaxxing: 'BenchmaxxingLeaderboard',
 } as const;
 
+const l1Figures = {
+  'l1-norm-balls': '01_norm_balls',
+  'l1-count-magnitude': '02_count_magnitude',
+  'l1-constraint-geometry': '04_constraint_geometry',
+  'l1-regularization-path': '05_regularization_path',
+  'l1-regression-comparison': '06_regression_comparison',
+  'l1-soft-threshold': '07_soft_threshold',
+  'l1-selection-stability': '09_selection_stability',
+  'l1-recovery-failure': '10_recovery_failure',
+  'l1-total-variation': '11_total_variation',
+  'l1-weight-patterns': '12_weight_patterns',
+  'l1-sparse-storage': '13_sparse_storage',
+  'l1-singular-shrinkage': '14_singular_shrinkage',
+  'l1-convex-envelope': '03_convex_envelope',
+  'l1-optimization-gap': '08_optimization_gap',
+} as const;
+
 export default function ResearchEssay({ study, locale = 'en' }: { study: Study; locale?: 'en' | 'ar' }) {
   const isArabic = locale === 'ar';
   const contentFile = isArabic ? study.content_file_ar : study.content_file;
@@ -94,9 +115,19 @@ export default function ResearchEssay({ study, locale = 'en' }: { study: Study; 
     && article.article_type === 'essay'
     && article.slug !== study.slug
     && (!isArabic || (article.arabic_translation_status !== 'draft' && hasArabicStudyMetadata(article))),
-  );
+  ).slice(0, 3);
   const markdown = readResearchContent(contentFile);
-  const blocks = markdown.trim().split(/\n\s*\n/);
+  const equationDetails: { summary: string; body: string }[] = [];
+  const markdownWithDetails = markdown.replace(/<details[^>]*>\s*<summary>([\s\S]*?)<\/summary>\s*([\s\S]*?)<\/details>/g, (_match, summary: string, body: string) => {
+    const index = equationDetails.push({ summary: summary.trim(), body: body.trim() }) - 1;
+    return `\n\n<!-- equation-detail:${index} -->\n\n`;
+  });
+  const blocks = markdownWithDetails.trim().split(/\n\s*\n/);
+  const l1FigureNumbers = new Map<string, number>();
+  for (const block of blocks) {
+    const marker = block.trim().match(/^<!--\s*visual:([a-z0-9-]+)\s*-->$/);
+    if (marker && marker[1] in l1Figures) l1FigureNumbers.set(marker[1], l1FigureNumbers.size + 1);
+  }
   const referencesLabel = isArabic ? 'المراجع' : 'References';
   const referencesIndex = blocks.findIndex((block) => block.trim() === `**${referencesLabel}**`);
   const series = (isArabic && study.series_ar) || study.series || (isArabic && study.category_ar) || study.category;
@@ -162,9 +193,33 @@ export default function ResearchEssay({ study, locale = 'en' }: { study: Study; 
             const codeBlock = block.match(/^```([\w+#.-]*)\n([\s\S]*?)\n```$/);
             if (codeBlock) {
               const language = codeBlock[1] || 'code';
-              return <ResearchCodeBlock key={index} code={codeBlock[2]} language={language} locale={locale} />;
+              return <ResearchCodeBlock key={index} code={codeBlock[2]} language={language} locale={locale} sessionId={study.slug === 'a-deep-reading-of-l1' ? study.slug : undefined} />;
+            }
+            if (/^\$\$[\s\S]+\$\$$/.test(block)) {
+              return <SafeLatex key={index} content={block} />;
+            }
+            const equationDetail = block.trim().match(/^<!--\s*equation-detail:(\d+)\s*-->$/);
+            if (equationDetail) {
+              const detail = equationDetails[Number(equationDetail[1])];
+              if (!detail) return null;
+              return (
+                <details key={index} className="research-equation-detail">
+                  <summary>{inlineMarkdown(detail.summary)}</summary>
+                  <div>
+                    {detail.body.split(/\n\s*\n/).map((detailBlock, detailIndex) => {
+                      const detailHeading = detailBlock.match(/^####\s+(.+)$/);
+                      return detailHeading
+                        ? <h4 key={detailIndex}>{inlineMarkdown(detailHeading[1])}</h4>
+                        : <p key={detailIndex}>{inlineMarkdown(detailBlock.replace(/\n/g, ' '))}</p>;
+                    })}
+                  </div>
+                </details>
+              );
             }
             const visualMarker = block.trim().match(/^<!--\s*visual:([a-z0-9-]+)\s*-->$/);
+            if (visualMarker && visualMarker[1] in l1Figures) {
+              return <L1Visuals key={index} figureId={l1Figures[visualMarker[1] as keyof typeof l1Figures]} figureNumber={l1FigureNumbers.get(visualMarker[1]) ?? 0} locale={locale} />;
+            }
             if (visualMarker?.[1] === 'darkveil') {
               return <DarkVeilEssayVisual key={index} locale={locale} />;
             }
@@ -179,6 +234,12 @@ export default function ResearchEssay({ study, locale = 'en' }: { study: Study; 
             }
             if (visualMarker?.[1] === 'darkveil-time-diagram') {
               return <DarkVeilTimeDiagram key={index} locale={locale} />;
+            }
+            if (visualMarker?.[1] === 'changing-uncertainty-mixture') {
+              return <ChangingUncertaintyMixture key={index} />;
+            }
+            if (visualMarker?.[1] === 'forecast-calibration') {
+              return <ForecastCalibration key={index} />;
             }
             if (visualMarker && visualMarker[1] in essayVisuals) {
               const id = essayVisuals[visualMarker[1] as keyof typeof essayVisuals];

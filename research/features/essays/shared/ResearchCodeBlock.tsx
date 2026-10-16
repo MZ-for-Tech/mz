@@ -67,7 +67,7 @@ function tokenizePython(line: string): Token[] {
   return tokens;
 }
 
-export default function ResearchCodeBlock({ code, language = 'python', locale = 'en' }: { code: string; language?: string; locale?: 'en' | 'ar' }) {
+export default function ResearchCodeBlock({ code, language = 'python', locale = 'en', runnable = true, sessionId }: { code: string; language?: string; locale?: 'en' | 'ar'; runnable?: boolean; sessionId?: string }) {
   const [copied, setCopied] = useState(false);
   const [running, setRunning] = useState(false);
   const [codeExpanded, setCodeExpanded] = useState(false);
@@ -93,7 +93,7 @@ export default function ResearchCodeBlock({ code, language = 'python', locale = 
     setOutput(null);
     setError('');
     try {
-      setOutput(await runResearchPython(code, uploadedFile ? [uploadedFile] : []));
+      setOutput(await runResearchPython(code, uploadedFile ? [uploadedFile] : [], sessionId));
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : String(cause));
     } finally {
@@ -116,7 +116,7 @@ export default function ResearchCodeBlock({ code, language = 'python', locale = 
       <figcaption className="research-code-header">
         <span>{language || 'code'}</span>
         <div className="research-code-actions">
-          {isPython && codeExpanded && <button className="research-code-run" type="button" onClick={handleRun} disabled={running || Boolean(imagePath && !uploadedFile)} aria-label={running ? runningLabel : runLabel}>
+          {isPython && runnable && <button className="research-code-run" type="button" onClick={handleRun} disabled={running || Boolean(imagePath && !uploadedFile)} aria-label={running ? runningLabel : runLabel}>
             {running ? <LoaderCircle className="research-code-spinner" aria-hidden="true" /> : <Play aria-hidden="true" />}
             <span>{running ? runningLabel : runLabel}</span>
           </button>}

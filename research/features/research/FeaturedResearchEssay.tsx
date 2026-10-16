@@ -68,7 +68,7 @@ export default function FeaturedResearchEssay({
                 src={article.hero_image || article.thumbnail!}
                 alt={article.hero_image_alt || article.thumbnail_alt || title}
                 fill
-                priority
+                loading="eager"
                 sizes="(min-width: 768px) 46vw, 100vw"
                 className={`${article.essay_renderer === 'svd-story' ? 'research-image-paper-tone-svd ' : ''}research-image-paper-tone research-image-paper-tone-hero object-cover transition-transform duration-500 group-hover:scale-[1.02]`}
               />

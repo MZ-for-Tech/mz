@@ -1,10 +1,10 @@
 .statusDot {
   font-family: var(--font-base);
-  font-size: 0.75rem;
+  font-size: var(--font-size-xs);
   color: var(--color-text-muted);
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--space-2);
   letter-spacing: 0.05em;
 }
 
@@ -13,7 +13,7 @@
 }
 
 .dot {
-  font-size: 0.6rem;
+  font-size: var(--font-size-2xs);
 }
 
 .statusDot.active .dot {

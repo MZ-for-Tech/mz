@@ -16,8 +16,8 @@
   min-height: 3.9rem;
   flex-direction: column;
   justify-content: center;
-  gap: 0.25rem;
-  padding: 0.6rem 0.75rem;
+  gap: var(--space-1);
+  padding: 0.6rem var(--space-3);
   border-bottom: 1px solid var(--border-val);
 }
 
@@ -42,7 +42,7 @@
 .darkveil-activation-label code {
   color: var(--pencil-val);
   font-family: var(--font-mono), monospace;
-  font-size: 0.72rem;
+  font-size: var(--font-size-xs);
   line-height: 1.35;
   white-space: nowrap;
 }

@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 
 export default function LogoPage() {
   return (
-    <div style={{ width: "100vw", height: "100vh", backgroundColor: "#000", overflow: "hidden" }}>
+    <div style={{ width: "100vw", height: "100vh", backgroundColor: "var(--color-black)", overflow: "hidden" }}>
       <MzLogo3D />
     </div>
   );

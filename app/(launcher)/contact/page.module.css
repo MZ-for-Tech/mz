@@ -61,7 +61,7 @@
   max-width: 1600px;
   width: 100%;
   margin: 0 auto;
-  padding: 3rem clamp(1.5rem, 4vw, 5rem) 2rem;
+  padding: var(--space-12) clamp(var(--space-6), 4vw, 5rem) var(--space-8);
 }
 
 .grid {
@@ -72,7 +72,7 @@
      so a long pill can wrap instead of forcing the track wider than the
      viewport. */
   grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
-  gap: clamp(3rem, 5vw, 5rem);
+  gap: clamp(var(--space-12), 5vw, 5rem);
   align-items: start;
 }
 
@@ -112,8 +112,8 @@
      reason this page used to feel like a page. The in-shell version capped
      at 4rem and tracked tighter, which is a small difference at 4rem and
      a large one at the 2.5rem a laptop actually gets. */
-  margin: 0 0 clamp(2.5rem, 4vw, 3.75rem);
-  font-size: clamp(2.5rem, 4.5vw, 4.5rem);
+  margin: 0 0 clamp(var(--space-10), 4vw, 3.75rem);
+  font-size: clamp(var(--font-size-5xl), 4.5vw, 4.5rem);
   font-weight: 500;
   line-height: 1.1;
   letter-spacing: -0.02em;
@@ -132,7 +132,7 @@
 .inquiry {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: var(--space-3);
 }
 
 /* No plate. The original set the address straight on the page with nothing
@@ -141,15 +141,15 @@
    it does not need a frame to be found. */
 .inquiryLabel {
   font-family: var(--font-code);
-  font-size: 0.62rem;
+  font-size: var(--font-size-2xs);
   letter-spacing: 0.3em;
   text-transform: uppercase;
-  color: rgba(245, 245, 240, 0.4);
+  color: rgba(var(--color-text-rgb), 0.4);
 }
 
 .inquiryEmail {
   font-family: var(--font-base);
-  font-size: clamp(1.2rem, 2vw, 1.8rem);
+  font-size: clamp(var(--font-size-lg), 2vw, var(--font-size-3xl));
   font-weight: 400;
   color: var(--color-text);
   text-decoration: none;
@@ -170,18 +170,18 @@
    below it is a way further in. That distinction is what the rule is drawing,
    and it is the reason the rule is here rather than above the socials. */
 .process {
-  margin: clamp(2rem, 3.5vw, 3rem) 0 0;
-  padding-top: clamp(1.5rem, 2.5vw, 2rem);
-  border-top: 1px solid rgba(245, 245, 240, 0.12);
-  font-size: 0.95rem;
+  margin: clamp(var(--space-8), 3.5vw, var(--space-12)) 0 0;
+  padding-top: clamp(var(--space-6), 2.5vw, var(--space-8));
+  border-top: 1px solid rgba(var(--color-text-rgb), 0.12);
+  font-size: var(--font-size-base);
   line-height: 1.6;
-  color: rgba(245, 245, 240, 0.5);
+  color: rgba(var(--color-text-rgb), 0.5);
 }
 
 .processLink {
   color: var(--color-text);
   text-decoration: none;
-  border-bottom: 1px solid rgba(245, 245, 240, 0.3);
+  border-bottom: 1px solid rgba(var(--color-text-rgb), 0.3);
   padding-bottom: 2px;
   transition: color 0.3s ease, border-color 0.3s ease;
 }
@@ -207,7 +207,7 @@
    token would be one more indirection for no gain. It also earns its place,
    since a visitor who cannot place an unlabelled mark still has it. */
 .socials {
-  margin-top: clamp(1.5rem, 2.5vw, 2rem);
+  margin-top: clamp(var(--space-6), 2.5vw, var(--space-8));
   display: flex;
   flex-direction: column;
   /* 0.9rem, not the 1rem the inquiry block uses: this gap is between a
@@ -218,16 +218,16 @@
 
 .socialsLabel {
   font-family: var(--font-code);
-  font-size: 0.62rem;
+  font-size: var(--font-size-2xs);
   letter-spacing: 0.3em;
   text-transform: uppercase;
-  color: rgba(245, 245, 240, 0.4);
+  color: rgba(var(--color-text-rgb), 0.4);
 }
 
 .socialList {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--space-2);
   margin: 0;
   padding: 0;
   list-style: none;
@@ -254,7 +254,7 @@
   height: 40px;
   border-radius: var(--radius-md);
   border: 1px solid transparent;
-  color: rgba(245, 245, 240, 0.5);
+  color: rgba(var(--color-text-rgb), 0.5);
   text-decoration: none;
   transition:
     color 0.3s ease,
@@ -264,8 +264,8 @@
 
 .socialLink:hover {
   color: var(--color-brand-yellow);
-  border-color: rgba(255, 231, 141, 0.35);
-  background: rgba(13, 15, 8, 0.5);
+  border-color: rgba(var(--color-brand-yellow-rgb), 0.35);
+  background: rgba(var(--color-bg-rgb), 0.5);
 }
 
 /* ── Form ──────────────────────────────────────────────────────────────
@@ -276,7 +276,7 @@
 .form {
   display: flex;
   flex-direction: column;
-  gap: clamp(3rem, 5vw, 5rem);
+  gap: clamp(var(--space-12), 5vw, 5rem);
 }
 
 .honeypot {
@@ -291,7 +291,7 @@
 .section {
   display: flex;
   flex-direction: column;
-  gap: clamp(1.5rem, 2.5vw, 2.5rem);
+  gap: clamp(var(--space-6), 2.5vw, var(--space-10));
 }
 
 /* The title is a label and a rule, exactly as the original had it: quiet
@@ -303,13 +303,13 @@
   align-items: baseline;
   gap: 0.9rem;
   margin: 0;
-  padding-bottom: 1.25rem;
-  border-bottom: 1px solid rgba(245, 245, 240, 0.12);
+  padding-bottom: var(--space-5);
+  border-bottom: 1px solid rgba(var(--color-text-rgb), 0.12);
   font-family: var(--font-code);
-  font-size: 0.78rem;
+  font-size: var(--font-size-sm);
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: rgba(245, 245, 240, 0.55);
+  color: rgba(var(--color-text-rgb), 0.55);
 }
 
 .sectionTitle span {
@@ -344,11 +344,11 @@
      was the mismatch that made this form look assembled from two different
      sources. */
   border-radius: var(--radius-sm);
-  border: 1px solid rgba(245, 245, 240, 0.2);
+  border: 1px solid rgba(var(--color-text-rgb), 0.2);
   background: transparent;
   color: var(--color-text);
   font-family: var(--font-base);
-  font-size: 1.1rem;
+  font-size: var(--font-size-lg);
   line-height: 1.2;
   cursor: pointer;
   transition:
@@ -359,7 +359,7 @@
 }
 
 .option:hover {
-  border-color: rgba(245, 245, 240, 0.6);
+  border-color: rgba(var(--color-text-rgb), 0.6);
   transform: translateY(-2px);
 }
 
@@ -375,10 +375,10 @@
 .label {
   display: block;
   font-family: var(--font-code);
-  font-size: 0.62rem;
+  font-size: var(--font-size-2xs);
   letter-spacing: 0.3em;
   text-transform: uppercase;
-  color: rgba(245, 245, 240, 0.55);
+  color: rgba(var(--color-text-rgb), 0.55);
   margin-bottom: 0.9rem;
 }
 
@@ -390,11 +390,11 @@
      toggle on the form, at the reference's own proportion for a control this
      size — so the form reads as a single object built one way. */
   border-radius: var(--radius-sm);
-  border: 1px solid rgba(245, 245, 240, 0.12);
-  background: rgba(13, 15, 8, 0.35);
+  border: 1px solid rgba(var(--color-text-rgb), 0.12);
+  background: rgba(var(--color-bg-rgb), 0.35);
   color: var(--color-text);
   font-family: var(--font-base);
-  font-size: 1.1rem;
+  font-size: var(--font-size-lg);
   transition: border-color 0.3s ease, background 0.3s ease;
 }
 
@@ -406,20 +406,20 @@
 
 .input::placeholder,
 .textarea::placeholder {
-  color: rgba(245, 245, 240, 0.28);
+  color: rgba(var(--color-text-rgb), 0.28);
 }
 
 .input:focus,
 .textarea:focus {
   outline: none;
   border-color: var(--color-brand-yellow);
-  background: rgba(255, 231, 141, 0.05);
+  background: rgba(var(--color-brand-yellow-rgb), 0.05);
 }
 
 .inputRow {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: clamp(1.5rem, 2.5vw, 2.5rem);
+  gap: clamp(var(--space-6), 2.5vw, var(--space-10));
 }
 
 /* Attachments. The input stays in the DOM and stays focusable — it is
@@ -444,9 +444,9 @@
      target shaped like a field, and the dashed border is the only thing that
      should distinguish them. */
   border-radius: var(--radius-sm);
-  border: 1px dashed rgba(245, 245, 240, 0.3);
-  color: rgba(245, 245, 240, 0.6);
-  font-size: 1.05rem;
+  border: 1px dashed rgba(var(--color-text-rgb), 0.3);
+  color: rgba(var(--color-text-rgb), 0.6);
+  font-size: var(--font-size-base);
   cursor: pointer;
   transition: border-color 0.3s ease, color 0.3s ease, background 0.3s ease;
 }
@@ -454,7 +454,7 @@
 .fileLabel:hover {
   border-color: var(--color-brand-yellow);
   color: var(--color-text);
-  background: rgba(255, 231, 141, 0.05);
+  background: rgba(var(--color-brand-yellow-rgb), 0.05);
 }
 
 /* ── Submit ─────────────────────────────────────────────────────────────
@@ -467,8 +467,8 @@
    what makes the button read as the end of something rather than as one
    more control in a list. */
 .submitSection {
-  padding-top: clamp(2rem, 3.5vw, 2.5rem);
-  border-top: 1px solid rgba(245, 245, 240, 0.12);
+  padding-top: clamp(var(--space-8), 3.5vw, var(--space-10));
+  border-top: 1px solid rgba(var(--color-text-rgb), 0.12);
 }
 
 .submit {
@@ -476,7 +476,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 1rem;
+  gap: var(--space-4);
   padding: 20px 48px;
   border: none;
   /* Was 100px, clamping to ~31px on a 63px-tall button — so the most
@@ -493,7 +493,7 @@
   background: var(--color-brand-yellow);
   color: var(--color-bg);
   font-family: var(--font-base);
-  font-size: 1.2rem;
+  font-size: var(--font-size-lg);
   font-weight: 600;
   cursor: pointer;
   transition:
@@ -509,16 +509,16 @@
 
 .submitMessage {
   min-height: 1.5em;
-  margin: 1rem 0 0;
-  color: rgba(245, 245, 240, 0.72);
-  font-size: 0.95rem;
+  margin: var(--space-4) 0 0;
+  color: rgba(var(--color-text-rgb), 0.72);
+  font-size: var(--font-size-base);
   line-height: 1.5;
 }
 
 .submit:hover {
   background: var(--color-text);
   transform: translateY(-4px);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 10px 20px rgba(var(--color-black-rgb), 0.2);
 }
 
 .submitArrow {
@@ -550,12 +550,12 @@
 @media (max-width: 768px) {
   .option {
     padding: 12px 24px;
-    font-size: 1rem;
+    font-size: var(--font-size-base);
   }
 
   .inputRow {
     grid-template-columns: minmax(0, 1fr);
-    gap: 1.5rem;
+    gap: var(--space-6);
   }
 
   .submit {

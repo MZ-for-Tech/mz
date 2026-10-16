@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "1.0",
+  "id": "10_recovery_failure",
+  "title": {
+    "ar": "الاستعادة والفشل",
+    "en": "Recovery and failure"
+  },
+  "renderer": "recovery",
+  "source": {
+    "pdf": "L1_21_Chapters_Illustrated_Study_Edition(1).pdf",
+    "physicalPages": [
+      29
+    ],
+    "additionalResearchFigure": false
+  },
+  "caption": {
+    "ar": "كل نقطة على المسار تحقق القياسات؛ أصغر L1 يختار الإشارة الأصلية في الأول وبديلا في الثاني.",
+    "en": "Every point on each path satisfies its measurements; minimum L1 chooses the original in the first example and an alternative in the second."
+  },
+  "controls": [
+    {
+      "key": "t",
+      "type": "range",
+      "label": {
+        "ar": "اتجاه غير مرئي t",
+        "en": "Invisible displacement t"
+      },
+      "default": 0,
+      "min": -0.4,
+      "max": 1.1,
+      "step": 0.01
+    },
+    {
+      "key": "case",
+      "type": "select",
+      "label": {
+        "ar": "المثال",
+        "en": "Example"
+      },
+      "default": "good",
+      "options": [
+        {
+          "value": "good",
+          "label": {
+            "ar": "الاستعادة",
+            "en": "Recovery"
+          }
+        },
+        {
+          "value": "bad",
+          "label": {
+            "ar": "الفشل",
+            "en": "Failure"
+          }
+        }
+      ]
+    }
+  ],
+  "data": {
+    "A_good": [
+      [
+        1,
+        0,
+        1
+      ],
+      [
+        0,
+        1,
+        1
+      ]
+    ],
+    "A_bad": [
+      [
+        1,
+        2
+      ]
+    ],
+    "measurement_good": [
+      1,
+      0
+    ],
+    "measurement_bad": [
+      1
+    ]
+  },
+  "theme": {
+    "source": "https://www.mzfortech.com/research",
+    "verified_on": "2026-10-10",
+    "source_selector": ".tnh-site",
+    "light": {
+      "paper": "#f5f2ed",
+      "ink": "#111111",
+      "accent": "#8b3a2b",
+      "pencil": "#756b5e",
+      "secondary": "#484039"
+    },
+    "dark": {
+      "paper": "#1e1b18",
+      "ink": "#e6ded3",
+      "accent": "#d96c5b",
+      "pencil": "#b8a691",
+      "secondary": "#e6ded3"
+    },
+    "additional_plot_color": {
+      "olive": "#5a7a0a",
+      "gold": "#d4a820"
+    },
+    "evidence": "Research CSS .tnh-site and .tnh-site[data-theme=dark]; olive/gold from site :root."
+  },
+  "framerMotion": {
+    "library": "framer-motion",
+    "duration": 0.22,
+    "ease": "easeOut",
+    "reducedMotion": "user"
+  },
+  "accessibility": {
+    "keyboardControls": true,
+    "bilingualLabels": true,
+    "textualReadout": true
+  }
+}

@@ -24,17 +24,17 @@
   width: 36px;
   height: 36px;
   place-items: center;
-  border: 1px solid rgba(255, 231, 141, 0.7);
-  background: #0d0f08;
-  color: #ffe78d;
-  font: 24px/1 var(--font-base);
+  border: 1px solid rgba(var(--color-brand-yellow-rgb), 0.7);
+  background: var(--color-bg);
+  color: var(--color-brand-yellow);
+  font: var(--font-size-2xl)/1 var(--font-base);
 }
 
 .screen {
   position: relative;
   overflow: hidden;
   margin: 0;
-  background: #0d0f08;
+  background: var(--color-bg);
   aspect-ratio: 4 / 3;
 }
 
@@ -43,7 +43,7 @@
   width: 100%;
   height: 100%;
   border: 0;
-  background: #000;
+  background: var(--color-black);
 }
 
 .picker {
@@ -53,7 +53,7 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: clamp(12px, 2.5vw, 28px);
   padding: clamp(16px, 4vw, 48px);
-  background: radial-gradient(ellipse at center, #25291d 0%, #0d0f08 75%);
+  background: radial-gradient(ellipse at center, #25291d 0%, var(--color-bg) 75%);
 }
 
 .gameChoice {
@@ -64,8 +64,8 @@
   place-items: center;
   overflow: hidden;
   padding: 0;
-  border: 2px solid rgba(255, 231, 141, 0.36);
-  background: rgba(0, 0, 0, 0.48);
+  border: 2px solid rgba(var(--color-brand-yellow-rgb), 0.36);
+  background: rgba(var(--color-black-rgb), 0.48);
   cursor: pointer;
   transition:
     border-color 140ms ease,
@@ -75,14 +75,14 @@
 
 .gameChoice:hover {
   transform: scale(1.025);
-  border-color: #ffe78d;
+  border-color: var(--color-brand-yellow);
 }
 
 .gameChoice:focus-visible {
-  outline: 3px solid #ffe78d;
+  outline: 3px solid var(--color-brand-yellow);
   outline-offset: 4px;
-  border-color: #ffe78d;
-  box-shadow: 0 0 24px rgba(255, 231, 141, 0.35);
+  border-color: var(--color-brand-yellow);
+  box-shadow: 0 0 24px rgba(var(--color-brand-yellow-rgb), 0.35);
 }
 
 .thumbnail {

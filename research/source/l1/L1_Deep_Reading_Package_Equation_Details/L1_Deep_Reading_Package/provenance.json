@@ -1,0 +1,312 @@
+{
+  "scope": {
+    "pdf_physical_pages": [
+      1,
+      40
+    ],
+    "printed_pages": [
+      1,
+      39
+    ],
+    "last_topic": "Chapter 20: limitations; no Chapter 21",
+    "figures": 13,
+    "additional_research_figures": 2
+  },
+  "style_source": "قراءة معمقة L1.pdf (3 pages)",
+  "content_source": "L1_21_Chapters_Illustrated_Study_Edition(1).pdf",
+  "code_source": "L1_Deep_Research_and_Explanation(2).pdf",
+  "units": [
+    {
+      "index": 1,
+      "code_source": "adapted",
+      "figure": null
+    },
+    {
+      "index": 2,
+      "code_source": "research pp.5-6; vector adapted to reference",
+      "figure": null
+    },
+    {
+      "index": 3,
+      "code_source": "adapted",
+      "figure": null
+    },
+    {
+      "index": 4,
+      "code_source": "adapted",
+      "figure": "01_norm_balls"
+    },
+    {
+      "index": 5,
+      "code_source": "research p.6; expanded norm comparison",
+      "figure": null
+    },
+    {
+      "index": 6,
+      "code_source": "chapter 3; new timeline code",
+      "figure": "history_landmarks"
+    },
+    {
+      "index": 7,
+      "code_source": "adapted",
+      "figure": "02_count_magnitude"
+    },
+    {
+      "index": 8,
+      "code_source": "adapted",
+      "figure": null
+    },
+    {
+      "index": 9,
+      "code_source": "research pp.7-9; plotting adapted to interactive JSON",
+      "figure": "14_convex_envelope"
+    },
+    {
+      "index": 10,
+      "code_source": "research pp.28-29; condensed original brentq example",
+      "figure": "04_constraint_geometry"
+    },
+    {
+      "index": 11,
+      "code_source": "adapted",
+      "figure": null
+    },
+    {
+      "index": 12,
+      "code_source": "adapted",
+      "figure": "05_regularization_path"
+    },
+    {
+      "index": 13,
+      "code_source": "research p.5 and appendix A pp.79-80; retained data construction",
+      "figure": null
+    },
+    {
+      "index": 14,
+      "code_source": "research pp.27 and 79-81; original solver and running example",
+      "figure": "06_regression_comparison"
+    },
+    {
+      "index": 15,
+      "code_source": "research pp.25-27; threshold example condensed",
+      "figure": "07_soft_threshold"
+    },
+    {
+      "index": 16,
+      "code_source": "adapted",
+      "figure": null
+    },
+    {
+      "index": 17,
+      "code_source": "research p.55; original proximal calculation",
+      "figure": null
+    },
+    {
+      "index": 18,
+      "code_source": "research pp.27 and 56-58; original dual and screening code",
+      "figure": "15_optimization_gap"
+    },
+    {
+      "index": 19,
+      "code_source": "research pp.61-62; original CV pipeline",
+      "figure": null
+    },
+    {
+      "index": 20,
+      "code_source": "adapted",
+      "figure": null
+    },
+    {
+      "index": 21,
+      "code_source": "research pp.38-39; original subsample example with source seed 2026",
+      "figure": "08_selection_stability"
+    },
+    {
+      "index": 22,
+      "code_source": "research pp.65-66; original linear program",
+      "figure": null
+    },
+    {
+      "index": 23,
+      "code_source": "research pp.63-66; original recovery examples",
+      "figure": "09_recovery_failure"
+    },
+    {
+      "index": 24,
+      "code_source": "adapted",
+      "figure": null
+    },
+    {
+      "index": 25,
+      "code_source": "adapted",
+      "figure": null
+    },
+    {
+      "index": 26,
+      "code_source": "adapted",
+      "figure": "10_total_variation"
+    },
+    {
+      "index": 27,
+      "code_source": "adapted",
+      "figure": "11_weight_patterns"
+    },
+    {
+      "index": 28,
+      "code_source": "adapted",
+      "figure": null
+    },
+    {
+      "index": 29,
+      "code_source": "chapter 16-17 and research sparsity discussion; new compact mask demonstration",
+      "figure": null
+    },
+    {
+      "index": 30,
+      "code_source": "adapted",
+      "figure": "12_sparse_storage"
+    },
+    {
+      "index": 31,
+      "code_source": "adapted",
+      "figure": null
+    },
+    {
+      "index": 32,
+      "code_source": "adapted",
+      "figure": null
+    },
+    {
+      "index": 33,
+      "code_source": "adapted",
+      "figure": null
+    },
+    {
+      "index": 34,
+      "code_source": "research pp.70-71; original SVD code with truncation comparison",
+      "figure": "13_singular_shrinkage"
+    },
+    {
+      "index": 35,
+      "code_source": "adapted",
+      "figure": null
+    },
+    {
+      "index": 36,
+      "code_source": "adapted",
+      "figure": null
+    }
+  ],
+  "references": [
+    [
+      "Hoerl & Kennard (1970)",
+      "https://doi.org/10.1080/00401706.1970.10488634"
+    ],
+    [
+      "Williams (1995)",
+      "https://doi.org/10.1162/neco.1995.7.1.117"
+    ],
+    [
+      "Tibshirani (1996)",
+      "https://doi.org/10.1111/j.2517-6161.1996.tb02080.x"
+    ],
+    [
+      "Chen, Donoho & Saunders (1998)",
+      "https://doi.org/10.1137/S1064827596304010"
+    ],
+    [
+      "Zou & Hastie (2005)",
+      "https://doi.org/10.1111/j.1467-9868.2005.00503.x"
+    ],
+    [
+      "Zou (2006)",
+      "https://doi.org/10.1198/016214506000000735"
+    ],
+    [
+      "Yuan & Lin (2006)",
+      "https://doi.org/10.1111/j.1467-9868.2005.00532.x"
+    ],
+    [
+      "Zhao & Yu (2006)",
+      "https://jmlr.org/papers/v7/zhao06a.html"
+    ],
+    [
+      "Candès, Romberg & Tao (2006)",
+      "https://arxiv.org/abs/math/0503066"
+    ],
+    [
+      "Donoho (2006)",
+      "https://doi.org/10.1109/TIT.2006.871582"
+    ],
+    [
+      "Wainwright (2009)",
+      "https://arxiv.org/abs/math/0605740"
+    ],
+    [
+      "Beck & Teboulle (2009)",
+      "https://doi.org/10.1137/080716542"
+    ],
+    [
+      "Friedman, Hastie & Tibshirani (2010)",
+      "https://doi.org/10.18637/jss.v033.i01"
+    ],
+    [
+      "Meinshausen & Bühlmann (2010)",
+      "https://doi.org/10.1111/j.1467-9868.2010.00740.x"
+    ],
+    [
+      "Lee et al. (2016)",
+      "https://arxiv.org/abs/1311.6238"
+    ],
+    [
+      "Parikh & Boyd (2014)",
+      "https://web.stanford.edu/~boyd/papers/prox_algs.html"
+    ],
+    [
+      "Fercoq et al. (2015)",
+      "https://proceedings.mlr.press/v37/fercoq15.html"
+    ],
+    [
+      "Cai, Candès & Shen (2010)",
+      "https://doi.org/10.1137/080738970"
+    ],
+    [
+      "Wen et al. (2016)",
+      "https://proceedings.neurips.cc/paper/2016/hash/41bfd20a38bb1b0bec75acf0845530a7-Abstract.html"
+    ],
+    [
+      "Scardapane et al. (2017)",
+      "https://doi.org/10.1016/j.neucom.2017.02.029"
+    ],
+    [
+      "Boyd: L1 methods",
+      "https://web.stanford.edu/class/ee364b/lectures/l1_methods_slides.pdf"
+    ]
+  ],
+  "editorial_review": {
+    "paragraph_titles_per_language": 36,
+    "reference_titles_per_language": 1,
+    "code_blocks_per_language": 39,
+    "added_teaching_experiments": [
+      "all-zero slopes at lambda_max",
+      "outlier influence",
+      "two-pixel TV merging",
+      "identical-predictor Elastic Net",
+      "feature-scale selection"
+    ],
+    "expanded_timeline_events": 10,
+    "guided_figures": 5
+  },
+  "equation_explanations": {
+    "equation_groups_per_language": 26,
+    "languages": [
+      "ar",
+      "en"
+    ],
+    "explanation_parts_per_group": 3,
+    "disclosure_default": "closed",
+    "html_activation": "click equation summary",
+    "markdown_activation": "details below equation",
+    "main_essay_preserved": true
+  }
+}

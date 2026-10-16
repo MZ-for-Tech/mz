@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "L1 bilingual interactive figure configuration",
+  "type": "object",
+  "required": ["schemaVersion", "id", "title", "renderer", "source", "caption", "controls", "data", "theme", "framerMotion"],
+  "properties": {
+    "schemaVersion": {"const": "1.0"},
+    "id": {"type": "string"},
+    "title": {"$ref": "#/$defs/bilingual"},
+    "caption": {"$ref": "#/$defs/bilingual"},
+    "renderer": {"enum": ["normBalls", "history", "countMagnitude", "geometry", "path", "regression", "threshold", "stability", "recovery", "tv", "weights", "storage", "singular", "envelope", "gap"]},
+    "source": {"type": "object", "required": ["pdf", "physicalPages", "additionalResearchFigure"], "properties": {"pdf": {"type": "string"}, "physicalPages": {"type": "array", "items": {"type": "integer", "minimum": 1}}, "additionalResearchFigure": {"type": "boolean"}}},
+    "controls": {"type": "array", "items": {"$ref": "#/$defs/control"}},
+    "data": {"type": "object"},
+    "theme": {"type": "object", "required": ["source", "light", "dark", "additional_plot_color"]},
+    "framerMotion": {"type": "object", "required": ["library", "duration", "ease", "reducedMotion"], "properties": {"library": {"const": "framer-motion"}, "duration": {"type": "number", "minimum": 0}, "ease": {"const": "easeOut"}, "reducedMotion": {"const": "user"}}},
+    "accessibility": {"type": "object"}
+  },
+  "$defs": {
+    "bilingual": {"type": "object", "required": ["ar", "en"], "properties": {"ar": {"type": "string"}, "en": {"type": "string"}}},
+    "control": {
+      "type": "object", "required": ["key", "type", "label", "default"],
+      "properties": {"key": {"type": "string"}, "type": {"enum": ["range", "select"]}, "label": {"$ref": "#/$defs/bilingual"}, "min": {"type": "number"}, "max": {"type": "number"}, "step": {"type": "number", "exclusiveMinimum": 0}, "options": {"type": "array", "items": {"type": "object", "required": ["value", "label"], "properties": {"value": {"type": "string"}, "label": {"$ref": "#/$defs/bilingual"}}}}},
+      "allOf": [
+        {"if": {"properties": {"type": {"const": "range"}}}, "then": {"required": ["min", "max", "step"], "properties": {"default": {"type": "number"}}}},
+        {"if": {"properties": {"type": {"const": "select"}}}, "then": {"required": ["options"], "properties": {"default": {"type": "string"}}}}
+      ]
+    }
+  }
+}

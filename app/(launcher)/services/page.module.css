@@ -37,9 +37,9 @@
      by ~50px — which stops the panel centring and drops the closer straight
      onto the fixed wordmark. This fits inside the box instead. */
   justify-content: center;
-  gap: clamp(1rem, 2vw, 1.6rem);
+  gap: clamp(var(--space-4), 2vw, 1.6rem);
   margin: 0 auto;
-  padding: 0 var(--spacing-container) 1.5rem;
+  padding: 0 var(--spacing-container) var(--space-6);
 }
 
 /* ── Intro ──────────────────────────────────────────────────────────────
@@ -69,14 +69,14 @@
 .count {
   margin: 0;
   font-family: var(--font-code);
-  font-size: clamp(0.5rem, 0.72vw, 0.66rem);
+  font-size: clamp(var(--font-size-tiny), 0.72vw, var(--font-size-xs));
   letter-spacing: 0.34em;
   text-transform: uppercase;
   /* The trailing space that tracking adds to the last glyph pushes a
      centred line visibly right of true centre; this pulls it back by
      exactly half of it. Same correction as .trustTitle on the home panel. */
   text-indent: 0.34em;
-  color: rgba(245, 245, 240, 0.42);
+  color: rgba(var(--color-text-rgb), 0.42);
 }
 
 /* ── Pillars ────────────────────────────────────────────────────────────
@@ -120,14 +120,14 @@
      of the scale for a card — 10px, which is the same ~4% the reference uses
      on a panel of this proportion. */
   border-radius: var(--radius-lg);
-  background: rgba(255, 255, 255, 0.04);
-  box-shadow: inset 0 0 0 1px rgba(245, 245, 240, 0.1);
+  background: rgba(var(--color-white-rgb), 0.04);
+  box-shadow: inset 0 0 0 1px rgba(var(--color-text-rgb), 0.1);
   transition: box-shadow 0.25s ease, background 0.25s ease;
 }
 
 .card:hover {
-  background: rgba(255, 255, 255, 0.06);
-  box-shadow: inset 0 0 0 1px rgba(245, 245, 240, 0.24);
+  background: rgba(var(--color-white-rgb), 0.06);
+  box-shadow: inset 0 0 0 1px rgba(var(--color-text-rgb), 0.24);
 }
 
 /* ── Head ───────────────────────────────────────────────────────────────
@@ -140,30 +140,30 @@
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  gap: 1rem;
+  gap: var(--space-4);
   margin-bottom: clamp(0.9rem, 1.5vw, 1.2rem);
 }
 
 .id {
   font-family: var(--font-code);
-  font-size: 0.6rem;
+  font-size: var(--font-size-2xs);
   line-height: 1;
   letter-spacing: 0.18em;
-  color: rgba(245, 245, 240, 0.3);
+  color: rgba(var(--color-text-rgb), 0.3);
   font-variant-numeric: tabular-nums;
   transition: color 0.25s ease;
 }
 
 .pillarLabel {
   font-family: var(--font-code);
-  font-size: clamp(0.56rem, 0.7vw, 0.66rem);
+  font-size: clamp(var(--font-size-3xs), 0.7vw, var(--font-size-xs));
   line-height: 1;
   letter-spacing: 0.3em;
   /* Tracking's trailing space again — this time pulling the label's right
      edge in so it sits flush with the card's content edge. */
   margin-right: -0.3em;
   text-transform: uppercase;
-  color: rgba(245, 245, 240, 0.5);
+  color: rgba(var(--color-text-rgb), 0.5);
   transition: color 0.25s ease;
 }
 
@@ -179,9 +179,9 @@
    competing heading. */
 
 .cardTitle {
-  margin: 0 0 0.5rem;
+  margin: 0 0 var(--space-2);
   font-family: var(--font-heading);
-  font-size: clamp(1.15rem, 1.9vw, 1.6rem);
+  font-size: clamp(var(--font-size-lg), 1.9vw, 1.6rem);
   font-weight: 500;
   line-height: 1.15;
   letter-spacing: -0.01em;
@@ -192,9 +192,9 @@
 .tagline {
   margin: 0 0 clamp(0.95rem, 1.6vw, 1.3rem);
   font-family: var(--font-base);
-  font-size: clamp(0.85rem, 1.05vw, 0.95rem);
+  font-size: clamp(var(--font-size-sm), 1.05vw, var(--font-size-base));
   line-height: 1.5;
-  color: rgba(245, 245, 240, 0.6);
+  color: rgba(var(--color-text-rgb), 0.6);
   text-wrap: pretty;
 }
 
@@ -214,16 +214,16 @@
   list-style: none;
   margin: auto 0 0;
   padding: clamp(0.85rem, 1.4vw, 1.1rem) 0 0;
-  border-top: 1px solid rgba(245, 245, 240, 0.1);
+  border-top: 1px solid rgba(var(--color-text-rgb), 0.1);
 }
 
 .capability {
   position: relative;
-  padding-left: 1rem;
+  padding-left: var(--space-4);
   font-family: var(--font-base);
-  font-size: clamp(0.8rem, 0.95vw, 0.875rem);
+  font-size: clamp(var(--font-size-sm), 0.95vw, var(--font-size-sm));
   line-height: 1.45;
-  color: rgba(245, 245, 240, 0.5);
+  color: rgba(var(--color-text-rgb), 0.5);
   transition: color 0.25s ease;
 }
 
@@ -236,12 +236,12 @@
   top: 0.62em;
   width: 6px;
   height: 1px;
-  background: rgba(245, 245, 240, 0.28);
+  background: rgba(var(--color-text-rgb), 0.28);
   transition: background 0.25s ease, width 0.25s ease;
 }
 
 .card:hover .capability {
-  color: rgba(245, 245, 240, 0.78);
+  color: rgba(var(--color-text-rgb), 0.78);
 }
 
 .card:hover .capability::before {
@@ -279,20 +279,20 @@
   display: inline-block;
   padding: 0.35rem 0;
   font-family: var(--font-code);
-  font-size: clamp(0.56rem, 0.72vw, 0.66rem);
+  font-size: clamp(var(--font-size-3xs), 0.72vw, var(--font-size-xs));
   letter-spacing: 0.28em;
   /* Same trailing-space correction as the two centred labels above. */
   text-indent: 0.28em;
   text-transform: uppercase;
-  color: rgba(245, 245, 240, 0.45);
+  color: rgba(var(--color-text-rgb), 0.45);
   text-decoration: none;
-  border-bottom: 1px solid rgba(245, 245, 240, 0.16);
+  border-bottom: 1px solid rgba(var(--color-text-rgb), 0.16);
   transition: color 0.25s ease, border-color 0.25s ease;
 }
 
 .closerLink:hover {
   color: var(--color-brand-yellow);
-  border-color: rgba(255, 231, 141, 0.55);
+  border-color: rgba(var(--color-brand-yellow-rgb), 0.55);
 }
 
 /* ── Responsive ──────────────────────────────────────────────────────────

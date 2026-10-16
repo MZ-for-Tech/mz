@@ -1,0 +1,70 @@
+{
+  "schemaVersion": "1.0",
+  "id": "01_norm_balls",
+  "title": {
+    "ar": "كرات المعايير",
+    "en": "Norm balls"
+  },
+  "renderer": "normBalls",
+  "source": {
+    "pdf": "L1_21_Chapters_Illustrated_Study_Edition(1).pdf",
+    "physicalPages": [
+      7
+    ],
+    "additionalResearchFigure": false
+  },
+  "caption": {
+    "ar": "عند ميزانية مشتركة t، تأخذ كرات L₁ وL₂ وL∞ أشكال المعين والقرص والمربع، على الترتيب.",
+    "en": "At a shared budget t, the L₁, L₂, and L∞ balls form a diamond, disk, and square, respectively."
+  },
+  "controls": [
+    {
+      "key": "budget",
+      "type": "range",
+      "label": {
+        "ar": "الميزانية t",
+        "en": "Budget t"
+      },
+      "default": 1,
+      "min": 0.2,
+      "max": 2,
+      "step": 0.02
+    }
+  ],
+  "data": {},
+  "theme": {
+    "source": "https://www.mzfortech.com/research",
+    "verified_on": "2026-10-10",
+    "source_selector": ".tnh-site",
+    "light": {
+      "paper": "#f5f2ed",
+      "ink": "#111111",
+      "accent": "#8b3a2b",
+      "pencil": "#756b5e",
+      "secondary": "#484039"
+    },
+    "dark": {
+      "paper": "#1e1b18",
+      "ink": "#e6ded3",
+      "accent": "#d96c5b",
+      "pencil": "#b8a691",
+      "secondary": "#e6ded3"
+    },
+    "additional_plot_color": {
+      "olive": "#5a7a0a",
+      "gold": "#d4a820"
+    },
+    "evidence": "Research CSS .tnh-site and .tnh-site[data-theme=dark]; olive/gold from site :root."
+  },
+  "framerMotion": {
+    "library": "framer-motion",
+    "duration": 0.22,
+    "ease": "easeOut",
+    "reducedMotion": "user"
+  },
+  "accessibility": {
+    "keyboardControls": true,
+    "bilingualLabels": true,
+    "textualReadout": true
+  }
+}

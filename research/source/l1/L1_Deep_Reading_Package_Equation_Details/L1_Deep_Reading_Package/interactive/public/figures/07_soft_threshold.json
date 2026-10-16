@@ -1,0 +1,82 @@
+{
+  "schemaVersion": "1.0",
+  "id": "07_soft_threshold",
+  "title": {
+    "ar": "العتبة اللينة",
+    "en": "Soft thresholding"
+  },
+  "renderer": "threshold",
+  "source": {
+    "pdf": "L1_21_Chapters_Illustrated_Study_Edition(1).pdf",
+    "physicalPages": [
+      23
+    ],
+    "additionalResearchFigure": false
+  },
+  "caption": {
+    "ar": "تحوّل Lasso مجالا مركزيا إلى الصفر؛ أما Ridge فيقلّص كل معامل غير صفري باستمرار.",
+    "en": "Lasso maps a central interval to zero; Ridge continuously shrinks every nonzero coefficient."
+  },
+  "controls": [
+    {
+      "key": "lambda",
+      "type": "range",
+      "label": {
+        "ar": "العتبة λ",
+        "en": "Threshold λ"
+      },
+      "default": 0.8,
+      "min": 0,
+      "max": 2.5,
+      "step": 0.02
+    },
+    {
+      "key": "a",
+      "type": "range",
+      "label": {
+        "ar": "تفضيل البيانات a",
+        "en": "Data preference a"
+      },
+      "default": 1.4,
+      "min": -3,
+      "max": 3,
+      "step": 0.02
+    }
+  ],
+  "data": {},
+  "theme": {
+    "source": "https://www.mzfortech.com/research",
+    "verified_on": "2026-10-10",
+    "source_selector": ".tnh-site",
+    "light": {
+      "paper": "#f5f2ed",
+      "ink": "#111111",
+      "accent": "#8b3a2b",
+      "pencil": "#756b5e",
+      "secondary": "#484039"
+    },
+    "dark": {
+      "paper": "#1e1b18",
+      "ink": "#e6ded3",
+      "accent": "#d96c5b",
+      "pencil": "#b8a691",
+      "secondary": "#e6ded3"
+    },
+    "additional_plot_color": {
+      "olive": "#5a7a0a",
+      "gold": "#d4a820"
+    },
+    "evidence": "Research CSS .tnh-site and .tnh-site[data-theme=dark]; olive/gold from site :root."
+  },
+  "framerMotion": {
+    "library": "framer-motion",
+    "duration": 0.22,
+    "ease": "easeOut",
+    "reducedMotion": "user"
+  },
+  "accessibility": {
+    "keyboardControls": true,
+    "bilingualLabels": true,
+    "textualReadout": true
+  }
+}

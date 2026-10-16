@@ -8,10 +8,12 @@ export default function ResearchArticleCards({
   articles,
   locale,
   label,
+  labelId = 'research-articles-label',
 }: {
   articles: Study[];
   locale: 'en' | 'ar';
   label?: string;
+  labelId?: string;
 }) {
   if (!articles.length) return null;
   const isArabic = locale === 'ar';
@@ -19,11 +21,11 @@ export default function ResearchArticleCards({
   return (
     <section
       className="research-article-cards mt-16 border-t border-ink/15 pt-8"
-      aria-labelledby="research-articles-label"
+      aria-labelledby={labelId}
       lang={locale}
       dir={isArabic ? 'rtl' : 'ltr'}
     >
-      <p id="research-articles-label" className="font-mono text-xs uppercase tracking-[0.16em] text-ink/45">
+      <p id={labelId} className="font-mono text-xs uppercase tracking-[0.16em] text-ink/45">
         {label || (isArabic ? 'مقالات وأفكار' : 'Articles & essays')}
       </p>
 

@@ -1,0 +1,70 @@
+{
+  "schemaVersion": "1.0",
+  "id": "03_convex_envelope",
+  "title": {
+    "ar": "الغلاف المحدب",
+    "en": "Convex envelope"
+  },
+  "renderer": "envelope",
+  "source": {
+    "pdf": "L1_Deep_Research_and_Explanation(2).pdf",
+    "physicalPages": [
+      8
+    ],
+    "additionalResearchFigure": true
+  },
+  "caption": {
+    "ar": "على المجال [−M، M]، يكون |w|/M الغلاف المحدب لمؤشر عدم الصفر؛ يلامس الصفر عند الأصل ويبلغ الواحد عند الحدين.",
+    "en": "On [−M, M], |w|/M is the convex envelope of the nonzero indicator, meeting zero at the origin and one at both bounds."
+  },
+  "controls": [
+    {
+      "key": "M",
+      "type": "range",
+      "label": {
+        "ar": "حد المجال M",
+        "en": "Domain bound M"
+      },
+      "default": 1,
+      "min": 0.5,
+      "max": 3,
+      "step": 0.1
+    }
+  ],
+  "data": {},
+  "theme": {
+    "source": "https://www.mzfortech.com/research",
+    "verified_on": "2026-10-10",
+    "source_selector": ".tnh-site",
+    "light": {
+      "paper": "#f5f2ed",
+      "ink": "#111111",
+      "accent": "#8b3a2b",
+      "pencil": "#756b5e",
+      "secondary": "#484039"
+    },
+    "dark": {
+      "paper": "#1e1b18",
+      "ink": "#e6ded3",
+      "accent": "#d96c5b",
+      "pencil": "#b8a691",
+      "secondary": "#e6ded3"
+    },
+    "additional_plot_color": {
+      "olive": "#5a7a0a",
+      "gold": "#d4a820"
+    },
+    "evidence": "Research CSS .tnh-site and .tnh-site[data-theme=dark]; olive/gold from site :root."
+  },
+  "framerMotion": {
+    "library": "framer-motion",
+    "duration": 0.22,
+    "ease": "easeOut",
+    "reducedMotion": "user"
+  },
+  "accessibility": {
+    "keyboardControls": true,
+    "bilingualLabels": true,
+    "textualReadout": true
+  }
+}

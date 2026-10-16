@@ -7,10 +7,10 @@
      and it is the only text in the header that reports anything. 0.8rem
      keeps the mono rhythm of the rest of the chrome while clearing the
      readability floor. */
-  font-size: 0.8rem;
+  font-size: var(--font-size-sm);
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.86);
+  color: rgba(var(--color-white-rgb), 0.86);
   /* Tabular figures: a proportional clock shifts the whole cluster sideways
      every time the digit widths change, which at 1Hz is a visible twitch. */
   font-variant-numeric: tabular-nums;
@@ -19,9 +19,9 @@
 }
 
 .time {
-  color: #fff;
+  color: var(--color-white);
 }
 
 .zone {
-  color: rgba(255, 255, 255, 0.72);
+  color: rgba(var(--color-white-rgb), 0.72);
 }

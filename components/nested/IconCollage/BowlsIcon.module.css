@@ -93,7 +93,7 @@
 
   0%,
   15% {
-    fill: #4a5d23;
+    fill: var(--color-icon-olive);
   }
 
   35%,
@@ -103,7 +103,7 @@
 
   85%,
   100% {
-    fill: #4a5d23;
+    fill: var(--color-icon-olive);
   }
 }
 
@@ -111,17 +111,17 @@
 
   0%,
   15% {
-    fill: #4a5d23;
+    fill: var(--color-icon-olive);
   }
 
   35%,
   65% {
-    fill: #ffd834;
+    fill: var(--color-icon-gold);
   }
 
   85%,
   100% {
-    fill: #4a5d23;
+    fill: var(--color-icon-olive);
   }
 }
 
@@ -129,16 +129,16 @@
 
   0%,
   15% {
-    fill: #4a5d23;
+    fill: var(--color-icon-olive);
   }
 
   35%,
   65% {
-    fill: #000000;
+    fill: var(--color-black);
   }
 
   85%,
   100% {
-    fill: #4a5d23;
+    fill: var(--color-icon-olive);
   }
 }

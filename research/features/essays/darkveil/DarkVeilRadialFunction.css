@@ -13,9 +13,9 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
+  gap: var(--space-4);
   min-height: 3.25rem;
-  padding: 0.55rem 0.75rem;
+  padding: 0.55rem var(--space-3);
   border-bottom: 1px solid var(--border-val);
   color: var(--ink-val);
 }
@@ -23,7 +23,7 @@
 .darkveil-radial-header code {
   color: var(--ink-val);
   font-family: var(--font-mono), monospace;
-  font-size: 0.76rem;
+  font-size: var(--font-size-sm);
 }
 
 .darkveil-radial-toggle {
@@ -42,7 +42,7 @@
   color: var(--pencil-val);
   cursor: pointer;
   font-family: var(--font-mono), monospace;
-  font-size: 0.56rem;
+  font-size: var(--font-size-3xs);
   letter-spacing: 0.04em;
   text-transform: uppercase;
   transition: color 160ms ease, background-color 160ms ease;
@@ -96,18 +96,18 @@
   stroke-linejoin: round;
   stroke-width: 2px;
   font-family: var(--font-mono), monospace;
-  font-size: 13px;
+  font-size: var(--font-size-sm);
 }
 
-.darkveil-radial-center-label { font-size: 10px; }
+.darkveil-radial-center-label { font-size: var(--font-size-2xs); }
 
 .darkveil-radial-hint {
   margin: 0;
-  padding: 0.55rem 0.75rem;
+  padding: 0.55rem var(--space-3);
   border-top: 1px solid var(--border-val);
   color: var(--pencil-val);
   font-family: var(--font-mono), monospace;
-  font-size: 0.58rem;
+  font-size: var(--font-size-3xs);
   letter-spacing: 0.02em;
 }
 
@@ -118,7 +118,7 @@
 }
 
 @media (max-width: 520px) {
-  .darkveil-radial-header { align-items: flex-start; flex-direction: column; gap: 0.5rem; }
+  .darkveil-radial-header { align-items: flex-start; flex-direction: column; gap: var(--space-2); }
   .darkveil-radial-toggle { align-self: stretch; }
   .darkveil-radial-toggle button { flex: 1; }
   .darkveil-radial-viewport { height: 67vw; min-height: 15rem; }

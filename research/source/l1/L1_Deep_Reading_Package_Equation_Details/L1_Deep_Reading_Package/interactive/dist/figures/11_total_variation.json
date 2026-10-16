@@ -1,0 +1,81 @@
+{
+  "schemaVersion": "1.0",
+  "id": "11_total_variation",
+  "title": {
+    "ar": "فروق الجيران",
+    "en": "Neighboring differences"
+  },
+  "renderer": "tv",
+  "source": {
+    "pdf": "L1_21_Chapters_Illustrated_Study_Edition(1).pdf",
+    "physicalPages": [
+      31
+    ],
+    "additionalResearchFigure": false
+  },
+  "caption": {
+    "ar": "الصف الأصلي له انتقال واحد. الحل يحسب TV للصف ذي ستة عناصر؛ لا نطبق عتبة مستقلة على فروق صورة عامة.",
+    "en": "The original row has one transition. The solution is the exact TV result for this six-entry row; we do not independently threshold a general image’s differences."
+  },
+  "controls": [
+    {
+      "key": "lambda",
+      "type": "range",
+      "label": {
+        "ar": "قوة TV λ",
+        "en": "TV strength λ"
+      },
+      "default": 0,
+      "min": 0,
+      "max": 70,
+      "step": 1
+    }
+  ],
+  "data": {
+    "row": [
+      10,
+      10,
+      10,
+      50,
+      50,
+      50
+    ],
+    "analyticDifference": "max(40 - 2*lambda/3, 0)",
+    "mean": 30
+  },
+  "theme": {
+    "source": "https://www.mzfortech.com/research",
+    "verified_on": "2026-10-10",
+    "source_selector": ".tnh-site",
+    "light": {
+      "paper": "#f5f2ed",
+      "ink": "#111111",
+      "accent": "#8b3a2b",
+      "pencil": "#756b5e",
+      "secondary": "#484039"
+    },
+    "dark": {
+      "paper": "#1e1b18",
+      "ink": "#e6ded3",
+      "accent": "#d96c5b",
+      "pencil": "#b8a691",
+      "secondary": "#e6ded3"
+    },
+    "additional_plot_color": {
+      "olive": "#5a7a0a",
+      "gold": "#d4a820"
+    },
+    "evidence": "Research CSS .tnh-site and .tnh-site[data-theme=dark]; olive/gold from site :root."
+  },
+  "framerMotion": {
+    "library": "framer-motion",
+    "duration": 0.22,
+    "ease": "easeOut",
+    "reducedMotion": "user"
+  },
+  "accessibility": {
+    "keyboardControls": true,
+    "bilingualLabels": true,
+    "textualReadout": true
+  }
+}

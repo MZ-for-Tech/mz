@@ -15,29 +15,29 @@
   font-family: var(--font-heading);
   font-size: clamp(4rem, 8vw, 8rem);
   line-height: 1;
-  margin-bottom: 2rem;
+  margin-bottom: var(--space-8);
   letter-spacing: -0.04em;
 }
 
 .content {
   font-family: var(--font-base);
-  font-size: 1.75rem;
+  font-size: var(--font-size-3xl);
   line-height: 1.8;
   color: var(--color-text-muted);
 }
 
 .content h2 {
   font-family: var(--font-heading);
-  font-size: 3rem;
+  font-size: var(--font-size-6xl);
   color: var(--color-text);
-  margin-top: 4rem;
-  margin-bottom: 1.5rem;
+  margin-top: var(--space-16);
+  margin-bottom: var(--space-6);
   font-weight: 500;
   letter-spacing: -0.02em;
 }
 
 .content p {
-  margin-bottom: 1.5rem;
+  margin-bottom: var(--space-6);
 }
 
 .content a {
@@ -50,15 +50,15 @@
 .backRow {
   display: flex;
   justify-content: center;
-  padding: 0 var(--spacing-container) 4rem;
+  padding: 0 var(--spacing-container) var(--space-16);
 }
 
 .backLink {
   font-family: var(--font-code);
-  font-size: 0.62rem;
+  font-size: var(--font-size-2xs);
   letter-spacing: 0.28em;
   text-transform: uppercase;
-  color: rgba(245, 245, 240, 0.4);
+  color: rgba(var(--color-text-rgb), 0.4);
   text-decoration: none;
   transition: color 0.25s ease;
 }

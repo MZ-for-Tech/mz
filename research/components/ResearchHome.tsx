@@ -2,6 +2,9 @@ import { CUSTOM_STUDIES, hasArabicStudyMetadata } from '@/research/data/studies'
 import Bookshelf from '@/research/features/research/Bookshelf';
 import FeaturedResearchEssay from '@/research/features/research/FeaturedResearchEssay';
 import ResearchArticleCards from '@/research/features/research/ResearchArticleCards';
+import { getStudyReadingMinutes } from '@/research/lib/readingTime';
+
+const DEEP_DIVE_MINUTES = 20;
 
 export default function ResearchHome({ locale = 'en' }: { locale?: 'en' | 'ar' }) {
   const isArabic = locale === 'ar';
@@ -12,6 +15,12 @@ export default function ResearchHome({ locale = 'en' }: { locale?: 'en' | 'ar' }
     && (!isArabic || hasArabicStudyMetadata(study)),
   );
   const featuredEssay = essays.find((essay) => essay.is_featured) || essays[0];
+  const listedEssays = essays.filter((essay) => essay.slug !== featuredEssay?.slug);
+  const deepDiveSlugs = new Set(
+    listedEssays
+      .filter((essay) => (getStudyReadingMinutes(essay, 'en') || 0) > DEEP_DIVE_MINUTES)
+      .map((essay) => essay.slug),
+  );
 
   return (
     <main className="research-main" lang={locale} dir={isArabic ? 'rtl' : 'ltr'}>
@@ -50,8 +59,14 @@ export default function ResearchHome({ locale = 'en' }: { locale?: 'en' | 'ar' }
         </section>
 
         <ResearchArticleCards
-          articles={essays.filter((essay) => essay.slug !== featuredEssay?.slug)}
+          articles={listedEssays.filter((essay) => !deepDiveSlugs.has(essay.slug))}
           locale={locale}
+        />
+        <ResearchArticleCards
+          articles={listedEssays.filter((essay) => deepDiveSlugs.has(essay.slug))}
+          locale={locale}
+          label={isArabic ? 'قراءات معمّقة' : 'Deep Dives'}
+          labelId="research-deep-dives-label"
         />
       </div>
     </main>

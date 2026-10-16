@@ -13,11 +13,11 @@
   0%, 100% {
     transform: scale(0.8) rotate(0deg);
     opacity: 0.8;
-    color: #000000;
+    color: var(--color-black);
   }
   50% {
     transform: scale(1.15) rotate(15deg);
     opacity: 1;
-    color: #ffffff;
+    color: var(--color-white);
   }
 }

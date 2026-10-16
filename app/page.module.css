@@ -24,7 +24,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2rem;
+  gap: var(--space-8);
   width: 100%;
   z-index: 2;
   pointer-events: none;
@@ -83,9 +83,9 @@
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  gap: clamp(1rem, 4vw, 4rem);
+  gap: clamp(var(--space-4), 4vw, var(--space-16));
   flex-wrap: wrap;
-  padding: 0 2rem;
+  padding: 0 var(--space-8);
   margin: 0;
   font-size: inherit;
   font-weight: inherit;
@@ -93,10 +93,10 @@
 
 .heroWord {
   font-weight: 300;
-  font-size: clamp(0.75rem, 1.2vw, 1.1rem);
+  font-size: clamp(var(--font-size-xs), 1.2vw, var(--font-size-lg));
   letter-spacing: 0.5em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.85);
+  color: rgba(var(--color-white-rgb), 0.85);
   pointer-events: auto;
   overflow: hidden; /* clips the y:110% slide-up animation */
   padding-bottom: 0.1em; /* prevents descender clipping */
@@ -108,7 +108,7 @@
   transition: color 0.3s ease;
   pointer-events: auto;
   display: inline-block;
-  padding: 0.75rem 0.5rem;
+  padding: var(--space-3) var(--space-2);
   margin: -0.75rem -0.5rem;
 }
 
@@ -118,7 +118,7 @@
 
 .heroSubtext {
   font-family: var(--font-base);
-  font-size: clamp(0.65rem, 1vw, 0.8rem);
+  font-size: clamp(var(--font-size-xs), 1vw, var(--font-size-sm));
   letter-spacing: 0.2em;
   color: var(--color-brand-yellow);
   pointer-events: auto;
@@ -157,12 +157,12 @@
 
 .heroDescription {
   position: absolute;
-  bottom: 4rem;
-  left: 4rem;
-  font-size: 0.85rem;
+  bottom: var(--space-16);
+  left: var(--space-16);
+  font-size: var(--font-size-sm);
   line-height: 1.6;
   letter-spacing: 0.02em;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(var(--color-white-rgb), 0.5);
   max-width: 280px;
   opacity: 0;
   z-index: 3;
@@ -177,9 +177,9 @@
      * scaled down on coarse viewports (see logoScale in MzLogo3D), so this
      * is the copy moving up to meet it, not the mark being pushed aside. */
     bottom: 9.5rem;
-    left: 1.5rem;
-    right: 1.5rem;
-    font-size: 0.8rem;
+    left: var(--space-6);
+    right: var(--space-6);
+    font-size: var(--font-size-sm);
     max-width: none;
   }
 
@@ -187,8 +187,8 @@
      the Enter line can drop to the bottom edge rather than sitting on the
      centre line. */
   .enterPrompt {
-    bottom: 1.25rem;
-    right: 1.5rem;
+    bottom: var(--space-5);
+    right: var(--space-6);
   }
 
   .heroContent {
@@ -202,7 +202,7 @@
 
   .heroWordsRow {
     flex-direction: column;
-    gap: 1rem;
+    gap: var(--space-4);
   }
 }
 
@@ -214,7 +214,7 @@
   }
 
   .heroWord {
-    font-size: clamp(1.2rem, 7vw, 2.5rem);
+    font-size: clamp(var(--font-size-lg), 7vw, var(--font-size-5xl));
     letter-spacing: 0.3em;
   }
 
@@ -230,12 +230,12 @@
     position: relative;
     right: auto;
     bottom: auto;
-    margin-top: 0.5rem;
-    font-size: 1rem;
+    margin-top: var(--space-2);
+    font-size: var(--font-size-base);
   }
 
   .heroDescription {
-    font-size: 1rem;
+    font-size: var(--font-size-base);
     max-width: 100%;
   }
 }
@@ -264,8 +264,8 @@
  * never was. */
 .enterPrompt {
   position: absolute;
-  bottom: 4rem;
-  right: 4rem;
+  bottom: var(--space-16);
+  right: var(--space-16);
   z-index: 3;
   display: inline-flex;
   align-items: center;
@@ -298,10 +298,10 @@
 }
 
 .enterLabel {
-  font-size: 0.68rem;
+  font-size: var(--font-size-xs);
   letter-spacing: 0.4em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.55);
+  color: rgba(var(--color-white-rgb), 0.55);
   transition: color 0.3s ease;
 }
 
@@ -348,7 +348,7 @@
 
 @media (max-width: 768px) {
   .enterPrompt {
-    bottom: 2rem;
+    bottom: var(--space-8);
     left: 50%;
     right: auto;
     transform: translateX(-50%);

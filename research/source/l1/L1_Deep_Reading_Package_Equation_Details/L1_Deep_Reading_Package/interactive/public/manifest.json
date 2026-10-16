@@ -1,0 +1,117 @@
+{
+  "schemaVersion": "1.0",
+  "figures": [
+    {
+      "id": "01_norm_balls",
+      "file": "figures/01_norm_balls.json",
+      "title": {
+        "ar": "كرات المعايير",
+        "en": "Norm balls"
+      }
+    },
+    {
+      "id": "02_count_magnitude",
+      "file": "figures/02_count_magnitude.json",
+      "title": {
+        "ar": "المقدار والدعم",
+        "en": "Magnitude and support"
+      }
+    },
+    {
+      "id": "03_convex_envelope",
+      "file": "figures/03_convex_envelope.json",
+      "title": {
+        "ar": "الغلاف المحدب",
+        "en": "Convex envelope"
+      }
+    },
+    {
+      "id": "04_constraint_geometry",
+      "file": "figures/04_constraint_geometry.json",
+      "title": {
+        "ar": "موضع التماس",
+        "en": "Constraint contact"
+      }
+    },
+    {
+      "id": "05_regularization_path",
+      "file": "figures/05_regularization_path.json",
+      "title": {
+        "ar": "مسار التنظيم",
+        "en": "Regularization path"
+      }
+    },
+    {
+      "id": "06_regression_comparison",
+      "file": "figures/06_regression_comparison.json",
+      "title": {
+        "ar": "OLS وRidge وLasso",
+        "en": "OLS, Ridge, and Lasso"
+      }
+    },
+    {
+      "id": "07_soft_threshold",
+      "file": "figures/07_soft_threshold.json",
+      "title": {
+        "ar": "العتبة اللينة",
+        "en": "Soft thresholding"
+      }
+    },
+    {
+      "id": "08_optimization_gap",
+      "file": "figures/08_optimization_gap.json",
+      "title": {
+        "ar": "فجوة الأمثلية",
+        "en": "Optimality gap"
+      }
+    },
+    {
+      "id": "09_selection_stability",
+      "file": "figures/09_selection_stability.json",
+      "title": {
+        "ar": "ثبات الاختيار",
+        "en": "Selection stability"
+      }
+    },
+    {
+      "id": "10_recovery_failure",
+      "file": "figures/10_recovery_failure.json",
+      "title": {
+        "ar": "الاستعادة والفشل",
+        "en": "Recovery and failure"
+      }
+    },
+    {
+      "id": "11_total_variation",
+      "file": "figures/11_total_variation.json",
+      "title": {
+        "ar": "فروق الجيران",
+        "en": "Neighboring differences"
+      }
+    },
+    {
+      "id": "12_weight_patterns",
+      "file": "figures/12_weight_patterns.json",
+      "title": {
+        "ar": "أنماط الأصفار",
+        "en": "Zero patterns"
+      }
+    },
+    {
+      "id": "13_sparse_storage",
+      "file": "figures/13_sparse_storage.json",
+      "title": {
+        "ar": "التناثر والتخزين",
+        "en": "Sparsity and storage"
+      }
+    },
+    {
+      "id": "14_singular_shrinkage",
+      "file": "figures/14_singular_shrinkage.json",
+      "title": {
+        "ar": "تقليص القيم المفردة",
+        "en": "Singular-value shrinkage"
+      }
+    }
+  ]
+}

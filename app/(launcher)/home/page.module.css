@@ -49,9 +49,9 @@
      which is what tells the eye the strip below is a different kind of thing
      and not a fourth row of tiles. */
   justify-content: center;
-  gap: clamp(1.5rem, 3.2vw, 2.5rem);
+  gap: clamp(var(--space-6), 3.2vw, var(--space-10));
   margin: 0 auto;
-  padding: 0 var(--spacing-container) 1.5rem;
+  padding: 0 var(--spacing-container) var(--space-6);
   animation: riseIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
@@ -96,7 +96,7 @@
   align-items: center;
   margin: 0;
   font-family: var(--font-code);
-  font-size: clamp(0.42rem, 0.62vw, 0.6rem);
+  font-size: clamp(var(--font-size-4xs), 0.62vw, var(--font-size-2xs));
   font-weight: 400;
   line-height: 1.1;
   letter-spacing: 0.42em;
@@ -110,7 +110,7 @@
   margin-right: -0.42em;
   text-transform: uppercase;
   text-align: center;
-  color: rgba(245, 245, 240, 0.4);
+  color: rgba(var(--color-text-rgb), 0.4);
 }
 
 /* The glyph that marks a band label. Sized in `em` against the label's own
@@ -205,7 +205,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0.5rem 0.35rem;
+  padding: var(--space-2) 0.35rem;
   position: relative;
   border-radius: var(--radius-md);
 }
@@ -260,7 +260,7 @@
 
 /* A monochrome ink mark, inverted to white.
  *
- * This is not a cosmetic choice: the artwork is a bare `#000` file, and black
+ * This is not a cosmetic choice: the artwork is a bare `var(--color-black)` file, and black
  * on the shell's near-black ground is invisible — the strip had a client
  * literally missing from it. `tone: "ink"` in lib/projects is the declaration
  * that says so, which is what keeps the next dark logo from having the same
@@ -396,8 +396,8 @@
      object with different contents. At 4px against the hero's previous 4px
      that was true, and it stopped being true the moment the hero moved. */
   border-radius: var(--radius-lg);
-  box-shadow: inset 0 0 0 1px rgba(245, 245, 240, 0.06);
-  background: rgba(255, 255, 255, 0.015);
+  box-shadow: inset 0 0 0 1px rgba(var(--color-text-rgb), 0.06);
+  background: rgba(var(--color-white-rgb), 0.015);
 }
 
 /* ── Tiles ────────────────────────────────────────────────────────────────
@@ -405,6 +405,7 @@
    small tiles beside the two heroes — but the band is now three equal claims
    with nothing in the column, so the surface has one size and one rule. */
 .hero {
+  --hero-scrim-rgb: 8, 9, 6;
   position: relative;
   display: block;
   overflow: hidden;
@@ -415,14 +416,14 @@
      globals.css work out to. The earlier 28px was a rounded system, not this
      one. */
   border-radius: var(--radius-lg);
-  background: rgba(255, 255, 255, 0.04);
-  box-shadow: inset 0 0 0 1px rgba(245, 245, 240, 0.1);
+  background: rgba(var(--color-white-rgb), 0.04);
+  box-shadow: inset 0 0 0 1px rgba(var(--color-text-rgb), 0.1);
   text-decoration: none;
   transition: box-shadow 0.25s ease, transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .hero:hover {
-  box-shadow: inset 0 0 0 1px rgba(245, 245, 240, 0.24);
+  box-shadow: inset 0 0 0 1px rgba(var(--color-text-rgb), 0.24);
 }
 
 /* ── Hero ─────────────────────────────────────────────────────────────────
@@ -471,7 +472,7 @@
    Its paper token is shared with the Research page, so the card is already
    standing on the destination's exact ground before the portal opens. */
 .heroPaper {
-  background: var(--color-tnh-bg, #f5f2ed);
+  background: var(--color-tnh-bg);
 }
 
 /* A project whose screenshot is being held back: the mark, centred on a light
@@ -486,17 +487,17 @@
 
 .heroMarked {
   background:
-    radial-gradient(120% 100% at 50% 0%, rgba(255, 255, 255, 0.06), transparent 60%),
-    #f2f1ec;
+    radial-gradient(120% 100% at 50% 0%, rgba(var(--color-white-rgb), 0.06), transparent 60%),
+    var(--color-paper-mark);
   /* A paper tile needs a dark hairline rather than the light inset ring the
      dark tiles use: on a light surface that ring reads as a scratch, and
      nothing about it holds the tile's edge against a light stage behind it.
      The action bar's own dark strip does the separating at the bottom. */
-  box-shadow: inset 0 0 0 1px rgba(13, 15, 8, 0.1);
+  box-shadow: inset 0 0 0 1px rgba(var(--color-bg-rgb), 0.1);
 }
 
 .heroMarked:hover {
-  box-shadow: inset 0 0 0 1px rgba(13, 15, 8, 0.2);
+  box-shadow: inset 0 0 0 1px rgba(var(--color-bg-rgb), 0.2);
 }
 
 /* The mark, held at the size a logo is actually drawn to be read at. The
@@ -542,13 +543,13 @@
   align-items: center;
   justify-content: center;
   font-family: var(--font-code);
-  font-size: clamp(1.05rem, 2.1vw, 1.9rem);
+  font-size: clamp(var(--font-size-base), 2.1vw, 1.9rem);
   letter-spacing: 0.22em;
   text-transform: uppercase;
   text-align: center;
   line-height: 1.35;
-  color: var(--color-tnh-ink, #1a1208);
-  padding: 0 1.5rem;
+  color: var(--color-tnh-ink);
+  padding: 0 var(--space-6);
   max-width: 100%;
   transition: color 0.3s ease;
 }
@@ -557,7 +558,7 @@
    close to illegible — it is a pale tint on a pale ground — and the accent
    that ships with the brand is the one the hover should be wearing. */
 .heroPaper:hover .heroType {
-  color: var(--color-tnh-accent, #8b1a1a);
+  color: var(--color-tnh-accent);
 }
 
 /* A scrim only where the type sits, feathered out well before the top — the
@@ -569,9 +570,9 @@
   z-index: -1;
   background: linear-gradient(
     to top,
-    rgba(8, 9, 6, 0.92) 0%,
-    rgba(8, 9, 6, 0.45) 38%,
-    rgba(8, 9, 6, 0) 68%
+    rgba(var(--hero-scrim-rgb), 0.92) 0%,
+    rgba(var(--hero-scrim-rgb), 0.45) 38%,
+    rgba(var(--hero-scrim-rgb), 0) 68%
   );
 }
 
@@ -595,13 +596,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  padding: 0.95rem 0.75rem 1.05rem;
+  gap: var(--space-2);
+  padding: 0.95rem var(--space-3) 1.05rem;
   font-family: var(--font-code);
-  font-size: 0.56rem;
+  font-size: var(--font-size-3xs);
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: rgba(245, 245, 240, 0.62);
+  color: rgba(var(--color-text-rgb), 0.62);
   pointer-events: none;
 }
 
@@ -616,24 +617,24 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  padding: 0.95rem 0.75rem 1.05rem;
+  gap: var(--space-2);
+  padding: 0.95rem var(--space-3) 1.05rem;
   font-family: var(--font-code);
-  font-size: 0.56rem;
+  font-size: var(--font-size-3xs);
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: rgba(245, 245, 240, 0.82);
+  color: rgba(var(--color-text-rgb), 0.82);
   background: linear-gradient(
     to top,
-    rgba(8, 9, 6, 0.95) 0%,
-    rgba(8, 9, 6, 0.6) 70%,
-    rgba(8, 9, 6, 0) 100%
+    rgba(var(--hero-scrim-rgb), 0.95) 0%,
+    rgba(var(--hero-scrim-rgb), 0.6) 70%,
+    rgba(var(--hero-scrim-rgb), 0) 100%
   );
   transition: color 0.25s ease;
 }
 
 .heroActionGlyph {
-  font-size: 0.5rem;
+  font-size: var(--font-size-tiny);
   line-height: 1;
 }
 
@@ -653,9 +654,9 @@
    yellow is what says "this responds to you" everywhere else on the page. */
 .heroPaper .heroAction,
 .heroMarked .heroAction {
-  color: rgba(245, 245, 240, 0.78);
-  background: var(--color-tnh-ink, #1a1208);
-  box-shadow: inset 0 1px 0 rgba(245, 245, 240, 0.12);
+  color: rgba(var(--color-text-rgb), 0.78);
+  background: var(--color-tnh-ink);
+  box-shadow: inset 0 1px 0 rgba(var(--color-text-rgb), 0.12);
 }
 
 .heroPaper:hover .heroAction,
@@ -800,7 +801,7 @@
      being readable as logos — so the floor, not the viewport, decides the
      minimum. Only the spacing tightens. */
   .roster {
-    gap: 1.25rem 1.75rem;
+    gap: var(--space-5) 1.75rem;
   }
 }
 

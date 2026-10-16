@@ -59,7 +59,7 @@ function loadPyodideRuntime(): Promise<PyodideRuntime> {
   return runtimePromise;
 }
 
-async function execute(code: string, files: ResearchPythonFile[]): Promise<ResearchPythonOutput[]> {
+async function execute(code: string, files: ResearchPythonFile[], sessionId?: string): Promise<ResearchPythonOutput[]> {
   const pyodide = await loadPyodideRuntime();
   const output: ResearchPythonOutput[] = [];
   pyodide.setStdout({
@@ -95,8 +95,10 @@ plt.show = _research_capture_show
 `);
   }
 
-  const isolatedCode = `exec(compile(${JSON.stringify(code)}, "<research-cell>", "exec"), {"__name__": "__main__"})`;
-  await pyodide.runPythonAsync(isolatedCode);
+  const namespace = sessionId
+    ? `globals().setdefault("_research_sessions", {}).setdefault(${JSON.stringify(sessionId)}, {"__name__": "__main__"})`
+    : `{"__name__": "__main__"}`;
+  await pyodide.runPythonAsync(`exec(compile(${JSON.stringify(code)}, "<research-cell>", "exec"), ${namespace})`);
   const savedPaths = [...code.matchAll(/\.save\(\s*["']([^"']+\.(?:png|jpe?g|csv))["']/gi)].map((match) => match[1]);
   for (const path of savedPaths) {
     try {
@@ -114,8 +116,8 @@ plt.show = _research_capture_show
   return output;
 }
 
-export function runResearchPython(code: string, files: ResearchPythonFile[] = []): Promise<ResearchPythonOutput[]> {
-  const currentRun = runQueue.then(() => execute(code, files));
+export function runResearchPython(code: string, files: ResearchPythonFile[] = [], sessionId?: string): Promise<ResearchPythonOutput[]> {
+  const currentRun = runQueue.then(() => execute(code, files, sessionId));
   runQueue = currentRun.then(() => undefined, () => undefined);
   return currentRun;
 }
