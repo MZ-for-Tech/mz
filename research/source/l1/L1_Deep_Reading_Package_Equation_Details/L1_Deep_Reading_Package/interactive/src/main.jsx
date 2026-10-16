@@ -2,7 +2,7 @@ import React, {useState,useMemo} from 'react';
 import {createRoot} from 'react-dom/client';
 import {motion,MotionConfig,AnimatePresence} from 'framer-motion';
 import figures from './figures.generated.json';
-import {soft,linspace,sum,dot,norm1,norm2,matvec,ridge,lasso,contact,loss,reconstruct} from './math.mjs';
+import {soft,linspace,sum,norm1,norm2,matvec,ridge,lasso,contact,loss,reconstruct} from './math.mjs';
 import './style.css';
 
 const fmt=x=>Math.abs(x)<1e-9?'0':Number(x.toFixed(4)).toString();
