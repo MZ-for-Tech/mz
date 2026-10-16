@@ -7,7 +7,7 @@ const MARKDOWN_PAGES = new Set([
   '/work',
   '/work/nested-united',
   '/services',
-  '/intel',
+  '/about',
   '/contact',
   '/privacy',
   '/research',

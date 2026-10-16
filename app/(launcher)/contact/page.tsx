@@ -4,7 +4,7 @@ import ContactPanel from "./ContactPanel";
 export const metadata = pageMetadata({
   title: "Contact MZ",
   description:
-    "Contact Model Zero for Technology Solutions in Cairo about custom software, AI deployment, or Arabic OCR.",
+    "Contact Model Zero in Cairo about custom software, AI deployment, or Arabic OCR.",
   path: "/contact",
 });
 

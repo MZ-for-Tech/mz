@@ -1,7 +1,6 @@
 
 import Image from 'next/image';
 import styles from './PremiumShowcase.module.css';
-import GradualBlur from '../GradualBlur/GradualBlur';
 
 export default function PremiumShowcase() {
 
@@ -21,6 +20,7 @@ export default function PremiumShowcase() {
             src="/green_glass.webp"
             alt="Abstract Green Glass 3D Shape"
             fill
+            loading="eager"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             quality={70}
             className={styles.demoImage}
@@ -32,27 +32,6 @@ export default function PremiumShowcase() {
         </div>
       </div>
 
-      <GradualBlur
-        target="parent"
-        position="bottom"
-        height="35vh"
-        strength={2}
-        divCount={3}
-        curve="bezier"
-        exponential={true}
-        animated="scroll"
-        opacity={1}
-        className={styles.desktopBlur}
-        style={{
-          position: 'sticky',
-          bottom: 0,
-          gridColumn: 1,
-          gridRow: 1,
-          alignSelf: 'end',
-          width: '100%',
-          zIndex: 10,
-        }}
-      />
     </div>
   );
 }

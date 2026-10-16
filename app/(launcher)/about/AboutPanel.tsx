@@ -1,13 +1,6 @@
-"use client";
-
 import PremiumShowcase from "@/components/PremiumShowcase/PremiumShowcase";
 
 /**
- * Client half of the Intel panel. PremiumShowcase pulls in GradualBlur, which
- * uses hooks without its own "use client" — it only ever worked because the
- * old homepage was a client component. Splitting here keeps the panel route a
- * server component so it can export metadata.
- *
  * The manifesto that used to close this panel is gone, and its absence is the
  * point rather than a gap. "We don't just write code. We engineer customized
  * systems designed for scale, rooted in statistical rigor, and built to
@@ -20,9 +13,9 @@ import PremiumShowcase from "@/components/PremiumShowcase/PremiumShowcase";
  * The "Our research doesn't stay internal" card used to close this panel. It
  * was an expanding title — a pattern that needs a full panel to itself, and
  * here it was one more rectangle below two others, so it did not read as an
- * invitation to open. The line itself is good, so it now lives on the Intel
+ * invitation to open. The line itself is good, so it now lives on the About
  * card on the launcher home, where it is a headline rather than a widget.
  */
-export default function IntelPanel() {
+export default function AboutPanel() {
   return <PremiumShowcase />;
 }

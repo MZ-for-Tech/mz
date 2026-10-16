@@ -1,18 +1,18 @@
 import { pageMetadata } from "@/lib/seo";
-import IntelPanel from "./IntelPanel";
+import AboutPanel from "./AboutPanel";
 
 export const metadata = pageMetadata({
-  title: "About MZ",
+  title: "About Model Zero",
   description:
     "Learn about MZ, a Cairo-based software and AI company building custom systems and training teams to run them, informed by applied research.",
-  path: "/intel",
+  path: "/about",
 });
 
 /**
- * Intel: who we are, how we think, and where the research goes.
+ * About: who we are, how we think, and where the research goes.
  *
  * The research publication lives at /research.
  */
-export default function IntelPage() {
-  return <IntelPanel />;
+export default function AboutPage() {
+  return <AboutPanel />;
 }

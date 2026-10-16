@@ -27,6 +27,9 @@ const nextConfig: NextConfig = {
     minimumCacheTTL: 31536000,
     qualities: [70, 75],
   },
+  async redirects() {
+    return [{ source: "/intel", destination: "/about", permanent: true }];
+  },
   // mz-specific config if any
   async headers() {
     return [

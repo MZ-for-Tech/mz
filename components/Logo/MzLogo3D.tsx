@@ -4,7 +4,8 @@ import {
   Suspense,
   useRef,
   useEffect,
-  useState
+  useState,
+  useMemo,
 } from "react";
 
 import {
@@ -15,7 +16,17 @@ import {
 
 import { PerformanceMonitor, Environment } from "@react-three/drei";
 
-import { Group, MathUtils, Mesh, PointLight } from "three";
+import {
+  DoubleSide,
+  Group,
+  MathUtils,
+  Mesh,
+  MeshStandardMaterial,
+  PointLight,
+  SRGBColorSpace,
+  Texture,
+  TextureLoader,
+} from "three";
 
 import { useDeviceTilt } from "./useDeviceTilt";
 
@@ -34,7 +45,25 @@ import {
 // How long the scatter→assemble intro plays (seconds). Tune here only.
 const ASSEMBLY_DURATION = 0.9;
 
-function Logo({ onLoad, assemblyStartDelayMs = 0 }: { onLoad?: () => void; assemblyStartDelayMs?: number }) {
+function Logo({
+  onLoad,
+  assemblyStartDelayMs = 0,
+  svgSrc = "/model-zero-logo-paths.svg",
+  textureSrc = "/model-zero-logo-texture.png",
+  animationKey = "mz_logo_model_zero_v1",
+  logoScaleMultiplier = 1,
+  texture,
+  texturePending = false,
+}: {
+  onLoad?: () => void;
+  assemblyStartDelayMs?: number;
+  svgSrc?: string;
+  textureSrc?: string;
+  animationKey?: string;
+  logoScaleMultiplier?: number;
+  texture: Texture | null;
+  texturePending?: boolean;
+}) {
   const logoRef = useRef<Group>(null);
   const sweepLightRef = useRef<PointLight>(null);
 
@@ -47,7 +76,7 @@ function Logo({ onLoad, assemblyStartDelayMs = 0 }: { onLoad?: () => void; assem
   // stack into three lines on a narrow screen and take far more vertical room
   // than the single row they occupy on desktop. 0.0016 keeps it the largest
   // object on the screen while leaving that band clear.
-  const logoScale = isMobile ? 0.0016 : 0.0035;
+  const logoScale = (isMobile ? 0.0016 : 0.0035) * logoScaleMultiplier;
 
   // Mouse tracking & drag interaction refs
   const hovered = useRef(false);
@@ -71,25 +100,52 @@ function Logo({ onLoad, assemblyStartDelayMs = 0 }: { onLoad?: () => void; assem
    * extrude off the critical path on cold loads.
    */
   const [meshData, setMeshData] = useState<MeshData | null>(null);
+  const renderMeshData = useMemo(() => {
+    if (!meshData || !texture) return meshData;
+    return {
+      ...meshData,
+      items: meshData.items.map((item) => ({
+        ...item,
+        material: [
+          new MeshStandardMaterial({
+            map: texture,
+            color: 0xffffff,
+            metalness: 0.9,
+            roughness: 0.25,
+            transparent: true,
+            alphaTest: 0.001,
+            side: DoubleSide,
+          }),
+          item.material[1],
+        ],
+      })),
+    };
+  }, [meshData, texture]);
 
   useEffect(() => {
     let cancelled = false;
+    const cacheKey = textureSrc
+      ? `mz-logo-mesh-textured-v1:${svgSrc}`
+      : svgSrc === "/model-zero-logo-paths.svg"
+        ? "mz-logo-mesh-v3"
+        : `mz-logo-mesh-v1:${svgSrc}`;
 
     (async () => {
       // 1. Session cache (client-side navigation)
-      if (globalMeshData) {
-        setMeshData(globalMeshData);
+      const cachedInMemory = globalMeshData.get(cacheKey);
+      if (cachedInMemory) {
+        setMeshData(cachedInMemory);
         return;
       }
       // 2. IndexedDB cache (survives hard reloads) — skips parse + extrude.
       //    Guarded: a corrupt/stale cache must never silently brick the logo —
       //    on any failure we fall through to the build path and warn instead.
       try {
-        const cached = await readCachedMeshData();
+        const cached = await readCachedMeshData(cacheKey);
         if (cancelled) return;
         if (cached && isValidCachedMeshData(cached)) {
           const data = hydrateMeshData(cached);
-          rememberMeshData(data);
+          rememberMeshData(data, cacheKey);
           setMeshData(data);
           return;
         }
@@ -105,14 +161,14 @@ function Logo({ onLoad, assemblyStartDelayMs = 0 }: { onLoad?: () => void; assem
       }
       // 3. First-ever build (also the fallback when storage is unavailable)
       try {
-        const res = await fetch("/mz.svg");
+        const res = await fetch(svgSrc);
         const text = await res.text();
         if (cancelled) return;
-        const data = buildMeshData(text);
-        rememberMeshData(data);
+        const data = buildMeshData(text, Boolean(textureSrc));
+        rememberMeshData(data, cacheKey);
         setMeshData(data);
         // Persist for the next cold load (fire-and-forget, non-fatal)
-        void writeCachedMeshData(serializeMeshData(data));
+        void writeCachedMeshData(serializeMeshData(data), cacheKey);
       } catch (err) {
         console.error("Failed to build logo mesh data:", err);
       }
@@ -121,7 +177,13 @@ function Logo({ onLoad, assemblyStartDelayMs = 0 }: { onLoad?: () => void; assem
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [svgSrc, textureSrc]);
+
+  useEffect(() => {
+    if (!renderMeshData || !texture) return;
+    const caps = renderMeshData.items.map((item) => item.material[0] as MeshStandardMaterial);
+    return () => caps.forEach((cap) => cap.dispose());
+  }, [renderMeshData, texture]);
 
   // Choreography: mesh data marks "ready" (the fade-in starts here); the
   // assembly then waits one beat (`assemblyStartDelayMs`) so the pieces
@@ -129,7 +191,7 @@ function Logo({ onLoad, assemblyStartDelayMs = 0 }: { onLoad?: () => void; assem
   const dataReadyAtRef = useRef<number>(0);
 
   useEffect(() => {
-    if (!meshData) return;
+    if (!meshData || texturePending) return;
     // Anchor the choreography once — re-runs (the parent re-renders when
     // onLoad fires, changing its identity) must not shift this or the
     // assembly gate would stall mid-flight.
@@ -155,7 +217,7 @@ function Logo({ onLoad, assemblyStartDelayMs = 0 }: { onLoad?: () => void; assem
       if (timer) clearTimeout(timer);
       cancelAnimationFrame(raf);
     };
-  }, [meshData, onLoad, assemblyStartDelayMs]);
+  }, [meshData, texturePending, onLoad, assemblyStartDelayMs]);
 
   // Hover & Mouse Drag tracking on the WebGL canvas element
   useEffect(() => {
@@ -273,7 +335,7 @@ function Logo({ onLoad, assemblyStartDelayMs = 0 }: { onLoad?: () => void; assem
   const meshRefs = useRef<(Mesh | null)[]>([]);
   const animStartTime = useRef<number>(-1);
   const assemblyDone = useRef(
-    typeof window !== 'undefined' && sessionStorage.getItem('mz_logo_animated_v3') === 'true'
+    typeof window !== 'undefined' && sessionStorage.getItem(animationKey) === 'true'
   );
   const reduceMotionRef = useRef(false);
 
@@ -353,7 +415,7 @@ function Logo({ onLoad, assemblyStartDelayMs = 0 }: { onLoad?: () => void; assem
         if (typeof window !== 'undefined') {
           // Versioned so a marker from an older build can't suppress the
           // current animation — bump when the intro changes.
-          sessionStorage.setItem('mz_logo_animated_v3', 'true');
+          sessionStorage.setItem(animationKey, 'true');
         }
       }
     }
@@ -481,7 +543,7 @@ function Logo({ onLoad, assemblyStartDelayMs = 0 }: { onLoad?: () => void; assem
       <group ref={logoRef}>
         <group scale={[logoScale, -logoScale, logoScale]}>
           <group position={[-meshData.cx, -meshData.cy, 0]}>
-            {meshData.items.map((item, i) => (
+            {(renderMeshData ?? meshData).items.map((item, i) => (
               <mesh
                 key={i}
                 ref={(el) => { meshRefs.current[i] = el; }}
@@ -512,10 +574,18 @@ export default function MzLogo3D({
   className,
   onLoad,
   assemblyStartDelayMs = 0,
+  svgSrc = "/model-zero-logo-paths.svg",
+  textureSrc = "/model-zero-logo-texture.png",
+  animationKey = "mz_logo_model_zero_v1",
+  logoScaleMultiplier = 1,
 }: {
   className?: string;
   onLoad?: () => void;
   assemblyStartDelayMs?: number;
+  svgSrc?: string;
+  textureSrc?: string;
+  animationKey?: string;
+  logoScaleMultiplier?: number;
 }) {
   // F3: cap resolution on coarse-pointer devices (phones/tablets) — dpr
   // starts at 1.0 and the PerformanceMonitor ceiling is 1.25 (vs 2 on
@@ -531,6 +601,34 @@ export default function MzLogo3D({
   // permanent GPU/main-thread burn; flipping back resumes the loop.
   const wrapRef = useRef<HTMLDivElement>(null);
   const [inView, setInView] = useState(true);
+  const [texture, setTexture] = useState<Texture | null>(null);
+  const [textureReady, setTextureReady] = useState(!textureSrc);
+
+  useEffect(() => {
+    if (!textureSrc) return;
+    let cancelled = false;
+    const loadedTexture = new TextureLoader().load(
+      textureSrc,
+      (loaded) => {
+        loaded.colorSpace = SRGBColorSpace;
+        if (cancelled) loaded.dispose();
+        else {
+          setTexture(loaded);
+          setTextureReady(true);
+        }
+      },
+      undefined,
+      (error) => {
+        console.error("Failed to load logo texture:", error);
+        if (!cancelled) setTextureReady(true);
+      }
+    );
+    loadedTexture.colorSpace = SRGBColorSpace;
+    return () => {
+      cancelled = true;
+      loadedTexture.dispose();
+    };
+  }, [textureSrc]);
 
   useEffect(() => {
     const el = wrapRef.current;
@@ -583,7 +681,16 @@ export default function MzLogo3D({
           onDecline={() => setDpr(Math.max(1, dpr - 0.25))}
         />
         <Suspense fallback={null}>
-          <Logo onLoad={onLoad} assemblyStartDelayMs={assemblyStartDelayMs} />
+          <Logo
+            onLoad={onLoad}
+            assemblyStartDelayMs={assemblyStartDelayMs}
+            svgSrc={svgSrc}
+            textureSrc={textureSrc}
+            animationKey={animationKey}
+            logoScaleMultiplier={logoScaleMultiplier}
+            texture={texture}
+            texturePending={!textureReady}
+          />
         </Suspense>
 
         {/* Environment map for realistic metallic reflections. Self-hosted

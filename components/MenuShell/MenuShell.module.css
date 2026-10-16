@@ -71,9 +71,8 @@
    exactly this. `flex: 1 1 0` rather than a fixed width — see the note on
    `.header` for why the two flanks have to be equal-basis, not equal-size.
 
-   The slot itself is the MZ home link. The flat black artwork is converted to
-   white, then difference blending makes it invert against the stage beneath
-   it, matching the adaptive mark on case-study pages. */
+   The slot itself is the Model Zero home link. The mark stays white in the
+   dark header; the adaptive copy on Work difference-blends against its stage. */
 .markSlot {
   flex: 1 1 0;
   min-width: 0;
@@ -99,7 +98,7 @@
      the least interactive thing in the bar and should not be the biggest. */
   width: clamp(var(--space-6), 2.2vw, 2.125rem);
   height: auto;
-  /* The artwork is flat `#020202`; collapse it to white before blending. */
+  /* Collapse the full-color artwork to white for the original chrome treatment. */
   filter: brightness(0) invert(1);
   mix-blend-mode: normal;
   opacity: 0.92;

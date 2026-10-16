@@ -11,7 +11,7 @@ function sectionFor(path: string) {
   if (path.startsWith("/work")) return "SELECTED WORK";
   if (path === "/services") return "SERVICES";
   if (path === "/contact") return "CONTACT";
-  if (path === "/intel") return "STUDIO";
+  if (path === "/about") return "STUDIO";
   return "";
 }
 
@@ -38,13 +38,13 @@ function actionFor(path: string, isArabic: boolean) {
   if (path.startsWith("/work")) return "EXPLORE OUR WORK ↗";
   if (path === "/services") return "TELL US WHAT YOU'RE BUILDING ↗";
   if (path === "/contact") return "START A CONVERSATION ↗";
-  if (path === "/intel") return "GET TO KNOW MZ ↗";
+  if (path === "/about") return "ABOUT MODEL ZERO ↗";
   return "START A PROJECT ↗";
 }
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
-  const title = limit(searchParams.get("title") || "Model Zero for Technology Solutions", 110);
+  const title = limit(searchParams.get("title") || "Model Zero", 110);
   const description = limit(
     searchParams.get("description") || "A Cairo-based software and AI company building custom systems and training teams to run them.",
     125,
@@ -56,8 +56,8 @@ export async function GET(request: Request) {
     : description;
   const section = sectionFor(path);
   const action = actionFor(path, isArabic);
-  const logo = await readFile(join(process.cwd(), "public/mz.svg"), "utf8");
-  const logoSource = `data:image/svg+xml;base64,${Buffer.from(logo).toString("base64")}`;
+  const logo = await readFile(join(process.cwd(), "public/model-zero-logo-texture.png"));
+  const logoSource = `data:image/png;base64,${logo.toString("base64")}`;
   const arabicFont = isArabic
     ? await readFile(join(process.cwd(), "public/fonts/og/NotoNaskhArabicUI-Regular.ttf"))
     : undefined;
@@ -118,7 +118,7 @@ export async function GET(request: Request) {
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={logoSource}
-          alt="MZ logo"
+          alt="Model Zero logo"
           style={{
             position: "absolute",
             right: "74px",

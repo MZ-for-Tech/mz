@@ -240,8 +240,8 @@ body {
        in the bar's left flank, so the layout copy would be a second mark in
        the same corner.
      - The start screen, via `.hero-section`. Its hero mark is the largest
-       object on the screen and is the first thing drawn; a 100px silhouette
-       of the same geometry beside it reads as a smudge rather than as a
+       object on the screen and is the first thing drawn; a 100px copy of the
+       same logo beside it reads as a smudge rather than as a
        second logo, which is worse than having no corner mark at all.
 
    What is left is the two pages that genuinely have no mark of their own:
@@ -260,6 +260,14 @@ body:has(.hero-section) .layout-logo-link {
   display: none;
 }
 
+:root[data-theme="light"] .layout-logo-link {
+  mix-blend-mode: normal;
+}
+
+:root[data-theme="light"] .layout-logo-img {
+  filter: brightness(0);
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
@@ -267,14 +275,6 @@ body:has(.hero-section) .layout-logo-link {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
-}
-
-:root[data-theme="light"] .layout-logo-link {
-  mix-blend-mode: normal;
-}
-
-:root[data-theme="light"] .layout-logo-img {
-  filter: brightness(0);
 }
 
 @media (max-width: 768px) {

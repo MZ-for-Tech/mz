@@ -18,13 +18,13 @@ export default function ResearchLayout({ children }: { children: React.ReactNode
         </Link>
         <nav aria-label="Research navigation" className="research-navlinks">
           <ResearchHeaderControls />
-          <TransitionLink href="/home">MZ ↗</TransitionLink>
+          <TransitionLink href="/home">Model Zero ↗</TransitionLink>
         </nav>
       </header>
       {children}
       <footer className="research-footer">
         <TransitionLink href="/home">
-          © {new Date().getFullYear()} Model Zero for Technology Solutions
+          © {new Date().getFullYear()} Model Zero
         </TransitionLink>
       </footer>
     </div>

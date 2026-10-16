@@ -4,7 +4,7 @@ import MenuShell from "@/components/MenuShell/MenuShell";
 /**
  * The launcher shell, mounted across every launcher route.
  *
- * A route group, so these pages are `/work`, `/services`, `/intel`,
+ * A route group, so these pages are `/work`, `/services`, `/about`,
  * `/contact` and `/home` at the top level — the group name appears in no URL.
  * It exists to hold the shared layout while keeping the segments flat, which
  * is the whole point: the routes a visitor sees and the routes they link to
@@ -18,7 +18,7 @@ import MenuShell from "@/components/MenuShell/MenuShell";
 export const metadata: Metadata = {
   title: "MZ",
   description:
-    "Model Zero for Technology Solutions (MZ) builds custom software and AI systems, and trains teams to operate them. Based in Cairo, Egypt.",
+    "Model Zero (MZ) builds custom software and AI systems, and trains teams to operate them. Based in Cairo, Egypt.",
 };
 
 export default function MenuLayout({ children }: { children: React.ReactNode }) {

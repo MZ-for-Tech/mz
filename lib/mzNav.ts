@@ -44,7 +44,7 @@ const LAUNCHER_PATHS = [
   LAUNCHER_ROOT,
   "/work",
   "/services",
-  "/intel",
+  "/about",
   "/contact",
 ];
 

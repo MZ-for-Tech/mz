@@ -6,8 +6,8 @@
  * constructions (~300 ms of main-thread work) on every cold load. The built
  * items are cached three ways:
  *
- *   1. `globalMeshData` — in-memory, survives client-side navigation (not a
- *      hard reload). Reset to null on HMR so dev picks up material changes.
+ *   1. `globalMeshData` — in-memory per SVG source, survives client-side
+ *      navigation (not a hard reload).
  *   2. IndexedDB — survives hard reloads. Geometry attributes are stored as
  *      typed arrays (structured clone, no JSON overhead) and rehydrated in a
  *      few ms, skipping the SVG parse + extrude entirely.
@@ -69,11 +69,11 @@ export interface MeshData {
 
 // Global cache to prevent re-building all geometries every time the user returns to the main page.
 // Reset to null here so HMR picks up material changes during development.
-export let globalMeshData: MeshData | null = null;
+export const globalMeshData = new Map<string, MeshData>();
 
 /** Store the built/hydrated mesh data for the rest of this session. */
-export function rememberMeshData(data: MeshData): void {
-  globalMeshData = data;
+export function rememberMeshData(data: MeshData, cacheKey = CACHE_KEY): void {
+  globalMeshData.set(cacheKey, data);
 }
 
 /*
@@ -125,7 +125,7 @@ function getWallMaterial(color: string, pathIdx: number) {
  * The original builder: parse the SVG and construct every geometry.
  * Only reached when no cache exists (first visit ever).
  */
-export function buildMeshData(svgText: string): MeshData {
+export function buildMeshData(svgText: string, textureCoordinates = false): MeshData {
   const svg = new SVGLoader().parse(svgText);
 
   let pathIndex = 0;
@@ -134,11 +134,13 @@ export function buildMeshData(svgText: string): MeshData {
   // Parse viewBox to find exact mathematical center
   let cx = 0;
   let cy = 0;
+  let viewBox = [0, 0, 1, 1];
   if (svg.xml) {
     const vb = (svg.xml as unknown as Element).getAttribute("viewBox");
     if (vb) {
       const parts = vb.split(/\s+/).map(parseFloat);
-      if (parts.length === 4) {
+      if (parts.length === 4 && parts.every(Number.isFinite)) {
+        viewBox = parts;
         cx = parts[0] + parts[2] / 2;
         cy = parts[1] + parts[3] / 2;
       }
@@ -152,8 +154,24 @@ export function buildMeshData(svgText: string): MeshData {
     pathIndex++;
 
     path.toShapes().forEach((shape) => {
+      const geometry = new ExtrudeGeometry(
+        shape,
+        textureCoordinates ? { ...extrudeSettings, bevelEnabled: false } : extrudeSettings
+      );
+      if (textureCoordinates) {
+        const positions = geometry.getAttribute("position");
+        const uvs = geometry.getAttribute("uv");
+        for (let i = 0; i < positions.count; i++) {
+          uvs.setXY(
+            i,
+            (positions.getX(i) - viewBox[0]) / viewBox[2],
+            1 - (positions.getY(i) - viewBox[1]) / viewBox[3]
+          );
+        }
+        uvs.needsUpdate = true;
+      }
       items.push({
-        geometry: new ExtrudeGeometry(shape, extrudeSettings),
+        geometry,
         material: [getCapMaterial(color), getWallMaterial(color, thisPathIndex)],
         pathIdx: thisPathIndex,
         zOffset,
@@ -206,7 +224,7 @@ export interface CachedMeshData {
   items: SerializedItem[];
 }
 
-// Bump when mz.svg, the extrude settings, or the serialized shape change —
+// Bump when the logo path SVG, extrude settings, or serialized shape change —
 // stale caches must not survive a geometry-affecting edit.
 const CACHE_KEY = "mz-logo-mesh-v3";
 const DB_NAME = "mz-logo-cache";
@@ -223,7 +241,7 @@ export function serializeMeshData(data: MeshData): CachedMeshData {
         position: g.getAttribute("position")!.array as Float32Array,
         normal: g.getAttribute("normal")!.array as Float32Array,
         uv: g.getAttribute("uv")!.array as Float32Array,
-        color: (item.material[0] as MeshStandardMaterial).color.getStyle(),
+        color: item.material[0].color.getStyle(),
         pathIdx: item.pathIdx,
         zOffset: item.zOffset,
         scatterX: item.scatterX,
@@ -282,12 +300,12 @@ function openDb(): Promise<IDBDatabase> {
   });
 }
 
-export async function readCachedMeshData(): Promise<CachedMeshData | null> {
+export async function readCachedMeshData(cacheKey = CACHE_KEY): Promise<CachedMeshData | null> {
   try {
     const db = await openDb();
     return await new Promise((resolve, reject) => {
       const tx = db.transaction(STORE, "readonly");
-      const get = tx.objectStore(STORE).get(CACHE_KEY);
+      const get = tx.objectStore(STORE).get(cacheKey);
       get.onsuccess = () => resolve((get.result as CachedMeshData) ?? null);
       get.onerror = () => reject(get.error);
     });
@@ -338,12 +356,12 @@ export function isValidCachedMeshData(cached: unknown): cached is CachedMeshData
   });
 }
 
-export async function writeCachedMeshData(cached: CachedMeshData): Promise<void> {
+export async function writeCachedMeshData(cached: CachedMeshData, cacheKey = CACHE_KEY): Promise<void> {
   try {
     const db = await openDb();
     await new Promise<void>((resolve, reject) => {
       const tx = db.transaction(STORE, "readwrite");
-      tx.objectStore(STORE).put(cached, CACHE_KEY);
+      tx.objectStore(STORE).put(cached, cacheKey);
       tx.oncomplete = () => resolve();
       tx.onerror = () => reject(tx.error);
     });

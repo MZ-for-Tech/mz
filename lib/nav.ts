@@ -7,7 +7,7 @@ export type MenuTab = {
  * The launcher's sections — the single source of truth for navigation.
  *
  * This used to be two independent hardcoded lists (MENU_TABS in MenuShell,
- * NAV_ITEMS here) that had already drifted: Intel and Home existed in one and
+ * NAV_ITEMS here) that had already drifted: About and Home existed in one and
  * not the other. NAV_ITEMS existed only to feed the nav pill, which is now
  * deleted, so MENU_TABS stands alone.
  *
@@ -31,6 +31,6 @@ export const MENU_TABS: MenuTab[] = [
   { label: "Home", href: LAUNCHER_ROOT },
   { label: "Work", href: "/work" },
   { label: "Services", href: "/services" },
-  { label: "Intel", href: "/intel" },
+  { label: "About", href: "/about" },
   { label: "Contact", href: "/contact" },
 ];

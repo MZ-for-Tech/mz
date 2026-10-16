@@ -1,6 +1,6 @@
-# Model Zero for Technology Solutions (MZ)
+# Model Zero
 
-Model Zero for Technology Solutions (MZ) is a Cairo-based software and AI company. It builds custom systems and trains teams to run them, informed by applied research.
+Model Zero (MZ) is a Cairo-based software and AI company. It builds custom systems and trains teams to run them, informed by applied research.
 
 ## Studio
 

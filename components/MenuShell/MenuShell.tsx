@@ -151,7 +151,7 @@ export default function MenuShell({ children }: { children: React.ReactNode }) {
   // header, so the two can't disagree about when they are suppressed.
   //
   // An exact match, not a prefix test. The shell is a route-group layout, so
-  // it only ever wraps /home, /work, /services, /intel and /contact — the
+  // it only ever wraps /home, /work, /services, /about and /contact — the
   // case study at /work/nested-united is deliberately outside it and renders
   // in the legacy world with its own chrome. A `startsWith("/work")` here
   // would look like it handled that page, and would silently do nothing.
@@ -224,16 +224,13 @@ export default function MenuShell({ children }: { children: React.ReactNode }) {
         <TransitionLink
           href="/"
           className={styles.markSlot}
-          aria-label="MZ home"
+          aria-label="Model Zero home"
           data-converge
         >
-          {/* `mz-logo.min.svg` is the flat black silhouette, unlike the
-              gradient `mz.svg`. The regular shell uses it as white ink on its
-              dark header; Work renders a second copy in the difference-blended
-              overlay below so it can invert against the actual stage. */}
+          {/* Use the same full-color mark in the header and adaptive work chrome. */}
           {!isWorkPanel && (
             <Image
-              src="/mz-logo.min.svg"
+              src="/model-zero-logo.svg"
               alt=""
               aria-hidden="true"
               width={100}
@@ -318,10 +315,10 @@ export default function MenuShell({ children }: { children: React.ReactNode }) {
           <TransitionLink
             href="/"
             className={styles.workAdaptiveMarkSlot}
-            aria-label="MZ home"
+            aria-label="Model Zero home"
           >
             <Image
-              src="/mz-logo.min.svg"
+              src="/model-zero-logo.svg"
               alt=""
               width={100}
               height={100}

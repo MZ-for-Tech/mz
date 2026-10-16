@@ -35,16 +35,16 @@ const newsreader = Newsreader({
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.mzfortech.com"),
   title: {
-    default: "Model Zero for Technology Solutions",
-    template: "%s | MZ",
+    default: "Model Zero",
+    template: "%s | Model Zero",
   },
-  applicationName: "MZ",
+  applicationName: "Model Zero",
   description:
-    "Model Zero for Technology Solutions (MZ) is a Cairo-based software and AI company that builds custom systems and trains teams to run them.",
-  creator: "MZ",
-  publisher: "MZ",
+    "Model Zero (MZ) is a Cairo-based software and AI company that builds custom systems and trains teams to run them.",
+  creator: "Model Zero",
+  publisher: "Model Zero",
   openGraph: {
-    siteName: "MZ",
+    siteName: "Model Zero",
     images: [{ url: "/og.webp", width: 1200, height: 630 }],
     locale: "en_US",
     type: "website",
@@ -97,8 +97,8 @@ export default function RootLayout({
             else; the rendered size is CSS's business. */}
         <TransitionLink href="/" className="layout-logo-link">
           <Image
-            src="/mz-logo.min.svg"
-            alt="MZ"
+            src="/model-zero-logo.svg"
+            alt="Model Zero"
             width={100}
             height={100}
             className="layout-logo-img"

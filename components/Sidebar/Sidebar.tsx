@@ -9,8 +9,8 @@ export function Sidebar() {
       {/* Top: Logo */}
       <Link href="/" className={styles.logoWrapper}>
         <Image 
-          src="/mz-logo.min.svg"
-          alt="MZ"
+          src="/model-zero-logo.svg"
+          alt="Model Zero"
           width={40} 
           height={40} 
           className={styles.logoImage} 

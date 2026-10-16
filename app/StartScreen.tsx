@@ -70,6 +70,10 @@ export default function Home() {
     className?: string;
     onLoad?: () => void;
     assemblyStartDelayMs?: number;
+    svgSrc?: string;
+    textureSrc?: string;
+    animationKey?: string;
+    logoScaleMultiplier?: number;
   }> | null>(null);
 
   useEffect(() => {
@@ -378,6 +382,10 @@ export default function Home() {
             >
               <MzLogo3DComponent
                 onLoad={() => setIsLogoLoaded(true)}
+                svgSrc="/model-zero-logo-paths.svg"
+                textureSrc="/model-zero-logo-texture.png"
+                animationKey="mz_logo_start_screen_v1"
+                logoScaleMultiplier={1.15}
                 // Data is usually ready ~1.1–1.5s after load (wipe ends at
                 // 1.02s). The fade-in waits for the assembly to start (one
                 // short beat later) so the pre-assembly hold is never

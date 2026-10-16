@@ -378,13 +378,13 @@ export default function ContactPanel() {
           {/* The process line the original carried under the address, now
               last in the column and behind the rule the socials used to sit
               above. It was pointing at `href="#"`, so it never went anywhere;
-              the answer to that question is the Intel panel, which is one tab
+              the answer to that question is the About panel, which is one tab
               across — an internal destination, which is why it sits below the
               divider rather than among the ways to leave. */}
           <p className={styles.process}>
             Want to learn about our process?
             <br />
-            <Link href="/intel" data-tile className={styles.processLink}>
+            <Link href="/about" data-tile className={styles.processLink}>
               Explore our methodology
             </Link>
           </p>
