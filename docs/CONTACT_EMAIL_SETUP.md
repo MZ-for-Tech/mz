@@ -35,6 +35,24 @@ are only sent to the configured inbox; no automatic client email is sent.
 Until the password is configured, the endpoint returns a setup message (503),
 not a successful delivery confirmation. SMTP delivery failures return 502.
 
+## Delivery diagnostics and safeguards
+
+Successful SMTP submissions return an inquiry reference, shown beneath the form.
+Search Vercel runtime logs for that reference: `Contact inquiry accepted by SMTP`
+means Zoho accepted the message, not that it has reached the inbox. Check Spam,
+Quarantine, inbox rules, and Zoho mail logs if it is missing. Failed SMTP attempts
+log the reference and an error code without logging the client's brief or password.
+
+Server-side checks enforce field types, lengths, international phone format,
+email format, allowed project choices, and the attachment size limit. Duplicate
+single-value fields are rejected. User-provided HTML is escaped in the email,
+and the recipient is fixed by server configuration. Requests with a mismatched
+Origin are rejected, but Origin checks and the honeypot are not full spam protection.
+Enable durable rate limiting in the Vercel firewall or a shared backing store;
+the application does not currently provide it. Attachments are untrusted and are
+not malware-scanned by this application: do not open unexpected files without
+scanning them. Vercel may reject large request bodies before this route runs.
+
 ## Domain DNS
 
 These records are managed at your DNS provider, not in this repository. Confirm

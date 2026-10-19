@@ -5,6 +5,10 @@ import { buildContactEmail } from "@/lib/contactEmail";
 const MAX_ATTACHMENT_BYTES = 5 * 1024 * 1024;
 const MAX_DESCRIPTION_LENGTH = 5000;
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const SINGLE_VALUE_FIELDS = [
+  "companyWebsite", "name", "company", "email", "phone", "description",
+  "budget", "timeline", "referral",
+];
 
 export const runtime = "nodejs";
 
@@ -55,11 +59,23 @@ function optionalChoice(value: FormDataEntryValue | null, choices: Set<string>) 
 }
 
 export async function POST(request: Request) {
+  const origin = request.headers.get("origin");
+  if (origin && origin !== new URL(request.url).origin) {
+    return response("Submit your brief from this website's contact page.", 403);
+  }
+
   let form: FormData;
   try {
     form = await request.formData();
   } catch {
     return response("The submitted brief couldn't be read. Please try again.", 400);
+  }
+
+  if (SINGLE_VALUE_FIELDS.some((field) =>
+    form.getAll(field).length > 1 ||
+    (form.has(field) && typeof form.get(field) !== "string")
+  ) || form.getAll("attachment").length > 1) {
+    return response("The submitted fields are invalid. Please refresh and try again.", 400);
   }
 
   // Quietly accept honeypot submissions so bots do not learn how they were caught.
@@ -82,7 +98,7 @@ export async function POST(request: Request) {
     return response("Enter a phone number with + and your country code (7–15 digits).", 400);
   }
   const description = String(form.get("description") ?? "").trim();
-  if (!EMAIL_PATTERN.test(email) || email.length > 254) {
+  if (!EMAIL_PATTERN.test(email) || email.length > 254 || /[\u0000-\u001f\u007f]/.test(email)) {
     return response("Enter a valid email address so we can reach you.", 400);
   }
   if (!description || description.length > MAX_DESCRIPTION_LENGTH) {
@@ -90,7 +106,7 @@ export async function POST(request: Request) {
   }
 
   const expertise = form.getAll("expertise");
-  if (expertise.some((value) => typeof value !== "string" || !EXPERTISE.has(value))) {
+  if (expertise.length > EXPERTISE.size || expertise.some((value) => typeof value !== "string" || !EXPERTISE.has(value))) {
     return response("One of the selected expertise options is invalid. Please refresh and try again.", 400);
   }
 
@@ -102,6 +118,9 @@ export async function POST(request: Request) {
   }
 
   const attachmentEntry = form.get("attachment");
+  if (attachmentEntry !== null && !(attachmentEntry instanceof File)) {
+    return response("The attachment must be a file.", 400);
+  }
   const attachment = attachmentEntry instanceof File && attachmentEntry.name
     ? attachmentEntry
     : null;
@@ -140,11 +159,16 @@ export async function POST(request: Request) {
     port,
     secure: port === 465,
     requireTLS: port === 587,
+    connectionTimeout: 10000,
+    greetingTimeout: 10000,
+    socketTimeout: 20000,
+    disableFileAccess: true,
+    disableUrlAccess: true,
     auth: { user, pass: password },
   });
 
   try {
-    await transporter.sendMail({
+    const delivery = await transporter.sendMail({
       from: { name: "MZ | Project Inquiries", address: from },
       to,
       replyTo: { name, address: email },
@@ -160,13 +184,17 @@ export async function POST(request: Request) {
           }
         : {}),
     });
+    if (!delivery.accepted.length) {
+      throw new Error("SMTP server did not accept any recipients");
+    }
+    console.info("Contact inquiry accepted by SMTP", { reference });
   } catch (error) {
     console.error(
       "Zoho SMTP delivery failed",
-      error instanceof Error ? error.message : "Unknown SMTP error"
+      { reference, code: error && typeof error === "object" && "code" in error ? error.code : "SMTP_ERROR" }
     );
-    return response("We couldn't send your brief right now. Please email us directly.", 502);
+    return response(`We couldn't send your brief right now. Please email us directly. Reference: ${reference}`, 502);
   }
 
-  return Response.json({ message: "Your brief is on its way." });
+  return Response.json({ message: "Your brief has been submitted.", reference });
 }

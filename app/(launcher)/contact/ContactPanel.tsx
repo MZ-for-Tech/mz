@@ -253,7 +253,7 @@ export default function ContactPanel() {
         method: "POST",
         body: new FormData(form),
       });
-      const result = (await response.json()) as { message?: string };
+      const result = (await response.json()) as { message?: string; reference?: string };
 
       if (!response.ok) {
         setSubmissionState("error");
@@ -270,7 +270,9 @@ export default function ContactPanel() {
       setReferral(null);
       setFileName(null);
       setSubmissionState("sent");
-      setSubmissionMessage("Your brief is on its way. We'll be in touch soon.");
+      setSubmissionMessage(result.reference
+        ? `Your brief has been submitted. Reference: ${result.reference}. We'll be in touch soon.`
+        : "Your brief is on its way. We'll be in touch soon.");
     } catch {
       setSubmissionState("error");
       setSubmissionMessage("We couldn't send your brief. Please email us directly.");
@@ -505,7 +507,7 @@ export default function ContactPanel() {
 
               <label>
                 <span className={styles.label}>Phone with country code (required)</span>
-                <input type="tel" name="phone" className={styles.input} placeholder="+20 100 123 4567" autoComplete="tel" required maxLength={32} pattern="\+[1-9][0-9 ()\-]{6,30}" title="Include + and your country code, for example +20 100 123 4567." aria-describedby="brief-phone-help" dir="ltr" />
+                <input type="tel" name="phone" className={styles.input} placeholder="+20 100 123 4567" autoComplete="tel" required maxLength={32} pattern="\+[1-9][0-9 \(\)\-]{6,30}" title="Include + and your country code, for example +20 100 123 4567." aria-describedby="brief-phone-help" dir="ltr" />
                 <span id="brief-phone-help" className={styles.fieldHelp}>Start with + and your country code, e.g. +20 for Egypt.</span>
               </label>
 

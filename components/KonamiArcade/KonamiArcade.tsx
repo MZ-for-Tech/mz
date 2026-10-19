@@ -85,6 +85,9 @@ export default function KonamiArcade() {
 
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.repeat) return;
+      if (typeof event.key !== "string" || event.isComposing) return;
+      const target = event.target as HTMLElement | null;
+      if (target?.closest?.("input, textarea, select, [contenteditable]")) return;
       advance(event.key.length === 1 ? event.key.toLowerCase() : event.key);
     };
     const onGamepadInput = (event: Event) => {

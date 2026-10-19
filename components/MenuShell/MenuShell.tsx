@@ -108,7 +108,7 @@ export default function MenuShell({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (!e.key.startsWith("Arrow")) return;
+      if (typeof e.key !== "string" || !e.key.startsWith("Arrow")) return;
       moveSelection(e);
     };
     window.addEventListener("keydown", onKey);
