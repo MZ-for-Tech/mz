@@ -1,4 +1,6 @@
 import { createTransport } from "nodemailer";
+import { randomUUID } from "node:crypto";
+import { buildContactEmail } from "@/lib/contactEmail";
 
 const MAX_ATTACHMENT_BYTES = 5 * 1024 * 1024;
 const MAX_DESCRIPTION_LENGTH = 5000;
@@ -66,6 +68,19 @@ export async function POST(request: Request) {
   }
 
   const email = String(form.get("email") ?? "").trim();
+  const name = String(form.get("name") ?? "").trim();
+  const company = String(form.get("company") ?? "").trim();
+  const rawPhone = String(form.get("phone") ?? "").trim();
+  const phone = rawPhone.replace(/[ ()-]/g, "");
+  if (!name || name.length > 120 || /[\r\n\u0000-\u001f\u007f]/.test(name)) {
+    return response("Enter your full name (up to 120 characters).", 400);
+  }
+  if (company.length > 160 || /[\r\n\u0000-\u001f\u007f]/.test(company)) {
+    return response("Enter a company name up to 160 characters, or leave it blank.", 400);
+  }
+  if (rawPhone.length > 32 || !/^\+[1-9][0-9 ()-]+$/.test(rawPhone) || !/^\+[1-9]\d{6,14}$/.test(phone)) {
+    return response("Enter a phone number with + and your country code (7–15 digits).", 400);
+  }
   const description = String(form.get("description") ?? "").trim();
   if (!EMAIL_PATTERN.test(email) || email.length > 254) {
     return response("Enter a valid email address so we can reach you.", 400);
@@ -107,18 +122,18 @@ export async function POST(request: Request) {
     );
   }
 
-  const lines = [
-    "A new project brief was submitted on mzfortech.com.",
-    "",
-    `Reply to: ${email}`,
-    `Expertise: ${expertise.length ? expertise.join(", ") : "Not provided"}`,
-    `Budget: ${budget}`,
-    `Timeline: ${timeline}`,
-    `Referral: ${referral}`,
-    "",
-    "Project description:",
-    description,
-  ];
+  const reference = `MZ-${randomUUID().slice(0, 8).toUpperCase()}`;
+  const attachmentName = attachment?.name.replace(/[\\/\r\n]/g, "_").slice(0, 180) ?? "";
+  const message = buildContactEmail({
+    name, company, email, phone,
+    expertise: expertise.length ? expertise.join(", ") : "Not provided",
+    budget, timeline, referral, description,
+    attachment: attachmentName,
+    reference,
+    submittedAt: new Intl.DateTimeFormat("en-GB", {
+      dateStyle: "medium", timeStyle: "short", timeZone: "Africa/Cairo",
+    }).format(new Date()) + " (Cairo)",
+  });
 
   const transporter = createTransport({
     host,
@@ -130,15 +145,16 @@ export async function POST(request: Request) {
 
   try {
     await transporter.sendMail({
-      from,
+      from: { name: "MZ | Project Inquiries", address: from },
       to,
-      replyTo: email,
-      subject: "New project brief — MZ website",
-      text: lines.join("\n"),
+      replyTo: { name, address: email },
+      subject: `New inquiry from ${name} | ${reference}`,
+      text: message.text,
+      html: message.html,
       ...(attachment
         ? {
             attachments: [{
-              filename: attachment.name.replace(/[\\/\r\n]/g, "_").slice(0, 180),
+              filename: attachmentName,
               content: Buffer.from(await attachment.arrayBuffer()),
             }],
           }

@@ -5,6 +5,17 @@ attachments through Zoho SMTP. Messages are sent from and delivered to
 `hello@mzfortech.com`. The visitor's email is set as Reply-To, so replying to a
 brief reaches the visitor without impersonating their address as the sender.
 
+The form requires the client's full name, email, international phone number
+(including `+` and country code), and project description. Company / organization
+is optional. Phone numbers are normalized to `+` followed by 7–15 digits; this
+checks format, not ownership or whether a number is reachable.
+
+Notifications include a branded HTML layout and a plain-text alternative, client
+details, project overview, attachment filename, an inquiry reference, and the
+submission time in Cairo. Reply and call links provide direct follow-up. Arabic
+and other right-to-left descriptions use automatic text direction. Notifications
+are only sent to the configured inbox; no automatic client email is sent.
+
 ## Activate delivery
 
 1. Set `ZOHO_SMTP_PASSWORD` in the ignored `.env.local` file to the mailbox's

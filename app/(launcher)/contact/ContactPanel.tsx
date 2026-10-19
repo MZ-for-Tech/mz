@@ -481,7 +481,17 @@ export default function ContactPanel() {
             </h2>
             <div className={styles.inputRow}>
               <label>
-                <span className={styles.label}>Email address</span>
+                <span className={styles.label}>Full name (required)</span>
+                <input name="name" className={styles.input} placeholder="Your full name" autoComplete="name" required maxLength={120} dir="auto" />
+              </label>
+
+              <label>
+                <span className={styles.label}>Company / organization (optional)</span>
+                <input name="company" className={styles.input} placeholder="Company or organization" autoComplete="organization" maxLength={160} dir="auto" />
+              </label>
+
+              <label>
+                <span className={styles.label}>Email address (required)</span>
                 <input
                   type="email"
                   name="email"
@@ -491,6 +501,12 @@ export default function ContactPanel() {
                   required
                   maxLength={254}
                 />
+              </label>
+
+              <label>
+                <span className={styles.label}>Phone with country code (required)</span>
+                <input type="tel" name="phone" className={styles.input} placeholder="+20 100 123 4567" autoComplete="tel" required maxLength={32} pattern="\+[1-9][0-9 ()\-]{6,30}" title="Include + and your country code, for example +20 100 123 4567." aria-describedby="brief-phone-help" dir="ltr" />
+                <span id="brief-phone-help" className={styles.fieldHelp}>Start with + and your country code, e.g. +20 for Egypt.</span>
               </label>
 
               <div>
