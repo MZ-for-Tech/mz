@@ -439,9 +439,9 @@ export default function ContactPanel() {
         )}
         <form className={styles.form} onSubmit={submitBrief} hidden={submissionState === "sent"}>
           {/* Honeypot for basic bot filtering; real visitors never see this field. */}
-          <label className={styles.honeypot} aria-hidden="true">
-            Company website
-            <input name="companyWebsite" tabIndex={-1} autoComplete="off" />
+          <label className={styles.honeypot} aria-hidden="true" inert>
+            Leave this field empty
+            <input name="formGuard" tabIndex={-1} autoComplete="off" data-1p-ignore="true" data-lpignore="true" data-bwignore="true" />
           </label>
           {categories.map((category) => (
             <input key={category} type="hidden" name="expertise" value={category} />

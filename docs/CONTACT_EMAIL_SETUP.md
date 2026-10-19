@@ -16,6 +16,13 @@ prefixes (such as Egypt's leading zero) are normalized before submission. A
 successful submission replaces the form with a confirmation card containing the
 inquiry reference and next steps, with an option to start another brief.
 
+Country labels and their ordering are a checked-in snapshot in
+`lib/phoneCountries.json`, shared by the server and browser to avoid differences
+between their locale databases during React hydration. Refresh this snapshot if
+updating the phone-number library's country metadata. Empty multipart attachment
+fields are treated as no attachment, whether represented as an empty file or an
+empty string; nonempty text in the attachment field is rejected.
+
 Notifications include a branded HTML layout and a plain-text alternative, client
 details, project overview, attachment filename, an inquiry reference, and the
 submission time in Cairo. Reply and call links provide direct follow-up. Arabic
@@ -57,6 +64,9 @@ single-value fields are rejected. User-provided HTML is escaped in the email,
 and the recipient is fixed by server configuration. Requests with a mismatched
 Origin are rejected. A triggered honeypot returns an error rather than claiming
 delivery succeeded, but Origin checks and the honeypot are not full spam protection.
+The trap uses a non-contact field name, an inert container, and password-manager
+ignore hints to reduce autofill false positives. The previous trap name is still
+checked for cached older clients. Rejections log only the reason, not field values.
 Enable durable rate limiting in the Vercel firewall or a shared backing store;
 the application does not currently provide it. Attachments are untrusted and are
 not malware-scanned by this application: do not open unexpected files without

@@ -6,7 +6,7 @@ const MAX_ATTACHMENT_BYTES = 5 * 1024 * 1024;
 const MAX_DESCRIPTION_LENGTH = 5000;
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const SINGLE_VALUE_FIELDS = [
-  "companyWebsite", "name", "company", "email", "phone", "description",
+  "companyWebsite", "formGuard", "name", "company", "email", "phone", "description",
   "budget", "timeline", "referral",
 ];
 
@@ -78,7 +78,8 @@ export async function POST(request: Request) {
     return response("The submitted fields are invalid. Please refresh and try again.", 400);
   }
 
-  if (String(form.get("companyWebsite") ?? "").trim()) {
+  if (String(form.get("companyWebsite") ?? "").trim() || String(form.get("formGuard") ?? "").trim()) {
+    console.warn("Contact submission rejected", { reason: "honeypot" });
     return response("We couldn't submit your brief. Please refresh and try again, or email hello@mzfortech.com.", 400);
   }
 
@@ -117,10 +118,10 @@ export async function POST(request: Request) {
   }
 
   const attachmentEntry = form.get("attachment");
-  if (attachmentEntry !== null && !(attachmentEntry instanceof File)) {
+  if (typeof attachmentEntry === "string" && attachmentEntry !== "") {
     return response("The attachment must be a file.", 400);
   }
-  const attachment = attachmentEntry instanceof File && attachmentEntry.name
+  const attachment = attachmentEntry && typeof attachmentEntry !== "string" && attachmentEntry.name
     ? attachmentEntry
     : null;
   if (attachment && attachment.size > MAX_ATTACHMENT_BYTES) {
