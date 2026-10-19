@@ -78,9 +78,8 @@ export async function POST(request: Request) {
     return response("The submitted fields are invalid. Please refresh and try again.", 400);
   }
 
-  // Quietly accept honeypot submissions so bots do not learn how they were caught.
   if (String(form.get("companyWebsite") ?? "").trim()) {
-    return Response.json({ message: "Your brief is on its way." });
+    return response("We couldn't submit your brief. Please refresh and try again, or email hello@mzfortech.com.", 400);
   }
 
   const email = String(form.get("email") ?? "").trim();
@@ -187,7 +186,12 @@ export async function POST(request: Request) {
     if (!delivery.accepted.length) {
       throw new Error("SMTP server did not accept any recipients");
     }
-    console.info("Contact inquiry accepted by SMTP", { reference });
+    console.info("Contact inquiry accepted by SMTP", {
+      reference,
+      messageId: delivery.messageId,
+      accepted: delivery.accepted,
+      rejected: delivery.rejected,
+    });
   } catch (error) {
     console.error(
       "Zoho SMTP delivery failed",

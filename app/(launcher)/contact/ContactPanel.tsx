@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import Link from "next/link";
 import ObfuscatedEmail from "@/components/ObfuscatedEmail/ObfuscatedEmail";
+import { normalizeContactPhone, PHONE_COUNTRIES } from "@/lib/contactPhone";
 import styles from "./page.module.css";
 
 /**
@@ -241,17 +242,41 @@ export default function ContactPanel() {
   const [fileName, setFileName] = useState<string | null>(null);
   const [submissionState, setSubmissionState] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const [submissionMessage, setSubmissionMessage] = useState("");
+  const [submissionReference, setSubmissionReference] = useState("");
+  const successRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (submissionState !== "sent") return;
+    successRef.current?.focus({ preventScroll: true });
+    successRef.current?.scrollIntoView({
+      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+      block: "center",
+    });
+  }, [submissionState]);
 
   const submitBrief = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const form = event.currentTarget;
+    const formData = new FormData(form);
+    const phone = normalizeContactPhone(
+      String(formData.get("phoneCountry") ?? ""),
+      String(formData.get("nationalPhone") ?? "").trim(),
+    );
+    if (!phone) {
+      setSubmissionState("error");
+      setSubmissionMessage("Check your phone number and selected country. Enter your number without the country code.");
+      return;
+    }
+    formData.set("phone", phone);
+    formData.delete("phoneCountry");
+    formData.delete("nationalPhone");
     setSubmissionState("sending");
     setSubmissionMessage("");
 
     try {
       const response = await fetch("/api/contact", {
         method: "POST",
-        body: new FormData(form),
+        body: formData,
       });
       const result = (await response.json()) as { message?: string; reference?: string };
 
@@ -270,9 +295,8 @@ export default function ContactPanel() {
       setReferral(null);
       setFileName(null);
       setSubmissionState("sent");
-      setSubmissionMessage(result.reference
-        ? `Your brief has been submitted. Reference: ${result.reference}. We'll be in touch soon.`
-        : "Your brief is on its way. We'll be in touch soon.");
+      setSubmissionReference(result.reference ?? "");
+      setSubmissionMessage("");
     } catch {
       setSubmissionState("error");
       setSubmissionMessage("We couldn't send your brief. Please email us directly.");
@@ -392,7 +416,28 @@ export default function ContactPanel() {
           </p>
         </div>
 
-        <form className={styles.form} onSubmit={submitBrief}>
+        {submissionState === "sent" && (
+          <div className={styles.successCard} ref={successRef} tabIndex={-1} role="status" aria-labelledby="brief-success-title">
+            <span className={styles.successIcon} aria-hidden="true">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="m5 12 4 4L19 6" /></svg>
+            </span>
+            <p className={styles.successEyebrow}>BRIEF SUBMITTED</p>
+            <h2 id="brief-success-title" className={styles.successTitle}>Thank you. Let’s build something great.</h2>
+            <p className={styles.successCopy}>Your project brief has been submitted to MZ. Our team will review your requirements and contact you using the details you provided.</p>
+            {submissionReference && <p className={styles.successReference}>Your inquiry reference <strong>{submissionReference}</strong></p>}
+            <div className={styles.successNext}>
+              <h3>What happens next?</h3>
+              <p>We’ll review your scope, budget, and timeline, then get in touch to discuss the best next step.</p>
+              <p>Have something to add? Email <ObfuscatedEmail user="hello" domain="mzfortech.com" />{submissionReference ? " and include your reference above." : "."}</p>
+            </div>
+            <button type="button" className={styles.submit} onClick={() => {
+              setSubmissionState("idle");
+              setSubmissionReference("");
+              requestAnimationFrame(() => document.querySelector<HTMLInputElement>('input[name="name"]')?.focus());
+            }}>Send another brief <span aria-hidden="true">↗</span></button>
+          </div>
+        )}
+        <form className={styles.form} onSubmit={submitBrief} hidden={submissionState === "sent"}>
           {/* Honeypot for basic bot filtering; real visitors never see this field. */}
           <label className={styles.honeypot} aria-hidden="true">
             Company website
@@ -505,11 +550,18 @@ export default function ContactPanel() {
                 />
               </label>
 
-              <label>
-                <span className={styles.label}>Phone with country code (required)</span>
-                <input type="tel" name="phone" className={styles.input} placeholder="+20 100 123 4567" autoComplete="tel" required maxLength={32} pattern="\+[1-9][0-9 \(\)\-]{6,30}" title="Include + and your country code, for example +20 100 123 4567." aria-describedby="brief-phone-help" dir="ltr" />
-                <span id="brief-phone-help" className={styles.fieldHelp}>Start with + and your country code, e.g. +20 for Egypt.</span>
-              </label>
+              <div>
+                <label htmlFor="brief-phone" className={styles.label}>Phone number (required)</label>
+                <div className={styles.phoneRow}>
+                  <select name="phoneCountry" className={`${styles.input} ${styles.countrySelect}`} defaultValue="EG" aria-label="Country and calling code" autoComplete="tel-country-code" required>
+                    {PHONE_COUNTRIES.map(({ country, name, callingCode }) => (
+                      <option key={country} value={country}>{name} ({callingCode})</option>
+                    ))}
+                  </select>
+                  <input id="brief-phone" type="tel" name="nationalPhone" className={styles.input} placeholder="Your phone number" autoComplete="tel-national" required maxLength={32} pattern="[0-9 \(\)\-]{6,32}" title="Enter your phone number without the country calling code." aria-describedby="brief-phone-help" dir="ltr" />
+                </div>
+                <span id="brief-phone-help" className={styles.fieldHelp}>Choose your country, then enter your number without the country code.</span>
+              </div>
 
               <div>
                 <span className={styles.label}>Attachments</span>

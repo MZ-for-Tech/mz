@@ -6,9 +6,15 @@ attachments through Zoho SMTP. Messages are sent from and delivered to
 brief reaches the visitor without impersonating their address as the sender.
 
 The form requires the client's full name, email, international phone number
-(including `+` and country code), and project description. Company / organization
+(selected using a country / calling-code dropdown), and project description. Company / organization
 is optional. Phone numbers are normalized to `+` followed by 7–15 digits; this
 checks format, not ownership or whether a number is reachable.
+
+The dropdown includes the supported countries and territories, with Egypt selected
+by default. Visitors enter their national number separately; standard national
+prefixes (such as Egypt's leading zero) are normalized before submission. A
+successful submission replaces the form with a confirmation card containing the
+inquiry reference and next steps, with an option to start another brief.
 
 Notifications include a branded HTML layout and a plain-text alternative, client
 details, project overview, attachment filename, an inquiry reference, and the
@@ -39,7 +45,9 @@ not a successful delivery confirmation. SMTP delivery failures return 502.
 
 Successful SMTP submissions return an inquiry reference, shown beneath the form.
 Search Vercel runtime logs for that reference: `Contact inquiry accepted by SMTP`
-means Zoho accepted the message, not that it has reached the inbox. Check Spam,
+means Zoho accepted the message, not that it has reached the inbox. The log also
+includes the SMTP message ID and accepted/rejected recipients so you can verify
+the production destination. Check Spam,
 Quarantine, inbox rules, and Zoho mail logs if it is missing. Failed SMTP attempts
 log the reference and an error code without logging the client's brief or password.
 
@@ -47,7 +55,8 @@ Server-side checks enforce field types, lengths, international phone format,
 email format, allowed project choices, and the attachment size limit. Duplicate
 single-value fields are rejected. User-provided HTML is escaped in the email,
 and the recipient is fixed by server configuration. Requests with a mismatched
-Origin are rejected, but Origin checks and the honeypot are not full spam protection.
+Origin are rejected. A triggered honeypot returns an error rather than claiming
+delivery succeeded, but Origin checks and the honeypot are not full spam protection.
 Enable durable rate limiting in the Vercel firewall or a shared backing store;
 the application does not currently provide it. Attachments are untrusted and are
 not malware-scanned by this application: do not open unexpected files without

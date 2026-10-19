@@ -424,6 +424,109 @@
   line-height: 1.5;
 }
 
+.phoneRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+  gap: 10px;
+}
+
+.phoneRow .input {
+  min-width: 0;
+  padding-inline: 12px;
+}
+
+.countrySelect {
+  color-scheme: dark;
+  text-overflow: ellipsis;
+}
+
+.countrySelect option {
+  background: #17191d;
+  color: #fff;
+}
+
+.form[hidden] {
+  display: none;
+}
+
+.successCard {
+  align-self: start;
+  padding: clamp(24px, 4vw, 56px);
+  border: 1px solid rgba(var(--color-brand-yellow-rgb), 0.35);
+  border-radius: var(--radius-md);
+  background: rgba(var(--color-bg-rgb), 0.65);
+  overflow-wrap: anywhere;
+}
+
+.successCard:focus-visible {
+  outline: 2px solid var(--color-brand-yellow);
+  outline-offset: 5px;
+}
+
+.successIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  color: var(--color-brand-yellow);
+  background: rgba(var(--color-brand-yellow-rgb), 0.12);
+  margin-bottom: 24px;
+}
+
+.successEyebrow {
+  color: var(--color-brand-yellow);
+  font-family: var(--font-code);
+  font-size: 0.75rem;
+  letter-spacing: 0.16em;
+  margin-bottom: 16px;
+}
+
+.successTitle {
+  font-size: clamp(1.75rem, 3vw, 2.75rem);
+  line-height: 1.15;
+  margin-bottom: 20px;
+}
+
+.successCopy,
+.successNext p {
+  color: rgba(var(--color-text-rgb), 0.75);
+  line-height: 1.7;
+}
+
+.successReference {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  margin-top: 24px;
+  padding: 16px;
+  border: 1px solid rgba(var(--color-text-rgb), 0.14);
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+}
+
+.successReference strong {
+  color: var(--color-brand-yellow);
+  font-family: var(--font-code);
+}
+
+.successNext {
+  margin: 28px 0;
+  padding-top: 24px;
+  border-top: 1px solid rgba(var(--color-text-rgb), 0.14);
+}
+
+.successNext h3,
+.successNext p {
+  margin-bottom: 12px;
+}
+
+.successNext a {
+  color: var(--color-brand-yellow);
+  text-decoration: underline;
+}
+
 .inputRow {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
