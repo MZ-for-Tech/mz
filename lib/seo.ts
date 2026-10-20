@@ -33,7 +33,10 @@ export function pageMetadata({
   publishedTime,
   modifiedTime,
 }: PageMetadataOptions): Metadata {
-  const metaDescription = fitDescription(description, 155);
+  const contextualDescription = description.length < 140 && path.startsWith("/research")
+    ? `${description} ${locale === "ar_EG" ? "من أبحاث موديل زيرو." : "Research by Model Zero."}`
+    : description;
+  const metaDescription = fitDescription(contextualDescription, 155);
   const socialDescription = fitDescription(description, 125);
   const imageParams = new URLSearchParams({ title, description: socialDescription, path, locale });
   const imageUrl = `/og?${imageParams.toString()}`;

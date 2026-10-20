@@ -7,7 +7,7 @@ import styles from "./page.module.css";
 export const metadata = pageMetadata({
   title: "Brand Guidelines",
   description:
-    "A practical guide to Model Zero's identity: its mark, colors, typography, visual language, and voice.",
+    "A practical guide to Model Zero's identity: logo use, colors, typography, visual language and writing style, with examples for consistent presentation.",
   path: "/brand",
 });
 

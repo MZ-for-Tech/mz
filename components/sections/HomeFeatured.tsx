@@ -169,13 +169,14 @@ function HeroCard({
   project: ProjectData;
 }) {
   const { kind, field } = resolveHero(project);
+  const accessibleLabel = `${project.name}: ${project.hasCaseStudy ? "View case study" : project.link ? "Open project" : "View project"}`;
 
   const body = (
     <>
       {kind === "artwork" && (
         <Image
           src={project.coverImage!}
-          alt=""
+          alt={`${project.name} platform screenshot`}
           fill
           sizes="(max-width: 900px) 100vw, 44vw"
           className={styles.heroImage}
@@ -250,7 +251,7 @@ function HeroCard({
       data-tile
       className={className}
       title={project.name}
-      aria-label={project.name}
+      aria-label={accessibleLabel}
     >
       {body}
     </a>
@@ -259,7 +260,7 @@ function HeroCard({
       className={className}
       actionClassName={styles.heroAction}
       title={project.name}
-      aria-label={project.name}
+      aria-label={accessibleLabel}
     >
       {body}
     </ResearchPortalLink>
@@ -269,7 +270,7 @@ function HeroCard({
       data-tile
       className={className}
       title={project.name}
-      aria-label={project.name}
+      aria-label={accessibleLabel}
     >
       {body}
     </Link>

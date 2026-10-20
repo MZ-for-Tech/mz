@@ -21,8 +21,8 @@ export default function ArabicContactForm() {
     <label>الاسم الكامل<input name="name" autoComplete="name" required maxLength={120} /></label>
     <label>المؤسسة أو الشركة<input name="company" autoComplete="organization" maxLength={160} /></label>
     <label>البريد الإلكتروني<input name="email" type="email" dir="ltr" autoComplete="email" required maxLength={254} /></label>
-    <label>رقم الهاتف مع رمز الدولة<input name="phone" type="tel" dir="ltr" autoComplete="tel" required maxLength={32} pattern="\+[1-9][0-9 ()-]{6,30}" aria-describedby="ar-phone-help" /></label>
-    <p id="ar-phone-help">ابدأ بعلامة + ثم رمز الدولة ورقم الهاتف.</p>
+    <label>رقم الهاتف مع رمز الدولة<input name="phone" type="tel" dir="ltr" autoComplete="tel" required maxLength={16} pattern={"\\+[1-9][0-9]{6,14}"} aria-describedby="ar-phone-help" /></label>
+    <p id="ar-phone-help">ابدأ بعلامة + ثم رمز الدولة ورقم الهاتف، دون مسافات.</p>
     <label>الخدمة المطلوبة<select name="expertise" defaultValue=""><option value="">لنحدد النطاق معًا</option><option value="Website">موقع إلكتروني</option><option value="ERP">أنظمة تخطيط موارد المؤسسات</option><option value="AI & Machine Learning">الذكاء الاصطناعي</option><option value="Data Analysis">تحليل البيانات</option><option value="Digital Transformation">التحول الرقمي</option><option value="Fintech & Compliance">الأنظمة المالية والامتثال</option><option value="Digitization & OCR">الرقمنة ومعالجة المستندات</option><option value="Embedded Systems">الأنظمة المدمجة</option><option value="Surveys & Statistics">المسوح والإحصاء</option><option value="Training">التدريب</option></select></label>
     <label>وصف المشروع<textarea name="description" required maxLength={5000} rows={6} /></label>
     <input type="hidden" name="formGuard" value="" />

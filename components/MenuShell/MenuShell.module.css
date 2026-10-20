@@ -594,6 +594,11 @@
   animation: panelWorkIn 0.55s cubic-bezier(0.22, 1, 0.36, 1) backwards;
 }
 
+/* Avoid rasterizing a blurred, full-length page before the first mobile paint. */
+@media (max-width: 768px) {
+  .panel, .panelWork { animation: none; }
+}
+
 @keyframes panelIn {
   from {
     opacity: 0;

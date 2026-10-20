@@ -22,7 +22,7 @@ export default function StartScreen() {
   }, []);
   return (
     <section ref={mainRef} className={`${styles.hero} hero-section`}>
-      <div className={styles.heroLogo3D} aria-hidden="true">{Logo ? <Logo svgSrc="/model-zero-logo-paths.svg" textureSrc="/model-zero-logo-texture.png" logoScaleMultiplier={1.15} /> : <Image src="/model-zero-logo.png" alt="" width={512} height={512} className={styles.heroPoster} />}</div>
+      <div className={styles.heroLogo3D} aria-hidden="true">{Logo ? <Logo svgSrc="/model-zero-logo-paths.svg" textureSrc="/model-zero-logo-texture.png" logoScaleMultiplier={1.15} /> : <Image src="/model-zero-logo.png" alt="" width={512} height={512} sizes="(max-width: 768px) 48vw, 360px" priority className={styles.heroPoster} />}</div>
       <div className={styles.heroContent}>
         <h1 className={styles.heroWordsRow}>
           <span className="sr-only">Research. Software. Knowledge.</span>

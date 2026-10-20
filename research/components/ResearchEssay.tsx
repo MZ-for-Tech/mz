@@ -150,13 +150,15 @@ export default function ResearchEssay({ study, locale = 'en' }: { study: Study; 
     })),
     datePublished: study.published_at,
     dateModified: study.updated_at || study.published_at,
-    isPartOf: { '@id': 'https://www.mzfortech.com/research#publication' },
-    ...(study.series ? { isPartOf: {
+    isPartOf: [
+      { '@id': 'https://www.mzfortech.com/research#publication' },
+      ...(study.series ? [{
       '@type': 'CreativeWorkSeries',
       name: (isArabic && study.series_ar) || study.series,
       position: study.series_number,
       ...(study.series_slug ? { url: `https://www.mzfortech.com${getResearchSeriesPath(study.series_slug)}` } : {}),
-    } } : {}),
+      }] : []),
+    ],
     publisher: {
       '@type': 'Organization',
       '@id': 'https://www.mzfortech.com/#organization',

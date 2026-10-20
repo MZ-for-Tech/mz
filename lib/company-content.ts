@@ -4,6 +4,14 @@ export const SITE = "https://www.mzfortech.com";
 export const ORGANIZATION_ID = `${SITE}/#organization`;
 export const ENTITY_DEFINITION = "Model Zero (MZ) is a software and artificial-intelligence company based in Cairo, Egypt.";
 export const COMPANY_SUMMARY = "Model Zero builds custom software and AI systems for organizations, publishes applied research through The Null Hypothesis, and trains client teams to operate what it builds.";
+export const SERVICES_INTRO = "Model Zero (MZ) designs, builds and deploys software and AI systems for organizations in Cairo and beyond — and then trains your team so you own the system and the knowledge to run it.";
+export const TECHNOLOGY_OVERVIEW = "We select the implementation around the system, data and operating environment. This website uses Next.js, React and TypeScript. For your project, we agree the stack, infrastructure and third-party dependencies during architecture planning.";
+export const ENGAGEMENT_OVERVIEW = "Start with a project brief, a defined assessment or a research question. Cost and timing depend on the deliverables, data access, integrations and review needs. Tell us your budget and intended launch window so we can discuss an appropriate scope. Continuing support and further development are agreed explicitly.";
+export const DIFFERENTIATORS = [
+  { title: "Ownership and understanding", text: "Source code, documentation and knowledge transfer are part of delivery, with ownership and third-party licenses defined in the agreement." },
+  { title: "Research you can inspect", text: "Our AI work connects to published explanations and experiments in The Null Hypothesis." },
+  { title: "Arabic and English", text: "Language, content structure and right-to-left behavior are considered in the design of bilingual systems." },
+];
 
 export const WORKFLOW = [
   { title: "Discovery", text: "We begin with the operation: who uses the system, where information comes from, and what currently slows people down. Together we identify data access, integration needs and practical constraints before choosing a technical approach." },

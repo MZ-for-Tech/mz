@@ -17,9 +17,8 @@ export type MenuTab = {
  *
  * These paths are flat and they say what they are. The old route structure
  * added a segment naming the navigation model rather than anything about the
- * page. `/work` says what a visitor came for. `LAUNCHER_ROOT` is the one
- * exception: the splash owns `/`, so the launcher's home page is `/home`—the
- * hub the other four tabs hang off.
+ * page. `/work` says what a visitor came for. The complete homepage lives at
+ * `/`; `/home` is a permanent legacy redirect.
  *
  * Order is the reading order of the shell and is hand-maintained, because a
  * home tab that drifts to the end of its own list is a bug no amount of data

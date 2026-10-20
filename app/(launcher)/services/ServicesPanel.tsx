@@ -3,7 +3,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { ArrowDownRight, ArrowUpRight } from "lucide-react";
 import { SERVICE_PILLARS } from "@/lib/services";
-import { OFFERINGS } from "@/lib/company-content";
+import { DIFFERENTIATORS, ENGAGEMENT_OVERVIEW, OFFERINGS, SERVICES_INTRO, TECHNOLOGY_OVERVIEW } from "@/lib/company-content";
 import { FAQ, ProjectCTA, Workflow } from "@/components/CompanyContent/ContentBlocks";
 import copy from "@/components/CompanyContent/CompanyContent.module.css";
 import JsonLd from "@/components/JsonLd";
@@ -72,7 +72,7 @@ export default function ServicesPanel() {
         <div className={styles.heroCopy}>
           <h1 className={styles.title} style={{ fontSize: "clamp(2.6rem, 5.5vw, 5.5rem)" }}>Software, AI &amp; Knowledge Transfer Services</h1>
           <p className={styles.lede}>
-            Model Zero (MZ) designs, builds and deploys software and AI systems for organizations in Cairo and beyond — and then trains your team so you own the system and the knowledge to run it.
+            {SERVICES_INTRO}
           </p>
           <Link href="/contact" data-tile className={styles.contactLink}>
             Start a project <ArrowUpRight size={16} strokeWidth={1.6} aria-hidden="true" />
@@ -156,9 +156,9 @@ export default function ServicesPanel() {
           { name: 'Consulting, Training & Knowledge Transfer', guides: ['digital-transformation', 'training-workshops'], extra: 'Research & development collaboration' },
         ].map(group => <section key={group.name}><h2>{group.name}</h2>{OFFERINGS.filter(item => (group.guides.includes(item.guide) || group.extra === item.name) && item.name !== group.exclude).map(item => <article key={item.name} className={copy.faq}><h3>{item.name}</h3><p>{item.text}</p><p><strong>Who it is for:</strong> {item.audience}</p><p><strong>What you get:</strong> {item.deliverables}</p><p><strong>Timing:</strong> {item.timing}</p><div className={copy.actions}><Link href={'/services/' + item.guide}>Explore this service</Link><Link href={item.proof || '/contact'}>{item.proof ? 'Read the related work' : 'Discuss your requirements'}</Link></div></article>)}</section>)}
         <Workflow />
-        <section><h2>Why Model Zero?</h2><div className={copy.grid}><article className={copy.card}><h3>Ownership and understanding</h3><p>Source code, documentation and knowledge transfer are part of delivery, with ownership and third-party licenses defined in the agreement.</p></article><article className={copy.card}><h3>Research you can inspect</h3><p>Our AI work connects to published explanations and experiments in <Link href='/research'>The Null Hypothesis</Link>.</p></article><article className={copy.card}><h3>Arabic and English</h3><p>Language, content structure and right-to-left behavior are considered in the design of bilingual systems.</p></article></div></section>
-        <section><h2>Technologies and implementation choices</h2><p>We select the implementation around the system, data and operating environment. This website uses Next.js, React and TypeScript. For your project, we agree the stack, infrastructure and third-party dependencies during architecture planning.</p></section>
-        <section><h2>Engagement and project scope</h2><p>Start with a project brief, a defined assessment or a research question. Cost and timing depend on the deliverables, data access, integrations and review needs. Tell us your budget and intended launch window so we can discuss an appropriate scope. Continuing support and further development are agreed explicitly.</p></section>
+        <section><h2>Why Model Zero?</h2><div className={copy.grid}>{DIFFERENTIATORS.map(item => <article className={copy.card} key={item.title}><h3>{item.title}</h3><p>{item.text}</p>{item.title === 'Research you can inspect' && <Link href='/research'>Read The Null Hypothesis</Link>}</article>)}</div></section>
+        <section><h2>Technologies and implementation choices</h2><p>{TECHNOLOGY_OVERVIEW}</p></section>
+        <section><h2>Engagement and project scope</h2><p>{ENGAGEMENT_OVERVIEW}</p></section>
         <FAQ /><ProjectCTA />
       </div>
       <footer className={styles.closer}>

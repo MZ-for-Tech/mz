@@ -1,4 +1,5 @@
-import { ABOUT_SECTIONS, COMPANY_FACTS, COMPANY_SUMMARY, CONTENT_UPDATED, ENTITY_DEFINITION, OFFERINGS, SERVICES_FAQ, SITE, WORKFLOW } from "./company-content";
+import { ABOUT_SECTIONS, COMPANY_FACTS, COMPANY_SUMMARY, CONTENT_UPDATED, DIFFERENTIATORS, ENGAGEMENT_OVERVIEW, ENTITY_DEFINITION, OFFERINGS, SERVICES_FAQ, SERVICES_INTRO, SITE, TECHNOLOGY_OVERVIEW, WORKFLOW } from "./company-content";
+import { SERVICE_PILLARS } from "./services";
 import { SERVICE_GUIDES } from "./service-guides";
 import { PROJECTS } from "./projects";
 import { CUSTOM_STUDIES } from "@/research/data/studies";
@@ -13,7 +14,8 @@ export function discoveryContent(full = false) {
     `# Model Zero\n\n${ENTITY_DEFINITION}\n\n${COMPANY_SUMMARY}\n\nUpdated: ${CONTENT_UPDATED}`,
     `## Facts\n\n${COMPANY_FACTS.map(([key, value]) => `- ${key}: ${value}`).join("\n")}\n- Official LinkedIn: ${LINKEDIN_URL}`,
     `## Public pages\n\n${getPublicPages().map((page) => `- [${page.name}](${SITE}${page.path})`).join("\n")}`,
-    `## Services\n\n${OFFERINGS.map((item) => `### ${item.name}\n\n${item.text}\n\nWho it is for: ${item.audience}\nDeliverables: ${item.deliverables}\nTiming: ${item.timing}\n${SITE}/services/${item.guide}`).join("\n\n")}`,
+    `## Services\n\n${SERVICES_INTRO}\n\n${SERVICE_PILLARS.map((pillar) => `### ${pillar.name} — ${pillar.title}\n\n${pillar.description}\n\n${pillar.scope.join("\n")}`).join("\n\n")}\n\n${OFFERINGS.map((item) => `### ${item.name}\n\n${item.text}\n\nWho it is for: ${item.audience}\nDeliverables: ${item.deliverables}\nTiming: ${item.timing}\n${SITE}/services/${item.guide}`).join("\n\n")}`,
+    `## Why Model Zero\n\n${DIFFERENTIATORS.map((item) => `### ${item.title}\n\n${item.text}`).join("\n\n")}\n\n## Technologies\n\n${TECHNOLOGY_OVERVIEW}\n\n## Engagement\n\n${ENGAGEMENT_OVERVIEW}`,
     `## How we work\n\n${WORKFLOW.map((step, index) => `${index + 1}. ${step.title}: ${step.text}`).join("\n\n")}`,
     `## About\n\n${ABOUT_SECTIONS.map((section) => `### ${section.title}\n\n${section.paragraphs.join("\n\n")}`).join("\n\n")}`,
     `## Products and selected work\n\n${PROJECTS.filter((project) => project.showOnWorkShelf !== false).map((project) => `- ${project.name} (${project.kind === "product" ? "Model Zero product" : project.kind === "demo" ? "Demo" : "Client work"}): ${project.description || project.category}${project.link ? ` — ${project.link}` : project.hasCaseStudy ? ` — ${SITE}/work/${project.slug}` : ` — ${SITE}/work`}`).join("\n")}`,
