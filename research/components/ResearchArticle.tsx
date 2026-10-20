@@ -109,13 +109,14 @@ export default function ResearchArticle({ locale = 'en', slug }: { locale?: 'en'
         publisher: {
             '@type': 'Organization',
             '@id': 'https://www.mzfortech.com/#organization',
-            name: 'MZ',
+            name: 'Model Zero',
             url: 'https://www.mzfortech.com/',
         },
         mainEntityOfPage: canonicalUrl,
         url: canonicalUrl,
         isPartOf: {
-            '@type': 'CreativeWorkSeries',
+            '@type': 'Periodical',
+            '@id': 'https://www.mzfortech.com/research#publication',
             name: 'The Null Hypothesis',
             url: `https://www.mzfortech.com/${locale === 'ar' ? 'research/ar' : 'research'}`,
         },

@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import { SmoothScrolling } from "@/components/SmoothScrolling/SmoothScrolling";
+import JsonLd from "@/components/JsonLd";
+import { SITE_GRAPH } from "@/lib/site-structured-data";
 
 const geistSans = localFont({
   src: "../public/fonts/geist.woff2",
@@ -80,6 +82,7 @@ export default function RootLayout({
       <head>
       </head>
       <body>
+        <JsonLd data={SITE_GRAPH} />
         <SiteBackground />
         <GamepadNavigation />
         <KonamiArcade />

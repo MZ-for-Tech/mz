@@ -150,6 +150,7 @@ export default function ResearchEssay({ study, locale = 'en' }: { study: Study; 
     })),
     datePublished: study.published_at,
     dateModified: study.updated_at || study.published_at,
+    isPartOf: { '@id': 'https://www.mzfortech.com/research#publication' },
     ...(study.series ? { isPartOf: {
       '@type': 'CreativeWorkSeries',
       name: (isArabic && study.series_ar) || study.series,
@@ -159,7 +160,7 @@ export default function ResearchEssay({ study, locale = 'en' }: { study: Study; 
     publisher: {
       '@type': 'Organization',
       '@id': 'https://www.mzfortech.com/#organization',
-      name: 'MZ',
+      name: 'Model Zero',
       url: 'https://www.mzfortech.com/',
     },
     mainEntityOfPage: canonicalUrl,

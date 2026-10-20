@@ -1,5 +1,8 @@
 import { pageMetadata } from "@/lib/seo";
 import ContactPanel from "./ContactPanel";
+import JsonLd from "@/components/JsonLd";
+import { breadcrumbs, graph } from "@/lib/structured-data";
+import { ORGANIZATION_ID, SITE } from "@/lib/company-content";
 
 export const metadata = pageMetadata({
   title: "Contact MZ",
@@ -15,5 +18,5 @@ export const metadata = pageMetadata({
  * stay present while a visitor fills it in.
  */
 export default function ContactRoute() {
-  return <ContactPanel />;
+  return <><JsonLd data={graph([{ "@type": "ContactPage", "@id": `${SITE}/contact#page`, url: `${SITE}/contact`, about: { "@id": ORGANIZATION_ID } }, breadcrumbs("/contact", "Contact")])} /><ContactPanel /></>;
 }

@@ -65,26 +65,8 @@ const serviceArt: Record<string, ReactNode> = {
 };
 
 export default function ServicesPanel() {
-  const serviceStructuredData = {
-    "@context": "https://schema.org",
-    "@graph": SERVICE_PILLARS.map((service) => ({
-      "@type": "Service",
-      "@id": `https://www.mzfortech.com/services#${service.name.toLowerCase()}`,
-      name: service.name,
-      description: `${service.title} ${service.description} ${service.scope.join(", ")}.`,
-      provider: { "@id": "https://www.mzfortech.com/#organization" },
-      url: "https://www.mzfortech.com/services",
-    })),
-  };
-
   return (
     <div className={styles.panel}>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(serviceStructuredData).replace(/</g, "\\u003c"),
-        }}
-      />
 
       <header className={styles.hero}>
         <div className={styles.heroCopy}>
