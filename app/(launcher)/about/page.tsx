@@ -1,10 +1,10 @@
 import { pageMetadata } from "@/lib/seo";
-import AboutPanel from "./AboutPanel";
+import AboutContent from "@/components/CompanyContent/AboutContent";
 
 export const metadata = pageMetadata({
-  title: "About Model Zero",
+  title: "About Model Zero — Software & AI in Cairo",
   description:
-    "Learn about MZ, a Cairo-based software and AI company building custom systems and training teams to run them, informed by applied research.",
+    "Model Zero is a Cairo-based software and AI company founded in 2026. We build custom systems, publish applied research and train teams to run what we build.",
   path: "/about",
 });
 
@@ -14,5 +14,5 @@ export const metadata = pageMetadata({
  * The research publication lives at /research.
  */
 export default function AboutPage() {
-  return <AboutPanel />;
+  return <AboutContent />;
 }
