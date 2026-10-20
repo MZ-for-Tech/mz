@@ -3,8 +3,6 @@
   overflow-x: clip;
 }
 
-.heroPoster { position: absolute; width: min(48vw, 360px); height: auto; inset: 0; margin: auto; }
-
 /* Hero */
 .hero {
   position: relative;
@@ -34,15 +32,14 @@
 
 /* Hero Entry Animations (Pure CSS, 0 JS cost) */
 .heroWord :global(.hero-word-inner) {
-  display: inline-block;
   transform-origin: left top;
   transform: translateY(110%) rotateZ(4deg);
-  animation: heroWordIn .7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: heroWordIn 1.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   will-change: transform;
 }
-.heroWordsRow > :nth-child(1) :global(.hero-word-inner) { animation-delay: .05s; }
-.heroWordsRow > :nth-child(2) :global(.hero-word-inner) { animation-delay: .1s; }
-.heroWordsRow > :nth-child(3) :global(.hero-word-inner) { animation-delay: .15s; }
+.heroWordsRow > :nth-child(1) :global(.hero-word-inner) { animation-delay: 1.10s; }
+.heroWordsRow > :nth-child(2) :global(.hero-word-inner) { animation-delay: 1.25s; }
+.heroWordsRow > :nth-child(3) :global(.hero-word-inner) { animation-delay: 1.40s; }
 
 .heroSubtext {
   opacity: 0;
@@ -53,7 +50,10 @@
 }
 
 .heroDescription {
-  opacity: 1;
+  opacity: 0;
+  animation: heroDescIn 1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: 2.50s;
+  will-change: opacity;
 }
 
 @keyframes heroWordIn {
@@ -100,10 +100,6 @@
   pointer-events: auto;
   overflow: hidden; /* clips the y:110% slide-up animation */
   padding-bottom: 0.1em; /* prevents descender clipping */
-}
-
-@media (hover: hover) {
-  .heroWord:hover { font-variation-settings: "wght" 700; color: var(--color-brand-yellow); }
 }
 
 .heroWord a {
@@ -168,7 +164,7 @@
   letter-spacing: 0.02em;
   color: rgba(var(--color-white-rgb), 0.5);
   max-width: 280px;
-    opacity: 1;
+  opacity: 0;
   z-index: 3;
 }
 

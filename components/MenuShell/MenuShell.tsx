@@ -55,7 +55,7 @@ export default function MenuShell({ children }: { children: React.ReactNode }) {
   // Converge-in: the launcher's furniture assembles over the background that
   // never left. Runs once, on mount — tab switches don't remount the layout.
   useEffect(() => {
-    if (!shellRef.current || prefersReducedMotion() || window.matchMedia("(max-width: 768px)").matches) return;
+    if (!shellRef.current || prefersReducedMotion()) return;
     const ctx = gsap.context(() => {
       gsap.from("[data-converge]", {
         opacity: 0,

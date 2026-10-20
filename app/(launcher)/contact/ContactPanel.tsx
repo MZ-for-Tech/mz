@@ -56,12 +56,6 @@ const CATEGORIES = [
   "Data Analysis",
   "Workshops",
   "Research Collaboration",
-  "Fintech & Compliance",
-  "Digital Transformation",
-  "Digitization & OCR",
-  "Embedded Systems",
-  "Surveys & Statistics",
-  "Training",
 ];
 
 /**
@@ -326,7 +320,6 @@ export default function ContactPanel() {
             <br />
             What do you wanna talk about?
           </h1>
-          <p>Contact Model Zero (MZ) in Cairo, Egypt, about software, AI, data or training. Share your requirements using the project brief below.</p>
 
           {/* The address sits straight on the page, as it did on the original
               brief page. A bordered card around one email turns information

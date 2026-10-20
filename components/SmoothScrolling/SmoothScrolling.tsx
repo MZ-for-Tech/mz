@@ -1,7 +1,7 @@
 "use client";
 
 import { ReactLenis, useLenis } from "lenis/react";
-import { ReactNode, useEffect, useSyncExternalStore } from "react";
+import { ReactNode, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { gsap, ScrollTrigger } from "@/lib/gsap";
 import { useReducedMotion } from "@/lib/useReducedMotion";
@@ -122,25 +122,15 @@ function LenisGsapBridge() {
   return null;
 }
 
-const desktopQuery = "(min-width: 769px) and (pointer: fine)";
-function subscribeDesktop(callback: () => void) {
-  const media = window.matchMedia(desktopQuery);
-  media.addEventListener("change", callback);
-  return () => media.removeEventListener("change", callback);
-}
-const desktopSnapshot = () => window.matchMedia(desktopQuery).matches;
-const serverDesktopSnapshot = () => false;
-
 export function SmoothScrolling({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const reduceMotion = useReducedMotion();
-  const desktop = useSyncExternalStore(subscribeDesktop, desktopSnapshot, serverDesktopSnapshot);
   const isResearchRoute =
     pathname === "/research" || pathname.startsWith("/research/");
 
   // Research uses native browser scrolling. Unmounting the root provider also
   // removes Lenis' global wheel handling and its GSAP bridge for this subtree.
-  if (reduceMotion || isResearchRoute || !desktop) {
+  if (reduceMotion || isResearchRoute) {
     return <>{children}</>;
   }
 

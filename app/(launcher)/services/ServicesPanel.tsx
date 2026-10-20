@@ -3,11 +3,6 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { ArrowDownRight, ArrowUpRight } from "lucide-react";
 import { SERVICE_PILLARS } from "@/lib/services";
-import { DIFFERENTIATORS, ENGAGEMENT_OVERVIEW, OFFERINGS, SERVICES_INTRO, TECHNOLOGY_OVERVIEW } from "@/lib/company-content";
-import { FAQ, ProjectCTA, Workflow } from "@/components/CompanyContent/ContentBlocks";
-import copy from "@/components/CompanyContent/CompanyContent.module.css";
-import JsonLd from "@/components/JsonLd";
-import { breadcrumbs, faqSchema, graph, serviceSchema } from "@/lib/structured-data";
 import styles from "./page.module.css";
 
 function BuildVisual() {
@@ -60,27 +55,46 @@ function TeachVisual() {
 
 const serviceArt: Record<string, ReactNode> = {
   Build: <BuildVisual />,
-  Deploy: <ApplyVisual />,
+  Apply: <ApplyVisual />,
   Teach: <TeachVisual />,
 };
 
 export default function ServicesPanel() {
+  const serviceStructuredData = {
+    "@context": "https://schema.org",
+    "@graph": SERVICE_PILLARS.map((service) => ({
+      "@type": "Service",
+      "@id": `https://www.mzfortech.com/services#${service.name.toLowerCase()}`,
+      name: service.name,
+      description: `${service.title} ${service.description} ${service.scope.join(", ")}.`,
+      provider: { "@id": "https://www.mzfortech.com/#organization" },
+      url: "https://www.mzfortech.com/services",
+    })),
+  };
+
   return (
     <div className={styles.panel}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(serviceStructuredData).replace(/</g, "\\u003c"),
+        }}
+      />
 
       <header className={styles.hero}>
         <div className={styles.heroCopy}>
-          <h1 className={styles.title} style={{ fontSize: "clamp(2.6rem, 5.5vw, 5.5rem)" }}>Software, AI &amp; Knowledge Transfer Services</h1>
+          <h1 className={styles.title}>Build. Apply. Teach.</h1>
           <p className={styles.lede}>
-            {SERVICES_INTRO}
+            We build custom software and AI systems, then help people understand
+            and operate them. Our services also include financial systems,
+            digital media, applied research, and information technology transfer.
           </p>
           <Link href="/contact" data-tile className={styles.contactLink}>
-            Start a project <ArrowUpRight size={16} strokeWidth={1.6} aria-hidden="true" />
+            Start a conversation <ArrowUpRight size={16} strokeWidth={1.6} />
           </Link>
-          <Link href="/work" className={styles.contactLink}>See our work</Link>
         </div>
 
-        <nav className={styles.pillarMap} aria-label="Explore Model Zero service pillars">
+        <nav className={styles.pillarMap} aria-label="Explore MZ service pillars">
           <svg className={styles.serviceMapGraphic} viewBox="0 0 400 280" aria-hidden="true">
             <ellipse className={styles.mapOrbit} cx="200" cy="140" rx="118" ry="94" />
             <ellipse className={styles.mapOrbit} cx="200" cy="140" rx="78" ry="62" />
@@ -96,8 +110,8 @@ export default function ServicesPanel() {
           <Link href="#build" data-tile className={`${styles.mapLink} ${styles.mapBuild}`}>
             Build <ArrowDownRight size={13} aria-hidden="true" />
           </Link>
-          <Link href="#deploy" data-tile className={`${styles.mapLink} ${styles.mapApply}`}>
-            Deploy <ArrowDownRight size={13} aria-hidden="true" />
+          <Link href="#apply" data-tile className={`${styles.mapLink} ${styles.mapApply}`}>
+            Apply <ArrowDownRight size={13} aria-hidden="true" />
           </Link>
           <Link href="#teach" data-tile className={`${styles.mapLink} ${styles.mapTeach}`}>
             Teach <ArrowDownRight size={13} aria-hidden="true" />
@@ -115,7 +129,7 @@ export default function ServicesPanel() {
       <div className={styles.pillars}>
         {SERVICE_PILLARS.map((pillar) => (
           <section
-            className={`${styles.pillar} ${styles[`pillar${pillar.name === "Deploy" ? "Apply" : pillar.name}`]}`}
+            className={`${styles.pillar} ${styles[`pillar${pillar.name}`]}`}
             id={pillar.name.toLowerCase()}
             key={pillar.id}
             aria-labelledby={`${pillar.name.toLowerCase()}-title`}
@@ -137,7 +151,7 @@ export default function ServicesPanel() {
                   Explore MZ products <ArrowUpRight size={15} aria-hidden="true" />
                 </Link>
               )}
-              {pillar.name === "Deploy" && (
+              {pillar.name === "Apply" && (
                 <Link href="/research" className={styles.textLink}>
                   Explore MZ research <ArrowUpRight size={15} aria-hidden="true" />
                 </Link>
@@ -147,20 +161,15 @@ export default function ServicesPanel() {
         ))}
       </div>
 
+      <aside className={styles.scopeNote}>
+        <p>
+          These summaries group MZ&apos;s registered business purposes. Carrying
+          out each activity remains subject to applicable laws, regulations,
+          decisions, and any required licenses. Clause 9 cites the Minister of
+          Defense and Military Production Decision No. 64 of 2003.
+        </p>
+      </aside>
 
-      <div className={copy.content}>
-        <JsonLd data={graph([breadcrumbs('/services', 'Services'), faqSchema('/services'), { '@type': 'OfferCatalog', '@id': 'https://www.mzfortech.com/services#catalog', name: 'Model Zero services', itemListElement: OFFERINGS.map((offering, index) => ({ '@type': 'Offer', itemOffered: serviceSchema('/services/' + offering.guide, offering.name, offering.text, 'offering-' + index) })) }])} />
-        {[
-          { name: 'Custom Software & Systems', guides: ['software-development', 'fintech-compliance', 'embedded-systems', 'digitization-arabic-ocr'], exclude: 'Arabic OCR & document AI' },
-          { name: 'AI, Data & Analytics', guides: ['ai-machine-learning', 'data-analytics-surveys'], extra: 'Arabic OCR & document AI', exclude: 'Research & development collaboration' },
-          { name: 'Consulting, Training & Knowledge Transfer', guides: ['digital-transformation', 'training-workshops'], extra: 'Research & development collaboration' },
-        ].map(group => <section key={group.name}><h2>{group.name}</h2>{OFFERINGS.filter(item => (group.guides.includes(item.guide) || group.extra === item.name) && item.name !== group.exclude).map(item => <article key={item.name} className={copy.faq}><h3>{item.name}</h3><p>{item.text}</p><p><strong>Who it is for:</strong> {item.audience}</p><p><strong>What you get:</strong> {item.deliverables}</p><p><strong>Timing:</strong> {item.timing}</p><div className={copy.actions}><Link href={'/services/' + item.guide}>Explore this service</Link><Link href={item.proof || '/contact'}>{item.proof ? 'Read the related work' : 'Discuss your requirements'}</Link></div></article>)}</section>)}
-        <Workflow />
-        <section><h2>Why Model Zero?</h2><div className={copy.grid}>{DIFFERENTIATORS.map(item => <article className={copy.card} key={item.title}><h3>{item.title}</h3><p>{item.text}</p>{item.title === 'Research you can inspect' && <Link href='/research'>Read The Null Hypothesis</Link>}</article>)}</div></section>
-        <section><h2>Technologies and implementation choices</h2><p>{TECHNOLOGY_OVERVIEW}</p></section>
-        <section><h2>Engagement and project scope</h2><p>{ENGAGEMENT_OVERVIEW}</p></section>
-        <FAQ /><ProjectCTA />
-      </div>
       <footer className={styles.closer}>
         <p>Have a problem worth solving?</p>
         <Link href="/contact" data-tile>

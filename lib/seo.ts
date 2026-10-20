@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { CORE_PAGES } from "./public-pages";
 
 type PageMetadataOptions = {
   title: string;
@@ -8,8 +7,6 @@ type PageMetadataOptions = {
   locale?: string;
   languages?: Record<string, string>;
   type?: "website" | "article";
-  publishedTime?: string;
-  modifiedTime?: string;
 };
 
 function fitDescription(text: string, maxLength: number): string {
@@ -30,35 +27,24 @@ export function pageMetadata({
   locale = "en_US",
   languages,
   type = "website",
-  publishedTime,
-  modifiedTime,
 }: PageMetadataOptions): Metadata {
-  const contextualDescription = description.length < 140 && path.startsWith("/research")
-    ? `${description} ${locale === "ar_EG" ? "من أبحاث موديل زيرو." : "Research by Model Zero."}`
-    : description;
-  const metaDescription = fitDescription(contextualDescription, 155);
+  const metaDescription = fitDescription(description, 155);
   const socialDescription = fitDescription(description, 125);
   const imageParams = new URLSearchParams({ title, description: socialDescription, path, locale });
   const imageUrl = `/og?${imageParams.toString()}`;
-  const searchTitle = fitDescription(title, path === "/" ? 60 : 47);
-  const core = CORE_PAGES.find((page) => page.path === path);
-  const configuredLanguages = languages || (core ? { en: core.path, ar: core.arabic } : undefined);
-  const languageAlternates = configuredLanguages ? { ...configuredLanguages, "x-default": configuredLanguages["x-default"] || configuredLanguages.en || path } : undefined;
 
   return {
-    title: path === "/" ? { absolute: searchTitle } : searchTitle,
+    title,
     description: metaDescription,
-    alternates: { canonical: path, ...(languageAlternates ? { languages: languageAlternates } : {}) },
+    alternates: { canonical: path, ...(languages ? { languages } : {}) },
     openGraph: {
       title,
       description: socialDescription,
       url: path,
-      siteName: "Model Zero",
+      siteName: "MZ",
       images: [{ url: imageUrl, alt: title, width: 1200, height: 630 }],
       locale,
-      ...(configuredLanguages?.ar ? { alternateLocale: locale === "ar_EG" ? ["en_US"] : ["ar_EG"] } : {}),
       type,
-      ...(type === "article" ? { ...(publishedTime ? { publishedTime } : {}), ...(modifiedTime ? { modifiedTime } : {}) } : {}),
     },
     twitter: {
       card: "summary_large_image",

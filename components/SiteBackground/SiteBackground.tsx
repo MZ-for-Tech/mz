@@ -48,7 +48,7 @@ export default function SiteBackground() {
     // render below already refuses to mount the canvas unless `mounted`, and
     // resetting two pieces of state to the values they were cleared to
     // would be a second source of truth for "is the shader on this route".
-    if (isPlain || window.matchMedia("(prefers-reduced-motion: reduce), (max-width: 768px)").matches) return;
+    if (isPlain) return;
 
     let r1 = 0;
     let r2 = 0;

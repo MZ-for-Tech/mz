@@ -29,13 +29,9 @@ function acceptsMarkdown(acceptHeader: string | null) {
 
 export function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
-  const requestHeaders = new Headers(request.headers);
-  const isArabic = pathname === '/ar' || pathname.startsWith('/ar/') || pathname === '/research/ar' || pathname.startsWith('/research/ar/');
-  requestHeaders.set('x-mz-locale', isArabic ? 'ar' : 'en');
-  const next = () => NextResponse.next({ request: { headers: requestHeaders } });
   const isResearchArticlePath = pathname.startsWith('/research/') && pathname !== '/research/markdown';
-  const isNegotiablePage = MARKDOWN_PAGES.has(pathname) || isResearchArticlePath || pathname.startsWith('/services/') || pathname === '/ar' || pathname.startsWith('/ar/');
-  if (!isNegotiablePage) return next();
+  const isNegotiablePage = MARKDOWN_PAGES.has(pathname) || isResearchArticlePath;
+  if (!isNegotiablePage) return NextResponse.next();
 
   if (request.method === 'GET' && acceptsMarkdown(request.headers.get('accept'))) {
     const destination = pathname.startsWith('/research')
@@ -55,7 +51,7 @@ export function proxy(request: NextRequest) {
     return response;
   }
 
-  return next();
+  return NextResponse.next();
 }
 
 export const config = {

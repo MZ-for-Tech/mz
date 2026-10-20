@@ -49,7 +49,7 @@ const LAUNCHER_PATHS = [
 ];
 
 export function isLauncherPath(pathname: string): boolean {
-  return LAUNCHER_PATHS.includes(pathname) || pathname.startsWith("/services/") || pathname === "/ar" || pathname.startsWith("/ar/");
+  return LAUNCHER_PATHS.includes(pathname);
 }
 
 /** Paths owned by the standalone Research experience. */
@@ -69,7 +69,7 @@ export function wantsWipe(from: string | null, to: string): boolean {
   // Leaving Research is a portal exit, so cover it with the site wipe.
   if (from !== null && isResearchPath(from)) return true;
 
-  if (from === null) return !isLauncherPath(to);
+  if (from === null) return true;
   return !(isLauncherPath(to) && isLauncherPath(from));
 }
 

@@ -2,9 +2,9 @@ import { pageMetadata } from "@/lib/seo";
 import ServicesPanel from "./ServicesPanel";
 
 export const metadata = pageMetadata({
-  title: "Software, AI & Training Services",
+  title: "Software, AI & Technology Services",
   description:
-    "Model Zero builds software, AI and fintech systems, runs data analysis and surveys, and guides digital transformation — then trains your team to run it.",
+    "MZ builds custom software and AI systems, applies research, and helps people understand and operate technology.",
   path: "/services",
 });
 

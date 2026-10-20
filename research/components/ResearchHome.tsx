@@ -39,7 +39,7 @@ export default function ResearchHome({ locale = 'en' }: { locale?: 'en' | 'ar' }
             <p className="research-brand-copy">
               {isArabic
                 ? 'يتتبع The Null Hypothesis أبحاث MZ من السؤال إلى المنتج، ويتيح استكشاف الأفكار والأساليب وراء ما نبنيه من خلال تجارب تفاعلية.'
-                : 'The Null Hypothesis publishes Model Zero (MZ) research on AI, statistics and model compression, with interactive explanations of the methods behind the work.'}
+                : 'The Null Hypothesis follows MZ research from question to product, making the ideas and methods behind what we build explorable through interactive work.'}
             </p>
           </div>
         </section>

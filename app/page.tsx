@@ -1,19 +1,53 @@
 import { pageMetadata } from "@/lib/seo";
 import StartScreen from "./StartScreen";
-import HomeFeatured from "@/components/sections/HomeFeatured";
-import MenuShell from "@/components/MenuShell/MenuShell";
+
+const siteStructuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://www.mzfortech.com/#organization",
+      name: "Model Zero",
+      alternateName: "MZ",
+      url: "https://www.mzfortech.com/",
+      logo: "https://www.mzfortech.com/model-zero-logo.svg",
+      email: "hello@mzfortech.com",
+      description:
+        "Model Zero (MZ) builds software and AI in Cairo, then trains teams to run it. Applied research informs the work.",
+      address: {
+        "@type": "PostalAddress",
+        addressLocality: "Cairo",
+        addressCountry: "EG",
+      },
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://www.mzfortech.com/#website",
+      url: "https://www.mzfortech.com/",
+      name: "Model Zero",
+      inLanguage: "en",
+      publisher: { "@id": "https://www.mzfortech.com/#organization" },
+    },
+  ],
+};
 
 export const metadata = pageMetadata({
-  title: "Model Zero — Software & AI Company in Cairo",
+  title: "Model Zero",
   description:
-    "Model Zero (MZ) builds custom software and AI systems in Cairo, publishes applied research, and trains your team to operate and maintain what we build.",
+    "Model Zero (MZ) builds software and AI in Cairo, then trains teams to run it. Applied research informs the work.",
   path: "/",
 });
 
 export default function HomePage() {
   return (
     <>
-      <MenuShell><StartScreen /><div id="featured"><HomeFeatured /></div></MenuShell>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(siteStructuredData).replace(/</g, "\\u003c"),
+        }}
+      />
+      <StartScreen />
     </>
   );
 }

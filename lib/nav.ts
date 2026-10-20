@@ -17,14 +17,15 @@ export type MenuTab = {
  *
  * These paths are flat and they say what they are. The old route structure
  * added a segment naming the navigation model rather than anything about the
- * page. `/work` says what a visitor came for. The complete homepage lives at
- * `/`; `/home` is a permanent legacy redirect.
+ * page. `/work` says what a visitor came for. `LAUNCHER_ROOT` is the one
+ * exception: the splash owns `/`, so the launcher's home page is `/home`—the
+ * hub the other four tabs hang off.
  *
  * Order is the reading order of the shell and is hand-maintained, because a
  * home tab that drifts to the end of its own list is a bug no amount of data
  * modelling would prevent.
  */
-export const LAUNCHER_ROOT = "/";
+export const LAUNCHER_ROOT = "/home";
 
 export const MENU_TABS: MenuTab[] = [
   { label: "Home", href: LAUNCHER_ROOT },

@@ -1,39 +1,33 @@
 import type { Metadata, Viewport } from "next";
-import localFont from "next/font/local";
+import { Geist, JetBrains_Mono, Cormorant_Garamond, Newsreader } from "next/font/google";
 import "./globals.css";
 import { SmoothScrolling } from "@/components/SmoothScrolling/SmoothScrolling";
-import JsonLd from "@/components/JsonLd";
-import { SITE_GRAPH } from "@/lib/site-structured-data";
-import SiteFooter from "@/components/SiteFooter/SiteFooter";
-import { headers } from "next/headers";
-import DocumentLanguage from "@/components/DocumentLanguage";
 
-const geistSans = localFont({
-  src: "../public/fonts/geist.woff2",
+const geistSans = Geist({
   variable: "--font-geist",
+  subsets: ["latin"],
   display: "swap",
 });
 
-const jetbrainsMono = localFont({
-  src: "../public/fonts/jetbrains-mono.woff2",
+const jetbrainsMono = JetBrains_Mono({
   variable: "--font-mono",
+  subsets: ["latin"],
   display: "swap",
   preload: false,
 });
 
-const cormorant = localFont({
-  src: "../public/fonts/cormorant.woff2",
+const cormorant = Cormorant_Garamond({
   variable: "--font-serif",
+  weight: ["400", "600"],
+  subsets: ["latin"],
   display: "swap",
   preload: false,
 });
 
-const newsreader = localFont({
-  src: [
-    { path: "../public/fonts/newsreader.woff2", style: "normal" },
-    { path: "../public/fonts/newsreader-italic.woff2", style: "italic" },
-  ],
+const newsreader = Newsreader({
   variable: "--font-newsreader",
+  subsets: ["latin"],
+  style: ["normal", "italic"],
   display: "swap",
   preload: false,
 });
@@ -41,7 +35,7 @@ const newsreader = localFont({
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.mzfortech.com"),
   title: {
-    default: "Model Zero — Software & AI Company in Cairo",
+    default: "Model Zero",
     template: "%s | Model Zero",
   },
   applicationName: "Model Zero",
@@ -71,26 +65,20 @@ import SiteBackground from "@/components/SiteBackground/SiteBackground";
 import GamepadNavigation from "@/components/GamepadNavigation/GamepadNavigation";
 import KonamiArcade from "@/components/KonamiArcade/KonamiArcade";
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // Proxy derives this from the URL, so the initial raw document has the correct language.
-  // Reading request headers makes HTML routes dynamic; sitemap and text exports stay static.
-  const locale = (await headers()).get("x-mz-locale") === "ar" ? "ar" : "en";
   return (
     <html
-      lang={locale}
-      dir={locale === "ar" ? "rtl" : "ltr"}
+      lang="en"
       className={`${geistSans.variable} ${jetbrainsMono.variable} ${cormorant.variable} ${newsreader.variable}`}
       data-theme="dark"
     >
       <head>
       </head>
       <body>
-        <JsonLd data={SITE_GRAPH} />
-        <DocumentLanguage />
         <SiteBackground />
         <GamepadNavigation />
         <KonamiArcade />
@@ -110,7 +98,7 @@ export default async function RootLayout({
         <TransitionLink href="/" className="layout-logo-link">
           <Image
             src="/model-zero-logo.svg"
-            alt="Model Zero logo"
+            alt="Model Zero"
             width={100}
             height={100}
             className="layout-logo-img"
@@ -118,7 +106,6 @@ export default async function RootLayout({
           />
         </TransitionLink>
         <SmoothScrolling>{children}</SmoothScrolling>
-        <SiteFooter />
       </body>
     </html>
   );

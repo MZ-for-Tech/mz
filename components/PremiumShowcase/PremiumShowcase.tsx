@@ -8,7 +8,7 @@ export default function PremiumShowcase() {
     <div className={styles.sectionContainer}>
       <div className={styles.wrapper}>
         <div className={styles.leftCopy}>
-          <h2>Systems built to be understood.</h2>
+          <h1>MZ builds software and AI systems in Cairo.</h1>
           <p>We train client teams to run what we build, informed by applied research.</p>
         </div>
 
@@ -18,7 +18,7 @@ export default function PremiumShowcase() {
           {/* The abstract 3D shape image (Updated to green theme) */}
           <Image
             src="/green_glass.webp"
-            alt=""
+            alt="Abstract Green Glass 3D Shape"
             fill
             loading="eager"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"

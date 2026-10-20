@@ -7,9 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "translate:research-draft": "node scripts/translate-research-markdown.mjs",
-    "seo:verify": "node scripts/verify-seo.mjs",
-    "seo:indexnow": "node scripts/indexnow.mjs"
+    "translate:research-draft": "node scripts/translate-research-markdown.mjs"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",

@@ -21,12 +21,6 @@ const EXPERTISE = new Set([
   "Data Analysis",
   "Workshops",
   "Research Collaboration",
-  "Fintech & Compliance",
-  "Digital Transformation",
-  "Digitization & OCR",
-  "Embedded Systems",
-  "Surveys & Statistics",
-  "Training",
 ]);
 const BUDGETS = new Set([
   "Under $1,500",
