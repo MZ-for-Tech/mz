@@ -30,7 +30,8 @@ export function pageMetadata({
 }: PageMetadataOptions): Metadata {
   const metaDescription = fitDescription(description, 155);
   const socialDescription = fitDescription(description, 125);
-  const imageParams = new URLSearchParams({ title, description: socialDescription, path, locale });
+  const brandedTitle = `${title} | MZ`;
+  const imageParams = new URLSearchParams({ title: brandedTitle, description: socialDescription, path, locale });
   const imageUrl = `/og?${imageParams.toString()}`;
 
   return {
@@ -38,7 +39,7 @@ export function pageMetadata({
     description: metaDescription,
     alternates: { canonical: path, ...(languages ? { languages } : {}) },
     openGraph: {
-      title,
+      title: brandedTitle,
       description: socialDescription,
       url: path,
       siteName: "MZ",
@@ -48,7 +49,7 @@ export function pageMetadata({
     },
     twitter: {
       card: "summary_large_image",
-      title,
+      title: brandedTitle,
       description: socialDescription,
       images: [imageUrl],
     },

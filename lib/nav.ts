@@ -31,6 +31,7 @@ export const MENU_TABS: MenuTab[] = [
   { label: "Home", href: LAUNCHER_ROOT },
   { label: "Work", href: "/work" },
   { label: "Services", href: "/services" },
+  { label: "Brand", href: "/brand" },
   { label: "About", href: "/about" },
   { label: "Contact", href: "/contact" },
 ];

@@ -43,26 +43,26 @@ import {
 } from "./meshBuilder";
 
 // How long the scatter→assemble intro plays (seconds). Tune here only.
-const ASSEMBLY_DURATION = 0.9;
+const ASSEMBLY_DURATION = 1.55;
 
 function Logo({
   onLoad,
-  assemblyStartDelayMs = 0,
-  svgSrc = "/model-zero-logo-paths.svg",
-  textureSrc = "/model-zero-logo-texture.png",
-  animationKey = "mz_logo_model_zero_v1",
-  logoScaleMultiplier = 1,
+  assemblyStartDelayMs,
+  svgSrc,
+  textureSrc,
+  animationKey,
+  logoScaleMultiplier,
   texture,
-  texturePending = false,
+  texturePending,
 }: {
   onLoad?: () => void;
-  assemblyStartDelayMs?: number;
-  svgSrc?: string;
-  textureSrc?: string;
-  animationKey?: string;
-  logoScaleMultiplier?: number;
+  assemblyStartDelayMs: number;
+  svgSrc: string;
+  textureSrc: string;
+  animationKey: string;
+  logoScaleMultiplier: number;
   texture: Texture | null;
-  texturePending?: boolean;
+  texturePending: boolean;
 }) {
   const logoRef = useRef<Group>(null);
   const sweepLightRef = useRef<PointLight>(null);
@@ -96,8 +96,7 @@ function Logo({
 
   /*
    * Mesh data comes from meshBuilder: in-memory cache → IndexedDB cache →
-   * build-from-SVG (first visit ever). This keeps the ~300 ms SVG parse +
-   * extrude off the critical path on cold loads.
+   * build-from-SVG. The caches skip parsing and extrusion on repeat visits.
    */
   const [meshData, setMeshData] = useState<MeshData | null>(null);
   const renderMeshData = useMemo(() => {
@@ -125,7 +124,7 @@ function Logo({
   useEffect(() => {
     let cancelled = false;
     const cacheKey = textureSrc
-      ? `mz-logo-mesh-textured-v1:${svgSrc}`
+      ? `mz-logo-mesh-textured-v2:${svgSrc}`
       : svgSrc === "/model-zero-logo-paths.svg"
         ? "mz-logo-mesh-v3"
         : `mz-logo-mesh-v1:${svgSrc}`;
@@ -389,23 +388,31 @@ function Logo({
         1,
         (performance.now() - animStartTime.current) / (ASSEMBLY_DURATION * 1000)
       );
-      // Fast, smooth ease-out curve
-      const easeOut = 1 - Math.pow(1 - progress, 3);
-      const invEase = 1 - easeOut;
-
       meshData.items.forEach((item, i) => {
         const mesh = meshRefs.current[i];
         if (!mesh) return;
 
+        // Stagger the three large sections, then give each a short damped
+        // recoil so the arrival reads as a mechanical lock rather than a fade.
+        const stagger = meshData.items.length > 1
+          ? (i / (meshData.items.length - 1)) * 0.16
+          : 0;
+        const itemProgress = MathUtils.clamp((progress - stagger) / (1 - stagger), 0, 1);
+        const approach = MathUtils.clamp(itemProgress / 0.78, 0, 1);
+        const easeOut = 1 - Math.pow(1 - approach, 4);
+        const invEase = 1 - easeOut;
+        const lock = MathUtils.clamp((itemProgress - 0.78) / 0.22, 0, 1);
+        const recoil = Math.sin(lock * Math.PI * 3) * Math.pow(1 - lock, 2) * (i % 2 ? -1 : 1);
+
         mesh.position.set(
           item.scatterX * invEase,
           item.scatterY * invEase,
-          item.scatterZ * invEase + item.zOffset
+          item.scatterZ * invEase + item.zOffset + recoil * 30
         );
         mesh.rotation.set(
-          item.rotX * invEase,
-          item.rotY * invEase,
-          item.rotZ * invEase
+          item.rotX * invEase + recoil * 0.16,
+          item.rotY * invEase + recoil * 0.2,
+          item.rotZ * invEase + recoil * 0.08
         );
       });
 
@@ -576,7 +583,7 @@ export default function MzLogo3D({
   assemblyStartDelayMs = 0,
   svgSrc = "/model-zero-logo-paths.svg",
   textureSrc = "/model-zero-logo-texture.png",
-  animationKey = "mz_logo_model_zero_v1",
+  animationKey = "mz_logo_model_zero_v2",
   logoScaleMultiplier = 1,
 }: {
   className?: string;

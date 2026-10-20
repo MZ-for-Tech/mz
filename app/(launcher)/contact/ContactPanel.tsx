@@ -110,8 +110,8 @@ const TIMELINES = [
  *
  * Glyphs are inlined rather than pulled from lucide, which has no brand marks
  * — and this panel inlines its other two icons (paperclip, arrow) for the same
- * reason, so the socials follow that. Three SVGs is cheaper than a package for
- * three static paths.
+ * reason, so the socials follow that. Four SVGs is cheaper than a package for
+ * four static paths.
  */
 const SOCIALS = [
   {
@@ -137,6 +137,13 @@ const SOCIALS = [
         <circle cx="12" cy="12" r="4.2" />
         <circle cx="17.6" cy="6.4" r="1.1" fill="currentColor" stroke="none" />
       </>
+    ),
+  },
+  {
+    name: "LinkedIn",
+    href: "https://www.linkedin.com/company/mzfortech/",
+    glyph: (
+      <path d="M20.45 20.45h-3.56v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.34V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29ZM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12ZM7.12 20.45H3.55V9h3.57v11.45ZM22.23 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0h.01Z" />
     ),
   },
 ] as const;
@@ -355,7 +362,7 @@ export default function ContactPanel() {
               is the distinction the rule is drawing, and it is why the divider
               goes here and not above the socials.
 
-              ICONS, AND A LABEL. The icons are the point — three glyphs a
+              ICONS, AND A LABEL. The icons are the point — four glyphs a
               visitor recognises without being told what they are — but the
               word "Elsewhere" stays beside them for the visitor who cannot
               place an unlabelled mark. That is the same argument the home
@@ -553,11 +560,16 @@ export default function ContactPanel() {
               <div>
                 <label htmlFor="brief-phone" className={styles.label}>Phone number (required)</label>
                 <div className={styles.phoneRow}>
-                  <select name="phoneCountry" className={`${styles.input} ${styles.countrySelect}`} defaultValue="EG" aria-label="Country and calling code" autoComplete="tel-country-code" required>
-                    {PHONE_COUNTRIES.map(({ country, name, callingCode }) => (
-                      <option key={country} value={country}>{name} ({callingCode})</option>
-                    ))}
-                  </select>
+                  <div className={styles.countrySelectWrap}>
+                    <select name="phoneCountry" className={`${styles.input} ${styles.countrySelect}`} defaultValue="EG" aria-label="Country and calling code" autoComplete="tel-country-code" required>
+                      {PHONE_COUNTRIES.map(({ country, name, callingCode }) => (
+                        <option key={country} value={country}>{name} ({callingCode})</option>
+                      ))}
+                    </select>
+                    <svg className={styles.countrySelectArrow} viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="m7 10 5 5 5-5" />
+                    </svg>
+                  </div>
                   <input id="brief-phone" type="tel" name="nationalPhone" className={styles.input} placeholder="Your phone number" autoComplete="tel-national" required maxLength={32} pattern="[0-9 \(\)\-]{6,32}" title="Enter your phone number without the country calling code." aria-describedby="brief-phone-help" dir="ltr" />
                 </div>
                 <span id="brief-phone-help" className={styles.fieldHelp}>Choose your country, then enter your number without the country code.</span>

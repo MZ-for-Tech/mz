@@ -81,9 +81,8 @@ export default function Home() {
     setReduceMotion(window.matchMedia("(prefers-reduced-motion: reduce)").matches);
   }, []);
 
-  // Loaded on every device. This used to be skipped on coarse pointers, on
-  // the reasoning that a 480-mesh WebGL scene on a phone was too much — a
-  // judgement made when the start screen was still a long scroll carrying two
+  // Loaded on every device. This used to be skipped on coarse pointers when
+  // the WebGL scene ran alongside a long scroll carrying two
   // `DarkVeil` layers and three `Grainient` cards alongside it. It is a splash
   // screen now, with nothing else on the page, so the scene is competing with
   // nothing and the mark is the whole reason to look at the screen.
@@ -384,7 +383,7 @@ export default function Home() {
                 onLoad={() => setIsLogoLoaded(true)}
                 svgSrc="/model-zero-logo-paths.svg"
                 textureSrc="/model-zero-logo-texture.png"
-                animationKey="mz_logo_start_screen_v1"
+                animationKey="mz_logo_start_screen_v2"
                 logoScaleMultiplier={1.15}
                 // Data is usually ready ~1.1–1.5s after load (wipe ends at
                 // 1.02s). The fade-in waits for the assembly to start (one

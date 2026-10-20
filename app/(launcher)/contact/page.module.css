@@ -241,7 +241,7 @@
    this row sits in the far left margin on a laptop, where it is the least
    reachable thing on the page.
 
-   The box is transparent at rest, like the header's privacy glyph: three
+   The box is transparent at rest, like the header's privacy glyph: four
    framed squares would be the only hard-edged objects in a column made of
    type and hairlines, and they would out-shout the email address above. The
    background comes back on hover, which acknowledges the pointer and gives
@@ -435,9 +435,37 @@
   padding-inline: 12px;
 }
 
+.phoneRow .countrySelect {
+  padding-right: 2.75rem;
+}
+
+.countrySelectWrap {
+  position: relative;
+  min-width: 0;
+}
+
 .countrySelect {
+  width: 100%;
+  appearance: none;
   color-scheme: dark;
   text-overflow: ellipsis;
+  cursor: pointer;
+}
+
+.countrySelectArrow {
+  position: absolute;
+  top: 50%;
+  right: 0.9rem;
+  width: 1rem;
+  height: 1rem;
+  transform: translateY(-50%);
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.8;
+  opacity: 0.55;
+  pointer-events: none;
 }
 
 .countrySelect option {

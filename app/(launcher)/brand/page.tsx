@@ -1,11 +1,10 @@
 import Image from "next/image";
-import Link from "next/link";
 import ObfuscatedEmail from "@/components/ObfuscatedEmail/ObfuscatedEmail";
 import { pageMetadata } from "@/lib/seo";
 import styles from "./page.module.css";
 
 export const metadata = pageMetadata({
-  title: "MZ Brand Guidelines",
+  title: "Brand",
   description:
     "A practical guide to Model Zero's identity: its mark, colors, typography, visual language, and voice.",
   path: "/brand",
@@ -127,9 +126,6 @@ export default function BrandPage() {
                 </li>
               ))}
             </ul>
-            <div className={styles.colorNote}>
-              <p>Use quiet neutrals for reading and accents for emphasis. The two greens need confirmation; print values are not yet defined.</p>
-            </div>
             <div className={styles.contrastPairs}>
               <h3>Accessible text pairings</h3>
               <div><span>Warm white on obsidian</span><strong>17.6:1</strong></div>
@@ -157,18 +153,6 @@ export default function BrandPage() {
             </div>
           </section>
 
-          <section id="visual-language" className={styles.section}>
-            <SectionHeading title="Visual language" />
-            <div className={styles.visualImage}>
-              <Image src="/green_glass.webp" alt="Green geometric glass texture used in MZ's visual identity" width={600} height={900} />
-            </div>
-            <div className={styles.principles}>
-              <div><strong>Structure first</strong><p>Clear blocks. Open space.</p></div>
-              <div><strong>Edges stay crisp</strong><p>Fine lines. Quiet surfaces.</p></div>
-              <div><strong>Motion has meaning</strong><p>Show state or sequence.</p></div>
-            </div>
-          </section>
-
           <section id="voice" className={styles.section}>
             <SectionHeading title="Voice" />
             <div className={styles.voiceGrid}>
@@ -183,28 +167,6 @@ export default function BrandPage() {
             </div>
             <div className={styles.boilerplate}>
               <p>Model Zero is a Cairo-based software and AI studio. We build custom systems and help teams run them.</p>
-            </div>
-          </section>
-
-          <section id="applications" className={styles.section}>
-            <SectionHeading title="Applications" />
-            <div className={styles.applicationGrid}>
-              <article>
-                <div className={styles.applicationVisual}>
-                  <Image src="/model-zero-logo-texture.png" alt="MZ mark on the studio website" width={1254} height={1254} />
-                </div>
-                <h3>Website</h3><Link href="/services">View services ↗</Link>
-              </article>
-              <article>
-                <div className={`${styles.applicationVisual} ${styles.applicationResearch}`}>The Null<br />Hypothesis</div>
-                <h3>Research</h3><Link href="/research">View research ↗</Link>
-              </article>
-              <article>
-                <div className={`${styles.applicationVisual} ${styles.applicationClient}`}>
-                  <Image src="/logos/nested-united.svg" alt="Nested United client logo" width={600} height={240} />
-                </div>
-                <h3>Client work</h3><Link href="/work/nested-united">View a case study ↗</Link>
-              </article>
             </div>
           </section>
 

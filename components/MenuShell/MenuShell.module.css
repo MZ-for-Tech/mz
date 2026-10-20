@@ -355,11 +355,11 @@
 
      `letter-spacing` in CSS adds a space AFTER every character, including the
      last one, so each tab's box is one letter-space wider than the ink inside
-     it. Five tabs therefore carry five invisible gaps on their right, and the
+     it. Each tab therefore carries an invisible gap on its right, and the
      row's box is perfectly centred while its visible mass sits left of it.
 
      Measured at 1280px: the tab list's box centres at exactly 640 — the page
-     centre — but the average of the five label centres is 629. An 11px lie,
+     centre — but the average of the tab label centres was 629. An 11px lie,
      on a bar that is nothing but labels, which is why it read as "the nav is
      slightly off" without anyone being able to say why. The box was never the
      problem, and centring the box harder would have made the drift worse.
@@ -552,7 +552,7 @@
  * it holds. Every panel on this launcher fits the screen, so that has been
  * fine and has kept Lenis driving the window.
  *
- * The brief does not fit: ~1900px of form in a 900px shell, which stretches
+ * The contact brief and brand guide are taller than the viewport, stretching
  * this box to the panel's full height. It then presents itself as a
  * scrollport with no range, and `position: sticky` inside it silently
  * stops working — the brief's left column tracked the form one-for-one

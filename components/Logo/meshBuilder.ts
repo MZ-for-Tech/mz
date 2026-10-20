@@ -1,10 +1,8 @@
 /*
  * Logo mesh data: build, cache, hydrate.
  *
- * Building the logo costs an SVG fetch + SVGLoader parse + ~163 ExtrudeGeometry
- * constructions (MZ.svg — the previous logo had 480)
- * constructions (~300 ms of main-thread work) on every cold load. The built
- * items are cached three ways:
+ * The current start-screen SVG builds three extruded sections on a cold load.
+ * Built geometry is cached three ways:
  *
  *   1. `globalMeshData` — in-memory per SVG source, survives client-side
  *      navigation (not a hard reload).
@@ -27,15 +25,10 @@ import {
 import { SVGLoader } from "three/examples/jsm/loaders/SVGLoader.js";
 
 /*
- * Z-offset per painter's layer (in SVG coordinate units).
- * The SVG is drawn back-to-front (MZ.svg: 165 paths / 163 shapes).
- * Positions with multiple stacked paths share a depth plane without a Z offset
- * those paths share the exact same depth plane → z-fighting / flickering.
+ * Z-offset per SVG section, keeping shared edges from z-fighting.
  *
- * ~163 * 0.02 = ~3.3 SVG units total stack height (was 9.6 for 480).
- * At scale 0.0035 → 0.034 world units (invisible at camera z=12).
- * The extrude depth is 32 SVG units, so the stack is < 30% of depth,
- * meaning the faces never bleed through the back of the logo.
+ * Three sections add 0.06 SVG units total, negligible beside the 32-unit
+ * extrusion depth.
  */
 const Z_STEP = 0.02;
 

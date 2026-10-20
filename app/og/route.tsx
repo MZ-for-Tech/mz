@@ -10,6 +10,7 @@ function sectionFor(path: string) {
   if (path.startsWith("/research")) return "RESEARCH";
   if (path.startsWith("/work")) return "SELECTED WORK";
   if (path === "/services") return "SERVICES";
+  if (path === "/brand") return "BRAND GUIDELINES";
   if (path === "/contact") return "CONTACT";
   if (path === "/about") return "STUDIO";
   return "";
@@ -37,6 +38,7 @@ function actionFor(path: string, isArabic: boolean) {
   if (path === "/work/nested-united") return "VIEW THE CASE STUDY ↗";
   if (path.startsWith("/work")) return "EXPLORE OUR WORK ↗";
   if (path === "/services") return "TELL US WHAT YOU'RE BUILDING ↗";
+  if (path === "/brand") return "MZ BRAND GUIDELINES ↗";
   if (path === "/contact") return "START A CONVERSATION ↗";
   if (path === "/about") return "ABOUT MODEL ZERO ↗";
   return "START A PROJECT ↗";

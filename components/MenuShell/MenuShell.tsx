@@ -151,28 +151,17 @@ export default function MenuShell({ children }: { children: React.ReactNode }) {
   // header, so the two can't disagree about when they are suppressed.
   //
   // An exact match, not a prefix test. The shell is a route-group layout, so
-  // it only ever wraps /home, /work, /services, /about and /contact — the
+  // it only ever wraps launcher routes — the
   // case study at /work/nested-united is deliberately outside it and renders
   // in the legacy world with its own chrome. A `startsWith("/work")` here
   // would look like it handled that page, and would silently do nothing.
   const isWorkPanel = pathname === "/work";
 
-  // The Contact panel is the only one taller than the viewport, and that is
-  // what decides whether the content box can be the scrollport at all.
-  //
-  // `.content` is `overflow-y: auto`, which only scrolls while it is SHORTER
-  // than its contents. The brief is ~1900px in a 900px shell, so the box is
-  // stretched to the panel's own height and never scrolls — the window does,
-  // via Lenis. That is harmless for every other panel, but it silently
-  // breaks `position: sticky` inside it: a sticky element resolves against
-  // its nearest scrolling ancestor, and this box looks like one while
-  // providing no range to move in. The brief's left column tracked the form
-  // one-for-one instead of holding still.
-  //
-  // Dropping this box out of the scrollport role (`overflow: visible`) hands
-  // the job back to the viewport, which is what every other panel already
-  // effectively scrolls, and the column pins correctly.
-  const isTallPanel = pathname === "/contact";
+  // Long panels use the window scroll that Lenis already drives. Keeping
+  // overflow on this box would trap scroll there and break sticky content on
+  // Contact.
+  const isTallPanel =
+    pathname === "/contact" || pathname === "/brand" || pathname === "/services";
 
   return (
     <div

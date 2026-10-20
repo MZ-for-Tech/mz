@@ -35,8 +35,8 @@ const newsreader = Newsreader({
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.mzfortech.com"),
   title: {
-    default: "Model Zero",
-    template: "%s | Model Zero",
+    default: "MZ",
+    template: "%s | MZ",
   },
   applicationName: "Model Zero",
   description:
@@ -44,7 +44,7 @@ export const metadata: Metadata = {
   creator: "Model Zero",
   publisher: "Model Zero",
   openGraph: {
-    siteName: "Model Zero",
+    siteName: "MZ",
     images: [{ url: "/og.webp", width: 1200, height: 630 }],
     locale: "en_US",
     type: "website",

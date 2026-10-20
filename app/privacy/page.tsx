@@ -27,7 +27,7 @@ import ObfuscatedEmail from "@/components/ObfuscatedEmail/ObfuscatedEmail";
 const LAST_UPDATED = "26 September 2026";
 
 export const metadata = pageMetadata({
-  title: "Privacy Policy",
+  title: "Privacy",
   description:
     "Read how MZ handles information submitted through its website and how to contact the team with privacy questions.",
   path: "/privacy",

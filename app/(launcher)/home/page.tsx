@@ -13,7 +13,7 @@ import ResearchPortalLink from "@/components/ResearchPortalLink/ResearchPortalLi
 import styles from "./page.module.css";
 
 export const metadata = pageMetadata({
-  title: "Software, AI & Knowledge Transfer",
+  title: "Home",
   description:
     "MZ is a Cairo-based software and AI company building custom systems and training teams to run them. Explore our work and applied research.",
   path: "/home",

@@ -30,7 +30,7 @@ import { LAUNCHER_ROOT } from "@/lib/nav";
  *
  * So the paths are listed, and `LAUNCHER_ROOT` comes from lib/nav rather than
  * being written here, because the shell and this module have to agree on what
- * the launcher's home page is called. A sixth panel is one line in one file.
+ * the launcher's home page is called. A new panel is one line in one file.
  *
  * `/` is in the list too, and is the splash as much as anything else: Esc
  * from any panel lands there, and it has to be a launcher-world arrival or
@@ -44,6 +44,7 @@ const LAUNCHER_PATHS = [
   LAUNCHER_ROOT,
   "/work",
   "/services",
+  "/brand",
   "/about",
   "/contact",
 ];

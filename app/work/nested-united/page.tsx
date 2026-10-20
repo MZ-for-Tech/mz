@@ -48,7 +48,7 @@ const caseStudyStructuredData = {
 };
 
 export const metadata = pageMetadata({
-  title: "Nested United Case Study",
+  title: "Nested United",
   description: caseStudyDescription,
   path: "/work/nested-united",
 });

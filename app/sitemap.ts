@@ -12,6 +12,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/work",
     "/work/nested-united",
     "/services",
+    "/brand",
     "/about",
     "/contact",
     "/privacy",

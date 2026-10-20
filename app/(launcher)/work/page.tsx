@@ -2,7 +2,7 @@ import { pageMetadata } from "@/lib/seo";
 import { WorkShelf } from "@/components/sections/WorkShelf";
 
 export const metadata = pageMetadata({
-  title: "Software Projects and Case Studies",
+  title: "Work",
   description:
     "Explore MZ software projects, client platforms, and proprietary products, including the Nested United digital platform and selected client work.",
   path: "/work",

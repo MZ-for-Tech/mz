@@ -2,7 +2,7 @@ import { pageMetadata } from "@/lib/seo";
 import ContactPanel from "./ContactPanel";
 
 export const metadata = pageMetadata({
-  title: "Contact MZ",
+  title: "Contact",
   description:
     "Contact Model Zero in Cairo about custom software, AI deployment, or Arabic OCR.",
   path: "/contact",

@@ -32,7 +32,7 @@ const siteStructuredData = {
 };
 
 export const metadata = pageMetadata({
-  title: "Model Zero",
+  title: "Home",
   description:
     "Model Zero (MZ) builds software and AI in Cairo, then trains teams to run it. Applied research informs the work.",
   path: "/",
