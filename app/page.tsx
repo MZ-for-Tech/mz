@@ -6,7 +6,7 @@ import MenuShell from "@/components/MenuShell/MenuShell";
 export const metadata = pageMetadata({
   title: "Model Zero — Software & AI Company in Cairo",
   description:
-    "Model Zero (MZ) builds software and AI in Cairo, then trains teams to run it. Applied research informs the work.",
+    "Model Zero (MZ) builds custom software and AI systems in Cairo, publishes applied research, and trains your team to operate and maintain what we build.",
   path: "/",
 });
 

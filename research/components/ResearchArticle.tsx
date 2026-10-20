@@ -36,10 +36,11 @@ export function researchArticleMetadata(locale: 'en' | 'ar', slug: string): Meta
             locale: locale === 'ar' ? 'ar_EG' : 'en_US',
             languages,
             type: 'article',
+            publishedTime: project.published_at,
+            modifiedTime: project.updated_at || project.published_at,
         });
     return {
         ...metadata,
-        ...(locale === 'ar' ? (project.keywords_ar?.length ? { keywords: project.keywords_ar } : {}) : (project.keywords?.length ? { keywords: project.keywords } : {})),
         ...(locale === 'ar' && project.arabic_translation_status === 'draft'
             ? { robots: { index: false, follow: true } }
             : {}),

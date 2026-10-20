@@ -5,9 +5,9 @@ import { breadcrumbs, graph } from "@/lib/structured-data";
 import { ORGANIZATION_ID, SITE } from "@/lib/company-content";
 
 export const metadata = pageMetadata({
-  title: "Contact MZ",
+  title: "Contact — Start a Project",
   description:
-    "Contact Model Zero in Cairo about custom software, AI deployment, or Arabic OCR.",
+    "Talk to Model Zero in Cairo about custom software, AI, Arabic OCR or training. Email hello@mzfortech.com or send your requirements in a project brief.",
   path: "/contact",
 });
 

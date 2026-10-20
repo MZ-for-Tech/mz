@@ -7,6 +7,8 @@ type PageMetadataOptions = {
   locale?: string;
   languages?: Record<string, string>;
   type?: "website" | "article";
+  publishedTime?: string;
+  modifiedTime?: string;
 };
 
 function fitDescription(text: string, maxLength: number): string {
@@ -27,16 +29,20 @@ export function pageMetadata({
   locale = "en_US",
   languages,
   type = "website",
+  publishedTime,
+  modifiedTime,
 }: PageMetadataOptions): Metadata {
   const metaDescription = fitDescription(description, 155);
   const socialDescription = fitDescription(description, 125);
   const imageParams = new URLSearchParams({ title, description: socialDescription, path, locale });
   const imageUrl = `/og?${imageParams.toString()}`;
+  const searchTitle = fitDescription(title, path === "/" ? 60 : 47);
+  const languageAlternates = languages ? { ...languages, "x-default": languages["x-default"] || languages.en || path } : undefined;
 
   return {
-    title: path === "/" ? { absolute: title } : title,
+    title: path === "/" ? { absolute: searchTitle } : searchTitle,
     description: metaDescription,
-    alternates: { canonical: path, ...(languages ? { languages } : {}) },
+    alternates: { canonical: path, ...(languageAlternates ? { languages: languageAlternates } : {}) },
     openGraph: {
       title,
       description: socialDescription,
@@ -44,7 +50,9 @@ export function pageMetadata({
       siteName: "Model Zero",
       images: [{ url: imageUrl, alt: title, width: 1200, height: 630 }],
       locale,
+      ...(languages?.ar ? { alternateLocale: locale === "ar_EG" ? ["en_US"] : ["ar_EG"] } : {}),
       type,
+      ...(type === "article" ? { ...(publishedTime ? { publishedTime } : {}), ...(modifiedTime ? { modifiedTime } : {}) } : {}),
     },
     twitter: {
       card: "summary_large_image",

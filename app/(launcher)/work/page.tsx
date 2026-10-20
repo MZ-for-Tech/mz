@@ -2,9 +2,9 @@ import { pageMetadata } from "@/lib/seo";
 import { WorkShelf } from "@/components/sections/WorkShelf";
 
 export const metadata = pageMetadata({
-  title: "Software Projects and Case Studies",
+  title: "Projects & Case Studies",
   description:
-    "Explore MZ software projects, client platforms, and proprietary products, including the Nested United digital platform and selected client work.",
+    "Explore software projects and products by Model Zero in Cairo, including the Nested United web platform, the FEPS events system and demonstration builds.",
   path: "/work",
 });
 

@@ -16,7 +16,6 @@ import MenuShell from "@/components/MenuShell/MenuShell";
  * on one part of it.
  */
 export const metadata: Metadata = {
-  title: "MZ",
   description:
     "Model Zero (MZ) builds custom software and AI systems, and trains teams to operate them. Based in Cairo, Egypt.",
 };

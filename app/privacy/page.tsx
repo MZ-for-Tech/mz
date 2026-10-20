@@ -29,7 +29,7 @@ const LAST_UPDATED = "26 September 2026";
 export const metadata = pageMetadata({
   title: "Privacy Policy",
   description:
-    "Read how MZ handles information submitted through its website and how to contact the team with privacy questions.",
+    "Read how Model Zero handles information submitted through its website, including project briefs, contact details and questions about your personal data.",
   path: "/privacy",
 });
 

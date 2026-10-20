@@ -5,7 +5,7 @@ import { pageMetadata } from "@/lib/seo";
 import styles from "./page.module.css";
 
 export const metadata = pageMetadata({
-  title: "MZ Brand Guidelines",
+  title: "Brand Guidelines",
   description:
     "A practical guide to Model Zero's identity: its mark, colors, typography, visual language, and voice.",
   path: "/brand",
