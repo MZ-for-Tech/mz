@@ -34,14 +34,15 @@
 
 /* Hero Entry Animations (Pure CSS, 0 JS cost) */
 .heroWord :global(.hero-word-inner) {
+  display: inline-block;
   transform-origin: left top;
   transform: translateY(110%) rotateZ(4deg);
   animation: heroWordIn .7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   will-change: transform;
 }
-.heroWordsRow > :nth-child(2) :global(.hero-word-inner) { animation-delay: .05s; }
-.heroWordsRow > :nth-child(3) :global(.hero-word-inner) { animation-delay: .1s; }
-.heroWordsRow > :nth-child(4) :global(.hero-word-inner) { animation-delay: .15s; }
+.heroWordsRow > :nth-child(1) :global(.hero-word-inner) { animation-delay: .05s; }
+.heroWordsRow > :nth-child(2) :global(.hero-word-inner) { animation-delay: .1s; }
+.heroWordsRow > :nth-child(3) :global(.hero-word-inner) { animation-delay: .15s; }
 
 .heroSubtext {
   opacity: 0;
@@ -99,6 +100,10 @@
   pointer-events: auto;
   overflow: hidden; /* clips the y:110% slide-up animation */
   padding-bottom: 0.1em; /* prevents descender clipping */
+}
+
+@media (hover: hover) {
+  .heroWord:hover { font-variation-settings: "wght" 700; color: var(--color-brand-yellow); }
 }
 
 .heroWord a {

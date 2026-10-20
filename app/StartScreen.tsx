@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState, type ComponentType } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import VariableProximity from "@/components/VariableProximity/VariableProximity";
 import styles from "./page.module.css";
 
 /** The original animated hero now introduces a complete, scrollable homepage. */
@@ -25,9 +24,8 @@ export default function StartScreen() {
       <div className={styles.heroLogo3D} aria-hidden="true">{Logo ? <Logo svgSrc="/model-zero-logo-paths.svg" textureSrc="/model-zero-logo-texture.png" logoScaleMultiplier={1.15} /> : <Image src="/model-zero-logo.png" alt="" width={512} height={512} sizes="(max-width: 768px) 48vw, 360px" priority className={styles.heroPoster} />}</div>
       <div className={styles.heroContent}>
         <h1 className={styles.heroWordsRow}>
-          <span className="sr-only">Research. Software. Knowledge.</span>
           {["RESEARCH.", "SOFTWARE.", "KNOWLEDGE."].map((word) => (
-            <span key={word} className={`${styles.heroWord} hero-word`} aria-hidden="true"><span className="hero-word-inner"><VariableProximity label={word} fromFontVariationSettings="'wght' 400" toFontVariationSettings="'wght' 900" containerRef={mainRef} radius={200} falloff="exponential" /></span></span>
+            <span key={word} className={`${styles.heroWord} hero-word`}><span className="hero-word-inner">{word}</span></span>
           ))}
         </h1>
         <div className={`${styles.heroSubtext} hero-subtext`}>In that order.</div>

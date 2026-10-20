@@ -40,6 +40,10 @@ for (const url of locations) {
   const canonical = decode(html.match(/rel="canonical" href="([^"]+)"/)?.[1] || "");
   assert.equal(new URL(canonical).href, new URL(site + path).href, `${path}: canonical`);
   assert.equal((html.match(/<h1[ >]/g) || []).length, 1, `${path}: H1 count`);
+  if (path === "/") {
+    const heading = strip(html.match(/<h1\b[^>]*>([\s\S]*?)<\/h1>/)?.[1] || "");
+    assert.equal(heading, "RESEARCH. SOFTWARE. KNOWLEDGE.", "homepage heading must have one readable copy of each word");
+  }
   const scripts = [...html.matchAll(/<script\b[^>]*type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/g)].map((match) => JSON.parse(match[1]));
   assert(scripts.length, `${path}: missing JSON-LD`);
   const nodes = scripts.flatMap((data) => data["@graph"] || [data]);
