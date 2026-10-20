@@ -16,7 +16,7 @@ export default function NotFound() {
           <div className={styles.copy}>
             <p className={styles.title}>This page doesn&apos;t exist.</p>
             <p className={styles.description}>
-              The address may be wrong, or the page may have moved.
+              The address may be wrong, or the page may have moved. Explore Model Zero&apos;s <TransitionLink href="/services">services</TransitionLink>, <TransitionLink href="/work">work</TransitionLink> or <TransitionLink href="/contact">contact page</TransitionLink>.
             </p>
           </div>
           <TransitionLink href="/" className={styles.homeLink}>

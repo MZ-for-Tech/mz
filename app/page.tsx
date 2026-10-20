@@ -13,8 +13,7 @@ export const metadata = pageMetadata({
 export default function HomePage() {
   return (
     <>
-      <StartScreen />
-      <MenuShell><div id="featured"><HomeFeatured /></div></MenuShell>
+      <MenuShell><StartScreen /><div id="featured"><HomeFeatured /></div></MenuShell>
     </>
   );
 }

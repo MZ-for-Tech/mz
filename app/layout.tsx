@@ -4,6 +4,7 @@ import "./globals.css";
 import { SmoothScrolling } from "@/components/SmoothScrolling/SmoothScrolling";
 import JsonLd from "@/components/JsonLd";
 import { SITE_GRAPH } from "@/lib/site-structured-data";
+import SiteFooter from "@/components/SiteFooter/SiteFooter";
 
 const geistSans = localFont({
   src: "../public/fonts/geist.woff2",
@@ -110,6 +111,7 @@ export default function RootLayout({
           />
         </TransitionLink>
         <SmoothScrolling>{children}</SmoothScrolling>
+        <SiteFooter />
       </body>
     </html>
   );

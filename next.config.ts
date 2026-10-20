@@ -31,6 +31,7 @@ const nextConfig: NextConfig = {
     return [
       { source: "/intel", destination: "/about", permanent: true },
       { source: "/home", destination: "/", statusCode: 301 },
+      { source: "/:path*", has: [{ type: "host", value: "mzfortech.com" }], destination: "https://www.mzfortech.com/:path*", statusCode: 301 },
     ];
   },
   // mz-specific config if any
@@ -57,6 +58,7 @@ const nextConfig: NextConfig = {
         headers: [
           // Security
           { key: "X-Content-Type-Options", value: "nosniff" },
+          { key: "Strict-Transport-Security", value: "max-age=31536000" },
           { key: "X-Frame-Options", value: "SAMEORIGIN" },
           { key: "X-XSS-Protection", value: "1; mode=block" },
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },

@@ -12,8 +12,8 @@
   position: fixed;
   inset: 0;
   z-index: -1;
-  background: transparent;
-  opacity: 0;
+  background: radial-gradient(ellipse at 50% 40%, #1b3020, #0d0f08 72%);
+  opacity: 1;
   transition: opacity 1.2s ease-out;
   pointer-events: none;
 }

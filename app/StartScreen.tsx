@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, type ComponentType } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import VariableProximity from "@/components/VariableProximity/VariableProximity";
 import styles from "./page.module.css";
 
@@ -10,7 +11,7 @@ export default function StartScreen() {
   const mainRef = useRef<HTMLElement>(null);
   const [Logo, setLogo] = useState<ComponentType<{ svgSrc?: string; textureSrc?: string; logoScaleMultiplier?: number }> | null>(null);
   useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce), (max-width: 768px)").matches) return;
     let active = true;
     const timer = setTimeout(() => {
       import("@/components/Logo/MzLogo3D").then((module) => {
@@ -21,7 +22,7 @@ export default function StartScreen() {
   }, []);
   return (
     <section ref={mainRef} className={`${styles.hero} hero-section`}>
-      {Logo && <div className={styles.heroLogo3D} aria-hidden="true"><Logo svgSrc="/model-zero-logo-paths.svg" textureSrc="/model-zero-logo-texture.png" logoScaleMultiplier={1.15} /></div>}
+      <div className={styles.heroLogo3D} aria-hidden="true">{Logo ? <Logo svgSrc="/model-zero-logo-paths.svg" textureSrc="/model-zero-logo-texture.png" logoScaleMultiplier={1.15} /> : <Image src="/model-zero-logo.png" alt="" width={512} height={512} className={styles.heroPoster} />}</div>
       <div className={styles.heroContent}>
         <h1 className={styles.heroWordsRow}>
           <span className="sr-only">Research. Software. Knowledge.</span>

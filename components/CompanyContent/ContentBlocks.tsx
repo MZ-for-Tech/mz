@@ -2,8 +2,8 @@ import Link from "next/link";
 import { SERVICES_FAQ, WORKFLOW } from "@/lib/company-content";
 import styles from "./CompanyContent.module.css";
 
-export function Workflow() {
-  return <section><h2>How we work</h2><ol className={styles.steps}>{WORKFLOW.map((step) => <li key={step.title}><h3>{step.title}</h3><p>{step.text}</p></li>)}</ol></section>;
+export function Workflow({ compact = false }: { compact?: boolean }) {
+  return <section><h2>How we work</h2><ol className={styles.steps}>{WORKFLOW.map((step) => <li key={step.title}><h3>{step.title}</h3><p>{compact ? step.text.split(/(?<=\.) /)[0] : step.text}</p></li>)}</ol></section>;
 }
 
 export function FAQ({ items = SERVICES_FAQ }: { items?: typeof SERVICES_FAQ }) {
