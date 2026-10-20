@@ -5,6 +5,8 @@ import { SmoothScrolling } from "@/components/SmoothScrolling/SmoothScrolling";
 import JsonLd from "@/components/JsonLd";
 import { SITE_GRAPH } from "@/lib/site-structured-data";
 import SiteFooter from "@/components/SiteFooter/SiteFooter";
+import { headers } from "next/headers";
+import DocumentLanguage from "@/components/DocumentLanguage";
 
 const geistSans = localFont({
   src: "../public/fonts/geist.woff2",
@@ -69,14 +71,18 @@ import SiteBackground from "@/components/SiteBackground/SiteBackground";
 import GamepadNavigation from "@/components/GamepadNavigation/GamepadNavigation";
 import KonamiArcade from "@/components/KonamiArcade/KonamiArcade";
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Proxy derives this from the URL, so the initial raw document has the correct language.
+  // Reading request headers makes HTML routes dynamic; sitemap and text exports stay static.
+  const locale = (await headers()).get("x-mz-locale") === "ar" ? "ar" : "en";
   return (
     <html
-      lang="en"
+      lang={locale}
+      dir={locale === "ar" ? "rtl" : "ltr"}
       className={`${geistSans.variable} ${jetbrainsMono.variable} ${cormorant.variable} ${newsreader.variable}`}
       data-theme="dark"
     >
@@ -84,6 +90,7 @@ export default function RootLayout({
       </head>
       <body>
         <JsonLd data={SITE_GRAPH} />
+        <DocumentLanguage />
         <SiteBackground />
         <GamepadNavigation />
         <KonamiArcade />

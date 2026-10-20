@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { CORE_PAGES } from "./public-pages";
 
 type PageMetadataOptions = {
   title: string;
@@ -37,7 +38,9 @@ export function pageMetadata({
   const imageParams = new URLSearchParams({ title, description: socialDescription, path, locale });
   const imageUrl = `/og?${imageParams.toString()}`;
   const searchTitle = fitDescription(title, path === "/" ? 60 : 47);
-  const languageAlternates = languages ? { ...languages, "x-default": languages["x-default"] || languages.en || path } : undefined;
+  const core = CORE_PAGES.find((page) => page.path === path);
+  const configuredLanguages = languages || (core ? { en: core.path, ar: core.arabic } : undefined);
+  const languageAlternates = configuredLanguages ? { ...configuredLanguages, "x-default": configuredLanguages["x-default"] || configuredLanguages.en || path } : undefined;
 
   return {
     title: path === "/" ? { absolute: searchTitle } : searchTitle,
@@ -50,7 +53,7 @@ export function pageMetadata({
       siteName: "Model Zero",
       images: [{ url: imageUrl, alt: title, width: 1200, height: 630 }],
       locale,
-      ...(languages?.ar ? { alternateLocale: locale === "ar_EG" ? ["en_US"] : ["ar_EG"] } : {}),
+      ...(configuredLanguages?.ar ? { alternateLocale: locale === "ar_EG" ? ["en_US"] : ["ar_EG"] } : {}),
       type,
       ...(type === "article" ? { ...(publishedTime ? { publishedTime } : {}), ...(modifiedTime ? { modifiedTime } : {}) } : {}),
     },

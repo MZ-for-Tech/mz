@@ -1,0 +1,34 @@
+import Link from "next/link";
+import { ARABIC_ABOUT, ARABIC_ENTITY, ARABIC_FAQ, ARABIC_SERVICES } from "@/lib/arabic-content";
+import { PROJECTS } from "@/lib/projects";
+import { ORGANIZATION_ID, SITE } from "@/lib/company-content";
+import { LINKEDIN_URL } from "@/lib/site-structured-data";
+import { breadcrumbs, faqSchema, graph } from "@/lib/structured-data";
+import JsonLd from "@/components/JsonLd";
+import ArabicContactForm from "./ArabicContactForm";
+import styles from "./CompanyContent.module.css";
+
+export const ARABIC_PAGES = {
+  home: { path: "/ar", en: "/", title: "موديل زيرو — برمجيات وذكاء اصطناعي", heading: "بحث. برمجيات. معرفة.", description: "موديل زيرو شركة برمجيات وذكاء اصطناعي في القاهرة. نطوّر أنظمة مخصصة وننشر أبحاثًا تطبيقية، وندرّب فريقك على تشغيل ما نبنيه وصيانته، مع دعم العربية والإنجليزية." },
+  services: { path: "/ar/services", en: "/services", title: "خدمات البرمجيات والذكاء الاصطناعي", heading: "البرمجيات والذكاء الاصطناعي ونقل المعرفة", description: "خدمات موديل زيرو في تطوير البرمجيات والذكاء الاصطناعي وتحليل البيانات والتحول الرقمي والأنظمة المالية ورقمنة المستندات والتدريب، من القاهرة إلى مؤسستك." },
+  about: { path: "/ar/about", en: "/about", title: "عن موديل زيرو في القاهرة", heading: "عن موديل زيرو", description: "تعرّف على موديل زيرو، شركة برمجيات وذكاء اصطناعي تأسست عام 2026 في القاهرة. نبني الأنظمة وننشر الأبحاث وننقل المعرفة إلى فرق المؤسسات لتشغيل ما نبنيه." },
+  contact: { path: "/ar/contact", en: "/contact", title: "تواصل مع موديل زيرو", heading: "لنبدأ بمشروعك", description: "تواصل مع موديل زيرو في القاهرة لمناقشة مشروع برمجيات أو ذكاء اصطناعي أو تحليل بيانات أو تدريب. أرسل تفاصيل المشروع واحتياجات فريقك عبر نموذج التواصل." },
+  work: { path: "/ar/work", en: "/work", title: "مشاريع ومنتجات موديل زيرو", heading: "المشاريع والمنتجات", description: "استكشف مشاريع موديل زيرو ومنتجاتها، ومنها منصة Nested United ونظام إدارة الفعاليات لدى FEPS، مع تمييز أعمال العملاء والمنتجات والعروض التجريبية بوضوح." },
+};
+export type ArabicPageKind = keyof typeof ARABIC_PAGES;
+
+export default function ArabicCorePage({ kind }: { kind: ArabicPageKind }) {
+  const page = ARABIC_PAGES[kind];
+  const pageType = kind === "about" ? "AboutPage" : kind === "contact" ? "ContactPage" : "WebPage";
+  return <main className={styles.content} style={{ paddingTop: "7rem" }} lang="ar" dir="rtl">
+    <JsonLd data={graph([{ "@type": pageType, "@id": `${SITE}${page.path}#page`, url: SITE + page.path, name: page.title, inLanguage: "ar", about: { "@id": ORGANIZATION_ID }, ...(kind === "about" ? { mainEntity: { "@id": ORGANIZATION_ID } } : {}) }, breadcrumbs(page.path, page.title), ...(["home", "services"].includes(kind) ? [faqSchema(page.path, ARABIC_FAQ)] : [])])} />
+    <nav className={styles.actions} aria-label="التنقل الرئيسي">{Object.entries(ARABIC_PAGES).map(([key, item]) => <Link key={key} href={item.path} aria-current={kind === key ? "page" : undefined}>{key === "home" ? "الرئيسية" : key === "services" ? "الخدمات" : key === "about" ? "عن الشركة" : key === "work" ? "الأعمال" : "تواصل معنا"}</Link>)}<a href={page.en} lang="en" hrefLang="en">English</a></nav>
+    <h1>{page.heading}</h1><p>{ARABIC_ENTITY} نبني أنظمة مخصصة، وننشر أبحاثًا تطبيقية، وندرّب فرق المؤسسات على تشغيل ما نبنيه.</p>
+    {kind === "home" && <><p>نربط البحث بالتنفيذ، ثم ننقل المعرفة إلى فريقك. يشمل عملنا تطوير المواقع والأنظمة والذكاء الاصطناعي وتحليل البيانات والاستشارات والتدريب. نحدد النطاق والمخرجات وفق احتياجات المؤسسة والبيانات والبيئة التي سيعمل فيها النظام.</p><div className={styles.actions}><Link href="/ar/contact">ابدأ مشروعًا</Link><Link href="/ar/work">شاهد أعمالنا</Link><Link href="/research/ar">اقرأ الأبحاث بالعربية</Link></div></>}
+    {(kind === "home" || kind === "services") && <><section><h2>حلول برمجية ومعرفة قابلة للتطبيق</h2><div className={styles.grid}>{ARABIC_SERVICES.map((service) => <article key={service.name} className={styles.card}><h3>{service.name}</h3><p>{service.text}</p><a href={service.href} hrefLang="en">تفاصيل الخدمة بالإنجليزية</a></article>)}</div></section><section><h2>كيف نعمل؟</h2><ol><li>نفهم العمليات والبيانات والقيود.</li><li>نحدّد المعمارية والنطاق والمخرجات ومراحل المراجعة.</li><li>ننفذ على خطوات يمكن لفريقك فحصها.</li><li>نجهز بيئة التشغيل والنشر.</li><li>نسلّم التوثيق والشفرة والتدريب وفق الاتفاق.</li></ol><p>تُحدّد المدة والتكلفة بعد مراجعة متطلبات المشروع. يعتمد الاختيار التقني على المهمة والبيانات والتكاملات، وتُناقش ترتيبات الدعم والمتابعة بوضوح.</p></section><section><h2>أسئلة شائعة</h2>{ARABIC_FAQ.map((faq) => <div key={faq.question} className={styles.faq}><h3>{faq.question}</h3><p>{faq.answer}</p></div>)}</section></>}
+    {kind === "about" && <>{ARABIC_ABOUT.map((section) => <section key={section.title}><h2>{section.title}</h2><p>{section.text}</p></section>)}<section><h2>معلومات سريعة</h2><dl className={styles.facts}><dt>سنة التأسيس</dt><dd>2026</dd><dt>المقر</dt><dd>القاهرة، مصر</dd><dt>الاسم القانوني</dt><dd>موديل زيرو للحلول التكنولوجية</dd><dt>الحالة</dt><dd>تحت التأسيس</dd><dt>اللغات</dt><dd>العربية والإنجليزية</dd><dt>الإصدار البحثي</dt><dd>الفرضية الصفرية</dd></dl><div className={styles.actions}><Link href="/research/ar">الأبحاث بالعربية</Link><a href="/work/nested-united" hrefLang="en">دراسة حالة Nested United</a></div></section></>}
+    {kind === "work" && <section><h2>أعمال العملاء ومنتجات الشركة</h2><p>يشمل الكتالوج أعمالًا للعملاء ومنتجات خاصة بموديل زيرو. وتظهر المشاريع التجريبية بوسم واضح. تصف دراسة حالة Nested United منصة تجمع علامات متخصصة في تجربة ويب واحدة، ويشمل عمل FEPS نظامًا لإدارة الفعاليات.</p><div className={styles.grid}>{PROJECTS.filter((project) => project.showOnWorkShelf !== false).map((project) => <article key={project.slug} className={styles.card}><h3>{project.name}</h3><p>{project.kind === "demo" ? "عرض تجريبي" : project.kind === "product" ? "منتج من موديل زيرو" : "عمل لعميل"}</p>{project.hasCaseStudy && <a href={`/work/${project.slug}`} hrefLang="en">دراسة الحالة بالإنجليزية</a>}{project.link && <p><a href={project.link}>افتح المشروع</a></p>}<Link href="/ar/contact">ناقش مشروعًا مشابهًا</Link></article>)}</div></section>}
+    {kind === "contact" && <><section><h2>أخبرنا بما تحتاج إلى بنائه</h2><p>اذكر الهدف من المشروع والمستخدمين والأنظمة أو البيانات المتاحة. أضف الإطار الزمني والميزانية المقترحة وأي قيود مهمة، لنتفق على الخطوة المناسبة.</p><ArabicContactForm /></section><section><h2>البريد وصفحة الشركة</h2><p><a href="mailto:hello@mzfortech.com" dir="ltr">hello@mzfortech.com</a></p><a href={LINKEDIN_URL}>موديل زيرو على LinkedIn</a></section></>}
+    {kind !== "contact" && <section><h2>لنتحدث عن مشروعك</h2><p>شارك احتياجاتك وقيودك، لنناقش نطاق العمل والمخرجات ونقل المعرفة إلى فريقك.</p><div className={styles.actions}><Link href="/ar/contact">تواصل معنا</Link><Link href="/ar/services">استكشف الخدمات</Link></div></section>}
+  </main>;
+}
