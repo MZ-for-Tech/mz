@@ -35,7 +35,7 @@ const newsreader = Newsreader({
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.mzfortech.com"),
   title: {
-    default: "Model Zero",
+    default: "Model Zero — Software & AI Company in Cairo",
     template: "%s | Model Zero",
   },
   applicationName: "Model Zero",
@@ -98,7 +98,7 @@ export default function RootLayout({
         <TransitionLink href="/" className="layout-logo-link">
           <Image
             src="/model-zero-logo.svg"
-            alt="Model Zero"
+            alt="Model Zero logo"
             width={100}
             height={100}
             className="layout-logo-img"

@@ -34,14 +34,14 @@ export function pageMetadata({
   const imageUrl = `/og?${imageParams.toString()}`;
 
   return {
-    title,
+    title: path === "/" ? { absolute: title } : title,
     description: metaDescription,
     alternates: { canonical: path, ...(languages ? { languages } : {}) },
     openGraph: {
       title,
       description: socialDescription,
       url: path,
-      siteName: "MZ",
+      siteName: "Model Zero",
       images: [{ url: imageUrl, alt: title, width: 1200, height: 630 }],
       locale,
       type,

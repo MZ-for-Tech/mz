@@ -8,7 +8,6 @@ const SITE = "https://www.mzfortech.com";
 export default function sitemap(): MetadataRoute.Sitemap {
   const staticPages = [
     "/",
-    "/home",
     "/work",
     "/work/nested-united",
     "/services",

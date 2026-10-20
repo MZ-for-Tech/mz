@@ -23,7 +23,7 @@ const redHatDisplay = Red_Hat_Display({
 
 
 const caseStudyDescription =
-  "How MZ designed and built a digital platform for Nested United, bringing five specialist brands into one coherent web experience. " +
+  "How Model Zero (MZ) designed and built a digital platform for Nested United, bringing five specialist brands into one coherent web experience. " +
   (PROJECTS.find((p) => p.slug === "nested-united")?.tagline || "Nested United project");
 
 const caseStudyStructuredData = {
@@ -51,6 +51,7 @@ export const metadata = pageMetadata({
   title: "Nested United Case Study",
   description: caseStudyDescription,
   path: "/work/nested-united",
+  type: "article",
 });
 
 export default function NestedUnitedWorld() {
@@ -105,7 +106,7 @@ export default function NestedUnitedWorld() {
           <div className={styles.writeupTextContainer}>
             <h2 className={styles.writeupTitle}>The Problem</h2>
             <p className={styles.writeupText}>
-              Nested United operates five distinct sub-brands under one roof — boutique hospitality, events, real estate, tech, and creative services. They came in with a clear brand vision and zero technical infrastructure. The work was to take that vision and build it into something real, navigable, and alive on screen.
+              Model Zero (MZ) built a digital platform for Nested United, which operates five distinct sub-brands under one roof — boutique hospitality, events, real estate, tech, and creative services. They came in with a clear brand vision and zero technical infrastructure. The work was to take that vision and build it into something real, navigable, and alive on screen.
             </p>
           </div>
           <div className={styles.writeupVisual}>
@@ -157,7 +158,7 @@ export default function NestedUnitedWorld() {
           <div className={`${styles.bentoCard} ${styles.cardPerformance}`}>
             <div className={styles.cardContent}>
               <h3 className={styles.featureTitle}>High Performance</h3>
-              <p className={styles.featureText}>Engineered for speed. The platform delivers instant load times and maintains a flawless 60 FPS across all devices.</p>
+              <p className={styles.featureText}>Built with responsive layouts and animated interactions, with performance considered throughout development.</p>
             </div>
             <div className={styles.cardVisual}>
               <div className={styles.scrollMockup}>
@@ -179,11 +180,11 @@ export default function NestedUnitedWorld() {
             </div>
           </div>
 
-          {/* 2. Perfect SEO */}
+          {/* 2. Search visibility */}
           <div className={`${styles.bentoCard} ${styles.cardSEO}`}>
             <div className={styles.cardContent}>
-              <h3 className={styles.featureTitle}>Perfect SEO</h3>
-              <p className={styles.featureText}>Optimized for visibility. The architecture achieves perfect technical SEO scores to secure top search rankings.</p>
+              <h3 className={styles.featureTitle}>Search visibility</h3>
+              <p className={styles.featureText}>Page metadata and semantic structure help search engines understand the platform and its content.</p>
             </div>
             <div className={styles.cardVisual}>
               <div className={styles.serpMockup}>
@@ -195,11 +196,7 @@ export default function NestedUnitedWorld() {
                   <div className={styles.serpTitle}>Nested United - Where Ideas Take Shape</div>
                   <div className={styles.serpDesc}>A cohesive ecosystem for scalable operations and sustainable growth...</div>
                 </a>
-                <div className={styles.serpResultDim}>
-                  <div className={styles.serpUrl}>https://example.com</div>
-                  <div className={styles.serpTitle}>Competitor Platform - Generic Real Estate</div>
-                  <div className={styles.serpDesc}>Lorem ipsum dolor sit amet consectetur adipiscing elit...</div>
-                </div>
+
               </div>
             </div>
           </div>
@@ -208,37 +205,10 @@ export default function NestedUnitedWorld() {
           <div className={`${styles.bentoCard} ${styles.cardAgentic}`}>
             <div className={styles.cardContent}>
               <h3 className={styles.featureTitle}>Agentic Compatibility</h3>
-              <p className={styles.featureText}>Built for the future. Clean semantic structures allow flawless parsing by both human users and AI agents.</p>
+              <p className={styles.featureText}>Semantic headings and descriptive content help people and automated tools navigate the platform.</p>
             </div>
             <div className={styles.cardVisual}>
-              <div className={styles.agentScoreCard}>
-                <div className={styles.scoreCircle}>
-                  <svg viewBox="0 0 100 50" className={styles.scoreArc}>
-                    <path d="M 10 45 A 40 40 0 0 1 90 45" fill="none" stroke="#22c55e" strokeWidth="8" strokeLinecap="round" />
-                  </svg>
-                  <span className={styles.scoreValue}>100</span>
-                </div>
-                <div className={styles.scoreLabel}>LEVEL 5</div>
-                <div className={styles.scoreTitle}>Agent-Native</div>
-                <div className={styles.metricsGrid}>
-                  <div className={styles.metricItem}>
-                    <div className={styles.metricRing}>100</div>
-                    <span>Discoverability</span>
-                  </div>
-                  <div className={styles.metricItem}>
-                    <div className={styles.metricRing}>100</div>
-                    <span>Content</span>
-                  </div>
-                  <div className={styles.metricItem}>
-                    <div className={styles.metricRing}>100</div>
-                    <span>Bot Access</span>
-                  </div>
-                  <div className={styles.metricItem}>
-                    <div className={styles.metricRing}>100</div>
-                    <span>API & MCP</span>
-                  </div>
-                </div>
-              </div>
+              <p className={styles.featureText}>Semantic HTML / Descriptive metadata / Bilingual content</p>
             </div>
           </div>
 

@@ -28,7 +28,10 @@ const nextConfig: NextConfig = {
     qualities: [70, 75],
   },
   async redirects() {
-    return [{ source: "/intel", destination: "/about", permanent: true }];
+    return [
+      { source: "/intel", destination: "/about", permanent: true },
+      { source: "/home", destination: "/", statusCode: 301 },
+    ];
   },
   // mz-specific config if any
   async headers() {
