@@ -1,73 +1,72 @@
+import Image from "next/image";
 import Link from "next/link";
-import { SERVICES, SERVICE_COUNT } from "@/lib/services";
+import type { ReactNode } from "react";
+import { ArrowDownRight, ArrowUpRight } from "lucide-react";
+import { SERVICE_PILLARS } from "@/lib/services";
 import styles from "./page.module.css";
 
-/**
- * Services, as a launcher panel.
- *
- * WHAT THIS USED TO BE
- *
- * A seven-tile bento: three live WebGL2 contexts (three `Grainient` canvases,
- * each with its own shader program, RAF loop, ResizeObserver and
- * IntersectionObserver), three CSS/SVG "animated mockup" scenes running
- * nineteen infinite keyframe animations between them, a second set of the
- * same three scenes plus four `filter: blur()` layers per card on mobile, and
- * a staggered GSAP reveal that promoted all seven tiles to their own
- * compositor layer. It was the heaviest thing in the repository by a wide
- * margin, and it rendered three GL contexts to say three sentences.
- *
- * So: the section is now type. There is no canvas, no shader, no keyframe
- * loop and no client component — this file is a server component, so all of
- * it arrives in the HTML and the panel ships zero JavaScript. The whole cost
- * of this page is the words in it.
- *
- * The staleness is deliberate and it is the point. The old bento was a
- * portfolio-piece: an argument for the studio's technical range, built with
- * the range it was arguing for. But this is a services page, and a visitor
- * on it is asking "can you do my thing" — not "are these people clever". The
- * capabilities are already a plain list of words; the thing they were wrapped
- * in was decoration costing three GL contexts per visit. When there are real
- * assets — actual work, not synthetic mockups — they go here, and the
- * structure is already a slot for one image per pillar.
- *
- * WHY IT IS A DASHBOARD AND NOT A HERO
- *
- * Because that is what the launcher's other panels already are, and this one
- * had drifted into a different product entirely. The tile treatment here is
- * the launcher's own (`box-shadow: inset` ring, 4px radius, the yellow
- * hover), the row rhythm is the same 6px gutter as the work shelf, and the
- * type scale is the shell's. Nothing on this panel is a component the
- * visitor hasn't already seen.
- *
- * NO COUNT, NO DUPLICATED INDEX
- *
- * The header states how many pillars there are because that is genuinely the
- * headline of the content, but the "3 pillars. One team." accent tile is
- * gone: the same fact was being said twice, in a tile that existed to fill
- * the bento's grid rather than to carry anything. The per-pillar `01`–`03`
- * numbers are the only indices, and they come from the data, so a fourth
- * pillar doesn't leave a stale count behind.
- *
- * THE CAPABILITIES REVEAL ON HOVER, NOT ON SCROLL
- *
- * A row of three pillars is short enough to read at a glance, so the
- * capabilities are simply there — dimmed, not hidden. Tying them to hover
- * meant the desktop revealed exactly what a phone could not, which is the
- * wrong asymmetry: on a touch device there is no hover at all, so a
- * hover-only reveal is a feature the phone silently doesn't have. The
- * `data-tile` attribute and the shell's arrow-key navigation still work —
- * these are focusable rows, not decoration.
- */
+function BuildVisual() {
+  return (
+    <svg viewBox="0 0 360 240" className={styles.artwork} aria-hidden="true">
+      <path className={styles.artGrid} d="M20 40h320M20 80h320M20 120h320M20 160h320M20 200h320M60 20v200M100 20v200M140 20v200M180 20v200M220 20v200M260 20v200M300 20v200" />
+      <g transform="translate(180 120) scale(1.35) translate(-160 -120)">
+        <path className={styles.artLine} d="m77 78 83-42 83 42-83 42-83-42Z" />
+        <path className={styles.artLine} d="M77 78v76l83 44 83-44V78M160 120v78" />
+        <path className={styles.artLine} d="m77 116 83 44 83-44M77 154l83 44 83-44" />
+        <path className={styles.artAccent} d="m117 58 43-22 83 42-43 22-83-42Z" />
+        <circle className={styles.artPoint} cx="160" cy="78" r="5" />
+        <circle className={styles.artPoint} cx="160" cy="160" r="4" />
+      </g>
+    </svg>
+  );
+}
+
+function ApplyVisual() {
+  return (
+    <svg viewBox="0 0 360 240" className={styles.artwork} aria-hidden="true">
+      <path className={styles.artGrid} d="M20 40h320M20 80h320M20 120h320M20 160h320M20 200h320M60 20v200M100 20v200M140 20v200M180 20v200M220 20v200M260 20v200M300 20v200" />
+      <path className={styles.artLine} d="M44 168c38-2 41-76 82-76s44 53 79 53 44-53 111-89" />
+      <path className={styles.artAccent} d="M44 168c38-2 41-76 82-76s44 53 79 53 44-53 111-89" />
+      <path className={styles.artLine} d="M44 198h272M44 198v-12" />
+      <circle className={styles.artPoint} cx="126" cy="92" r="5" />
+      <circle className={styles.artPoint} cx="205" cy="145" r="5" />
+      <circle className={styles.artPoint} cx="316" cy="56" r="6" />
+    </svg>
+  );
+}
+
+function TeachVisual() {
+  return (
+    <svg viewBox="0 0 360 240" className={styles.artwork} aria-hidden="true">
+      <path className={styles.artGrid} d="M20 40h320M20 80h320M20 120h320M20 160h320M20 200h320M60 20v200M100 20v200M140 20v200M180 20v200M220 20v200M260 20v200M300 20v200" />
+      <path className={styles.artLine} d="M70 120h77m0 0V65m0 55v55m0-55h70m0 0V65m0 55v55m0-55h70" />
+      <path className={styles.artAccent} d="M70 120h77m0 0h70m0 0h70" />
+      <circle className={styles.artHub} cx="70" cy="120" r="14" />
+      <circle className={styles.artPoint} cx="147" cy="65" r="8" />
+      <circle className={styles.artPoint} cx="147" cy="120" r="8" />
+      <circle className={styles.artPoint} cx="147" cy="175" r="8" />
+      <circle className={styles.artPoint} cx="217" cy="65" r="5" />
+      <circle className={styles.artPoint} cx="217" cy="120" r="5" />
+      <circle className={styles.artPoint} cx="217" cy="175" r="5" />
+      <circle className={styles.artHub} cx="287" cy="120" r="14" />
+    </svg>
+  );
+}
+
+const serviceArt: Record<string, ReactNode> = {
+  Build: <BuildVisual />,
+  Apply: <ApplyVisual />,
+  Teach: <TeachVisual />,
+};
 
 export default function ServicesPanel() {
   const serviceStructuredData = {
     "@context": "https://schema.org",
-    "@graph": SERVICES.map((service) => ({
+    "@graph": SERVICE_PILLARS.map((service) => ({
       "@type": "Service",
-      "@id": `https://www.mzfortech.com/services#${service.id}`,
-      name: service.title,
-      serviceType: service.pillar,
-      description: `${service.tagline} ${service.capabilities.join(". ")}.`,
+      "@id": `https://www.mzfortech.com/services#${service.name.toLowerCase()}`,
+      name: service.name,
+      description: `${service.title} ${service.description} ${service.scope.join(", ")}.`,
       provider: { "@id": "https://www.mzfortech.com/#organization" },
       url: "https://www.mzfortech.com/services",
     })),
@@ -81,51 +80,102 @@ export default function ServicesPanel() {
           __html: JSON.stringify(serviceStructuredData).replace(/</g, "\\u003c"),
         }}
       />
-      <div className={styles.intro}>
-        <h1 className={styles.title}>Services</h1>
-        <p className={styles.count}>
-          {SERVICE_COUNT} pillars. One team.
-        </p>
+
+      <header className={styles.hero}>
+        <div className={styles.heroCopy}>
+          <h1 className={styles.title}>Build. Apply. Teach.</h1>
+          <p className={styles.lede}>
+            We build custom software and AI systems, then help people understand
+            and operate them. Our services also include financial systems,
+            digital media, applied research, and information technology transfer.
+          </p>
+          <Link href="/contact" data-tile className={styles.contactLink}>
+            Start a conversation <ArrowUpRight size={16} strokeWidth={1.6} />
+          </Link>
+        </div>
+
+        <nav className={styles.pillarMap} aria-label="Explore MZ service pillars">
+          <svg className={styles.serviceMapGraphic} viewBox="0 0 400 280" aria-hidden="true">
+            <ellipse className={styles.mapOrbit} cx="200" cy="140" rx="118" ry="94" />
+            <ellipse className={styles.mapOrbit} cx="200" cy="140" rx="78" ry="62" />
+            <path className={styles.mapConnection} d="M200 109C215 82 207 53 200 24M177 149C135 161 86 202 30 254M223 149C265 161 314 202 370 254" />
+            <path className={styles.mapConnectionAccent} d="M200 109C215 82 207 53 200 24M177 149C135 161 86 202 30 254M223 149C265 161 314 202 370 254" />
+            <circle className={styles.mapNode} cx="200" cy="24" r="4" />
+            <circle className={styles.mapNode} cx="30" cy="254" r="4" />
+            <circle className={styles.mapNode} cx="370" cy="254" r="4" />
+            <circle className={styles.mapNode} cx="200" cy="109" r="3" />
+            <circle className={styles.mapNode} cx="177" cy="149" r="3" />
+            <circle className={styles.mapNode} cx="223" cy="149" r="3" />
+          </svg>
+          <Link href="#build" data-tile className={`${styles.mapLink} ${styles.mapBuild}`}>
+            Build <ArrowDownRight size={13} aria-hidden="true" />
+          </Link>
+          <Link href="#apply" data-tile className={`${styles.mapLink} ${styles.mapApply}`}>
+            Apply <ArrowDownRight size={13} aria-hidden="true" />
+          </Link>
+          <Link href="#teach" data-tile className={`${styles.mapLink} ${styles.mapTeach}`}>
+            Teach <ArrowDownRight size={13} aria-hidden="true" />
+          </Link>
+          <Image
+            src="/model-zero-logo-texture.png"
+            alt=""
+            width={1254}
+            height={1254}
+            className={styles.mapMark}
+          />
+        </nav>
+      </header>
+
+      <div className={styles.pillars}>
+        {SERVICE_PILLARS.map((pillar) => (
+          <section
+            className={`${styles.pillar} ${styles[`pillar${pillar.name}`]}`}
+            id={pillar.name.toLowerCase()}
+            key={pillar.id}
+            aria-labelledby={`${pillar.name.toLowerCase()}-title`}
+          >
+            <div className={styles.pillarHeading}>
+              <h2 id={`${pillar.name.toLowerCase()}-title`}>{pillar.name}</h2>
+              <p>{pillar.title}</p>
+            </div>
+
+            <div className={styles.pillarContent}>
+              <p className={styles.pillarDescription}>{pillar.description}</p>
+              <div className={styles.pillarVisual}>{serviceArt[pillar.name]}</div>
+              <ul className={styles.scopeList}>
+                {pillar.scope.map((item) => <li key={item}>{item}</li>)}
+              </ul>
+
+              {pillar.name === "Build" && (
+                <Link href="/work" className={styles.textLink}>
+                  Explore MZ products <ArrowUpRight size={15} aria-hidden="true" />
+                </Link>
+              )}
+              {pillar.name === "Apply" && (
+                <Link href="/research" className={styles.textLink}>
+                  Explore MZ research <ArrowUpRight size={15} aria-hidden="true" />
+                </Link>
+              )}
+            </div>
+          </section>
+        ))}
       </div>
 
-      <ul className={styles.pillars}>
-        {SERVICES.map((service) => (
-          <li key={service.id} className={styles.pillar}>
-            <article
-              data-tile
-              tabIndex={0}
-              className={styles.card}
-              aria-label={`${service.pillar} — ${service.title}. ${service.tagline}`}
-            >
-              <div className={styles.head}>
-                <span className={styles.id}>{service.id}</span>
-                <span className={styles.pillarLabel}>{service.pillar}</span>
-              </div>
+      <aside className={styles.scopeNote}>
+        <p>
+          These summaries group MZ&apos;s registered business purposes. Carrying
+          out each activity remains subject to applicable laws, regulations,
+          decisions, and any required licenses. Clause 9 cites the Minister of
+          Defense and Military Production Decision No. 64 of 2003.
+        </p>
+      </aside>
 
-              <h2 className={styles.cardTitle}>{service.title}</h2>
-              <p className={styles.tagline}>{service.tagline}</p>
-
-              <ul className={styles.capabilities}>
-                {service.capabilities.map((capability) => (
-                  <li key={capability} className={styles.capability}>
-                    {capability}
-                  </li>
-                ))}
-              </ul>
-            </article>
-          </li>
-        ))}
-      </ul>
-
-      {/* The brief is the one thing a services page exists to produce, and
-          the launcher already has a form that collects it. A closing
-          "get in touch" that bounced to a different route was the old
-          pattern; this stays in the shell. */}
-      <p className={styles.closer}>
-        <Link href="/contact" data-tile className={styles.closerLink}>
-          Tell us what you&apos;re building
+      <footer className={styles.closer}>
+        <p>Have a problem worth solving?</p>
+        <Link href="/contact" data-tile>
+          Tell us about it <ArrowUpRight size={16} aria-hidden="true" />
         </Link>
-      </p>
+      </footer>
     </div>
   );
 }

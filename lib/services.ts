@@ -1,64 +1,48 @@
-export type ServiceData = {
-  /** The two-digit ordinal, "01"–"03". Present in the data rather than
-   *  derived from array position so inserting a pillar later cannot silently
-   *  renumber the ones after it. */
+export type ServicePillar = {
   id: string;
-  /** The verb. This is the word the pillar is named for. */
-  pillar: string;
+  name: string;
   title: string;
-  tagline: string;
-  capabilities: string[];
+  description: string;
+  scope: string[];
 };
 
-/**
- * The three pillars, as data.
- *
- * This was duplicated before: once as a `SERVICES` array in
- * ServicesAccordion, which only the mobile branch read, and again as
- * hand-written JSX in ServicesBento's three text tiles, which only the
- * desktop branch read. Two lists describing the same three things, free to
- * drift, and a real risk of the phone and the desktop describing different
- * services.
- *
- * It lives here, beside lib/projects, and the panel maps it. A fourth pillar
- * is a data entry: the count in the header, the numbering and the layout are
- * all derived from the array rather than written out per service.
- */
-export const SERVICES: ServiceData[] = [
+/** MZ's Build / Apply / Teach framework, grounded in its registered activities. */
+export const SERVICE_PILLARS: ServicePillar[] = [
   {
     id: "01",
-    pillar: "BUILD",
-    title: "Software",
-    tagline: "We make systems that work.",
-    capabilities: [
-      "Custom websites & landing pages",
-      "E-commerce & digital storefronts",
-      "ERP & internal operations systems",
+    name: "Build",
+    title: "Systems made for the work they do.",
+    description:
+      "We design and develop software, applications, information systems, and embedded technology—from first specification through operation.",
+    scope: [
+      "Software, applications, databases & data workflows",
+      "Computer & embedded systems",
+      "ICT, electronics, data centers & outsourcing",
+      "Digital media & content digitization",
     ],
   },
   {
     id: "02",
-    pillar: "DEPLOY",
-    title: "Artificial Intelligence",
-    tagline: "We give machines judgment.",
-    capabilities: [
-      "Custom specialized models",
-      "Model fine-tuning & pruning",
-      "Cost-optimized local inference",
+    name: "Apply",
+    title: "Research put to practical use.",
+    description:
+      "We apply AI, data analysis, and research to the systems and decisions shaping modern organizations.",
+    scope: [
+      "AI, machine learning & analytics",
+      "Fintech, insurance & compliance systems",
+      "Advanced technology, field research & IP",
     ],
   },
   {
     id: "03",
-    pillar: "TEACH",
-    title: "Knowledge Transfer",
-    tagline: "We make expertise replicable.",
-    capabilities: [
-      "Premium institutional workshops",
-      "Statistical thinking & data literacy",
-      "Digital-first educational content",
+    name: "Teach",
+    title: "Knowledge that moves with the technology.",
+    description:
+      "We help people and institutions understand, operate, and extend technology through training, advisory, and transfer.",
+    scope: [
+      "Technology education & researcher training",
+      "Specialist advice & digital readiness",
+      "Information technology transfer, incubation & entrepreneurship",
     ],
   },
 ];
-
-/** The ordinal the last pillar currently reaches, for the header's count. */
-export const SERVICE_COUNT = SERVICES.length;
