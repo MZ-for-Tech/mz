@@ -1,0 +1,203 @@
+{
+  "date": "2026-10-20",
+  "codeCommit": "7676654",
+  "method": "Lighthouse 13.5.0, mobile defaults, simulated throttling, local Next.js production builds, Windows Chrome headless",
+  "reports": [
+    {
+      "file": "after-about.json",
+      "url": "http://localhost:3100/about",
+      "fetchTime": "2026-10-20T19:40:27.705Z",
+      "version": "13.5.0",
+      "scores": {
+        "performance": 75,
+        "accessibility": 100,
+        "seo": 100
+      },
+      "lcpMs": 8444.103,
+      "tbtMs": 68,
+      "cls": 0
+    },
+    {
+      "file": "after-home.json",
+      "url": "http://localhost:3100/",
+      "fetchTime": "2026-10-20T19:39:48.408Z",
+      "version": "13.5.0",
+      "scores": {
+        "performance": 53,
+        "accessibility": 100,
+        "seo": 100
+      },
+      "lcpMs": 8767.984500000002,
+      "tbtMs": 703.0000000000027,
+      "cls": 0
+    },
+    {
+      "file": "after-services.json",
+      "url": "http://localhost:3100/services",
+      "fetchTime": "2026-10-20T19:40:08.602Z",
+      "version": "13.5.0",
+      "scores": {
+        "performance": 72,
+        "accessibility": 100,
+        "seo": 100
+      },
+      "lcpMs": 8129.808000000001,
+      "tbtMs": 206.09600000000046,
+      "cls": 0
+    },
+    {
+      "file": "before-about.json",
+      "url": "http://localhost:3100/about",
+      "fetchTime": "2026-10-20T18:18:01.940Z",
+      "version": "13.5.0",
+      "scores": {
+        "performance": 40,
+        "accessibility": 100,
+        "seo": 100
+      },
+      "lcpMs": 10268.181150000004,
+      "tbtMs": 1384.0000000000027,
+      "cls": 0
+    },
+    {
+      "file": "before-home.json",
+      "url": "http://localhost:3100/",
+      "fetchTime": "2026-10-20T18:16:24.255Z",
+      "version": "13.5.0",
+      "scores": {
+        "performance": 55,
+        "accessibility": 100,
+        "seo": 100
+      },
+      "lcpMs": 3036.31135,
+      "tbtMs": 48100.229550000004,
+      "cls": 0
+    },
+    {
+      "file": "before-services.json",
+      "url": "http://localhost:3100/services",
+      "fetchTime": "2026-10-20T18:17:29.147Z",
+      "version": "13.5.0",
+      "scores": {
+        "performance": 39,
+        "accessibility": 100,
+        "seo": 100
+      },
+      "lcpMs": 8327.591550000001,
+      "tbtMs": 3182.9999999999973,
+      "cls": 0
+    },
+    {
+      "file": "phase-1-home.json",
+      "url": "http://localhost:3100/",
+      "fetchTime": "2026-10-20T18:20:33.621Z",
+      "version": "13.5.0",
+      "scores": {
+        "performance": 36,
+        "accessibility": 100,
+        "seo": 100
+      },
+      "lcpMs": 7562.9788499999995,
+      "tbtMs": 21962.517624999997,
+      "cls": 0
+    },
+    {
+      "file": "phase-2-services.json",
+      "url": "http://localhost:3100/services",
+      "fetchTime": "2026-10-20T18:30:43.896Z",
+      "version": "13.5.0",
+      "scores": {
+        "performance": 48,
+        "accessibility": 100,
+        "seo": 100
+      },
+      "lcpMs": 9004.30515,
+      "tbtMs": 1154.5649500000009,
+      "cls": 0
+    },
+    {
+      "file": "phase-3-about.json",
+      "url": "http://localhost:3100/about",
+      "fetchTime": "2026-10-20T18:33:32.097Z",
+      "version": "13.5.0",
+      "scores": {
+        "performance": 40,
+        "accessibility": 100,
+        "seo": 100
+      },
+      "lcpMs": 10127.696700000004,
+      "tbtMs": 1468.000000000001,
+      "cls": 0
+    },
+    {
+      "file": "phase-4-services.json",
+      "url": "http://localhost:3100/services",
+      "fetchTime": "2026-10-20T18:35:51.966Z",
+      "version": "13.5.0",
+      "scores": {
+        "performance": 52,
+        "accessibility": 100,
+        "seo": 100
+      },
+      "lcpMs": 8466.25245,
+      "tbtMs": 839.9158499999983,
+      "cls": 0
+    },
+    {
+      "file": "phase-5-about.json",
+      "url": "http://localhost:3100/about",
+      "fetchTime": "2026-10-20T18:38:20.016Z",
+      "version": "13.5.0",
+      "scores": {
+        "performance": 36,
+        "accessibility": 100,
+        "seo": 100
+      },
+      "lcpMs": 10130.791799999997,
+      "tbtMs": 2692.9999999999955,
+      "cls": 0
+    },
+    {
+      "file": "phase-6-services.json",
+      "url": "http://localhost:3100/services",
+      "fetchTime": "2026-10-20T18:41:08.074Z",
+      "version": "13.5.0",
+      "scores": {
+        "performance": 50,
+        "accessibility": 100,
+        "seo": 100
+      },
+      "lcpMs": 8470.479450000003,
+      "tbtMs": 974.0000000000009,
+      "cls": 0
+    },
+    {
+      "file": "phase-7-home.json",
+      "url": "http://localhost:3100/",
+      "fetchTime": "2026-10-20T19:19:06.265Z",
+      "version": "13.5.0",
+      "scores": {
+        "performance": 58,
+        "accessibility": 100,
+        "seo": 100
+      },
+      "lcpMs": 9591.094949999999,
+      "tbtMs": 662.0000000000009,
+      "cls": 0
+    },
+    {
+      "file": "phase-8-ar-services.json",
+      "url": "http://localhost:3100/ar/services",
+      "fetchTime": "2026-10-20T19:21:53.471Z",
+      "version": "13.5.0",
+      "scores": {
+        "performance": 69,
+        "accessibility": 100,
+        "seo": 100
+      },
+      "lcpMs": 7403.858,
+      "tbtMs": 311,
+      "cls": 0
+    }
+  ]
+}

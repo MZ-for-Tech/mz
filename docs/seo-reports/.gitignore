@@ -1,0 +1,10 @@
+# Full local audit payloads contain screenshots/traces; keep concise evidence in git.
+*.log
+*.json
+*.html
+*.png
+*.jpg
+!after-*.png
+!after-*.jpg
+!lighthouse-summary.json
+!html-verification.json
