@@ -1,3 +1,4 @@
+import { NESTED_STUDY } from "@/lib/case-study-content";
 import styles from "./page.module.css";
 import localFont from "next/font/local";
 import { TransitionLink } from "@/components/TransitionLink/TransitionLink";
@@ -104,9 +105,7 @@ export default function NestedUnitedWorld() {
         <div className={styles.writeupBlock}>
           <div className={styles.writeupTextContainer}>
             <h2 className={styles.writeupTitle}>The Problem</h2>
-            <p className={styles.writeupText}>
-              Model Zero (MZ) built a digital platform for Nested United, which operates five distinct sub-brands under one roof — boutique hospitality, events, real estate, tech, and creative services. They came in with a clear brand vision and zero technical infrastructure. The work was to take that vision and build it into something real, navigable, and alive on screen.
-            </p>
+            <p className={styles.writeupText}>{NESTED_STUDY.sections[0].text}</p>
           </div>
           <div className={styles.writeupVisual}>
             <div className={styles.writeupSvgWrapper}>
@@ -118,9 +117,7 @@ export default function NestedUnitedWorld() {
         <div className={styles.writeupBlock}>
           <div className={styles.writeupTextContainer}>
             <h2 className={styles.writeupTitle}>Our Approach</h2>
-            <p className={styles.writeupText}>
-              We used their design direction as a foundation and brought significant creative input of our own — rethinking sections, building a proper component system, and adding an entire motion layer that wasn&apos;t in the original brief. The preloader, the custom SVG animations, the transitions — all our own work, and ultimately what people remember most about the site.
-            </p>
+            <p className={styles.writeupText}>{NESTED_STUDY.sections[1].text}</p>
           </div>
           <div className={styles.writeupVisual}>
             <div className={styles.writeupSvgWrapper}>
@@ -132,9 +129,7 @@ export default function NestedUnitedWorld() {
         <div className={styles.writeupBlock}>
           <div className={styles.writeupTextContainer}>
             <h2 className={styles.writeupTitle}>The Outcome</h2>
-            <p className={styles.writeupText}>
-              Nested United now has a digital home that lives up to the scale of their ambitions. Five brands, one coherent identity. The animations — which weren&apos;t part of the original brief — ended up being what people respond to most. A platform that started as a design file is now something people genuinely remember.
-            </p>
+            <p className={styles.writeupText}>{NESTED_STUDY.sections[2].text}</p>
           </div>
           <div className={styles.writeupVisual}>
             <div className={styles.writeupSvgWrapper}>
@@ -157,7 +152,7 @@ export default function NestedUnitedWorld() {
           <div className={`${styles.bentoCard} ${styles.cardPerformance}`}>
             <div className={styles.cardContent}>
               <h3 className={styles.featureTitle}>High Performance</h3>
-              <p className={styles.featureText}>Built with responsive layouts and animated interactions, with performance considered throughout development.</p>
+              <p className={styles.featureText}>{NESTED_STUDY.capabilities[0].text}</p>
             </div>
             <div className={styles.cardVisual}>
               <div className={styles.scrollMockup}>
@@ -183,7 +178,7 @@ export default function NestedUnitedWorld() {
           <div className={`${styles.bentoCard} ${styles.cardSEO}`}>
             <div className={styles.cardContent}>
               <h3 className={styles.featureTitle}>Search visibility</h3>
-              <p className={styles.featureText}>Page metadata and semantic structure help search engines understand the platform and its content.</p>
+              <p className={styles.featureText}>{NESTED_STUDY.capabilities[1].text}</p>
             </div>
             <div className={styles.cardVisual}>
               <div className={styles.serpMockup}>
@@ -204,7 +199,7 @@ export default function NestedUnitedWorld() {
           <div className={`${styles.bentoCard} ${styles.cardAgentic}`}>
             <div className={styles.cardContent}>
               <h3 className={styles.featureTitle}>Agentic Compatibility</h3>
-              <p className={styles.featureText}>Semantic headings and descriptive content help people and automated tools navigate the platform.</p>
+              <p className={styles.featureText}>{NESTED_STUDY.capabilities[2].text}</p>
             </div>
             <div className={styles.cardVisual}>
               <p className={styles.featureText}>Semantic HTML / Descriptive metadata / Bilingual content</p>
@@ -215,7 +210,7 @@ export default function NestedUnitedWorld() {
           <div className={`${styles.bentoCard} ${styles.cardBilingual}`}>
             <div className={styles.cardContent}>
               <h3 className={styles.featureTitle}>Bilingual Support</h3>
-              <p className={styles.featureText}>Seamlessly localized. Full RTL and LTR support ensures a native experience for both Arabic and English users.</p>
+              <p className={styles.featureText}>{NESTED_STUDY.capabilities[3].text}</p>
             </div>
             <div className={styles.cardVisual}>
               <div className={styles.bilingualContainer}>
@@ -236,7 +231,7 @@ export default function NestedUnitedWorld() {
           <div className={`${styles.bentoCard} ${styles.cardAnimations}`}>
             <div className={styles.cardContent}>
               <h3 className={styles.featureTitle}>Fluid Animations</h3>
-              <p className={styles.featureText}>Dynamic and engaging. Hardware-accelerated micro-interactions bring the interface to life.</p>
+              <p className={styles.featureText}>{NESTED_STUDY.capabilities[4].text}</p>
             </div>
             <div className={styles.cardVisual}>
               <div className={styles.fluidGrid}>
@@ -255,7 +250,7 @@ export default function NestedUnitedWorld() {
       <section className={styles.showcaseSection}>
         <div className={styles.showcaseHeader}>
           <h2 className={styles.previewTitle}>The Design Language</h2>
-          <p className={styles.previewText} style={{ color: "rgba(16, 15, 13, 0.7)" }}>Strict geometry, vibrant primary accents, and minimal friction.</p>
+          <p className={styles.previewText} style={{ color: "rgba(16, 15, 13, 0.7)" }}>{NESTED_STUDY.design}</p>
         </div>
 
         <div className={styles.showcaseComposition}>
@@ -299,7 +294,7 @@ export default function NestedUnitedWorld() {
       <section className={styles.previewSection}>
         <div className={styles.previewHeader}>
           <h2 className={styles.previewTitle}>Experience the World</h2>
-          <p className={styles.previewText}>Interact directly with the live Nested United platform.</p>
+          <p className={styles.previewText}>{NESTED_STUDY.preview}</p>
         </div>
 
         {/* Desktop Iframe */}
