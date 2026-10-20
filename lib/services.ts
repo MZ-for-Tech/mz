@@ -6,43 +6,43 @@ export type ServicePillar = {
   scope: string[];
 };
 
-/** MZ's Build / Apply / Teach framework, grounded in its registered activities. */
+/** Model Zero's Build / Deploy / Teach framework. */
 export const SERVICE_PILLARS: ServicePillar[] = [
   {
     id: "01",
     name: "Build",
-    title: "Systems made for the work they do.",
+    title: "Custom Software & Systems",
     description:
-      "We design and develop software, applications, information systems, and embedded technology—from first specification through operation.",
+      "We make systems that work. Websites, e-commerce, ERP, fintech and internal systems are built around your operation, with the databases, embedded systems and digitization work underneath. Arabic and English, with full RTL support.",
     scope: [
       "Software, applications, databases & data workflows",
       "Computer & embedded systems",
-      "ICT, electronics, data centers & outsourcing",
+      "Fintech, insurance & financial reporting",
       "Digital media & content digitization",
     ],
   },
   {
     id: "02",
-    name: "Apply",
-    title: "Research put to practical use.",
+    name: "Deploy",
+    title: "AI, Data & Analytics",
     description:
-      "We apply AI, data analysis, and research to the systems and decisions shaping modern organizations.",
+      "We give machines judgment. Specialized AI models, compression and local inference connect to the data work that feeds them: collection, surveys and analysis. Arabic document AI and our published research are part of this pillar.",
     scope: [
       "AI, machine learning & analytics",
-      "Fintech, insurance & compliance systems",
-      "Advanced technology, field research & IP",
+      "Arabic OCR & document processing",
+      "Data collection, statistical studies & field surveys",
     ],
   },
   {
     id: "03",
     name: "Teach",
-    title: "Knowledge that moves with the technology.",
+    title: "Consulting, Training & Knowledge Transfer",
     description:
-      "We help people and institutions understand, operate, and extend technology through training, advisory, and transfer.",
+      "We make expertise replicable. Digital-transformation consulting and readiness assessments connect to institutional training in statistics, data and AI. Learning content and research partnerships extend that knowledge; every build ends with a documented handover.",
     scope: [
       "Technology education & researcher training",
       "Specialist advice & digital readiness",
-      "Information technology transfer, incubation & entrepreneurship",
+      "Digital learning content & knowledge transfer",
     ],
   },
 ];

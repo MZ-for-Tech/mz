@@ -1,5 +1,5 @@
 import styles from "./page.module.css";
-import { Red_Hat_Display } from "next/font/google";
+import localFont from "next/font/local";
 import { TransitionLink } from "@/components/TransitionLink/TransitionLink";
 import ObfuscatedEmail from "@/components/ObfuscatedEmail/ObfuscatedEmail";
 import Image from "next/image";
@@ -14,10 +14,9 @@ import TiktokIcon from "@/components/nested/IconCollage/TiktokIcon";
 
 // Scoped to this page: it is the only route using --font-red-hat. Loading it
 // here (instead of the global layout) keeps its bytes off the other four.
-const redHatDisplay = Red_Hat_Display({
+const redHatDisplay = localFont({
+  src: "../../../public/fonts/red-hat-display.woff2",
   variable: "--font-red-hat",
-  subsets: ["latin"],
-  weight: "variable",
   display: "swap",
 });
 

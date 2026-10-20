@@ -1,33 +1,34 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, JetBrains_Mono, Cormorant_Garamond, Newsreader } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import { SmoothScrolling } from "@/components/SmoothScrolling/SmoothScrolling";
 
-const geistSans = Geist({
+const geistSans = localFont({
+  src: "../public/fonts/geist.woff2",
   variable: "--font-geist",
-  subsets: ["latin"],
   display: "swap",
 });
 
-const jetbrainsMono = JetBrains_Mono({
+const jetbrainsMono = localFont({
+  src: "../public/fonts/jetbrains-mono.woff2",
   variable: "--font-mono",
-  subsets: ["latin"],
   display: "swap",
   preload: false,
 });
 
-const cormorant = Cormorant_Garamond({
+const cormorant = localFont({
+  src: "../public/fonts/cormorant.woff2",
   variable: "--font-serif",
-  weight: ["400", "600"],
-  subsets: ["latin"],
   display: "swap",
   preload: false,
 });
 
-const newsreader = Newsreader({
+const newsreader = localFont({
+  src: [
+    { path: "../public/fonts/newsreader.woff2", style: "normal" },
+    { path: "../public/fonts/newsreader-italic.woff2", style: "italic" },
+  ],
   variable: "--font-newsreader",
-  subsets: ["latin"],
-  style: ["normal", "italic"],
   display: "swap",
   preload: false,
 });
