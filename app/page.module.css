@@ -49,7 +49,8 @@
   will-change: transform, opacity;
 }
 
-.heroDescription {
+.heroDescription,
+.gameMenu {
   opacity: 0;
   animation: heroDescIn 1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
   animation-delay: 2.50s;
@@ -71,7 +72,8 @@
 @media (prefers-reduced-motion: reduce) {
   .heroWord :global(.hero-word-inner),
   .heroSubtext,
-  .heroDescription {
+  .heroDescription,
+  .gameMenu {
     animation: none !important;
     opacity: 1 !important;
     transform: none !important;
@@ -157,38 +159,162 @@
 
 .heroDescription {
   position: absolute;
-  bottom: var(--space-16);
-  left: var(--space-16);
+  right: clamp(2rem, 8vw, 9rem);
+  bottom: clamp(var(--space-8), 8vh, var(--space-16));
+  width: min(340px, calc(100vw - 2 * var(--space-16)));
   font-size: var(--font-size-sm);
   line-height: 1.6;
   letter-spacing: 0.02em;
-  color: rgba(var(--color-white-rgb), 0.5);
-  max-width: 280px;
-  opacity: 0;
+  color: rgba(var(--color-white-rgb), 0.7);
+  text-align: right;
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.8);
   z-index: 3;
+}
+
+.gameMenu {
+  position: absolute;
+  top: clamp(24rem, 56vh, 36rem);
+  left: clamp(2rem, 8vw, 9rem);
+  width: min(370px, calc(100vw - 2 * var(--space-16)));
+  padding: var(--space-4) var(--space-5);
+  border-left: 1px solid rgba(var(--color-white-rgb), 0.2);
+  line-height: 1.6;
+  letter-spacing: 0.02em;
+  color: rgba(var(--color-white-rgb), 0.7);
+  z-index: 3;
+}
+
+.heroIntro {
+  margin: 0;
+}
+
+.menuHeading {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: var(--space-2);
+  color: rgba(var(--color-white-rgb), 0.55);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.missionSelect {
+  display: grid;
+  gap: 2px;
+}
+
+.menuItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: 3.15rem;
+  padding: var(--space-2) var(--space-3);
+  border-left: 2px solid transparent;
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.18s ease, background 0.18s ease, transform 0.18s ease;
+}
+
+.menuItem:hover,
+.menuItem:focus-visible {
+  background: rgba(var(--color-brand-yellow-rgb), 0.1);
+  color: var(--color-brand-yellow);
+  transform: translateX(4px);
+  outline: none;
+}
+
+.menuItem:focus-visible {
+  outline: 1px solid rgba(var(--color-brand-yellow-rgb), 0.55);
+  outline-offset: 2px;
+}
+
+.menuItem:hover .missionLabel,
+.menuItem:focus-visible .missionLabel {
+  color: var(--color-brand-yellow);
+}
+
+.menuItem:hover .missionDetail,
+.menuItem:focus-visible .missionDetail {
+  color: rgba(var(--color-white-rgb), 0.76);
+}
+
+.menuItemPrimary {
+  border-left-color: var(--color-brand-yellow);
+  background: linear-gradient(90deg, rgba(var(--color-brand-yellow-rgb), 0.15), rgba(var(--color-brand-yellow-rgb), 0.02) 75%, transparent);
+  color: var(--color-brand-yellow);
+}
+
+.menuItemPrimary .missionLabel {
+  color: var(--color-brand-yellow);
+}
+
+.menuNumber,
+.menuArrow {
+  flex: 0 0 1.5rem;
+  color: rgba(var(--color-white-rgb), 0.56);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+}
+
+.menuItemPrimary .menuNumber,
+.menuItemPrimary .menuArrow {
+  color: var(--color-brand-yellow);
+}
+
+.menuText {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.missionLabel {
+  color: rgba(var(--color-white-rgb), 0.88);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-sm);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.missionDetail {
+  font-size: var(--font-size-xs);
+  color: rgba(var(--color-white-rgb), 0.68);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.75);
 }
 
 @media (max-width: 768px) {
   .heroDescription {
-    display: block;
-    /* 11rem lifted to 9.5rem's worth of clearance from the mark: with the
-     * 3D logo now rendering on phones, the copy has to sit clear of the
-     * centre band the mark occupies rather than overlapping it. The mark is
-     * scaled down on coarse viewports (see logoScale in MzLogo3D), so this
-     * is the copy moving up to meet it, not the mark being pushed aside. */
-    bottom: 9.5rem;
-    left: var(--space-6);
     right: var(--space-6);
+    bottom: var(--space-6);
+    left: var(--space-6);
     font-size: var(--font-size-sm);
-    max-width: none;
+    width: auto;
   }
 
-  /* The description spans edge to edge, so the corner is free on mobile and
-     the Enter line can drop to the bottom edge rather than sitting on the
-     centre line. */
-  .enterPrompt {
-    bottom: var(--space-5);
-    right: var(--space-6);
+  .gameMenu {
+    top: 48vh;
+    left: var(--space-6);
+    width: min(370px, calc(100vw - 2 * var(--space-6)));
+    padding: var(--space-3) var(--space-4);
+  }
+
+  .heroIntro {
+    margin: 0;
+  }
+
+  .menuHeading {
+    margin-bottom: 0;
+  }
+
+  .menuItem {
+    min-height: 2.5rem;
+    gap: var(--space-2);
+    padding: var(--space-1) var(--space-2);
+  }
+
+  .missionDetail {
+    font-size: 0.65rem;
   }
 
   .heroContent {
@@ -244,82 +370,13 @@
    Start screen → launcher
    ═══════════════════════════════════════════════════════════════════════ */
 
-/* The Enter prompt: chrome, not a control.
- *
- * This WAS a pill — a 1px ring, a dark fill, a 45px target, and a row of
- * keycap chips reading "Space" and "Scroll". Every one of those said button,
- * and the keycaps were the worst of it: a shortcut list answers "which keys"
- * rather than "what can I do here", which is exactly what a control bar looks
- * like. So it is now bare type — no border, no fill, no chips, one word.
- *
- * What makes something read as a button on a page like this is the frame, not
- * the word. Remove the frame and the same text becomes the console's idle
- * "press to start" line, which is what it is. The hit area stays comfortably
- * above the touch floor even though nothing is drawn there — a target does not
- * need to be visible to be real, and shrinking it to match the glyphs would
- * only make it harder to use.
- *
- * It is a real <a> link: focusable, clickable, crawlable, and reachable by
- * keyboard. It just no longer looks like the page's primary action, which it
- * never was. */
-.enterPrompt {
-  position: absolute;
-  bottom: var(--space-16);
-  right: var(--space-16);
-  z-index: 3;
-  display: inline-flex;
-  align-items: center;
-  /* Padding with no background: this is the hit area, and it is what keeps
-     the target honest while the drawn element is 12px of type. */
-  padding: 0.85rem 1rem;
-  background: none;
-  border: 0;
-  border-radius: var(--radius-sm);
-  color: inherit;
-  cursor: pointer;
-  opacity: 0;
-  animation: heroDescIn 1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-  animation-delay: 2.70s;
-  will-change: opacity;
-  transition: color 0.3s ease;
-}
-
-.enterPrompt:hover {
-  color: var(--color-brand-yellow);
-}
-
-/* Keyboard focus has to be visible even though the resting state is only
-   type, so the ring is drawn on focus rather than being the default frame —
-   the browser's own focus ring is a rectangle that would look heavier than
-   the element it is on. */
-.enterPrompt:focus-visible {
-  outline: 1px solid var(--color-brand-yellow);
-  outline-offset: 2px;
-}
-
-.enterLabel {
-  font-size: var(--font-size-xs);
-  letter-spacing: 0.4em;
-  text-transform: uppercase;
-  color: rgba(var(--color-white-rgb), 0.55);
-  transition: color 0.3s ease;
-}
-
-/* `.enterKey` — the keycap chip that used to sit beside the label — is gone
-   with the shortcut list it belonged to. A framed keycap is a control, and
-   two controls in the corner of a splash screen outranked the one thing the
-   screen actually wants you to do. So is the centred scroll cue that used to
-   teach the gesture underneath it: the screen is a launch screen, it has one
-   destination, and the link at the bottom-right says which. SPACE/ENTER
-   still work without being advertised. */
-
 /* The exit is driven by GSAP, but CSS animations outrank inline styles —
    without detaching them first the tween would be invisible. Both the class
    and the gsap.set() land in the same synchronous block, before paint. */
 :global(html.mz-launching) .heroWord :global(.hero-word-inner),
 :global(html.mz-launching) .heroSubtext,
 :global(html.mz-launching) .heroDescription,
-:global(html.mz-launching) .enterPrompt {
+:global(html.mz-launching) .gameMenu {
   animation: none !important;
 }
 
@@ -342,15 +399,6 @@
 }
 
 :global(html.mz-returned) .heroDescription,
-:global(html.mz-returned) .enterPrompt {
+:global(html.mz-returned) .gameMenu {
   animation-delay: 0.45s;
-}
-
-@media (max-width: 768px) {
-  .enterPrompt {
-    bottom: var(--space-8);
-    left: 50%;
-    right: auto;
-    transform: translateX(-50%);
-  }
 }

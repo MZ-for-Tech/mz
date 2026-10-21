@@ -33,8 +33,6 @@
   text-wrap: balance;
 }
 
-.title span { color: var(--brand-yellow); }
-
 .lede {
   max-width: 510px;
   margin: var(--space-6) auto 0;

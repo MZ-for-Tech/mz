@@ -447,41 +447,60 @@ export default function Home() {
           </div>
 
           <div className={`${styles.heroDescription} hero-desc`}>
-            Engineered in Cairo. Owned by you. We build proprietary systems and transfer the exact knowledge you need to run them.
+            <p className={styles.heroIntro}>
+              Model Zero is a Cairo-based software and AI studio. We build proprietary systems, then train your team to run them.
+            </p>
           </div>
 
-          {/* Two affordances on two axes, deliberately.
-
-              ENTER is a real link to /home, which works without JavaScript
-              and gives crawlers a direct path to the site's content. It draws
-              as bare type — no frame, no fill — so it reads as the console's
-              idle "press to start" line rather than a nav bar. During normal
-              client navigation, onNavigate preserves the launch animation.
-
-              The scroll cue that used to sit in the centre is gone. It taught
-              the swipe that opens the menu, but on a touch device it was
-              teaching a gesture the 3D logo also wants, and a 1px line was a
-              poor enough bargain for that conflict. The gesture is still
-              live — it is the launch handler above — and now that the mark
-              takes the middle of the screen, the drag owns that space and the
-              swipe owns everything around it.
-
-              Nothing here says "click anywhere" — that handler was removed so
-              it could not swallow the 3D logo's drag. These two are the whole
-              advertised surface: one link, one gesture. */}
-          <Link
-            href="/home"
-            data-tile
-            data-controller-default
-            className={`${styles.enterPrompt} hero-enter`}
-            onNavigate={(event) => {
-              event.preventDefault();
-              launch("/home");
-            }}
-            aria-label="Enter the menu"
-          >
-            <span className={styles.enterLabel}>Enter</span>
-          </Link>
+          <div className={`${styles.gameMenu} hero-desc`}>
+            <div className={styles.menuHeading}>
+              <span>Main menu</span>
+              <span>Select destination</span>
+            </div>
+            <nav className={styles.missionSelect} aria-label="Explore Model Zero">
+              <Link
+                href="/home"
+                data-tile
+                data-controller-default
+                className={`${styles.menuItem} ${styles.menuItemPrimary} hero-enter`}
+                onNavigate={(event) => {
+                  event.preventDefault();
+                  launch("/home");
+                }}
+              >
+                <span className={styles.menuNumber}>01</span>
+                <span className={styles.menuText}>
+                  <span className={styles.missionLabel}>Enter MZ</span>
+                  <span className={styles.missionDetail}>Launch the experience</span>
+                </span>
+                <span className={styles.menuArrow} aria-hidden="true">›</span>
+              </Link>
+              <Link href="/services" data-tile className={styles.menuItem}>
+                <span className={styles.menuNumber}>02</span>
+                <span className={styles.menuText}>
+                  <span className={styles.missionLabel}>Services</span>
+                  <span className={styles.missionDetail}>Build &amp; train</span>
+                </span>
+                <span className={styles.menuArrow} aria-hidden="true">›</span>
+              </Link>
+              <Link href="/work" data-tile className={styles.menuItem}>
+                <span className={styles.menuNumber}>03</span>
+                <span className={styles.menuText}>
+                  <span className={styles.missionLabel}>Work</span>
+                  <span className={styles.missionDetail}>Systems in action</span>
+                </span>
+                <span className={styles.menuArrow} aria-hidden="true">›</span>
+              </Link>
+              <Link href="/research" data-tile className={styles.menuItem}>
+                <span className={styles.menuNumber}>04</span>
+                <span className={styles.menuText}>
+                  <span className={styles.missionLabel}>Research</span>
+                  <span className={styles.missionDetail}>Ideas behind the work</span>
+                </span>
+                <span className={styles.menuArrow} aria-hidden="true">›</span>
+              </Link>
+            </nav>
+          </div>
 
         </section>
       </main>

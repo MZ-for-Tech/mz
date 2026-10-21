@@ -32,9 +32,9 @@ const siteStructuredData = {
 };
 
 export const metadata = pageMetadata({
-  title: "Home",
+  title: "Model Zero — Software & AI Studio in Cairo",
   description:
-    "Model Zero (MZ) builds software and AI in Cairo, then trains teams to run it. Applied research informs the work.",
+    "Model Zero is a Cairo-based studio building custom software and AI systems, then training teams to run them. Applied research informs the work.",
   path: "/",
 });
 
