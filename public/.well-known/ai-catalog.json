@@ -1,0 +1,23 @@
+{
+  "specVersion": "1.0",
+  "host": {
+    "displayName": "Model Zero",
+    "identifier": "https://www.mzfortech.com"
+  },
+  "entries": [
+    {
+      "identifier": "urn:air:www.mzfortech.com:skill:navigate-model-zero",
+      "displayName": "Navigate Model Zero",
+      "type": "text/markdown",
+      "url": "https://www.mzfortech.com/.well-known/agent-skills/navigate-model-zero/SKILL.md",
+      "representativeQueries": ["Where can I find Model Zero's services?", "Where is Model Zero's research portal?", "How do I contact Model Zero about a project?"]
+    },
+    {
+      "identifier": "urn:air:www.mzfortech.com:api:research-reader",
+      "displayName": "Model Zero Research Reader OpenAPI",
+      "type": "application/json",
+      "url": "https://www.mzfortech.com/openapi.json",
+      "representativeQueries": ["Where is the research reader API specification?", "What endpoint provides Markdown representations of research pages?"]
+    }
+  ]
+}

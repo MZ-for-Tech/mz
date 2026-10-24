@@ -1,0 +1,29 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Model Zero Research Reader",
+    "version": "1.0.0",
+    "description": "Read-only Markdown representations of published research. Content usage preferences are declared in /robots.txt. No authentication is required."
+  },
+  "servers": [{ "url": "https://www.mzfortech.com" }],
+  "security": [],
+  "paths": {
+    "/research/markdown": {
+      "get": {
+        "operationId": "readResearchMarkdown",
+        "summary": "Read a research overview or a published article as Markdown",
+        "parameters": [{
+          "name": "path",
+          "in": "query",
+          "description": "Research page path: /research, /research/ar, /research/essays/{slug}, /research/papers/{slug}, or their /research/ar equivalents. Omit for the English overview.",
+          "schema": { "type": "string", "default": "/research" },
+          "example": "/research/essays/a-deep-reading-of-svd"
+        }],
+        "responses": {
+          "200": { "description": "Research overview or article", "content": { "text/markdown": { "schema": { "type": "string" } } } },
+          "404": { "description": "Unknown or unpublished article, or unavailable Arabic edition", "content": { "text/markdown": { "schema": { "type": "string" } } } }
+        }
+      }
+    }
+  }
+}

@@ -60,9 +60,24 @@ const nextConfig: NextConfig = {
           { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
 
           // ── Public discovery resources ──
-          { key: "Link", value: `<${SITE}/sitemap.xml>; rel="sitemap"; type="application/xml"` },
-          { key: "Link", value: `<${SITE}/llms.txt>; rel="describedby"; type="text/plain"` },
+          { key: "Link", value: `<${SITE}/sitemap.xml>; rel="sitemap"; type="application/xml", <${SITE}/llms.txt>; rel="describedby"; type="text/plain", <${SITE}/.well-known/api-catalog>; rel="api-catalog"; type="application/linkset+json", <${SITE}/.well-known/ai-catalog.json>; rel="ai-catalog"; type="application/json"` },
         ],
+      },
+      {
+        source: "/.well-known/:path*",
+        headers: [{ key: "Access-Control-Allow-Origin", value: "*" }],
+      },
+      {
+        source: "/.well-known/api-catalog",
+        headers: [{ key: "Content-Type", value: 'application/linkset+json; profile="https://www.rfc-editor.org/info/rfc9727"' }],
+      },
+      {
+        source: "/.well-known/agent-skills/:skill/SKILL.md",
+        headers: [{ key: "Content-Type", value: "text/markdown; charset=utf-8" }],
+      },
+      {
+        source: "/:document(auth|api-docs).md",
+        headers: [{ key: "Content-Type", value: "text/markdown; charset=utf-8" }],
       },
       {
         // ── Markdown content negotiation — serve /content.md as text/markdown

@@ -38,4 +38,4 @@ MZ is based in Cairo, Egypt. Contact: [hello@mzfortech.com](mailto:hello@mzforte
 
 ## Machine-readable content
 
-The public machine-readable resources are this file, [content.md](https://www.mzfortech.com/content.md), and the [sitemap](https://www.mzfortech.com/sitemap.xml). The site does not expose a public OpenAPI, MCP, OAuth, commerce, or payment API.
+Public discovery resources include this file, [content.md](https://www.mzfortech.com/content.md), the [sitemap](https://www.mzfortech.com/sitemap.xml), the [API catalog](https://www.mzfortech.com/.well-known/api-catalog), the [OpenAPI description of the read-only research reader](https://www.mzfortech.com/openapi.json), the [agent skills index](https://www.mzfortech.com/.well-known/agent-skills/index.json), and the [AI catalog](https://www.mzfortech.com/.well-known/ai-catalog.json). See [auth.md](https://www.mzfortech.com/auth.md) for authentication support and [robots.txt](https://www.mzfortech.com/robots.txt) for content usage preferences. The site does not expose an MCP server, A2A agent, OAuth provider, agent registration service, commerce API, or payment API.

@@ -1,0 +1,12 @@
+{
+  "$schema": "https://schemas.agentskills.io/discovery/0.2.0/schema.json",
+  "skills": [
+    {
+      "name": "navigate-model-zero",
+      "type": "skill-md",
+      "description": "Locate Model Zero services, project inquiry pages, and research links when a user asks how to navigate mzfortech.com.",
+      "url": "/.well-known/agent-skills/navigate-model-zero/SKILL.md",
+      "digest": "sha256:a0e2bba7f7bde8b6e7e2829bbb031b4ced199a4adf057284b40fdad580180d25"
+    }
+  ]
+}

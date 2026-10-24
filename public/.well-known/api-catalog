@@ -1,0 +1,13 @@
+{
+  "linkset": [
+    {
+      "anchor": "https://www.mzfortech.com/.well-known/api-catalog",
+      "item": [{ "href": "https://www.mzfortech.com/research/markdown" }]
+    },
+    {
+      "anchor": "https://www.mzfortech.com/research/markdown",
+      "service-desc": [{ "href": "https://www.mzfortech.com/openapi.json", "type": "application/json" }],
+      "service-doc": [{ "href": "https://www.mzfortech.com/api-docs.md", "type": "text/markdown" }]
+    }
+  ]
+}
