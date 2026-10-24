@@ -9,10 +9,9 @@ import { transitionTo } from "@/components/TransitionLink/TransitionLink";
 import styles from "./WorkShelf.module.css";
 
 /**
- * Five-visible-project carousel. The selected square is in front at the
- * centre; nearby projects sit behind it and rotate around as selection
- * changes. Left and right move cyclically, while MenuShell still handles up
- * and down from the surrounding interface.
+ * Five-visible-project carousel. The selected project is highlighted in a
+ * vertical desktop rail and a horizontal mobile rail. Arrow keys move
+ * through it cyclically.
  *
  * Focus previews and disarms a tile. Click or Enter arms it; a second
  * activation opens its case study or live project. Pointer hover does not
@@ -150,11 +149,11 @@ export function WorkShelf() {
 
   const onTileKeyDown = useCallback(
     (e: React.KeyboardEvent, slug: string) => {
-      if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
+      if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(e.key)) {
         e.preventDefault();
         e.stopPropagation();
         const currentIndex = projects.findIndex((project) => project.slug === slug);
-        const step = e.key === "ArrowRight" ? 1 : -1;
+        const step = e.key === "ArrowRight" || e.key === "ArrowDown" ? 1 : -1;
         const nextIndex =
           (currentIndex + step + projects.length) % projects.length;
         const target = e.currentTarget
@@ -332,34 +331,16 @@ export function WorkShelf() {
                     <span className={styles.tileInitials}>{initials}</span>
                   ) : null}
                 </span>
+                <span className={styles.tileMeta} aria-hidden="true">
+                  <span className={styles.tileName}>{project.name}</span>
+                  <span className={styles.tileCategory}>{project.category}</span>
+                </span>
               </div>
             </li>
           );
         })}
       </ul>
 
-      {/* Keep the captions in their own blending layer. The logo tiles need
-          transforms and depth opacity; text needs to blend against the stage
-          behind them, so it cannot live inside those transformed tile layers. */}
-      <ul className={styles.labelShelf} aria-hidden="true">
-        {projects.map((project, i) => {
-          const slotOffset = getSlotOffset(i, activeIndex, projects.length);
-
-          return (
-            <li
-              key={project.slug}
-              className={styles.labelSlot}
-              data-offset={slotOffset ?? "hidden"}
-              data-kind={project.kind}
-            >
-              <span className={styles.tileMeta}>
-                <span className={styles.tileName}>{project.name}</span>
-                <span className={styles.tileCategory}>{project.category}</span>
-              </span>
-            </li>
-          );
-        })}
-      </ul>
     </div>
   );
 }

@@ -1,8 +1,7 @@
 /* ═══════════════════════════════════════════════════════════════════════
    Work shelf
 
-   A stage that replaces the background, and a row of cards sitting on it.
-   No track, no offsets, no wrap — with four projects they all fit.
+   A full-screen stage with a compact, labeled project rail.
    ═══════════════════════════════════════════════════════════════════════ */
 
 .work {
@@ -117,14 +116,12 @@
 
 /* ── Shelf ───────────────────────────────────────────────────────────── */
 
-/* The active card sits at the front of a five-card carousel. The other four
-   recede in shallow depth steps; modulo offsets rotate them around as
-   selection changes. */
+/* Right-side project rail. Five projects remain visible as selection moves. */
 .shelf {
   position: absolute;
   z-index: 1;
-  top: 88%;
-  left: 50%;
+  top: 50%;
+  right: clamp(1rem, 4vw, 5rem);
   width: 0;
   height: 0;
   list-style: none;
@@ -132,126 +129,38 @@
   padding: 0;
 }
 
-/* Captions get a separate compositing group from the transformed logo tiles.
-   Only text lives here, so the whole group can difference-blend directly with
-   whatever the selected project has put on the stage. */
-.labelShelf {
-  position: absolute;
-  z-index: 2;
-  top: 88%;
-  left: 50%;
-  width: 0;
-  height: 0;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  pointer-events: none;
-  mix-blend-mode: difference;
-}
+.slot[data-offset="hidden"] { display: none; }
 
-.labelSlot {
-  position: absolute;
-  top: 52px;
-  left: 0;
-  width: 144px;
-  text-align: center;
-  will-change: transform;
-  transition:
-    transform 0.65s cubic-bezier(0.22, 1, 0.36, 1),
-    opacity 0.65s ease;
-}
-
-.labelSlot[data-offset="hidden"],
-.slot[data-offset="hidden"] {
-  display: none;
-}
-
-.labelSlot[data-offset="-2"] {
-  transform: translateX(-50%) translate(clamp(-332px, -17vw, -210px), 24px) scale(0.78);
-  opacity: 0.72;
-}
-
-.labelSlot[data-offset="-1"] {
-  transform: translateX(-50%) translate(clamp(-180px, -9vw, -120px), 12px) scale(0.9);
-  opacity: 0.84;
-}
-
-.labelSlot[data-offset="0"] {
-  z-index: 1;
-  transform: translateX(-50%) scale(1.1);
-}
-
-.labelSlot[data-offset="1"] {
-  transform: translateX(-50%) translate(clamp(120px, 9vw, 180px), 12px) scale(0.9);
-  opacity: 0.84;
-}
-
-.labelSlot[data-offset="2"] {
-  transform: translateX(-50%) translate(clamp(210px, 17vw, 332px), 24px) scale(0.78);
-  opacity: 0.72;
-}
-
-/* The <li> carries the depth transform, keeping each square tile's own
-   geometry and border crisp while it moves through the carousel. */
 .slot {
   position: absolute;
   top: 0;
   left: 0;
-  width: clamp(88px, 9.2vw, 124px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  will-change: transform;
-  transition:
-    transform 0.65s cubic-bezier(0.22, 1, 0.36, 1),
-    opacity 0.65s ease;
+  width: clamp(210px, 17vw, 250px);
+  transition: transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.slot[data-offset="-2"] {
-  z-index: 1;
-  transform: translate(-50%, -50%) translate(clamp(-332px, -17vw, -210px), 24px) scale(0.78);
-  opacity: 0.72;
-}
+.slot[data-offset="-2"] { transform: translate(-100%, -50%) translateY(-208px) scale(0.92); }
+.slot[data-offset="-1"] { transform: translate(-100%, -50%) translateY(-104px) scale(0.96); }
+.slot[data-offset="0"] { z-index: 2; transform: translate(-100%, -50%); }
+.slot[data-offset="1"] { transform: translate(-100%, -50%) translateY(104px) scale(0.96); }
+.slot[data-offset="2"] { transform: translate(-100%, -50%) translateY(208px) scale(0.92); }
 
-.slot[data-offset="-1"] {
-  z-index: 2;
-  transform: translate(-50%, -50%) translate(clamp(-180px, -9vw, -120px), 12px) scale(0.9);
-  opacity: 0.84;
-}
-
-.slot[data-offset="0"] {
-  z-index: 3;
-  transform: translate(-50%, -50%) scale(1.1);
-  opacity: 1;
-}
-
-.slot[data-offset="1"] {
-  z-index: 2;
-  transform: translate(-50%, -50%) translate(clamp(120px, 9vw, 180px), 12px) scale(0.9);
-  opacity: 0.84;
-}
-
-.slot[data-offset="2"] {
-  z-index: 1;
-  transform: translate(-50%, -50%) translate(clamp(210px, 17vw, 332px), 24px) scale(0.78);
-  opacity: 0.72;
-}
-
-/* Square artwork stays compact relative to the stage; depth comes from each
-   card's position and scale in the carousel. */
 .tile {
   position: relative;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 68px minmax(0, 1fr);
   align-items: center;
+  gap: 12px;
   width: 100%;
-  overflow: visible;
-  font-size: clamp(8.8px, 0.92vw, 12.4px);
-  color: var(--color-text);
-  background: transparent;
-  border: 0;
-  border-radius: 0;
+  min-height: 82px;
+  padding: 8px;
+  color: var(--color-white);
+  text-align: left;
+  background: var(--color-paper-ink);
+  border: 1px solid rgba(var(--color-white-rgb), 0.2);
+  border-radius: 5px;
   cursor: pointer;
+  transition: border-color 0.25s ease, background-color 0.25s ease;
 }
 
 .tileFace {
@@ -259,206 +168,136 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 100%;
-  aspect-ratio: 1;
-  overflow: visible;
+  width: 68px;
+  height: 66px;
+  overflow: hidden;
+  background: rgba(var(--color-white-rgb), 0.08);
+  border-radius: 3px;
 }
 
-/* The label, INSIDE the card and across its bottom — the Xbox arrangement,
-   and the reason the card is square in the first place.
- *
- * It was below the card because a card carrying a mark is white while the
-   label was set in the site's light type, which would have been white on
-   white. Rather than move the type, the type now sits on its own scrim inside
-   the card, which is the same solution the launcher tiles already use for
-   their action bars — and it is the better answer anyway: the name travels
-   with the mark when the shelf is scanned, instead of appearing underneath
-   it as a separate object, and the row's height no longer changes when a
-   label appears.
- *
- * The mark and the label share the card as separate layers rather than as
- * siblings, so the label can claim the bottom band outright and the mark is
- * optically centred in what is left above it. */
 .tileLogo {
-  width: 88%;
-  height: 88%;
+  width: 92%;
+  height: 92%;
   object-fit: contain;
-  overflow: visible;
-  filter: drop-shadow(0 7px 18px rgba(var(--color-black-rgb), 0.24));
-  transition: filter 0.4s ease, transform 0.4s ease;
 }
 
-.tileLogoAdaptive {
-  filter: brightness(0) invert(1) drop-shadow(0 7px 18px rgba(var(--color-black-rgb), 0.24));
-  mix-blend-mode: difference;
-}
+.tileLogoAdaptive { filter: brightness(0) invert(1); }
 
-/* Placeholder tiles for projects with no mark yet: initials, set in the
-   site's own type, read as intentional rather than as a missing image. */
 .tileInitials {
-  font-size: clamp(2rem, 3vw, 3.4rem);
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  color: rgba(var(--color-white-rgb), 0.9);
+  font-size: 2rem;
+  font-weight: 650;
+  color: var(--color-white);
   text-align: center;
-  padding: 0 6px;
   line-height: 1.1;
-  word-break: break-word;
-  text-shadow: 0 6px 20px rgba(var(--color-black-rgb), 0.36);
 }
 
-/* The label band. A scrim rather than a solid fill, so the card still reads
-   as a card with a mark on it rather than as a caption bar with a picture
-   above it. The feather is short and steep for the same reason: enough to
-   guarantee the type's contrast, not so much that it becomes a plate.
-
-   Padding is in `em` off the card's own type size, which `.tile` sets from
-   the card's own width. At the old fixed 1.5rem/0.7rem the band was a fixed
-   30px tall; against a 124px card that is a quarter of the face, and the
-   mark above it had nowhere to sit. Tying the band to the card means the
-   three parts — mark, band, radius — keep their proportions at every
-   breakpoint instead of only at the one they were measured at. */
 .tileMeta {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 0.24rem;
-  width: max(100%, 144px);
-  margin-top: 0.35rem;
-  text-align: center;
+  align-items: flex-start;
+  gap: 4px;
+  min-width: 0;
   pointer-events: none;
-  transition: opacity 0.25s ease;
-}
-
-.labelSlot:not([data-offset="0"]) .tileMeta {
-  opacity: 0;
-}
-
-.labelSlot[data-offset="0"] .tileMeta {
-  opacity: 1;
 }
 
 .tileName {
-  font-size: clamp(var(--font-size-xs), 0.88vw, 0.86rem);
-  font-weight: 600;
-  letter-spacing: 0.01em;
-  line-height: 1.15;
-  color: var(--color-white);
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.tileCategory {
-  font-family: var(--font-code);
-  font-size: var(--font-size-tiny);
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: rgba(var(--color-white-rgb), 0.78);
-  line-height: 1.25;
   max-width: 100%;
   overflow: hidden;
+  color: var(--color-white);
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.15;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.labelSlot[data-kind="demo"] .tileCategory {
-  font-size: var(--font-size-4xs);
-  letter-spacing: 0.08em;
+.tileCategory {
+  max-width: 100%;
+  overflow: hidden;
+  color: rgba(var(--color-white-rgb), 0.72);
+  font-family: var(--font-code);
+  font-size: 0.625rem;
+  letter-spacing: 0.1em;
+  line-height: 1.25;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
 }
 
-.tile:hover .tileLogo {
-  transform: scale(1.05);
+.tileActive {
+  background: #191a15;
+  border-color: var(--color-brand-yellow);
 }
 
-.tileActive .tileLogo {
-  transform: scale(1.08);
-  filter: drop-shadow(0 8px 22px rgba(var(--color-black-rgb), 0.3))
-    drop-shadow(0 0 15px rgba(var(--color-brand-yellow-rgb), 0.28));
-}
-
-.tileActive .tileInitials {
-  color: var(--color-brand-yellow);
-}
+.tileActive .tileInitials { color: var(--color-brand-yellow); }
 
 .tile:focus-visible {
-  outline: none;
-}
-
-.tile:focus-visible .tileLogo,
-.tile:focus-visible .tileInitials {
-  filter: drop-shadow(0 0 14px rgba(var(--color-brand-yellow-rgb), 0.55));
+  outline: 2px solid var(--color-brand-yellow);
+  outline-offset: 3px;
 }
 
 @media (prefers-reduced-motion: reduce) {
   .tile,
   .stageLayer,
   .slot,
-  .labelSlot,
-  .tileMeta,
   .tileInitials {
     transition-duration: 0.01ms;
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 900px) {
   .shelf {
     top: 80%;
-  }
-
-  .labelShelf {
-    top: 80%;
-  }
-
-  .labelSlot {
-    top: 44px;
+    left: 50%;
+    right: auto;
   }
 
   .slot { width: clamp(72px, 21vw, 96px); }
 
   .tile {
-    width: clamp(72px, 21vw, 96px);
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    width: 100%;
+    min-height: 0;
+    padding: 0;
+    text-align: center;
+    background: transparent;
+    border: 0;
   }
 
-  .slot[data-offset="-2"] {
-    transform: translate(-50%, -50%) translate(-116px, 20px) scale(0.72);
+  .tileFace {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1;
+    background: var(--color-paper-ink);
+    border: 1px solid rgba(var(--color-white-rgb), 0.3);
+    border-radius: 8px;
   }
 
-  .slot[data-offset="-1"] {
-    transform: translate(-50%, -50%) translate(-78px, 10px) scale(0.88);
+  .tileMeta {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 50%;
+    display: none;
+    align-items: center;
+    width: max(100%, 144px);
+    padding: 7px 9px;
+    text-align: center;
+    background: rgba(16, 15, 13, 0.92);
+    border-radius: 3px;
+    transform: translateX(-50%);
   }
 
-  .slot[data-offset="0"] {
-    transform: translate(-50%, -50%) scale(1.05);
-  }
+  .slot[data-offset="0"] .tileMeta { display: flex; }
+  .tileName { white-space: normal; }
+  .tileCategory { font-size: var(--font-size-4xs); letter-spacing: 0.08em; }
+  .tileActive { background: transparent; border-color: transparent; }
+  .tileActive .tileFace { border-color: var(--color-brand-yellow); }
 
-  .slot[data-offset="1"] {
-    transform: translate(-50%, -50%) translate(78px, 10px) scale(0.88);
-  }
-
-  .slot[data-offset="2"] {
-    transform: translate(-50%, -50%) translate(116px, 20px) scale(0.72);
-  }
-
-  .labelSlot[data-offset="-2"] {
-    transform: translateX(-50%) translate(-116px, 20px) scale(0.72);
-  }
-
-  .labelSlot[data-offset="-1"] {
-    transform: translateX(-50%) translate(-78px, 10px) scale(0.88);
-  }
-
-  .labelSlot[data-offset="0"] {
-    transform: translateX(-50%) scale(1.05);
-  }
-
-  .labelSlot[data-offset="1"] {
-    transform: translateX(-50%) translate(78px, 10px) scale(0.88);
-  }
-
-  .labelSlot[data-offset="2"] {
-    transform: translateX(-50%) translate(116px, 20px) scale(0.72);
-  }
-
+  .slot[data-offset="-2"] { transform: translate(-50%, -50%) translate(-116px, 20px) scale(0.72); }
+  .slot[data-offset="-1"] { transform: translate(-50%, -50%) translate(-78px, 10px) scale(0.88); }
+  .slot[data-offset="0"] { transform: translate(-50%, -50%) scale(1.05); }
+  .slot[data-offset="1"] { transform: translate(-50%, -50%) translate(78px, 10px) scale(0.88); }
+  .slot[data-offset="2"] { transform: translate(-50%, -50%) translate(116px, 20px) scale(0.72); }
 }
