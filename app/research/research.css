@@ -83,6 +83,10 @@
   --color-ink: var(--ink-val);
   --color-accent: var(--accent-val);
   --color-tertiary: var(--tertiary-val);
+  /* Paper chart series (validated: CVD + contrast on #F5F2ED / #1e1b18) */
+  --viz-l1: #2f6fb8;
+  --viz-svd: #1a9a6c;
+  --viz-l0: #d0602e;
   --font-latex: "CMU Serif", "Cormorant Garamond", serif;
   position: relative;
   z-index: 1;
@@ -93,6 +97,13 @@
   font-family: "CMU Serif", "Cormorant Garamond", serif;
   -webkit-font-smoothing: antialiased;
   isolation: isolate;
+}
+
+.tnh-site[data-theme="dark"],
+.tnh-site[data-theme="modern-dark"] {
+  --viz-l1: #4a8fe0;
+  --viz-svd: #22a878;
+  --viz-l0: #d9663a;
 }
 
 .tnh-site[data-theme="dark"] {

@@ -41,9 +41,11 @@ function renderContentsLabel(label: string): ReactNode[] {
 export default function ResearchContentsSidebar({
   items,
   locale = 'en',
+  articleType = 'essay',
 }: {
   items: ContentsItem[];
   locale?: 'en' | 'ar';
+  articleType?: 'essay' | 'paper';
 }) {
   const [hovered, setHovered] = useState(false);
   const [focused, setFocused] = useState(false);
@@ -52,7 +54,7 @@ export default function ResearchContentsSidebar({
   const panelId = useId();
   const triggerRef = useRef<HTMLButtonElement>(null);
   const isArabic = locale === 'ar';
-  const title = isArabic ? 'في هذا المقال' : 'In this essay';
+  const title = isArabic ? articleType === 'paper' ? 'في هذا البحث' : 'في هذا المقال' : articleType === 'paper' ? 'In this paper' : 'In this essay';
   const tabTitle = isArabic ? 'المحتويات' : 'Contents';
   const label = isArabic ? 'جدول المحتويات' : 'Table of contents';
 

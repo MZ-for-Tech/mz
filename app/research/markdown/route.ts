@@ -50,8 +50,9 @@ export async function GET(request: NextRequest) {
         'Low-rank SVD compression',
         'Interactive visualizations are available on the web page.',
       ];
-  const essayBlocks = requestedStudy?.content_file
-    ? readResearchContent(requestedStudy.content_file).trim().split(/\n\s*\n/)
+  const contentFile = locale === 'ar' ? requestedStudy?.content_file_ar : requestedStudy?.content_file;
+  const essayBlocks = contentFile
+    ? readResearchContent(contentFile).trim().split(/\n\s*\n/)
     : [];
   if (essayBlocks[0] === `**${title}**`) essayBlocks.shift();
   const essayText = essayBlocks
@@ -59,7 +60,7 @@ export async function GET(request: NextRequest) {
     .map((block) => block.replace(/<!--\s*paragraph:thesis\s*-->\s*/, ''))
     .join('\n\n');
 
-  const content = requestedStudy?.article_type === 'essay' && requestedStudy.content_file
+  const content = requestedStudy?.article_type === 'essay' && contentFile
     ? [
         `# ${title}`,
         '',
@@ -70,6 +71,18 @@ export async function GET(request: NextRequest) {
         essayText,
         '',
         `Read online: https://www.mzfortech.com${articlePath}`,
+      ].join('\n')
+    : requestedStudy?.article_type === 'paper' && contentFile
+    ? [
+        `# ${title}`,
+        '',
+        tagline,
+        '',
+        `${locale === 'ar' ? 'إعداد' : 'By'} ${study.authors?.map((author) => locale === 'ar' ? author.name_ar || author.name : author.name).join(', ') || 'MZ Research'}`,
+        '',
+        essayText,
+        '',
+        `${locale === 'ar' ? 'صفحة البحث' : 'Read the paper'}: https://www.mzfortech.com${articlePath}`,
       ].join('\n')
     : requestedStudy
     ? [
@@ -104,7 +117,7 @@ export async function GET(request: NextRequest) {
 
   const headers: Record<string, string> = {
     'Content-Type': 'text/markdown; charset=utf-8',
-    'Cache-Control': 'public, max-age=3600, s-maxage=3600',
+    'Cache-Control': requestedStudy?.unlisted ? 'private, no-store' : 'public, max-age=3600, s-maxage=3600',
   };
   // This Markdown representation has its own URL and must not compete with
   // the canonical HTML article in search results.

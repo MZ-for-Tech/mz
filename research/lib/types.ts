@@ -24,6 +24,7 @@ export interface Study extends BaseEditorialMetadata {
   slug: string;
   is_featured: boolean;
   published: boolean;
+  unlisted?: boolean;
   published_at?: string;
   created_at: string;
   updated_at: string;
@@ -32,6 +33,11 @@ export interface Study extends BaseEditorialMetadata {
   authors?: StudyAuthor[];
   article_type?: 'paper' | 'essay';
   essay_renderer?: 'svd-story' | 'l0-story';
+  // Papers only: margin gauge that follows the reader. states[0] is the reference; anchors are h2/h3 heading ids.
+  paper_metrics?: {
+    metrics: { label: string; unit: string; better: 'lower' | 'higher' }[];
+    states: { label: string; anchors: string[]; values: number[] }[];
+  };
   series?: string;
   series_ar?: string;
   series_slug?: string;

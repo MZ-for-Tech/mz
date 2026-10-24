@@ -9,7 +9,9 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  return researchArticleMetadata('en', slug);
+  const metadata = researchArticleMetadata('en', slug);
+  const study = CUSTOM_STUDIES.find((item) => item.slug === slug);
+  return study?.unlisted ? { ...metadata, robots: { index: false, follow: false } } : metadata;
 }
 
 export default async function ResearchArticlePage({ params }: { params: Promise<{ slug: string }> }) {

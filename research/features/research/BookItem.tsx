@@ -10,6 +10,31 @@ interface BookItemProps {
 }
 
 export default function BookItem({ study, locale }: BookItemProps) {
+  if (study.unlisted) {
+    return (
+      <article className="moleskine-wrapper" aria-label={locale === 'ar' ? 'قريبًا' : 'Coming soon'}>
+        <div className="moleskine-notebook">
+          <div className="notebook-cover">
+            <div className="research-cover">
+              <span className="research-cover-label">THE NULL HYPOTHESIS · MZ</span>
+              <div className="research-cover-body">
+                <h3>{locale === 'ar' ? 'قريبًا' : 'Coming soon'}</h3>
+                <span className="research-cover-rule" />
+              </div>
+            </div>
+          </div>
+          <div className="notebook-page ruled">
+            <div className="notebook-quote-container">
+              <span className="notebook-quote-text text-xs opacity-80">
+                {locale === 'ar' ? 'بحث قيد الإعداد.' : 'A research paper in preparation.'}
+              </span>
+            </div>
+          </div>
+        </div>
+      </article>
+    );
+  }
+
   const title = locale === 'ar' ? study.title_ar || study.title : study.title;
   const seriesLabel = study.series_number
     ? `${study.series || 'THE NULL HYPOTHESIS'} · ${String(study.series_number).padStart(2, '0')}`

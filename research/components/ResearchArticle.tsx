@@ -84,6 +84,7 @@ export default function ResearchArticle({ locale = 'en', slug }: { locale?: 'en'
 
     if (!project) return <div className="p-8 text-semantic-error">Page Not Found</div>;
     if (project.article_type === 'essay') return <ResearchEssay study={project} locale={locale} />;
+    if (project.content_file && locale === 'en') return <ResearchEssay study={project} locale={locale} />;
 
     const title = (locale === 'ar' && project?.title_ar) ? project.title_ar : project?.title;
     const tagline = (locale === 'ar' && project?.tagline_ar) ? project.tagline_ar : project?.tagline;
@@ -147,7 +148,7 @@ export default function ResearchArticle({ locale = 'en', slug }: { locale?: 'en'
                     {tagline && <p className="mt-5 max-w-3xl font-serif text-xl italic leading-relaxed text-ink/65 md:text-2xl">{tagline}</p>}
                 </header>
 
-                <ResearchContentsSidebar items={tocData} locale={locale} />
+                <ResearchContentsSidebar items={tocData} locale={locale} articleType="paper" />
 
                 {/* Authors Section */}
                 <div className="mb-12 grid grid-cols-1 gap-8 py-8 border-b border-ink/10">

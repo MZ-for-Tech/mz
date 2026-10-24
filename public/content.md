@@ -13,7 +13,7 @@ Model Zero (MZ) is a Cairo-based software and AI company. It builds custom syste
 
 ### The Null Hypothesis
 
-The Null Hypothesis is MZ's research publication. It publishes essays on the systems, mathematics, and incentives behind technology, alongside research papers and interactive explanations. The four current essays examine a neural network shader, Goodhart's law and AI benchmarks, singular value decomposition, and L₀ regularization. Its research paper investigates statistical compression of VGG19 for BloodMNIST blood-cell classification.
+The Null Hypothesis is MZ's research publication. It publishes essays on the systems, mathematics, and incentives behind technology, alongside interactive explanations. The four current essays examine a neural network shader, Goodhart's law and AI benchmarks, singular value decomposition, and L₀ regularization.
 
 - English research portal: https://www.mzfortech.com/research
 - Arabic research portal: https://www.mzfortech.com/research/ar
@@ -21,9 +21,7 @@ The Null Hypothesis is MZ's research publication. It publishes essays on the sys
 - The Measure and the Target: https://www.mzfortech.com/research/essays/the-measure-and-the-target
 - A Deep Reading of SVD: https://www.mzfortech.com/research/essays/a-deep-reading-of-svd
 - A Deep Reading of L₀: https://www.mzfortech.com/research/essays/a-deep-reading-of-l0
-- Statistical Compression of VGG19 for Blood-Cell Image Classification on BloodMNIST: https://www.mzfortech.com/research/papers/vgg19-bloodmnist-compression
 - Arabic research editions: https://www.mzfortech.com/research/ar/essays/the-measure-and-the-target, https://www.mzfortech.com/research/ar/essays/a-deep-reading-of-svd, https://www.mzfortech.com/research/ar/essays/a-deep-reading-of-l0
-- Paper PDF: https://www.mzfortech.com/research-applied-stats-in-ai.pdf
 
 ## Selected work
 

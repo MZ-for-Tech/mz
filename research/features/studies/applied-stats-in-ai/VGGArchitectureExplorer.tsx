@@ -33,7 +33,7 @@ const VGG19_LAYERS: LayerInfo[] = [
     { name: "Conv5-2", type: 'conv', params: 2359808, shape: "14x14x512", kernel: "3x3", description: "Final convolutional feature maps." },
     { name: "Conv5-3", type: 'conv', params: 2359808, shape: "14x14x512", kernel: "3x3", description: "Final convolutional feature maps." },
     { name: "Conv5-4", type: 'conv', params: 2359808, shape: "14x14x512", kernel: "3x3", description: "Final convolutional feature maps." },
-    { name: "Pool5", type: 'pool', params: 0, shape: "7x7x512", description: "Global pooling before flatten." },
+    { name: "Pool5", type: 'pool', params: 0, shape: "7x7x512", description: "Max pooling before the classifier." },
     { name: "FC1", type: 'fc', params: 102764544, shape: "4096", description: "The parameter bottleneck. Fully connected mapping from features to concepts." },
     { name: "FC2", type: 'fc', params: 16781312, shape: "4096", description: "Concept refinement and abstraction." },
     { name: "FC3", type: 'fc', params: 32776, shape: "8 (BloodMNIST)", description: "Output logits for 8 diagnostic classes." },
@@ -201,18 +201,6 @@ export default function VGGArchitectureExplorer() {
 
     return (
         <div className="p-8 bg-paper border border-ink/10 rounded-sm ">
-            <div className="flex justify-between items-start mb-12">
-                <div>
-                    <div className="text-xs font-mono uppercase tracking-[0.2em] text-tertiary mb-2">
-                        Feature Hierarchy & Volumetrics
-                    </div>
-                    <h4 className="text-xl font-latex font-bold text-ink mb-1 tracking-tight">VGG19 Hierarchical Construction</h4>
-                    <p className="text-sm text-secondary max-w-md">
-                        Isometric decomposition visualizing the bottleneck transitions and parameter distribution.
-                    </p>
-                </div>
-            </div>
-
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
                 <div className="lg:col-span-6 relative aspect-square bg-ink/[0.01] rounded-sm overflow-hidden border border-ink/5">
                     <svg viewBox="0 0 600 600" className="w-full h-full">

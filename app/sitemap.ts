@@ -22,7 +22,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     url: `${SITE}${path}`,
   }));
 
-  for (const study of CUSTOM_STUDIES.filter((item) => item.published)) {
+  for (const study of CUSTOM_STUDIES.filter((item) => item.published && !item.unlisted)) {
     const english = getResearchArticlePath(study, 'en');
     const arabic = getResearchArticlePath(study, 'ar');
     const hasArabic = hasArabicStudyMetadata(study) && study.arabic_translation_status !== 'draft';

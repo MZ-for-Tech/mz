@@ -34,7 +34,7 @@ export default function TensorSurgeryVisualizer() {
                 <div>
                     <h4 className="text-2xl font-latex font-bold text-ink mb-2 tracking-tight">Structured Tensor Surgery</h4>
                     <p className="text-sm text-secondary italic font-latex max-w-2xl opacity-70">
-                        Discarding redundant channels physically to unlock hardware throughput.
+                        An illustrative single-layer example of turning a channel mask into a smaller dense tensor.
                     </p>
                 </div>
 
@@ -106,9 +106,9 @@ export default function TensorSurgeryVisualizer() {
                     {/* Stage Description */}
                     <div className="p-6 bg-ink/[0.03] rounded-sm border border-ink/5">
                         <p className="text-sm font-latex italic text-secondary leading-relaxed">
-                            {stage === "baseline" && "Initial State: VGG19 Conv-Layer with 192 dense channels. Every channel is physically present and calculated."}
-                            {stage === "pruned" && "Ghost Sparsity: 75% of channels have been zeroed by the L0 penalty, but the tensor shape remains [B, 192, H, W]. No speed gain yet."}
-                            {stage === "compact" && "Physical Compactness: Surgery has removed the dead indices. The tensor is physically reshaped to [B, 48, H, W], effectively 4x faster."}
+                            {stage === "baseline" && "Illustrative starting tensor: 192 output channels are present."}
+                            {stage === "pruned" && "Illustrative mask: 75% of channels are inactive, but the dense tensor still has shape [B, 192, H, W]. This does not establish a speed gain."}
+                            {stage === "compact" && "The masked indices are removed and the example tensor is reshaped to [B, 48, H, W]. This reduces this layer's channel width; it is not a whole-model latency measurement."}
                         </p>
                     </div>
                 </div>
@@ -134,20 +134,20 @@ export default function TensorSurgeryVisualizer() {
                                 <div className="flex justify-between items-center">
                                     <div className="flex items-center gap-2 text-tertiary">
                                         <Activity className="w-4 h-4" />
-                                        <span className="text-xs font-mono uppercase tracking-widest">Throughput</span>
+                                        <span className="text-xs font-mono uppercase tracking-widest">Channels retained</span>
                                     </div>
                                     <motion.span
                                         key={stage}
                                         animate={{ scale: stage === "compact" ? 1.1 : 1 }}
                                         className={cn("text-xl font-latex font-bold", stage === "compact" ? "text-accent" : "text-ink")}
                                     >
-                                        {stage === "compact" ? "4.00x" : "1.00x"}
+                                        {stage === "compact" ? "25%" : "100%"}
                                     </motion.span>
                                 </div>
                                 <div className="w-full h-1.5 bg-ink/5 rounded-full overflow-hidden">
                                     <motion.div
-                                        initial={{ width: "25%" }}
-                                        animate={{ width: stage === "compact" ? "100%" : "25%" }}
+                                        initial={{ width: "100%" }}
+                                        animate={{ width: stage === "compact" ? "25%" : "100%" }}
                                         className="h-full bg-accent"
                                     />
                                 </div>
@@ -175,12 +175,6 @@ export default function TensorSurgeryVisualizer() {
                         </div>
                     </div>
 
-                    <div className="p-6 border border-accent/10 bg-accent/[0.02] rounded-sm">
-                        <span className="block text-xs font-mono uppercase text-accent mb-2 tracking-[0.2em] font-bold">Hardware Paradox</span>
-                        <p className="text-xs font-latex text-secondary leading-relaxed italic opacity-80">
-                            Without physical rearrangement, zeroed weights still consume memory bandwidth. Physical surgery is the only path to real-world latency reduction.
-                        </p>
-                    </div>
                 </div>
             </div>
         </div>

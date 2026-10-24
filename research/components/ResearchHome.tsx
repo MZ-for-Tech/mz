@@ -3,6 +3,7 @@ import Bookshelf from '@/research/features/research/Bookshelf';
 import FeaturedResearchEssay from '@/research/features/research/FeaturedResearchEssay';
 import ResearchArticleCards from '@/research/features/research/ResearchArticleCards';
 import { getStudyReadingMinutes } from '@/research/lib/readingTime';
+import type { Study } from '@/research/lib/types';
 
 const DEEP_DIVE_MINUTES = 20;
 
@@ -21,6 +22,22 @@ export default function ResearchHome({ locale = 'en' }: { locale?: 'en' | 'ar' }
       .filter((essay) => (getStudyReadingMinutes(essay, 'en') || 0) > DEEP_DIVE_MINUTES)
       .map((essay) => essay.slug),
   );
+  const shelfStudies = CUSTOM_STUDIES
+    .filter((study) => study.published && study.article_type === 'paper' && (!isArabic || hasArabicStudyMetadata(study)))
+    .map((study): Study => study.unlisted ? {
+      id: 'coming-soon',
+      slug: 'coming-soon',
+      title: 'Coming soon',
+      title_ar: 'قريبًا',
+      category: 'Research',
+      category_ar: 'بحث',
+      article_type: 'paper',
+      unlisted: true,
+      published: true,
+      is_featured: false,
+      created_at: '',
+      updated_at: '',
+    } : study);
 
   return (
     <main className="research-main" lang={locale} dir={isArabic ? 'rtl' : 'ltr'}>
@@ -49,11 +66,7 @@ export default function ResearchHome({ locale = 'en' }: { locale?: 'en' | 'ar' }
             {isArabic ? 'بحث مختار' : 'Research on the shelf'}
           </p>
           <Bookshelf
-            studies={CUSTOM_STUDIES.filter((study) =>
-              study.published
-              && study.article_type === 'paper'
-              && (!isArabic || hasArabicStudyMetadata(study)),
-            )}
+            studies={shelfStudies}
             locale={locale}
           />
         </section>

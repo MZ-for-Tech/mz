@@ -5052,11 +5052,6 @@
       "kind": "user-source"
     },
     {
-      "id": "mz-vgg19-paper",
-      "label": "Statistical Compression of VGG19 for Blood-Cell Image Classification on BloodMNIST",
-      "url": "https://www.mzfortech.com/research/papers/vgg19-bloodmnist-compression"
-    },
-    {
       "id": "andrews-patterson-1976",
       "label": "Andrews & Patterson (1976), Singular Value Decomposition (SVD) Image Coding",
       "doi": "10.1109/TCOM.1976.1093309"

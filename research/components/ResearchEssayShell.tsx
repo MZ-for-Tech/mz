@@ -15,6 +15,8 @@ export type ResearchEssayShellProps = {
   seriesLabel?: string;
   seriesHref?: string;
   articleNumber?: number;
+  articleLabel?: string;
+  articleType?: 'essay' | 'paper';
   publishedAt?: string;
   authors?: StudyAuthor[];
   readTimeMinutes: number;
@@ -36,6 +38,8 @@ export default function ResearchEssayShell({
   seriesLabel,
   seriesHref,
   articleNumber,
+  articleLabel,
+  articleType = 'essay',
   publishedAt,
   authors = [],
   readTimeMinutes,
@@ -71,7 +75,7 @@ export default function ResearchEssayShell({
           <h1 lang={locale} className={`research-essay-title max-w-4xl tracking-tight text-ink ${isArabic ? '' : 'font-latex'}`}>{title}</h1>
           {tagline && <p className="research-essay-tagline mt-5 max-w-3xl font-serif italic leading-relaxed text-ink/65">{tagline}</p>}
           <div className="research-essay-metadata mt-6 flex flex-wrap items-center gap-x-2 gap-y-1 border-y border-ink/15 py-3 font-mono text-xs uppercase tracking-widest text-ink/55">
-            <span>{isArabic ? 'مقال' : 'Essay'}</span>
+            <span>{articleLabel || (isArabic ? 'مقال' : 'Essay')}</span>
             {publicationDate && <><span aria-hidden="true">·</span><time dateTime={publishedAt}>{publicationDate}</time></>}
             {authors.map((author) => {
               const name = isArabic ? author.name_ar || author.name : author.name;
@@ -85,7 +89,7 @@ export default function ResearchEssayShell({
 
         {heroImage && <figure className="relative m-0 mb-12 aspect-[16/9] w-full overflow-hidden border border-ink/10 bg-ink/[0.04]"><Image src={heroImage} alt={heroImageAlt || title} fill loading="eager" sizes="(min-width: 896px) 896px, calc(100vw - 40px)" className={`research-image-paper-tone research-image-paper-tone-hero ${heroImageToneClass || ''} object-cover`} /></figure>}
         {translationNotice}
-        <ResearchContentsSidebar items={contents} locale={locale} />
+        <ResearchContentsSidebar items={contents} locale={locale} articleType={articleType} />
         {children}
         <ResearchArticleCards articles={relatedArticles} locale={locale} label={isArabic ? 'اقرأ المزيد' : 'Read more'} />
         {seriesHref && <footer className="mt-16 border-t border-ink/15 pt-6"><Link href={seriesHref} className="font-serif text-lg text-ink/65 underline decoration-ink/25 underline-offset-4 transition-colors hover:text-accent hover:decoration-accent">{isArabic ? `اكتشف السلسلة: ${seriesLabel}` : `Explore the series: ${seriesLabel}`}</Link></footer>}

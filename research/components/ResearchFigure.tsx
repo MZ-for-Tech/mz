@@ -26,7 +26,7 @@ export default function ResearchFigure({
       {children}
       <figcaption className="research-figure-caption">
         <p>
-          <span className="research-figure-number">{isArabic ? `الشكل ${number}:` : `Figure ${number}:`}</span>
+          <span className="research-figure-number">{isArabic ? `الشكل ${number}:` : `Figure ${number}.`}</span>
           {title && <> <strong className="research-figure-title">{title}</strong></>}
           {caption && <>{title ? '. ' : ' '}{caption}</>}
         </p>

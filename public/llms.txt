@@ -22,7 +22,7 @@ MZ is based in Cairo, Egypt. Contact: [hello@mzfortech.com](mailto:hello@mzforte
 
 ## Research
 
-- **The Null Hypothesis** is MZ's research publication. It currently publishes four essays and a research paper, with interactive explanations and selected Arabic editions.
+- **The Null Hypothesis** is MZ's research publication. It currently publishes four essays, with interactive explanations and selected Arabic editions.
 
 ### Published essays
 
@@ -30,10 +30,6 @@ MZ is based in Cairo, Egypt. Contact: [hello@mzfortech.com](mailto:hello@mzforte
 - [The Measure and the Target](https://www.mzfortech.com/research/essays/the-measure-and-the-target): Goodhart's law, statistical measures, AI reward models, and benchmark optimization. [Arabic edition](https://www.mzfortech.com/research/ar/essays/the-measure-and-the-target).
 - [A Deep Reading of SVD](https://www.mzfortech.com/research/essays/a-deep-reading-of-svd): an interactive explanation of singular value decomposition, geometry, low-rank approximation, and PCA. [Arabic edition](https://www.mzfortech.com/research/ar/essays/a-deep-reading-of-svd).
 - [A Deep Reading of L₀](https://www.mzfortech.com/research/essays/a-deep-reading-of-l0): an interactive explanation of L₀ regularization, stochastic gates, and structured neural network pruning. [Arabic edition](https://www.mzfortech.com/research/ar/essays/a-deep-reading-of-l0).
-
-### Research paper
-
-- [Statistical Compression of VGG19 for Blood-Cell Image Classification on BloodMNIST](https://www.mzfortech.com/research/papers/vgg19-bloodmnist-compression): model compression with L1 regularization, structured L₀ gates, and low-rank SVD. [Arabic edition](https://www.mzfortech.com/research/ar/papers/vgg19-bloodmnist-compression). [PDF](https://www.mzfortech.com/research-applied-stats-in-ai.pdf).
 
 ## Selected work
 

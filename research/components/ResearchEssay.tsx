@@ -1,4 +1,5 @@
 import type { Study } from '@/research/lib/types';
+import Image from 'next/image';
 import { getResearchArticlePath, getResearchSeriesPath } from '@/research/lib/paths';
 import { readResearchContent } from '@/research/lib/content';
 import { VisualizationEngine } from '@/research/features/engine/VisualizationEngine';
@@ -9,6 +10,9 @@ import SafeLatex from '@/research/components/SafeLatex';
 import ResearchCodeBlock from '@/research/features/essays/shared/ResearchCodeBlock';
 import ResearchTable from '@/research/components/ResearchTable';
 import ResearchReferences from '@/research/components/ResearchReferences';
+import ResearchFigure from '@/research/components/ResearchFigure';
+import ResearchPaperGauge from '@/research/components/ResearchPaperGauge';
+import VGG19Figure from '@/research/features/papers/vgg19/VGG19Figures';
 import DarkVeilEssayVisual from '@/research/features/essays/darkveil/DarkVeilEssayVisual';
 import DarkVeilFunctionSignature from '@/research/features/essays/darkveil/DarkVeilFunctionSignature';
 import DarkVeilActivationComparison from '@/research/features/essays/darkveil/DarkVeilActivationComparison';
@@ -20,7 +24,7 @@ import { CUSTOM_STUDIES, hasArabicStudyMetadata } from '@/research/data/studies'
 import { estimateReadingMinutes } from '@/research/lib/readingTime';
 
 function inlineMarkdown(text: string) {
-  const pieces = text.split(/(\$\$[\s\S]+?\$\$|\[[^\]]+\]\([^)\s]+\)|\$[^$\n]+\$|`[^`]+`|\*\*[^*]+\*\*|\*[^*]+\*)/g);
+  const pieces = text.split(/(\$\$[\s\S]+?\$\$|\[[^\]]+\]\([^)\s]+\)|<https?:\/\/[^>]+>|\$[^$\n]+\$|`[^`]+`|\*\*[^*]+\*\*|\*[^*]+\*)/g);
   return pieces.map((piece, index) => {
     if (piece.startsWith('$') && piece.endsWith('$')) {
       return <SafeLatex key={index} content={piece} />;
@@ -35,6 +39,8 @@ function inlineMarkdown(text: string) {
         </a>
       );
     }
+    const autolink = piece.match(/^<(https?:\/\/[^>]+)>$/);
+    if (autolink) return <a key={index} href={autolink[1]} target="_blank" rel="noreferrer" className="text-accent underline decoration-accent/40 underline-offset-4 hover:decoration-accent">{autolink[1]}</a>;
     if (piece.startsWith('`') && piece.endsWith('`')) {
       return <code key={index}>{piece.slice(1, -1)}</code>;
     }
@@ -83,6 +89,24 @@ const essayVisuals = {
   benchmaxxing: 'BenchmaxxingLeaderboard',
 } as const;
 
+const paperVisuals = {
+  'vgg19-architecture': {
+    id: 'VGGArchitectureExplorer',
+    number: 1,
+    title: 'VGG19 architecture adapted for eight-class BloodMNIST+ classification',
+  },
+  'bloodmnist-dataset': {
+    id: 'BloodMNISTExplorer',
+    number: 2,
+    title: 'BloodMNIST+ class counts and representative images',
+  },
+  'tensor-surgery': {
+    id: 'TensorSurgeryVisualizer',
+    number: 4,
+    title: 'Illustrative tensor surgery: channel removal and resulting tensor dimensions',
+  },
+} as const;
+
 const l1Figures = {
   'l1-norm-balls': '01_norm_balls',
   'l1-count-magnitude': '02_count_magnitude',
@@ -110,12 +134,16 @@ export default function ResearchEssay({ study, locale = 'en' }: { study: Study; 
   const description = (isArabic && study.description_ar) || study.description || tagline;
   const keywords = (isArabic && study.keywords_ar) || study.keywords;
   const toc = (isArabic && study.toc_ar) || study.toc;
-  const relatedArticles = CUSTOM_STUDIES.filter((article) =>
-    article.published
-    && article.article_type === 'essay'
-    && article.slug !== study.slug
-    && (!isArabic || (article.arabic_translation_status !== 'draft' && hasArabicStudyMetadata(article))),
-  ).slice(0, 3);
+  const relatedArticles = study.slug === 'vgg19-bloodmnist-compression'
+    ? ['a-deep-reading-of-l1', 'a-deep-reading-of-l0', 'a-deep-reading-of-svd']
+      .map((slug) => CUSTOM_STUDIES.find((article) => article.slug === slug && article.published))
+      .filter((article): article is Study => article !== undefined && (!isArabic || (article.arabic_translation_status !== 'draft' && hasArabicStudyMetadata(article))))
+    : CUSTOM_STUDIES.filter((article) =>
+        article.published
+        && article.article_type === 'essay'
+        && article.slug !== study.slug
+        && (!isArabic || (article.arabic_translation_status !== 'draft' && hasArabicStudyMetadata(article))),
+      ).slice(0, 3);
   const markdown = readResearchContent(contentFile);
   const equationDetails: { summary: string; body: string }[] = [];
   const markdownWithDetails = markdown.replace(/<details[^>]*>\s*<summary>([\s\S]*?)<\/summary>\s*([\s\S]*?)<\/details>/g, (_match, summary: string, body: string) => {
@@ -129,16 +157,27 @@ export default function ResearchEssay({ study, locale = 'en' }: { study: Study; 
     if (marker && marker[1] in l1Figures) l1FigureNumbers.set(marker[1], l1FigureNumbers.size + 1);
   }
   const referencesLabel = isArabic ? 'المراجع' : 'References';
-  const referencesIndex = blocks.findIndex((block) => block.trim() === `**${referencesLabel}**`);
+  const referencesIndex = blocks.findIndex((block) => {
+    const heading = block.trim();
+    return heading === `**${referencesLabel}**`
+      || (/^#{1,3}\s+/.test(heading) && heading.replace(/^#{1,3}\s+/, '') === referencesLabel);
+  });
   const series = (isArabic && study.series_ar) || study.series || (isArabic && study.category_ar) || study.category;
-  const contents = study.essay_renderer === 'svd-story'
+  const contents = study.article_type === 'paper'
+    ? blocks.flatMap((block) => {
+        const heading = block.trim().match(/^#\s+(.+)$/);
+        if (!heading) return [];
+        const label = heading[1].trim();
+        return [{ id: headingId(label), label }];
+      })
+    : study.essay_renderer === 'svd-story'
     ? getSVDStoryContents(locale)
     : study.essay_renderer === 'l0-story' ? getL0StoryContents(locale) : toc;
   const readingMinutes = estimateReadingMinutes(markdown, title);
   const canonicalUrl = `https://www.mzfortech.com${getResearchArticlePath(study, locale)}`;
   const articleSchema = {
     '@context': 'https://schema.org',
-    '@type': 'Article',
+    '@type': study.article_type === 'paper' ? 'ScholarlyArticle' : 'Article',
     headline: title,
     description,
     keywords,
@@ -174,6 +213,8 @@ export default function ResearchEssay({ study, locale = 'en' }: { study: Study; 
       seriesLabel={series}
       seriesHref={study.series_slug && !(isArabic && study.arabic_translation_status === 'draft') ? getResearchSeriesPath(study.series_slug) : undefined}
       articleNumber={study.series_slug ? study.series_number || 1 : undefined}
+      articleLabel={study.article_type === 'paper' ? (isArabic ? 'بحث' : 'Research paper') : undefined}
+      articleType={study.article_type}
       publishedAt={study.published_at}
       authors={study.authors}
       readTimeMinutes={readingMinutes}
@@ -198,6 +239,17 @@ export default function ResearchEssay({ study, locale = 'en' }: { study: Study; 
             if (/^\$\$[\s\S]+\$\$$/.test(block)) {
               return <SafeLatex key={index} content={block} />;
             }
+            const markdownImage = block.trim().match(/^!\[([^\]]*)\]\(([^)]+)\)$/);
+            if (markdownImage) {
+              const [, alt, src] = markdownImage;
+              const caption = alt.match(/^Figure\s+(\d+):\s*(.*)$/i);
+              return (
+                <ResearchFigure key={index} number={Number(caption?.[1] || 1)} caption={caption?.[2] || alt} locale={locale}>
+                  {src.startsWith('/research/vgg19/figures/') ? <VGG19Figure src={src} /> : <Image src={src} alt={alt} width={1200} height={800} sizes="(min-width: 896px) 896px, calc(100vw - 40px)" className="h-auto w-full" />}
+                </ResearchFigure>
+              );
+            }
+            if (/^\*Figure\s+\d+\./i.test(block.trim()) && /^!\[[^\]]*\]\([^)]+\)$/.test(blocks[index - 1]?.trim() || '')) return null;
             const equationDetail = block.trim().match(/^<!--\s*equation-detail:(\d+)\s*-->$/);
             if (equationDetail) {
               const detail = equationDetails[Number(equationDetail[1])];
@@ -217,6 +269,14 @@ export default function ResearchEssay({ study, locale = 'en' }: { study: Study; 
               );
             }
             const visualMarker = block.trim().match(/^<!--\s*visual:([a-z0-9-]+)\s*-->$/);
+            if (visualMarker && visualMarker[1] in paperVisuals) {
+              const figure = paperVisuals[visualMarker[1] as keyof typeof paperVisuals];
+              return (
+                <ResearchFigure key={index} number={figure.number} title={figure.title} locale={locale} dataInteractive={visualMarker[1]}>
+                  <VisualizationEngine id={figure.id} locale={locale} />
+                </ResearchFigure>
+              );
+            }
             if (visualMarker && visualMarker[1] in l1Figures) {
               return <L1Visuals key={index} figureId={l1Figures[visualMarker[1] as keyof typeof l1Figures]} figureNumber={l1FigureNumbers.get(visualMarker[1]) ?? 0} locale={locale} />;
             }
@@ -288,29 +348,31 @@ export default function ResearchEssay({ study, locale = 'en' }: { study: Study; 
                 </p>
               );
             }
-            const heading = block.match(/^\*\*(.+)\*\*$/);
+            const heading = block.match(/^(#{1,3})\s+(.+)$/) || block.match(/^\*\*(.+)\*\*$/);
             if (heading) {
-              const label = heading[1].replace(/[.!?]+$/, '');
+              const markdownHeading = heading.length === 3;
+              const level = markdownHeading ? heading[1].length : 2;
+              const label = (markdownHeading ? heading[2] : heading[1]).replace(/[.!?]+$/, '');
               const isReferencesHeading = label === referencesLabel;
               const headingIndex = blocks
                 .slice(0, index)
                 .filter((candidate) => /^\*\*.+\*\*$/.test(candidate.trim()) && candidate.trim() !== `**${title}**`).length;
-              const id = toc?.[headingIndex]?.id || headingId(label);
+              const id = study.article_type === 'paper' && markdownHeading
+                ? headingId(label)
+                : toc?.[headingIndex]?.id || headingId(label);
               if (isReferencesHeading) {
                 const entries = blocks.slice(index + 1).filter(Boolean).map((entry) => inlineMarkdown(entry.replace(/\n/g, ' ')));
                 return <ResearchReferences key={index} id={id} title={label} entries={entries} />;
               }
-              return (
-                <h2 key={index} id={id}>
-                  {inlineMarkdown(label)}
-                </h2>
-              );
+              const Heading = `h${markdownHeading ? Math.min(level + 1, 4) : 2}` as 'h2' | 'h3' | 'h4';
+              return <Heading key={index} id={id}>{inlineMarkdown(label)}</Heading>;
             }
             return (
               <p key={index}>{inlineMarkdown(block.replace(/\n/g, ' '))}</p>
             );
           })}
         </div>}
+        {study.article_type === 'paper' && study.paper_metrics && <ResearchPaperGauge {...study.paper_metrics} />}
     </ResearchEssayShell>
   );
 }
