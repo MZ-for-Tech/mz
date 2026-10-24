@@ -1,5 +1,6 @@
 
 import Image from 'next/image';
+import Link from 'next/link';
 import styles from './PremiumShowcase.module.css';
 
 export default function PremiumShowcase() {
@@ -10,6 +11,9 @@ export default function PremiumShowcase() {
         <div className={styles.leftCopy}>
           <h1>MZ builds software and AI systems in Cairo.</h1>
           <p>We train client teams to run what we build, informed by applied research.</p>
+          <Link href="/brand" className={styles.brandGuideLink}>
+            Brand guide &amp; assets <span aria-hidden="true">↗</span>
+          </Link>
         </div>
 
         <div className={styles.container}>

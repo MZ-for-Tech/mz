@@ -94,8 +94,26 @@
   line-height: inherit;
 }
 
-.leftCopy p:last-child {
+.leftCopy p:last-of-type {
   margin-bottom: 0;
+}
+
+.brandGuideLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1.25rem;
+  color: inherit;
+  font-family: var(--font-code);
+  font-size: var(--font-size-xs);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-underline-offset: 0.3em;
+}
+
+.brandGuideLink:focus-visible {
+  outline: 2px solid var(--color-brand-yellow);
+  outline-offset: 4px;
 }
 
 .rightCopy {

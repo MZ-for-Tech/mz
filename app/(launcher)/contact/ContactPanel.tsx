@@ -437,7 +437,7 @@ export default function ContactPanel() {
               <p>We’ll review your scope, budget, and timeline, then get in touch to discuss the best next step.</p>
               <p>Have something to add? Email <ObfuscatedEmail user="hello" domain="mzfortech.com" />{submissionReference ? " and include your reference above." : "."}</p>
             </div>
-            <button type="button" className={styles.submit} onClick={() => {
+            <button type="button" className={`${styles.submit} primaryAction`} onClick={() => {
               setSubmissionState("idle");
               setSubmissionReference("");
               requestAnimationFrame(() => document.querySelector<HTMLInputElement>('input[name="name"]')?.focus());
@@ -612,7 +612,7 @@ export default function ContactPanel() {
               the submit read as the end of the brief rather than as one
               more control in a list of them. */}
           <section className={`${styles.section} ${styles.submitSection}`}>
-            <button type="submit" className={styles.submit} disabled={submissionState === "sending"}>
+            <button type="submit" className={`${styles.submit} primaryAction`} disabled={submissionState === "sending"}>
               {submissionState === "sending" ? "Sending…" : "Send Brief"}
               {/* lucide arrow-right (inlined; see PERFORMANCE_REAUDIT §7) */}
               <svg

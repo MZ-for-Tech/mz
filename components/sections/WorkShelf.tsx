@@ -1,9 +1,10 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { PROJECTS } from "@/lib/projects";
+import { useReducedMotion } from "@/lib/useReducedMotion";
 import { transitionTo } from "@/components/TransitionLink/TransitionLink";
 import styles from "./WorkShelf.module.css";
 
@@ -64,11 +65,33 @@ export function WorkShelf() {
       projects[Math.floor(projects.length / 2)]?.slug
   );
   const [armedSlug, setArmedSlug] = useState<string | null>(null);
+  const [videoStartedFor, setVideoStartedFor] = useState<string | null>(null);
+  const prefersReducedMotion = useReducedMotion();
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   const activeIndex = Math.max(
     0,
     projects.findIndex((p) => p.slug === activeSlug)
   );
+  const activeProject = projects[activeIndex];
+
+  useEffect(() => {
+    if (!activeProject?.video || prefersReducedMotion) return;
+    const timer = window.setTimeout(() => setVideoStartedFor(activeSlug), 1000);
+    return () => window.clearTimeout(timer);
+  }, [activeSlug, activeProject?.video, prefersReducedMotion]);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    const syncPlayback = () => {
+      if (document.hidden) video.pause();
+      else void video.play().catch(() => {});
+    };
+    document.addEventListener("visibilitychange", syncPlayback);
+    syncPlayback();
+    return () => document.removeEventListener("visibilitychange", syncPlayback);
+  }, [videoStartedFor]);
 
   // Enter OR click opens the case study or the project's declared link.
   //
@@ -116,12 +139,13 @@ export function WorkShelf() {
     (slug: string) => {
       if (armedSlug !== slug) {
         setArmedSlug(slug);
+        if (activeSlug !== slug) setVideoStartedFor(null);
         setActiveSlug(slug);
         return;
       }
       openProject(slug);
     },
-    [armedSlug, openProject]
+    [activeSlug, armedSlug, openProject]
   );
 
   const onTileKeyDown = useCallback(
@@ -137,6 +161,7 @@ export function WorkShelf() {
           .closest("ul")
           ?.querySelector<HTMLElement>(`[data-project-index="${nextIndex}"]`);
         if (target?.closest("li")?.getAttribute("data-offset") === "hidden") {
+          setVideoStartedFor(null);
           setActiveSlug(projects[nextIndex].slug);
           setArmedSlug(null);
           requestAnimationFrame(() => {
@@ -161,9 +186,10 @@ export function WorkShelf() {
   // pointer entry would move the target under the pointer; keyboard movement
   // and deliberate activation are stable inputs for the rotating layout.
   const select = useCallback((slug: string) => {
+    if (activeSlug !== slug) setVideoStartedFor(null);
     setActiveSlug(slug);
     setArmedSlug(null);
-  }, []);
+  }, [activeSlug]);
 
   return (
     <div className={styles.work}>
@@ -187,6 +213,41 @@ export function WorkShelf() {
         {projects.map((project, i) => {
           const isActive = i === activeIndex;
           const activeClass = isActive ? styles.stageLayerActive : "";
+
+          if (project.video && project.logo) {
+            const showVideo = isActive && videoStartedFor === project.slug && !prefersReducedMotion;
+            return (
+              <div key={project.slug}>
+                <div
+                  className={`${styles.stageLayer} ${styles.stageLayerMark} ${showVideo ? "" : activeClass}`}
+                >
+                  <Image
+                    src={project.logo}
+                    alt=""
+                    width={200}
+                    height={200}
+                    className={styles.stageMark}
+                  />
+                </div>
+                <div className={`${styles.stageLayer} ${showVideo ? activeClass : ""}`}>
+                  {showVideo && (
+                    <video
+                      ref={videoRef}
+                      className={styles.stageVideo}
+                      src={project.video}
+                      poster={project.videoPoster}
+                      autoPlay
+                      muted
+                      loop
+                      playsInline
+                      preload="auto"
+                      aria-hidden="true"
+                    />
+                  )}
+                </div>
+              </div>
+            );
+          }
 
           if (project.coverImage) {
             return (
@@ -259,13 +320,13 @@ export function WorkShelf() {
                 onKeyDown={(e) => onTileKeyDown(e, project.slug)}
               >
                 <span className={styles.tileFace}>
-                  {project.logo && project.slug !== "nested-united" ? (
+                  {project.logo ? (
                     <Image
                       src={project.logo}
                       alt=""
                       width={200}
                       height={200}
-                      className={styles.tileLogo}
+                      className={`${styles.tileLogo} ${project.slug === "nested-united" ? styles.tileLogoAdaptive : ""}`}
                     />
                   ) : !project.logo ? (
                     <span className={styles.tileInitials}>{initials}</span>
@@ -291,15 +352,6 @@ export function WorkShelf() {
               data-offset={slotOffset ?? "hidden"}
               data-kind={project.kind}
             >
-              {project.slug === "nested-united" && (
-                <Image
-                  src={project.logo!}
-                  alt=""
-                  width={200}
-                  height={200}
-                  className={styles.adaptiveLogo}
-                />
-              )}
               <span className={styles.tileMeta}>
                 <span className={styles.tileName}>{project.name}</span>
                 <span className={styles.tileCategory}>{project.category}</span>

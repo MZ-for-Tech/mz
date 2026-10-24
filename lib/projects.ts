@@ -443,6 +443,8 @@ export const PROJECTS: ProjectData[] = [
     // links out to it. The tile states what the studio did; the case study
     // shows it; the live site is the client's to speak for.
     logo: "/logos/nested-united.svg",
+    video: "/nested/videos/nested-united-promo.mp4",
+    videoPoster: "/nested/videos/nested-united-promo.webp",
     // The desktop screenshot is held back from the stage for now — the mark on
     // a white field is the resting state until a current capture is chosen.
     // The files are untouched in `screenshots` below and the stage renders

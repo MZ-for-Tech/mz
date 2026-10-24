@@ -89,7 +89,7 @@ export default function ServicesPanel() {
             and operate them. Our services also include financial systems,
             digital media, applied research, and information technology transfer.
           </p>
-          <Link href="/contact" data-tile className={styles.contactLink}>
+          <Link href="/contact" data-tile className={`${styles.contactLink} primaryAction`}>
             Start a conversation <ArrowUpRight size={16} strokeWidth={1.6} />
           </Link>
         </div>
@@ -172,7 +172,7 @@ export default function ServicesPanel() {
 
       <footer className={styles.closer}>
         <p>Have a problem worth solving?</p>
-        <Link href="/contact" data-tile>
+        <Link href="/contact" data-tile className="primaryAction">
           Tell us about it <ArrowUpRight size={16} aria-hidden="true" />
         </Link>
       </footer>

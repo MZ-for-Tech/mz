@@ -360,6 +360,49 @@ a {
   transition: color 0.2s ease-out;
 }
 
+.primaryAction {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  padding: 20px 48px;
+  border: 0;
+  border-radius: var(--radius-md);
+  background: var(--color-brand-yellow);
+  color: var(--color-bg);
+  font-family: var(--font-base);
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  line-height: 1.2;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.3s ease;
+}
+
+.primaryAction:hover:not(:disabled) {
+  background: var(--color-text);
+  color: var(--color-bg);
+  transform: translateY(-4px);
+  box-shadow: 0 10px 20px rgba(var(--color-black-rgb), 0.2);
+}
+
+.primaryAction:disabled {
+  cursor: wait;
+  opacity: 0.7;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .primaryAction,
+  .primaryAction:hover:not(:disabled) {
+    transition: none;
+    transform: none;
+  }
+}
+
 /* Base Link Hover Style - Animated Underline */
 .hover-link {
   position: relative;

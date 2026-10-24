@@ -361,7 +361,7 @@ export default function NestedUnitedWorld() {
       <section className={styles.ctaSection}>
         <h2 className={styles.ctaTitle}>Building something like this?</h2>
         <div className={styles.ctaButtons}>
-          <TransitionLink href="/contact" className={styles.ctaBtn}>
+          <TransitionLink href="/contact" className="primaryAction">
             START A PROJECT →
           </TransitionLink>
           <ObfuscatedEmail

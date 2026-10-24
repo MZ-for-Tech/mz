@@ -610,40 +610,9 @@
   border-top: 1px solid rgba(var(--color-text-rgb), 0.12);
 }
 
+/* Shared filled action style lives in `app/globals.css`. */
 .submit {
   align-self: flex-start;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-4);
-  padding: 20px 48px;
-  border: none;
-  /* Was 100px, clamping to ~31px on a 63px-tall button — so the most
-     important object on the form was rounded the most, and part of why it
-     read as a soft suggestion rather than as the end of the form.
-
-     Kept one step above the fields rather than dropped to `--radius-sm` with
-     them. Everything else on this panel is a hairline outline; this is the
-     only filled, oversized, 1.2rem object, and one step of corner is one of
-     the few signals left saying "this is the end of it". 6px is barely
-     perceptible as a shape — which is the point at this scale, and the same
-     4% the reference uses on a card of comparable height. */
-  border-radius: var(--radius-md);
-  background: var(--color-brand-yellow);
-  color: var(--color-bg);
-  font-family: var(--font-base);
-  font-size: var(--font-size-lg);
-  font-weight: 600;
-  cursor: pointer;
-  transition:
-    background 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-    transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-    box-shadow 0.3s ease;
-}
-
-.submit:disabled {
-  cursor: wait;
-  opacity: 0.7;
 }
 
 .submitMessage {
@@ -652,12 +621,6 @@
   color: rgba(var(--color-text-rgb), 0.72);
   font-size: var(--font-size-base);
   line-height: 1.5;
-}
-
-.submit:hover {
-  background: var(--color-text);
-  transform: translateY(-4px);
-  box-shadow: 0 10px 20px rgba(var(--color-black-rgb), 0.2);
 }
 
 .submitArrow {
